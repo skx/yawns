@@ -5,6 +5,7 @@
     <!-- tmpl_var name='metadata' -->
     <!-- tmpl_var name='stylesheet' -->
 <!-- tmpl_if name='title' -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title><!-- tmpl_var name='title' --></title>
 <!-- tmpl_else -->
     <title>Debian Administration - Debian Administration Resources</title>
