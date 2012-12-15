@@ -53,6 +53,7 @@ require AutoLoader;
 use Yawns::Formatters::HTML;
 use Yawns::Formatters::Text;
 use Yawns::Formatters::Textile;
+use Yawns::Formatters::Markdown;
 
 
 
@@ -99,9 +100,10 @@ sub getAvailable
     #  The formatters are the keys, and the values
     # are the human-readable names.
     #
-    $results{ 'html' }    = "HTML";
-    $results{ 'text' }    = "Plain Text";
-    $results{ 'textile' } = "Textile";
+    $results{ 'html' }     = "HTML";
+    $results{ 'text' }     = "Plain Text";
+    $results{ 'textile' }  = "Textile";
+    $results{ 'markdown' } = "Markdown";
 
     return (%results);
 }
@@ -127,6 +129,10 @@ sub create
     {
         return ( new Yawns::Formatters::Text->new( text => $text ) );
     }
+    elsif ( $type =~ /^markdown$/i )
+    {
+        return ( new Yawns::Formatters::Markdown->new( text => $text ) );
+    }
     elsif ( $type =~ /^textile$/i )
     {
         return ( new Yawns::Formatters::Textile->new( text => $text ) );
@@ -151,7 +157,7 @@ http://www.steve.org.uk/
 
 =head1 LICENSE
 
-Copyright (c) 2007 by Steve Kemp.  All rights reserved.
+Copyright (c) 2007-2012 by Steve Kemp.  All rights reserved.
 
 This module is free software;
 you can redistribute it and/or modify it under
