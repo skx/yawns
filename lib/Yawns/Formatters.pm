@@ -50,7 +50,6 @@ require AutoLoader;
 #
 #  The actual formatters we create, and return.
 #
-use Yawns::Formatters::BBCode;
 use Yawns::Formatters::HTML;
 use Yawns::Formatters::Text;
 use Yawns::Formatters::Textile;
@@ -100,7 +99,6 @@ sub getAvailable
     #  The formatters are the keys, and the values
     # are the human-readable names.
     #
-    $results{ 'bbcode' }  = "BBCode";
     $results{ 'html' }    = "HTML";
     $results{ 'text' }    = "Plain Text";
     $results{ 'textile' } = "Textile";
@@ -121,11 +119,7 @@ sub create
 {
     my ( $self, $type, $text ) = (@_);
 
-    if ( $type =~ /^bbcode$/i )
-    {
-        return ( new Yawns::Formatters::BBCode->new( text => $text ) );
-    }
-    elsif ( $type =~ /^html$/i )
+    if ( $type =~ /^html$/i )
     {
         return ( new Yawns::Formatters::HTML->new( text => $text ) );
     }
