@@ -49,3 +49,29 @@ is present - all code will be installed beneath that users homedirectory.
 There is a supplied "fabric" file which can be used to do that.
 
 The Apache configuration can be copied from the included ~/apache/ file.
+
+
+
+Live Usage
+----------
+
+The code is deployed upon five hosts:
+
+
+da-db1.vm
+da-db2.vm
+ 2 x MySQL running in master-master.  Only one is used for real, the other
+ is present for fail-over.
+ These hosts also run MemCached via ucarp.
+
+
+da-web1.vm
+da-web2.vm
+da-web3.vm
+ 3 x Apache.
+ Each host uses a shared IP and has heartbeat configured, again with ucarp.
+
+
+All data is stored in MySQL *except* login sessions.  Login sessions go
+to memcached, which is configured via ucarp to ensure that it is always
+available.
