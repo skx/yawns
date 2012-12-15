@@ -160,7 +160,7 @@ sub get
     my $query2 = $db->prepare(
         'SELECT answer,votes,id FROM poll_answers WHERE poll_id=? ORDER BY id');
     $query2->execute($id);
-    $answers = $query2->fetchall_arrayref();
+    my $answers = $query2->fetchall_arrayref();
 
     return ( $question, $total, $answers, $author, $date );
 }
