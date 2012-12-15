@@ -24,3 +24,6 @@ install libcgi-session-perl
 install libhtml-template-perl
 install libauthen-captcha-perl
 install libtimedate-perl
+install libmail-verify-perl
+install libtext-diff-perl
+install libtext-textile-perl
