@@ -23,3 +23,4 @@ install libredis-perl
 install libcgi-session-perl
 install libhtml-template-perl
 install libauthen-captcha-perl
+install libtimedate-perl
