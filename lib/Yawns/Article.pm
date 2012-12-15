@@ -251,6 +251,7 @@ sub create
     #
     if ( !defined($id) )
     {
+        my $articles = Yawns::Articles->new();
         $id = $articles->count();
         $id += 1;
     }
