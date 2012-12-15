@@ -186,62 +186,6 @@ sub validateSession
 }
 
 
-=begin doc
-
-  Flush the wblog cache.
-
-=end doc
-
-=cut
-
-sub flush_weblog_cache
-{
-
-    #
-    #  Get the cache directory.
-    #
-    my $cache = get_conf("blog_cache_dir");
-
-    #
-    #  If it isn't set, or doesn't exist we do nothing.
-    #
-    return unless ( defined($cache) && ( -d $cache ) );
-
-    foreach my $file ( sort( glob( $cache . "/*" ) ) )
-    {
-        unlink($file);
-    }
-}
-
-
-=begin doc
-
-  Flush the article cache.
-
-=end doc
-
-=cut
-
-sub flush_article_cache
-{
-    my ($id) = (@_);
-
-    #
-    #  Get the cache directory.
-    #
-    my $cache = get_conf("art_cache_dir");
-
-    #
-    #  If it isn't set, or doesn't exist we do nothing.
-    #
-    return unless ( defined($cache) && ( -d $cache ) );
-
-    foreach my $file ( sort( glob( $cache . $id . "-*" ) ) )
-    {
-        unlink($file);
-    }
-}
-
 
 
 # ===========================================================================
@@ -427,39 +371,6 @@ sub read_article
     if ( $article_id =~ /([0-9]+)/ )
     {
         $article_id = $1;
-    }
-
-
-    #
-    #  Cached on disk?
-    #
-    my $cache = get_conf("art_cache_dir");
-    if ( defined($cache) && ( -d $cache ) )
-    {
-
-        #
-        #  IPv6 might have a different header.
-        #
-        my $ipv6 = 0;
-        if ( $ENV{ 'REMOTE_ADDR' } =~ /:/ )
-        {
-            $ipv6 = 1 unless ( $ENV{ 'REMOTE_ADDR' } =~ /^::ffff:/ );
-        }
-
-        #
-        #  Return the file contents if present.
-        #
-        my $file = $cache . "/" . $article_id . "-" . $ipv6 . "-" . $username;
-        if ( -e $file )
-        {
-            open( FILE, "<", $file );
-            while (<FILE>)
-            {
-                print;
-            }
-            close(FILE);
-            return;
-        }
     }
 
 
@@ -692,37 +603,9 @@ sub read_article
     }
 
     #
-    #  Output to the cache?
+    # generate the output
     #
     my $output = $template->output();
-
-    #
-    #  Cache to disk, if we have a valid cache directory
-    #
-    if ( defined($cache) && ( -d $cache ) )
-    {
-
-        #
-        #  IPv6 might have a different header.
-        #
-        my $ipv6 = 0;
-        if ( $ENV{ 'REMOTE_ADDR' } =~ /:/ )
-        {
-            $ipv6 = 1 unless ( $ENV{ 'REMOTE_ADDR' } =~ /^::ffff:/ );
-        }
-
-
-        #
-        #  Return the file contents if present.
-        #
-        my $file = $cache . "/" . $article_id . "-" . $ipv6 . "-" . $username;
-
-        open( FILE, ">", $file );
-        print FILE $output;
-        close(FILE);
-    }
-
-    # generate the output
     print $output;
 
 }
@@ -1263,13 +1146,6 @@ sub submit_comment
     #  Anonymous user?
     $anonymous = 1 if ( $username =~ /^anonymous$/i );
 
-    my $comment_cache = get_conf( "comment_cache_dir" );
-
-    if ( defined( $comment_cache ) && ( !-d $comment_cache ) )
-    {
-        system( "mkdir", "-p", $comment_cache );
-    }
-
     #
     #  Is the user non-anonymous?
     #
@@ -1515,24 +1391,14 @@ sub submit_comment
             my $hash = md5_base64( Encode::encode( "utf8", $submit_body ) );
             my $used = $session->param($hash);
 
-            my $file = "$hash.$ENV{'REMOTE_ADDR'}.$username";
-            $file =~ s/[^a-zA-Z0-9]//g;
 
-            if ( defined($used) ||
-                 ( ( defined( $comment_cache ) &&  ( -e "$comment_cache/$file" ) ) ) )
+            if ( defined($used) )
             {
                 return ( permission_denied( duplicate_comment => 1 ) );
             }
             else
             {
                 $session->param( $hash, "used" );
-
-                if ( defined( $comment_cache ) )
-                {
-                    open( LOG, ">", $comment_cache . "/" . $file );
-                    print LOG "\n";
-                    close(LOG);
-                }
             }
         }
 
@@ -1710,17 +1576,6 @@ sub submit_comment
         #
         $session->param( md5_base64( Encode::encode( "utf8", $submit_body ) ),
                          1 );
-
-        #
-        #  Remove our temporary disk cache of the article
-        #
-        flush_article_cache($onarticle);
-
-
-        #
-        # Flush weblog cache
-        #
-        flush_weblog_cache();
 
 
 
@@ -3703,11 +3558,6 @@ EOF
                          author => $edit_username
                        );
 
-
-        #
-        #  Flush the cache
-        #
-        flush_article_cache($article_id);
 
         #
         # generate new RDF feeds
@@ -5730,44 +5580,10 @@ sub view_single_weblog
     my $error        = 0;
 
 
-
-    #
-    #  Cached on disk?
-    #
-    my $cache = get_conf("blog_cache_dir");
-    if ( defined($cache) && ( -d $cache ) )
-    {
-
-        #
-        #  IPv6 might have a different header.
-        #
-        my $ipv6 = 0;
-        $ipv6 = 1 if ( $ENV{ 'REMOTE_ADDR' } =~ /:/ );
-
-        #
-        #  Return the file contents if present.
-        #
-        my $file =
-          $cache . "/" . $viewusername . $id . "-" . $ipv6 . "-" . $username;
-        if ( -e $file )
-        {
-            open( FILE, "<", $file );
-            while (<FILE>)
-            {
-                print;
-            }
-            close(FILE);
-            return;
-        }
-    }
-
-
-
     # in the case an entry has been deleted we want to
     # link to next/prev
     my $error_prev;
     my $error_next;
-
 
     #
     #  Users can edit their own entries, and see the read count.
@@ -5954,25 +5770,6 @@ sub view_single_weblog
 
     # generate the output
     my $output = $template->output;
-
-    if ( defined($cache) && ( -d $cache ) )
-    {
-
-        #
-        #  IPv6 might have a different header.
-        #
-        my $ipv6 = 0;
-        $ipv6 = 1 if ( $ENV{ 'REMOTE_ADDR' } =~ /:/ );
-
-        #
-        #  Return the file contents if present.
-        #
-        my $file =
-          $cache . "/" . $viewusername . $id . "-" . $ipv6 . "-" . $username;
-        open( FILE, ">", $file );
-        print FILE $output;
-    }
-
     print($output );
 }
 
@@ -6170,11 +5967,6 @@ sub edit_weblog
         validateSession();
 
         #
-        # Flush weblog cache
-        #
-        flush_weblog_cache();
-
-        #
         # Get the weblog.
         #
         my $weblog = Yawns::Weblog->new( username => $username, id => $id );
@@ -6351,11 +6143,6 @@ sub delete_weblog
         #
         $weblog->remove( gid      => $gid,
                          username => $username );
-
-        #
-        # Flush weblog cache
-        #
-        flush_weblog_cache();
 
         #
         #  All done.
@@ -6935,19 +6722,6 @@ sub edit_comment
         $template->param( saved => 1,
                           title => "Comment Saved" );
 
-
-        #
-        # Flush weblog cache
-        #
-        flush_weblog_cache();
-
-        #
-        # Flush article cache.
-        #
-        if ($article_id)
-        {
-            flush_article_cache($article_id);
-        }
 
     }
     else
@@ -7660,21 +7434,6 @@ sub ban_ip
       die "Failed to execute " . $db->errstr();
 
     $sql->finish();
-
-    #
-    #  3.  Flush cache
-    #
-    my $cache1 = get_conf("art_cache_dir");
-    my $cache2 = get_conf("art_cache_dir");
-
-    if ( defined($cache1) && ( -d $cache1 ) )
-    {
-        system("find $cache1 -type f -delete");
-    }
-    if ( defined($cache2) && ( -d $cache2 ) )
-    {
-        system("find $cache2 -type f -delete");
-    }
 
     print "OK: $ip banned.\n";
 
