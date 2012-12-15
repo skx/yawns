@@ -147,10 +147,6 @@ BEGIN{ use_ok( 'Singleton::DBI' ); }
 require_ok( 'Singleton::DBI' );
 
 
-BEGIN{ use_ok( 'Singleton::Memcache' ); }
-require_ok( 'Singleton::Memcache' );
-
-
 BEGIN{ use_ok( 'Singleton::Session' ); }
 require_ok( 'Singleton::Session' );
 

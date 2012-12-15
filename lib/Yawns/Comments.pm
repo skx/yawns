@@ -61,7 +61,6 @@ use HTML::Balance;
 use HTML::BreakupText;
 use HTML::Linkize;
 use Singleton::DBI;
-use Singleton::Memcache;
 use Singleton::Session;
 use Yawns::Date;
 use Yawns::User;
@@ -221,18 +220,6 @@ sub getRecent
     my ( $class, $count ) = (@_);
 
     #
-    #  Find in the cache first?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $hash  = $cache->get( "recent_comments_" . $count );
-
-    if ( $hash->{ 'teasers' } && $hash->{ 'comments' } )
-    {
-        return ( $hash->{ 'teasers' }, $hash->{ 'comments' } );
-    }
-
-
-    #
     #  Get access to singleton objects
     #
     my $db = Singleton::DBI->instance();
@@ -315,12 +302,6 @@ sub getRecent
         push( @$teasers, { link => $link, } );
     }
 
-    #
-    # Save in cache
-    #
-    $hash->{ 'teasers' }  = $teasers;
-    $hash->{ 'comments' } = $comments;
-    $cache->set( "recent_comments_" . $count, $hash );
 
     return ( $teasers, $comments );
 }
@@ -337,16 +318,6 @@ sub getRecent
 sub getRecentByUser
 {
     my ( $class, $username ) = (@_);
-
-    #
-    #  Find in the cache first?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $hash  = $cache->get( "recent_comments_by_" . $username );
-    if ( $hash->{ 'teasers' } && $hash->{ 'comments' } )
-    {
-        return ( $hash->{ 'teasers' }, $hash->{ 'comments' } );
-    }
 
 
     #
@@ -433,12 +404,8 @@ sub getRecentByUser
     }
 
     #
-    # Save in cache
+    # Return
     #
-    $hash->{ 'teasers' }  = $teasers;
-    $hash->{ 'comments' } = $comments;
-    $cache->set( "recent_comments_by_" . $username, $hash );
-
     return ( $teasers, $comments );
 }
 
@@ -456,18 +423,6 @@ sub getRecentByUser
 sub getReported
 {
     my ( $class, $count ) = (@_);
-
-    #
-    #  Find in the cache first?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $hash  = $cache->get( "reported_comments_" . $count );
-
-    if ( $hash->{ 'teasers' } && $hash->{ 'comments' } )
-    {
-        return ( $hash->{ 'teasers' }, $hash->{ 'comments' } );
-    }
-
 
     #
     #  Get access to singleton objects
@@ -567,13 +522,6 @@ sub getReported
         push( @$teasers, { link => $link, } );
     }
 
-    #
-    # Save in cache
-    #
-    $hash->{ 'teasers' }  = $teasers;
-    $hash->{ 'comments' } = $comments;
-    $cache->set( "reported_comments_" . $count, $hash );
-
     return ( $teasers, $comments );
 }
 
@@ -627,18 +575,6 @@ sub getCommentFeed
 sub _getCommentFeed
 {
     my ( $root, $type ) = (@_);
-
-    #
-    #  Find in the cache first?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $hash  = $cache->get( "comment_feed_" . $root . "_" . $type );
-
-    if ( $hash->{ 'teasers' } && $hash->{ 'comments' } )
-    {
-        return ( $hash->{ 'teasers' }, $hash->{ 'comments' } );
-    }
-
 
     #
     #  Get access to singleton objects
@@ -723,14 +659,6 @@ sub _getCommentFeed
         push( @$teasers, { link => $link, } );
     }
 
-    #
-    # Save in cache
-    #
-    $hash->{ 'teasers' }  = $teasers;
-    $hash->{ 'comments' } = $comments;
-
-    $cache->set( "comment_feed_" . $root . "_" . $type, $hash );
-
     return ( $teasers, $comments );
 }
 
@@ -746,32 +674,11 @@ sub _get_article_comments
 {
     my ($article_id) = (@_);
 
-    #
-    # See if the comments are cached.
-    #
-    my $cache    = Singleton::Memcache->instance();
-    my $comments = $cache->get( "comments_on_article_" . $article_id );
-
-    if ( defined($comments) )
-    {
-        return ($comments);
-    }
-
 
     #
     #  If not fetch from database
     #
-    $comments = _get_comments( 'a', 1, $article_id, 0, 0 );
-
-
-    #
-    # Update the cache
-    #
-    if ( defined($comments) )
-    {
-        $cache->set( "comments_on_article_" . $article_id, $comments );
-    }
-
+    my $comments = _get_comments( 'a', 1, $article_id, 0, 0 );
     return ($comments);
 }
 
@@ -788,33 +695,9 @@ sub _get_weblog_comments
     my ( $weblog_id, $enabled ) = @_;
 
     #
-    # Gain access to the cache
-    #
-    my $cache = Singleton::Memcache->instance();
-
-    #
-    #  Fetch from the cache if present.
-    #
-    my $comments =
-      $cache->get( "comments_on_weblog_" . $weblog_id . "_" . $enabled );
-    if ( defined($comments) )
-    {
-        return ($comments);
-    }
-
-    #
     #  Fetch from the database.
     #
-    $comments = _get_comments( 'w', $enabled, $weblog_id, 0, 0 );
-
-    #
-    #  Update the cache
-    #
-    if ( defined($comments) )
-    {
-        $cache->set( "comments_on_weblog_" . $weblog_id . "_" . $enabled,
-                     $comments );
-    }
+    my $comments = _get_comments( 'w', $enabled, $weblog_id, 0, 0 );
 
     return ($comments);
 }
@@ -830,29 +713,9 @@ sub _get_poll_comments
     my ( $poll_id, $enabled ) = @_;
 
     #
-    # Fetch from the cache if present.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $comments =
-      $cache->get( "comments_on_poll_" . $poll_id . "_" . $enabled );
-    if ( defined($comments) )
-    {
-        return ($comments);
-    }
-
-    #
     #  Fetch from database
     #
-    $comments = _get_comments( 'p', $enabled, $poll_id, 0, 0 );
-
-    #
-    #  Update the cache
-    #
-    if ( defined($comments) )
-    {
-        $cache->set( "comments_on_poll_" . $poll_id . "_" . $enabled,
-                     $comments );
-    }
+    my $comments = _get_comments( 'p', $enabled, $poll_id, 0, 0 );
 
     return ($comments);
 }
@@ -1079,64 +942,6 @@ sub hideByUser
 sub invalidateCache
 {
     my ($class) = (@_);
-
-    #
-    #  Get the cache object.
-    #
-    my $cache = Singleton::Memcache->instance();
-
-    #
-    #  Delete recent comments.
-    #
-    $cache->delete("recent_comments");
-    $cache->delete("recent_comments_");
-    $cache->delete("recent_comments_10");
-    $cache->delete("recent_comments_20");
-    $cache->delete("recent_comments_30");
-
-    $cache->delete("reported_comments");
-    $cache->delete("reported_comments_");
-    $cache->delete("reported_comments_10");
-    $cache->delete("reported_comments_20");
-    $cache->delete("reported_comments_30");
-
-
-    #
-    #  Recent comments by user now wrong.
-    #
-    if ( defined( $class->{ 'username' } ) )
-    {
-        $cache->delete( "recent_comments_by_" . $class->{ 'username' } );
-    }
-
-    #
-    # See what we're resetting the cache from
-    if ( defined( $class->{ 'article' } ) )
-    {
-        $cache->delete( "comments_on_article_" . $class->{ 'article' } );
-        $cache->delete( "comment_feed_" . $class->{ 'article' } . "_a" );
-    }
-
-    if ( defined( $class->{ 'poll' } ) )
-    {
-
-        #
-        #  Both polls enabled and disabled.
-        #
-        $cache->delete( "comments_on_poll_" . $class->{ 'poll' } . "_0" );
-        $cache->delete( "comments_on_poll_" . $class->{ 'poll' } . "_1" );
-        $cache->delete( "comment_feed_" . $class->{ 'poll' } . "_p" );
-    }
-    if ( defined( $class->{ 'weblog' } ) )
-    {
-
-        #
-        #  Both weblogs enabled and disabled.
-        #
-        $cache->delete( "comments_on_weblog_" . $class->{ 'weblog' } . "_0" );
-        $cache->delete( "comments_on_weblog_" . $class->{ 'weblog' } . "_1" );
-        $cache->delete( "comment_feed_" . $class->{ 'weblog' } . "_w" );
-    }
 }
 
 

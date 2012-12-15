@@ -54,7 +54,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 use Singleton::Session;
 
 
@@ -104,17 +103,6 @@ sub commentCount
     die "No poll ID " if !defined($id);
 
     #
-    # See if the content is cached.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $count = $cache->get( "comment_count_on_poll_" . $id );
-    if ( defined($count) )
-    {
-        return ($count);
-    }
-
-
-    #
     # Get the database handle.
     #
     my $db = Singleton::DBI->instance();
@@ -126,11 +114,6 @@ sub commentCount
            'SELECT COUNT(*) FROM comments WHERE score>0 AND root=? AND type=?');
     $query->execute( $id, 'p' );
     $count = $query->fetchrow_array();
-
-    #
-    # Store the value in the cache.
-    #
-    $cache->set( "comment_count_on_poll_" . $id, $count );
 
     return ($count);
 
@@ -158,28 +141,7 @@ sub get
     die "No poll ID" if !defined($id);
 
     #
-    # First attempt to fetch it from the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-
-
-    my $question = $cache->get( "poll_title_" . $id );
-    my $total    = $cache->get( "poll_total_votes_" . $id );
-    my $answers  = $cache->get( "poll_answers_" . $id );
-    my $author   = $cache->get( "poll_author_" . $id );
-    my $date     = $cache->get( "poll_date_" . $id );
-
-    if ( defined($question) &&
-         defined($total) &&
-         defined($answers) &&
-         defined($author) &&
-         defined($date) )
-    {
-        return ( $question, $total, $answers, $author, $date );
-    }
-
-    #
-    # OK the cache fetch failed, get from the database instead.
+    # Get from the database.
     #
     my $db = Singleton::DBI->instance();
 
@@ -199,16 +161,6 @@ sub get
         'SELECT answer,votes,id FROM poll_answers WHERE poll_id=? ORDER BY id');
     $query2->execute($id);
     $answers = $query2->fetchall_arrayref();
-
-    #
-    # Update the values in the cache
-    #
-    $cache->set( "poll_title_" . $id,       $question );
-    $cache->set( "poll_total_votes_" . $id, $total );
-    $cache->set( "poll_answers_" . $id,     $answers );
-    $cache->set( "poll_author_" . $id,      $author );
-    $cache->set( "poll_date_" . $id,        $date );
-
 
     return ( $question, $total, $answers, $author, $date );
 }
@@ -262,12 +214,6 @@ sub vote
 
         if ($ip_voted)
         {
-
-            #
-            #  Invalidate our cache
-            #
-            $class->invalidateCache();
-
             # anon already voted - explain, suggest they create a user account
             return ( $ip_address, 0, 0 );
         }
@@ -307,12 +253,6 @@ sub vote
             );
             $q23->execute( $prev_vote, $id );
 
-
-            #
-            #  Invalidate our cache
-            #
-            $class->invalidateCache();
-
             return ( 0, $prev_vote, $choice );
         }
         else
@@ -323,12 +263,6 @@ sub vote
             $q25->execute($id);
         }
     }
-
-
-    #
-    #  Invalidate our cache
-    #
-    $class->invalidateCache();
 
     return ( 0, 0, 0 );
 }
@@ -353,17 +287,6 @@ sub getTitle
     die "No poll ID" if !defined($id);
 
     #
-    #  Attempt to fetch from the cache
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $title = "";
-    $title = $cache->get("poll_title_$id");
-    if ($title)
-    {
-        return ($title);
-    }
-
-    #
     #  Attempt to fetch from database.
     #
     my $db    = Singleton::DBI->instance();
@@ -373,14 +296,6 @@ sub getTitle
     my @ret = $sql->fetchrow_array();
     $title = $ret[0];
     $sql->finish();
-
-    #
-    #  Add to cache
-    #
-    if ( defined($title) )
-    {
-        $cache->set( "poll_title_$id", $title );
-    }
 
     return ($title);
 }
@@ -405,17 +320,6 @@ sub getVoteCount
     die "No poll ID" if !defined($id);
 
     #
-    #  Attempt to fetch from the cache
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $count = 0;
-    $count = $cache->get("poll_total_votes_$id");
-    if ( defined($count) )
-    {
-        return ($count);
-    }
-
-    #
     #  Attempt to fetch from database.
     #
     my $db    = Singleton::DBI->instance();
@@ -426,13 +330,6 @@ sub getVoteCount
     $count = $ret[0] || 0;
     $sql->finish();
 
-    #
-    #  Add to cache
-    #
-    if ( defined($count) )
-    {
-        $cache->set( "poll_total_votes_$id", $count );
-    }
 
     return ($count);
 }
@@ -450,18 +347,6 @@ sub invalidateCache
     my ($class) = (@_);
 
     my $id = $class->{ 'id' };
-
-    #
-    #  Flush the cached data we contain.
-    #
-    my $cache = Singleton::Memcache->instance();
-
-    $cache->delete( "comment_count_on_poll_" . $id );
-    $cache->delete( "poll_title_" . $id );
-    $cache->delete( "poll_total_votes_" . $id );
-    $cache->delete( "poll_answers_" . $id );
-    $cache->delete( "poll_author_" . $id );
-    $cache->delete( "poll_date_" . $id );
 }
 
 

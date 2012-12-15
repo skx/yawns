@@ -74,7 +74,6 @@ use HTML::Entities;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 use Singleton::Session;
 
 #
@@ -179,15 +178,7 @@ sub getTags
                                  ( !defined($type) ) );
 
 
-    #
-    #  Attempt to fetch from the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $tags  = $cache->get( "tags_on" . $root . "_" . $type );
-    if ( defined($tags) )
-    {
-        return ($tags);
-    }
+    my $tags;
 
     #
     # Failed to fetch from the cache, so get from the database.
@@ -213,13 +204,6 @@ sub getTags
     }
     $sql->finish();
 
-    #
-    #  Update the cache.
-    #
-    if ( defined($tags) )
-    {
-        $cache->set( "tags_on" . $root . "_" . $type, $tags );
-    }
 
     return ($tags);
 }
@@ -347,19 +331,6 @@ sub addTag
     $sql->execute( $tag, $root, $user_id, $type ) or die $db->errstr();
     $sql->finish();
 
-    #
-    #  Invalidate our cache
-    #
-    $class->invalidateCache();
-
-
-    #
-    #  Explicitly delete tags on this article/weblog/submission, and
-    # the feed of tags matching the given thing.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete( "tags_on" . $root . "_" . $type );
-    $cache->delete( "tag_feed_" . $tag );
 
     #
     #  Weblog caching.
@@ -452,16 +423,6 @@ sub deleteTags
     $sql->execute( $root, $type );
     $sql->finish();
 
-    #
-    #  Invalidate cache
-    #
-    $class->invalidateCache();
-
-    #
-    #  And the article specific ones.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete( "tags_on" . $root . "_" . $type );
 }
 
 
@@ -493,10 +454,6 @@ sub promoteSubmissionTags
       die "Failed to update tag type" . $dbi->errstr();
     $query->finish();
 
-    #
-    #  Flush our cache
-    #
-    $self->invalidateCache();
 }
 
 
@@ -516,15 +473,7 @@ sub getAllTags
 {
     my ( $class, $type ) = (@_);
 
-    #
-    #  Fetch from cache?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $tags  = $cache->get("all_tags");
-    if ( defined($tags) )
-    {
-        return ($tags);
-    }
+    my $tags;
 
     #
     # Get the database handle.
@@ -559,11 +508,6 @@ sub getAllTags
     }
     $sql->finish();
 
-    #
-    #  Update the cache
-    #
-    $cache->set( "all_tags", $tags );
-
     return ($tags);
 }
 
@@ -579,15 +523,7 @@ sub getAllTagsByType
 {
     my ( $class, $type ) = (@_);
 
-    #
-    #  Fetch from cache?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $tags  = $cache->get("all_tags_$type");
-    if ( defined($tags) )
-    {
-        return ($tags);
-    }
+    my $tags;
 
     #
     # Get the database handle.
@@ -622,11 +558,6 @@ sub getAllTagsByType
     }
     $sql->finish();
 
-    #
-    #  Update the cache
-    #
-    $cache->set( "all_tags_$type", $tags );
-
     return ($tags);
 }
 
@@ -650,16 +581,7 @@ sub getRecent
     #
     $count = 10 if ( !defined($count) );
 
-
-    #
-    #  Fetch from cache?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $tags  = $cache->get("recent_tags_$count");
-    if ( defined($tags) )
-    {
-        return ($tags);
-    }
+    my $tags;
 
     #
     # Get the database handle.
@@ -691,11 +613,6 @@ sub getRecent
     }
     $sql->finish();
 
-
-    #
-    #  Update the cache
-    #
-    $cache->set( "recent_tags_$count", $tags );
     return ($tags);
 }
 
@@ -919,25 +836,6 @@ sub getRelatedTags
 sub invalidateCache
 {
     my ($class) = (@_);
-
-
-    #
-    #  Clean the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("all_tags");
-
-    # different type of all tags.
-    my @types = $class->getTagTypes();
-    foreach my $t (@types)
-    {
-        $cache->delete( "all_tags_" . $t );
-    }
-
-    $cache->delete("recent_tags");
-    $cache->delete("recent_tags_10");
-    $cache->delete("recent_tags_20");
-    $cache->delete("recent_tags_30");
 }
 
 

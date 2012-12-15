@@ -51,7 +51,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 
 use Yawns::Articles;
 use Yawns::Comments;
@@ -96,15 +95,7 @@ sub get
     #
     my $id = $class->{ id };
 
-    #
-    #  Fetch from cache, if available.
-    #
-    my $cache   = Singleton::Memcache->instance();
-    my $article = $cache->get("article_$id");
-    if ($article)
-    {
-        return ($article);
-    }
+    my $article;
 
     #
     # find the number of articles.
@@ -184,10 +175,6 @@ sub get
                         suspended      => $thisarticle[10],
                       );
 
-    #
-    #  Store in cache
-    #
-    $cache->set( "article_$id", \%the_article );
 
     return ( \%the_article );
 }
@@ -235,10 +222,6 @@ sub edit
 
     $sql2->execute( $title, $author, $leadtext, $body, $words, $id );
 
-    #
-    #  Invalidate previous contents.Delete title from the cache.
-    #
-    $class->invalidateCache();
 }
 
 
@@ -262,14 +245,6 @@ sub create
     my $body   = $parameters{ 'body' };
     my $author = $parameters{ 'author' };
     my $id     = $parameters{ 'id' };
-
-    #
-    # We need an articles object to calculate the next
-    # free ID, if one is not defined.  Otherwise we need
-    # it to later invalidate the cache.
-    #
-    my $articles = Yawns::Articles->new();
-
 
     #
     #  Generate the new article number if one isn't given.
@@ -309,40 +284,9 @@ sub create
     $sql->finish();
 
     #
-    # Article count is now wrong.
-    #
-    $articles->invalidateCache();
-
-    #
-    # Total stats is now wrong.
-    #
-    my $stats = Yawns::Stats->new();
-    $stats->invalidateCache();
-
-
-    #
-    # The *previous* and *next* article will now have an incorrect
-    # "next article" navigation data stored.
-    #
-    my $prev = Yawns::Article->new( id => ( $id - 1 ) );
-    $prev->invalidateCache();
-
-    my $next = Yawns::Article->new( id => ( $id + 1 ) );
-    $next->invalidateCache();
-
-    #
-    #  Invalidate the authors article history
-    #
-    my $user = Yawns::User->new( username => $author );
-    $user->invalidateCache();
-
-
-    #
     # We are now a new article ID.
     #
     $class->{ id } = $id;
-
-    $class->invalidateCache();
 
     return ($id);
 }
@@ -399,42 +343,6 @@ sub delete
     my $tags = Yawns::Tags->new();
     $tags->deleteTags( article => $id );
 
-
-    #
-    # Flush the caches.
-    #
-    $class->invalidateCache();
-
-    #
-    # Article count is now wrong.
-    #
-    my $articles = Yawns::Articles->new();
-    $articles->invalidateCache();
-    my $stats = Yawns::Stats->new();
-    $stats->invalidateCache();
-
-
-    #
-    # The *previous* and *next* article will now have an incorrect
-    # "next article" navigation data stored.
-    #
-    my $article = Yawns::Article->new( id => ( $id - 1 ) );
-    $article->invalidateCache();
-    $article = Yawns::Article->new( id => ( $id + 1 ) );
-    $article->invalidateCache();
-
-    #
-    # Comments on this article will be wrong.
-    #
-    my $comments = Yawns::Comments->new( article => $id );
-    $comments->invalidateCache();
-
-    #
-    #
-    #  Invalidate the user's article history
-    #
-    my $user = Yawns::User->new( username => $author );
-    $user->invalidateCache();
 }
 
 
@@ -457,13 +365,7 @@ sub getTitle
     #
     #  Attempt to fetch from the cache
     #
-    my $cache = Singleton::Memcache->instance();
     my $title = "";
-    $title = $cache->get("article_title_$id");
-    if ($title)
-    {
-        return ($title);
-    }
 
     #
     #  Attempt to fetch from database.
@@ -475,14 +377,6 @@ sub getTitle
     my @ret = $sql->fetchrow_array();
     $title = $ret[0];
     $sql->finish();
-
-    #
-    #  Add to cache
-    #
-    if ( defined($title) )
-    {
-        $cache->set( "article_title_$id", $title );
-    }
 
     return ($title);
 }
@@ -551,13 +445,6 @@ sub addRelated
 
     $sql->execute( $id, $title, $link );
     $sql->finish();
-
-    #
-    #  Flush the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("related_links_$id");
-
 }
 
 
@@ -593,11 +480,6 @@ sub deleteRelated
 
     $db->do("DELETE FROM related WHERE article=$article AND id=$id");
 
-    #
-    #  Flush the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("related_links_$article");
 }
 
 
@@ -638,26 +520,6 @@ sub getRelated
     }
 
     #
-    #  Memory cache
-    #
-    my $cache;
-
-    #
-    #  Attempt to fetch from the cache for non-administrators.
-    #
-    if ( !$related_admin )
-    {
-        $cache = Singleton::Memcache->instance();
-        my $rel;
-        $rel = $cache->get("related_links_$id");
-        if ( defined($rel) )
-        {
-            return ($rel);
-        }
-    }
-
-
-    #
     # Get database handle
     #
     my $db = Singleton::DBI->instance();
@@ -687,17 +549,6 @@ sub getRelated
                  id            => $details[3],
                  related_admin => $related_admin,
               } );
-    }
-
-    #
-    # Update the cache.
-    #
-    if ( !$related_admin )
-    {
-        if ( defined($related) )
-        {
-            $cache->set( "related_links_$id", $related );
-        }
     }
 
     # return the requested values
@@ -735,13 +586,6 @@ sub _count_words
 sub invalidateCache
 {
     my ($class) = (@_);
-
-    my $id = $class->{ id };
-
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("article_title_$id");
-    $cache->delete("related_links_$id");
-    $cache->delete("article_$id");
 }
 
 1;

@@ -60,7 +60,7 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
+
 
 
 =head2 new
@@ -89,16 +89,6 @@ sub new
 sub getStats
 {
     my ($class) = (@_);
-
-    #
-    # Fetch from cache, if present.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $data  = $cache->get("hof");
-    if ($data)
-    {
-        return ($data);
-    }
 
     #
     #  Get the database handle
@@ -187,11 +177,6 @@ sub getStats
                        weblog_count     => $weblog_count,
                      );
 
-    #
-    #  Update cache
-    #
-    $cache->set( "hof", \%stats_info );
-
     return ( \%stats_info );
 }
 
@@ -207,13 +192,6 @@ sub getStats
 sub invalidateCache
 {
     my ($class) = (@_);
-
-    #
-    #  Get the cache object.
-    #
-    my $cache = Singleton::Memcache->instance();
-
-    $cache->delete("hof");
 
 }
 

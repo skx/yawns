@@ -30,4 +30,4 @@ install libtext-textile-perl
 install liburi-find-perl
 install libsys-cpuload-perl
 install libdbi-mysql-perl
-
+install libcache-memcached-perl

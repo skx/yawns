@@ -66,7 +66,6 @@ use HTML::Entities;
 #
 use HTML::Balance;
 use Singleton::DBI;
-use Singleton::Memcache;
 use Yawns::Stats;
 use Yawns::Tags;
 use Yawns::User;
@@ -200,43 +199,6 @@ sub add
     my $weblogs = Yawns::Weblogs->new( username => $username );
     $weblogs->invalidateCache();
 
-    #
-    # Weblog feed is now wrong.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("weblog_feed_$username");
-
-
-    #
-    #  Invalidate recent cache
-    #
-    {
-        my $count = $class->count();
-        while ( $count > 0 )
-        {
-            $cache->delete( "weblog_" . $username . "_recent_" . $count );
-            $count -= 1;
-        }
-    }
-
-    #
-    #  We need to invalidate the user's *previous* weblog entry, since
-    # this will now have an entry following it - so the "next" entry
-    # will be wrong.
-    #
-    my $i = $count - 1;
-    $class->{ 'id' }       = $i;
-    $class->{ 'username' } = $username;
-    my $g = $class->getGID();
-
-    if ( defined($g) )
-    {
-        $cache->delete( "weblog_entry_" . $g . "_0" );
-        $cache->delete( "weblog_entry_" . $g . "_1" );
-    }
-
-    $cache->delete( "weblog_feed_" . $username );
-
     return ($count);
 }
 
@@ -315,27 +277,6 @@ sub edit
     #
     $class->{ 'gid' } = $gid;
 
-    #
-    #  Invalidate recent cache
-    #
-    {
-        my $cache = Singleton::Memcache->instance();
-
-        # Weblog feed is wrong.
-        $cache->delete( "weblog_feed_" . $username );
-
-        my $count = $class->count();
-        while ( $count > 0 )
-        {
-            $cache->delete( "weblog_" . $username . "_recent_" . $count );
-            $count -= 1;
-        }
-    }
-
-    #
-    # Invalidate ourself.
-    #
-    $class->invalidateCache();
 }
 
 
@@ -381,32 +322,6 @@ sub remove
     my $user = Yawns::User->new( username => $username );
     $user->invalidateCache();
 
-    #
-    #  Weblog feed is now incorrect.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete( "weblog_feed_" . $username );
-
-
-    #
-    #  Save the username and GID, then invalidate
-    #
-    $class->{ 'username' } = $user;
-    $class->{ 'gid' }      = $gid;
-    $class->invalidateCache();
-
-    #
-    #  Invalidate recent cache
-    #
-    {
-
-        my $count = $class->count();
-        while ( $count > 0 )
-        {
-            $cache->delete( "weblog_" . $username . "_recent_" . $count );
-            $count -= 1;
-        }
-    }
 }
 
 
@@ -431,13 +346,7 @@ sub getTitle
     #
     #  Attempt to fetch from the cache
     #
-    my $cache = Singleton::Memcache->instance();
     my $title = "";
-    $title = $cache->get("weblog_title_$gid");
-    if ($title)
-    {
-        return ($title);
-    }
 
 
     #
@@ -452,14 +361,6 @@ sub getTitle
     $query->execute($gid) or die "Failed to get weblog title " . $db->errstr();
 
     $title = $query->fetchrow_array();
-
-    #
-    #  Update the cache
-    #
-    if ( defined($title) )
-    {
-        $cache->set( "weblog_title_$gid", $title );
-    }
 
     return ($title);
 }
@@ -524,17 +425,7 @@ sub getScore
 
     die "No gid specified" if ( !defined($gid) );
 
-    #
-    #  Attempt to fetch from the cache
-    #
-    my $cache = Singleton::Memcache->instance();
     my $score = undef;
-    $score = $cache->get("weblog_score_$gid");
-    if ( defined($score) )
-    {
-        return ($score);
-    }
-
 
     #
     # Get the database handle.
@@ -548,15 +439,6 @@ sub getScore
     $query->execute($gid) or die "Failed to get weblog score " . $db->errstr();
 
     $score = $query->fetchrow_array();
-
-    #
-    #  Update the cache
-    #
-    if ( defined($score) )
-    {
-        $cache->set( "weblog_score_$gid", $score );
-    }
-
     return ($score);
 
 }
@@ -588,13 +470,7 @@ sub getCommentCount
     #
     #  Attempt to fetch from the cache
     #
-    my $cache = Singleton::Memcache->instance();
     my $count = "";
-    $count = $cache->get("weblog_comment_count_$gid");
-    if ($count)
-    {
-        return ($count);
-    }
 
 
     #
@@ -607,14 +483,6 @@ sub getCommentCount
 
     $count = $query->fetchrow_array();
     $query->finish();
-
-    #
-    #  Update the cache
-    #
-    if ( defined($count) )
-    {
-        $cache->set( "weblog_comment_count_$gid", $count );
-    }
 
     return ($count);
 }
@@ -646,13 +514,7 @@ sub getOwner
     #
     #  Attempt to fetch from the cache
     #
-    my $cache = Singleton::Memcache->instance();
     my $name  = "";
-    $name = $cache->get("weblog_owner_$gid");
-    if ($name)
-    {
-        return ($name);
-    }
 
     #
     # Find the user who posted this entry.
@@ -661,15 +523,6 @@ sub getOwner
     $query->execute( $gid, );
 
     $name = $query->fetchrow_array();
-
-    #
-    #  Update the cache
-    #
-    if ( defined($name) )
-    {
-        $cache->set( "weblog_owner_$gid", $name );
-    }
-
     return ($name);
 }
 
@@ -691,13 +544,7 @@ sub getLink
     my $gid = $parameters{ 'gid' } || $self->{ 'gid' };
     die "No gid specified" if ( !defined($gid) );
 
-    my $cache = Singleton::Memcache->instance();
     my $link  = '';
-    $link = $cache->get("weblog_link_$gid");
-    if ($link)
-    {
-        return ($link);
-    }
 
     #
     #  Get the owner + ID.
@@ -709,11 +556,6 @@ sub getLink
     #  Build up the link.
     #
     $link = "/users/$owner/weblog/$id";
-
-    #
-    #  Store in cache.
-    #
-    $cache->set( "weblog_link_$gid", $link );
 
     return ($link);
 }
@@ -739,15 +581,7 @@ sub getID
     #
     #  Attempt to fetch from the cache
     #
-    my $cache = Singleton::Memcache->instance();
     my $id    = "";
-    $id = $cache->get("weblog_id_$gid");
-    if ($id)
-    {
-        return ($id);
-    }
-
-
 
     #
     # Get the database handle.
@@ -759,14 +593,6 @@ sub getID
     $query->execute( $gid, );
 
     $id = $query->fetchrow_array();
-
-    #
-    #  Update the cache
-    #
-    if ( defined($id) )
-    {
-        $cache->set( "weblog_id_$gid", $id );
-    }
 
     return ($id);
 }
@@ -832,26 +658,8 @@ sub getSingleWeblogEntry
         die "No GID";
     }
 
+    my $entry;
 
-    #
-    #  OK now we have a GID.  Test to see if we can get the entry
-    # from the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $entry = $cache->get( "weblog_entry_" . $gid . "_" . $editable );
-
-    #
-    #  If we found it in the cache, return it.
-    #
-    if ( defined($entry) )
-    {
-
-        #
-        #  Make sure the entry read count is correct
-        #
-        @$entry[0]->{ 'read' } = $class->getReadCount( gid => $gid );
-        return ($entry);
-    }
 
     #
     #  Count of entries.
@@ -966,11 +774,6 @@ sub getSingleWeblogEntry
     $sql->finish();
 
     #
-    #  Update the cache.
-    #
-    $cache->set( "weblog_entry_" . $gid . "_" . $editable, $entry );
-
-    #
     #  Make sure the entry read count is correct
     #
     @$entry[0]->{ 'read' } = $class->getReadCount( gid => $gid );
@@ -998,7 +801,6 @@ sub getReadCount
     #  Get the count
     #
     my $db = Singleton::DBI->instance();
-
     my $sql = $db->prepare("SELECT readcount FROM weblogs WHERE gid=?");
     $sql->execute($gid) or die "Failed to get read count " . $db->errstr();
     my $count = $sql->fetchrow_array();
@@ -1065,9 +867,8 @@ sub getEntries
     #
     #  See if these are in the cache.
     #
-    my $cache   = Singleton::Memcache->instance();
-    my $entries = $cache->get( "weblog_" . $username . "_recent_" . $start );
-    return $entries if ( defined($entries) );
+    my $entries;
+
 
 
     #
@@ -1229,13 +1030,6 @@ sub getEntries
     # Cleanup
     $sql->finish();
 
-
-    #
-    #  Store in the cache.
-    #
-    $cache->set( "weblog_" . $username . "_recent_" . $start, $entries )
-      if ( defined($entries) );
-
     return ($entries);
 }
 
@@ -1257,12 +1051,7 @@ sub getWeblogFeed
     #
     # Fetch from the cache first.
     #
-    my $cache = Singleton::Memcache->instance();
-    my $feed  = $cache->get( "weblog_feed_" . $username );
-    if ( defined($feed) )
-    {
-        return ($feed);
-    }
+    my $feed;
 
     #
     #  Find the entries.
@@ -1354,12 +1143,6 @@ sub getWeblogFeed
 
     }
 
-    #
-    # Store in the cache.
-    #
-    $cache->set( "weblog_feed_" . $username, $feed )
-      if ( defined($feed) );
-
     return ($feed);
 }
 
@@ -1374,42 +1157,6 @@ sub getWeblogFeed
 sub invalidateCache
 {
     my ( $class, %params ) = (@_);
-
-    my $gid  = $class->{ 'gid' }      || $params{ 'gid' };
-    my $user = $class->{ 'username' } || $params{ 'username' };
-
-    die "No GID " if ( !defined($gid) );
-
-    my $count = 0;
-    $class->{ 'username' } = $user;
-    $count = $class->count();
-
-    #
-    #  Flush the cached data
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("weblog_title_$gid");
-    $cache->delete("weblog_score_$gid");
-    $cache->delete("weblog_owner_$gid");
-    $cache->delete("weblog_id_$gid");
-    $cache->delete("weblog_comment_count_$gid");
-    $cache->delete( "weblog_entry_$gid" . "_0" );    # not editable.
-    $cache->delete( "weblog_entry_$gid" . "_1" );    # editable
-
-    #
-    #  This is a hack.
-    #
-    if ( defined($user) )
-    {
-        $cache->delete( "weblog_feed_" . $user );
-
-        while ( $count > 0 )
-        {
-            $cache->delete( "weblog_" . $user . "_recent_" . $count );
-            $count -= 1;
-        }
-
-    }
 }
 
 

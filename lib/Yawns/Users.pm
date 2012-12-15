@@ -54,7 +54,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 use Yawns::User;
 
 
@@ -243,16 +242,6 @@ sub count
 {
     my ($class) = (@_);
 
-    #
-    #  Is this information cached?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $count = $cache->get("user_count");
-    if ( defined($count) )
-    {
-        return ($count);
-    }
-
 
     #
     #  Get the database handle.
@@ -275,13 +264,7 @@ sub count
     #
     # Get the result
     #
-    $count = $query->fetchrow_array();
-
-    #
-    # Update the cache.
-    #
-    $cache->set( "user_count", $count );
-
+    my $count = $query->fetchrow_array();
 
     #
     # Cleanup.
@@ -391,12 +374,6 @@ sub getRecent
 sub invalidateCache
 {
     my ($class) = (@_);
-
-    #
-    #  Flush the cached count of users.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("user_count");
 
 }
 

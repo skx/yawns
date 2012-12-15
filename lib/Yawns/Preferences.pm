@@ -58,7 +58,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 
 use Yawns::User;
 
@@ -113,13 +112,6 @@ sub getAll
     my %results;
 
     #
-    #  Fetch from the cache first, if present.
-    #
-    my $cache  = Singleton::Memcache->instance();
-    my $cached = $cache->get("preferences_all_$username");
-    return $cached if ( defined $cached );
-
-    #
     #  Get the database handle.
     #
     my $db = Singleton::DBI->instance();
@@ -146,8 +138,6 @@ sub getAll
 
     $sql->finish();
 
-    $cache->set( "preferences_all_$username", \%results );
-
     return ( \%results );
 }
 
@@ -171,20 +161,10 @@ sub getPreference
 
 
     #
-    #  Fetch from the cache first, if present.
+    #  Get them..
     #
-    my $cache  = Singleton::Memcache->instance();
-    my $cached = $cache->get( "preference_" . $key . "_$username" );
-    return $cached if ( defined $cached );
-
     my $all = $class->getAll($key);
-
-    #
-    #  Set in cache
-    #
     my $val = $all->{ $key };
-    $cache->set( "preference_" . $key . "_$username", $val )
-      if ( defined($val) );
 
     return ($val);
 }
@@ -239,24 +219,6 @@ sub setPreference
         $sql->finish();
     }
 
-    #
-    #  Flush cache
-    #
-    $class->invalidateCache();
-
-    #
-    #  Store or delete from the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    if ( defined($value) )
-    {
-        $cache->set( "preference_" . $name . "_$username", $value );
-    }
-    else
-    {
-        $cache->delete( "preference_" . $name . "_$username" );
-    }
-
 }
 
 
@@ -292,10 +254,6 @@ sub deleteByUser
     $sql->execute($id) or die "Failed to delete " . $dbi->errstr();
     $sql->finish();
 
-    #
-    #  Flush cache
-    #
-    $class->invalidateCache();
 }
 
 
@@ -311,13 +269,6 @@ sub invalidateCache
     my ($class) = (@_);
 
     my $name = $class->{ 'username' };
-
-    #
-    #  Flush the cached data
-    #
-    my $cache = Singleton::Memcache->instance();
-
-    $cache->delete("preferences_all_$name");
 }
 
 

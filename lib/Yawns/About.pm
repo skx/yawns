@@ -56,7 +56,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 
 
 
@@ -104,15 +103,9 @@ sub get
 
 
     #
-    #  Attempt to fetch from the cache
+    #  The text
     #
-    my $cache = Singleton::Memcache->instance();
     my $text  = "";
-    $text = $cache->get("about_$name");
-    if ($text)
-    {
-        return ($text);
-    }
 
     #
     #  Objects we use.
@@ -124,11 +117,6 @@ sub get
     $sql->execute($name);
     $text = $sql->fetchrow_array();
     $sql->finish();
-
-    if ( defined($text) )
-    {
-        $cache->set( "about_$name", $text );
-    }
 
     # return
     return ($text);
@@ -177,10 +165,6 @@ sub set
     $sql->execute( $name, $text );
     $sql->finish();
 
-    #
-    # Remove the old cached text.
-    #
-    $class->invalidateCache( name => $name );
 }
 
 
@@ -215,11 +199,6 @@ sub delete
     my $sql = $db->prepare("delete from about_pages where id = ?");
     $sql->execute($name);
     $sql->finish();
-
-    #
-    # Remove the old cached text.
-    #
-    $class->invalidateCache( name => $name );
 }
 
 
@@ -277,14 +256,6 @@ sub invalidateCache
 {
     my ( $class, %parameters ) = (@_);
 
-    my $name = $parameters{ 'name' };
-
-    #
-    #  Flush the cached data
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("about_pages");
-    $cache->delete("about_$name");
 }
 
 

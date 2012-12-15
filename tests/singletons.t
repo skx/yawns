@@ -18,14 +18,8 @@ require_ok( 'Singleton::CGI' );
 BEGIN { use_ok( 'Singleton::DBI' ); }
 require_ok( 'Singleton::DBI' );
 
-BEGIN { use_ok( 'Singleton::Memcache' ); }
-require_ok( 'Singleton::Memcache' );
-
 BEGIN { use_ok( 'Singleton::Session' ); }
 require_ok( 'Singleton::Session' );
-
-BEGIN { use_ok( 'Singleton::Redis' ); }
-require_ok( 'Singleton::Redis' );
 
 
 #
@@ -88,40 +82,6 @@ ok( $form->param( $key, $value ), "Parameter set" );
 ok( $form->param( $key ) eq $value, "Parameter retrieved OK" );
 
 
-
-#
-#  Connect to Memcached
-#
-my $cache = Singleton::Memcache->instance();
-
-#
-# Is this the right object type?
-#
-isa_ok( $cache, "Singleton::Memcache" );
-
-#
-#  Can we set a value?
-#
-ok( $cache->set( "foo", "bar" ), "Stored value in Memcache",  );
-
-#
-#  May we retrieve it?
-#
-ok( $cache->get( "foo" ) eq "bar", "Retrieved from Memcached" );
-
-#
-#  Delete it?
-#
-ok( $cache->delete("foo" ), "Removed OK" );
-
-#
-#  Now is it gone?
-#
-ok( ! defined $cache->get( "foo" ), "Key removed from Memcached" );
-
-$cache->disconnect();
-
-
 #
 # Get Session object.
 #
@@ -141,37 +101,3 @@ ok( $session->param( $key ) eq $value, "Session parameter retrieved OK" );
 
 
 
-#
-#  Redis
-#
-#
-#  Connect to Memcached
-#
-my $r = Singleton::Redis->instance();
-
-#
-# Is this the right object type?
-#
-isa_ok( $r, "Singleton::Redis" );
-
-#
-#  Can we set a value?
-#
-ok( $r->set( "foo", "bar" ), "Stored value in Redis",  );
-
-#
-#  May we retrieve it?
-#
-ok( $r->get( "foo" ) eq "bar", "Retrieved from Redis" );
-
-#
-#  Delete it?
-#
-ok( $r->delete("foo" ), "Removed OK" );
-
-#
-#  Now is it gone?
-#
-ok( ! defined $r->get( "foo" ), "Key removed from Redis" );
-
-$r->disconnect();

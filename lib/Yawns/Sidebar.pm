@@ -55,7 +55,6 @@ use HTML::Template;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 use Singleton::Session;
 
 use Yawns::Adverts;

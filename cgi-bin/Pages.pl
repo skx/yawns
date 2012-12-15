@@ -6016,12 +6016,6 @@ sub edit_weblog
         }
 
 
-        #
-        # Invalidate recent weblogs, just in case this was a recent one.
-        #
-        my $weblogs = Yawns::Weblogs->new();
-        $weblogs->invalidateCache();
-
         $saved = 1;
     }
     else
@@ -6986,17 +6980,6 @@ sub tag_feed
     my $tag  = $form->param("tag_feed");
 
     #
-    #  If this is in the cache return it directly.
-    #
-    my $memcache = Singleton::Memcache->instance();
-    my $value    = $memcache->get( "tag_feed_" . $tag );
-    if ( defined($value) )
-    {
-        print $value;
-        return;
-    }
-
-    #
     # Get the articles
     #
     my $holder   = Yawns::Tags->new();
@@ -7101,7 +7084,6 @@ sub tag_feed
     #  Store the complete output page in the memcache.
     #
     $value = $template->output();
-    $memcache->set( "tag_feed_" . $tag, $value );
 
     # generate the output
     print $value;

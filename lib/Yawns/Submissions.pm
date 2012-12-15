@@ -61,7 +61,6 @@ use HTML::Entities;
 #
 use conf::SiteConfig;
 use Singleton::DBI;
-use Singleton::Memcache;
 
 use Yawns::Article;
 use Yawns::Date;
@@ -135,30 +134,12 @@ sub articleCount
     my ($class) = (@_);
 
     #
-    #  Fetch from cache?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $count = $cache->get("pending_article_count");
-    if ( defined($count) )
-    {
-        return ($count);
-    }
-
-    #
     # Get the count of pending items from the database.
     #
     my $db    = Singleton::DBI->instance();
     my $query = $db->prepare('SELECT COUNT(id) FROM submissions');
     $query->execute();
-    $count = $query->fetchrow_array();
-
-    #
-    #  Update cache
-    #
-    if ( defined($count) )
-    {
-        $cache->set( "pending_article_count", $count );
-    }
+    my $count = $query->fetchrow_array();
 
     return ($count);
 }
@@ -191,16 +172,6 @@ sub articleCountByUsername
 
 
     #
-    #  Fetch from cache?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $count = $cache->get( "pending_article_count_by_" . $username );
-    if ( defined($count) )
-    {
-        return ($count);
-    }
-
-    #
     # Get the count of pending items from the database.
     #
     my $db = Singleton::DBI->instance();
@@ -208,15 +179,7 @@ sub articleCountByUsername
         'SELECT COUNT(a.id) FROM submissions AS a INNER JOIN users AS b WHERE a.user_id=b.id AND b.username=?'
     );
     $query->execute($username) or die "Failed to execute: " . $db->errstr();
-    $count = $query->fetchrow_array();
-
-    #
-    #  Update cache
-    #
-    if ( defined($count) )
-    {
-        $cache->set( "pending_article_count_by_" . $username, $count );
-    }
+    my $count = $query->fetchrow_array();
 
     return ($count);
 }
@@ -238,16 +201,7 @@ sub articlesByUser
     #  Find the username
     #
     my $username = $class->{ username };
-
-    #
-    #  See if the details are in the cache first.
-    #
-    my $cache   = Singleton::Memcache->instance();
-    my $details = $cache->get( "pending_articles_" . $username );
-    if ( defined($details) )
-    {
-        return ($details);
-    }
+    my $details;
 
 
     #
@@ -285,12 +239,6 @@ sub articlesByUser
 
     # Finished with the query.
     $sql->finish();
-
-    #
-    #  Store in the cache
-    #
-    $cache->set( "pending_articles_" . $username, $submissions )
-      if defined($submissions);
 
     # return the requested values
     return ($submissions);
@@ -334,15 +282,6 @@ sub pollCount
 {
     my ($class) = (@_);
 
-    #
-    #  Fetch from cache?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $count = $cache->get("pending_poll_count");
-    if ( defined($count) )
-    {
-        return ($count);
-    }
 
     #
     # Get the count of pending items from the database.
@@ -350,15 +289,7 @@ sub pollCount
     my $db    = Singleton::DBI->instance();
     my $query = $db->prepare('SELECT COUNT(id) FROM poll_submissions');
     $query->execute();
-    $count = $query->fetchrow_array();
-
-    #
-    #  Update cache
-    #
-    if ( defined($count) )
-    {
-        $cache->set( "pending_poll_count", $count );
-    }
+    my $count = $query->fetchrow_array();
 
     return ($count);
 }
@@ -527,16 +458,6 @@ sub getArticleFeed
 {
     my ($class) = (@_);
 
-    #
-    #  See if this is cached first.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $list  = $cache->get("pending_articles");
-    if ($list)
-    {
-        return ($list);
-    }
-
 
     #
     # Not cached, so fetch from the database.
@@ -555,6 +476,7 @@ sub getArticleFeed
     $sql->bind_columns( undef, \$id, \$title, \$author, \$bodytext );
 
 
+    my $list;
 
     #
     #  Process each result.
@@ -572,11 +494,6 @@ sub getArticleFeed
               } );
     }
     $sql->finish();
-
-    #
-    #  Store in the cache
-    #
-    $cache->set( "pending_articles", $list );
 
     #
     # Return the data.
@@ -659,11 +576,6 @@ sub addArticle
                         );
     }
 
-
-    #
-    # Flush our cache.
-    #
-    $class->invalidateCache();
 
     #
     # Return the new submission ID, which is useful for testing.
@@ -859,12 +771,6 @@ sub updateSubmission
     }
 
 
-    #
-    #  Flush the cache of the previous authors details and the
-    # current author.
-    #
-    $self->invalidateCache( $old{ 'author' } );
-    $self->invalidateCache($author);
 }
 
 
@@ -981,10 +887,6 @@ sub rejectArticle
     $notes->deleteSubmissionNotes($id);
 
 
-    #
-    # Flush our cache.
-    #
-    $class->invalidateCache();
 }
 
 
@@ -1116,11 +1018,6 @@ sub addPoll
 
 
     #
-    # Flush our cache.
-    #
-    $class->invalidateCache();
-
-    #
     # Return the new submission ID, which is useful for testing.
     #
     return ($num);
@@ -1158,10 +1055,6 @@ sub rejectPoll
       $db->prepare("DELETE FROM poll_submissions_answers WHERE poll_id=?");
     $sql2->execute($id);
 
-    #
-    #  Invalidate poll count
-    #
-    $class->invalidateCache();
 }
 
 
@@ -1234,10 +1127,6 @@ sub editPendingPoll
 
     }
 
-    #
-    #  Invalidate our cache.
-    #
-    $self->invalidateCache();
 }
 
 
@@ -1342,26 +1231,6 @@ sub postPoll
 sub invalidateCache
 {
     my ( $class, $username ) = (@_);
-
-    #
-    #  Flush the cached count of users.
-    #
-    my $cache = Singleton::Memcache->instance();
-
-
-    $cache->delete("pending_article_count");
-    $cache->delete("pending_poll_count");
-    $cache->delete("pending_articles");
-
-    #
-    #  Flush the per-user cache
-    #
-    my $name = $username || $class->{ 'username' };
-    if ( defined($name) )
-    {
-        $cache->delete( "pending_articles_" . $name );
-        $cache->delete( "pending_article_count_by_" . $name );
-    }
 }
 
 

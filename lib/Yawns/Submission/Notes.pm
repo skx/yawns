@@ -71,7 +71,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 use Yawns::User;
 use Yawns::Submissions;
 
@@ -143,8 +142,6 @@ sub addSubmissionNote
       die "Failed to insert " . $dbi->errstr();
     $sql->finish();
 
-    # Flush cached data
-    $self->invalidateCache($submission);
 }
 
 
@@ -161,13 +158,6 @@ sub getSubmissionNotes
 
     # Make sure we have a submission ID.
     die "No submission" unless ( defined $submission );
-
-    #
-    #  Fetch from the cache first.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $notes = $cache->get( "submission_notes_" . $submission ) || undef;
-    return ($notes) if ( defined($notes) );
 
     #
     #  Get from the database.
@@ -188,6 +178,8 @@ sub getSubmissionNotes
     my ( $username, $note, $ondate );
     $sql->bind_columns( undef, \$username, \$note, \$ondate );
 
+    my $notes;
+
     #
     #  Store.
     #
@@ -207,12 +199,6 @@ sub getSubmissionNotes
 
     # Cleanup
     $sql->finish();
-
-    #
-    #  Update the cache.
-    #
-    $cache->set( "submission_notes_" . $submission, $notes )
-      if ( defined($notes) );
 
     return ($notes);
 }
@@ -244,10 +230,6 @@ sub deleteSubmissionNotes
     $sql->execute($submission);
     $sql->finish();
 
-    #
-    #  Flush any cached submission notes we might have.
-    #
-    $self->invalidateCache($submission);
 }
 
 
@@ -262,11 +244,6 @@ sub invalidateCache
 {
     my ( $class, $submission ) = (@_);
 
-    #
-    #  Flush any cached data we might contain.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete( "submission_notes_" . $submission );
 }
 
 

@@ -59,7 +59,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 use Singleton::Session;
 
 
@@ -131,13 +130,6 @@ sub send
         $num = $db->{ mysql_insertid };
     }
 
-    #
-    #  Invalidate the cache of the recipient so that they see
-    # the new message.
-    #
-    my $msg = Yawns::Messages->new( username => $to );
-    $msg->invalidateCache();
-
     return ($num);
 }
 
@@ -156,18 +148,6 @@ sub messageCounts
     my $username = $self->{ 'username' };
 
     #
-    #  Fetch from the cache first.
-    #
-    my $cache  = Singleton::Memcache->instance();
-    my $total  = $cache->get("total_messages_for_$username");
-    my $unread = $cache->get("unread_messages_for_$username");
-
-    if ( defined($total) && defined($unread) )
-    {
-        return ( $unread, $total );
-    }
-
-    #
     # Get from the database.
     #
     my $db = Singleton::DBI->instance();
@@ -178,7 +158,7 @@ sub messageCounts
     my $totalQ =
       $db->prepare('SELECT COUNT(*) FROM messages WHERE recipient=?');
     $totalQ->execute($username);
-    $total = $totalQ->fetchrow_array();
+    my $total = $totalQ->fetchrow_array();
     $totalQ->finish();
 
     #
@@ -187,14 +167,8 @@ sub messageCounts
     my $unreadQ = $db->prepare(
                 'SELECT COUNT(*) FROM messages WHERE recipient=? AND status=?');
     $unreadQ->execute( $username, "new" );
-    $unread = $unreadQ->fetchrow_array();
+    my $unread = $unreadQ->fetchrow_array();
     $unreadQ->finish();
-
-    #
-    #  Store in the cache
-    #
-    $cache->set( "total_messages_for_$username",  $total );
-    $cache->set( "unread_messages_for_$username", $unread );
 
     return ( $unread, $total );
 }
@@ -286,11 +260,6 @@ sub markRead
     $sql->execute( $username, $id );
     $sql->finish();
 
-    #
-    #  Invalidate cache.
-    #
-    $self->invalidateCache();
-
 }
 
 
@@ -324,10 +293,6 @@ sub markReplied
     $sql2->execute( $username, $id );
     $sql2->finish();
 
-    #
-    #  Invalidate cache.
-    #
-    $self->invalidateCache();
 
 }
 
@@ -349,15 +314,6 @@ sub getMessages
     my $username = $self->{ 'username' };
     die "No username" unless defined($username);
 
-    #
-    #  Fetch from the cache?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $msgs  = $cache->get("messages_for_$username");
-    if ( defined($msgs) )
-    {
-        return ($msgs);
-    }
 
     #
     #  Not found, get from the database.
@@ -376,7 +332,7 @@ sub getMessages
     #
     #  Fetch the results.
     #
-    $msgs = [];
+    my $msgs = [];
     while ( $sql->fetch() )
     {
 
@@ -400,10 +356,6 @@ sub getMessages
     }
     $sql->finish();
 
-    #
-    #  Store in the cache
-    #
-    $cache->set( "messages_for_$username", $msgs );
     return ($msgs);
 
 }
@@ -434,11 +386,6 @@ sub deleteMessage
     $sql->execute( $username, $id );
     $sql->finish();
 
-
-    #
-    #  Invalidate our cache.
-    #
-    $self->invalidateCache();
 }
 
 
@@ -475,10 +422,6 @@ sub deleteOldMessages
       die "Failed to delete messages " . $dbi->errstr();
     $sql->finish();
 
-    #
-    #  Flush our cache
-    #
-    $self->invalidateCache();
 }
 
 
@@ -506,12 +449,6 @@ sub deleteByUser
     my $sql = $db->prepare("DELETE FROM messages WHERE recipient=?");
     $sql->execute($username);
     $sql->finish();
-
-
-    #
-    #  Invalidate our cache.
-    #
-    $self->invalidateCache();
 }
 
 
@@ -525,24 +462,6 @@ sub deleteByUser
 sub invalidateCache
 {
     my ($class) = (@_);
-
-    #
-    #  Get our username
-    #
-    my $username = $class->{ 'username' };
-
-    #
-    #  Make sure we have one.
-    #
-    die "No username" unless defined($username);
-
-    #
-    #  Flush the cached data
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("total_messages_for_$username");
-    $cache->delete("unread_messages_for_$username");
-    $cache->delete("messages_for_$username");
 }
 
 

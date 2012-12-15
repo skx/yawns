@@ -54,7 +54,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 
 
 =head2 new
@@ -92,18 +91,6 @@ sub new
 sub getRecent
 {
     my ($class) = (@_);
-
-
-    #
-    #  Fetch from cache?
-    #
-    my $cache    = Singleton::Memcache->instance();
-    my $wentries = $cache->get("recent_weblogs");
-    if ( defined($wentries) )
-    {
-        return ($wentries);
-    }
-
 
     my $number = 10;
     my $bignum = $number * $number;
@@ -207,14 +194,6 @@ sub getRecent
     }
 
     #
-    # Update cache
-    #
-    if ( defined($entries) )
-    {
-        $cache->set( "recent_weblogs", $entries );
-    }
-
-    #
     #
     # Return the entries.
     #
@@ -234,16 +213,6 @@ sub getTipEntries
     my ($class) = (@_);
 
     #
-    #  Fetch from cache?
-    #
-    my $cache   = Singleton::Memcache->instance();
-    my $entries = $cache->get("recent_tips");
-    if ( defined($entries) )
-    {
-        return ($entries);
-    }
-
-    #
     #  Run the query.
     #
     my $dbi = Singleton::DBI->instance();
@@ -258,6 +227,8 @@ sub getTipEntries
     my ( $username, $id, $title, $comments );
     $sql->bind_columns( undef, \$username, \$id, \$title, \$comments );
 
+
+    my $entries;
 
     #
     # Process the results.
@@ -295,10 +266,6 @@ sub getTipEntries
     }
     $sql->finish();
 
-    #
-    #  Update the cache
-    #
-    $cache->set( "recent_tips", $entries );
     return ($entries);
 }
 
@@ -313,16 +280,6 @@ sub getTipEntries
 sub getReportedWeblogs
 {
     my ($self) = (@_);
-
-    #
-    #  See if these are in the cache.
-    #
-    my $cache   = Singleton::Memcache->instance();
-    my $entries = $cache->get("reported_weblogs");
-    if ( defined($entries) )
-    {
-        return ($entries);
-    }
 
     #
     #  Failed to find them.  Load from the database.
@@ -341,7 +298,7 @@ sub getReportedWeblogs
     #
     # Get the results
     #
-    $entries = [];
+    my $entries = [];
     while ( $sql->fetch() )
     {
 
@@ -390,11 +347,6 @@ sub getReportedWeblogs
     # Tidy up
     #
     $sql->finish();
-
-    #
-    #  Store in the cache.
-    #
-    $cache->set("reported_weblogs");
     return ($entries);
 }
 
@@ -421,7 +373,7 @@ sub deleteByUser
     my $query = $db->prepare("DELETE FROM weblogs WHERE username=?");
     $query->execute($username);
     $query->finish();
-    $class->invalidateCache();
+
 }
 
 
@@ -447,7 +399,6 @@ sub hideByUser
     my $query = $db->prepare("UPDATE weblogs SET score=-1 WHERE username=?");
     $query->execute($username);
     $query->finish();
-    $class->invalidateCache();
 }
 
 
@@ -460,21 +411,6 @@ sub hideByUser
 sub invalidateCache
 {
     my ($class) = (@_);
-
-
-    #
-    #  Clean the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("recent_weblogs");
-    $cache->delete("recent_tips");
-    $cache->delete("reported_weblogs");
-
-    if ( defined $class->{ 'username' } )
-    {
-        $cache->delete( "weblog_feed_" . $class->{ 'username' } );
-    }
-
 }
 
 

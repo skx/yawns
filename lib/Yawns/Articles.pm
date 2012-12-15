@@ -60,7 +60,7 @@ use Date::Parse;
 #
 use Yawns::Date;
 use Singleton::DBI;
-use Singleton::Memcache;
+
 
 
 
@@ -101,18 +101,7 @@ sub count
 {
     my ($class) = (@_);
 
-    #
-    #  First look in the memory cache
-    #
-    my $cache = Singleton::Memcache->instance();
     my $count = 0;
-
-
-    $count = $cache->get("article_count");
-    if ( defined($count) )
-    {
-        return ($count);
-    }
 
     #
     #  Get the database handle
@@ -128,15 +117,6 @@ sub count
     my @ret = $sql->fetchrow_array();
     $count = $ret[0];
     $sql->finish();
-
-
-    #
-    #  Update the memory cache
-    #
-    if ( defined($count) )
-    {
-        $cache->set( "article_count", $count );
-    }
 
     return ($count);
 }
@@ -379,13 +359,6 @@ sub getPreviousHeadlines
 {
     my ($class) = (@_);
 
-    my $cache   = Singleton::Memcache->instance();
-    my $details = $cache->get("previous_headlines");
-    if ($details)
-    {
-        return ($details);
-    }
-
     #
     # The number of articles to show in previous headlines box
     #
@@ -408,14 +381,6 @@ sub getPreviousHeadlines
     # get the required amount of headlines
     #
     my $previous_headlines = $class->getHeadlines( $items, $count, 0 );
-
-    #
-    # Add to the cache.
-    #
-    if ( defined($previous_headlines) )
-    {
-        $cache->set( "previous_headlines", $previous_headlines );
-    }
 
     return ($previous_headlines);
 }
@@ -566,16 +531,6 @@ sub getArchivedArticles
     $month = "" if !defined($month);
 
     #
-    #  First attempt to fetch from the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $data  = $cache->get( "archive_" . $year . "_" . $month );
-    if ( defined($data) )
-    {
-        return ($data);
-    }
-
-    #
     # Cache fetch failed, so get from the database.
     #
     my $db = Singleton::DBI->instance();
@@ -648,12 +603,6 @@ sub getArchivedArticles
         $prevMonth = $name;
     }
 
-    #
-    #  Update the cache
-    #
-    $cache->set( "archive_" . $year . "_" . $month, $articles )
-      if ($articles);
-
     # return the requested values
     return ($articles);
 }
@@ -700,16 +649,6 @@ sub findBySlug
     my $id = undef;
 
     #
-    #  Cached?
-    #
-    my $cache = Singleton::Memcache->instance();
-    $id = $cache->get("article_by_t_$slug");
-    if ( defined($id) )
-    {
-        return ($id);
-    }
-
-    #
     #  Get the database handle
     #
     my $db = Singleton::DBI->instance();
@@ -738,18 +677,7 @@ sub findBySlug
     $id = $ret[0];
     $sql->finish();
 
-
-    #
-    #  Update the memory cache
-    #
-    if ( defined($id) )
-    {
-        $cache->set( "article_by_t_$slug", $id );
-    }
-
     return ($id);
-
-
 }
 
 
@@ -786,35 +714,6 @@ sub invalidateCache
 {
     my ($class) = (@_);
 
-    #
-    #  Flush the cached data.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("article_count");
-    $cache->delete("previous_headlines");
-
-    #
-    #  Here we will expire the article archive for each possible
-    # year and month combination.
-    #
-    #  First get the year range we have content within.
-    #
-    my %years = getArticleYears();
-
-    #
-    # Each year.
-    #
-    foreach my $year ( keys %years )
-    {
-
-        #
-        #  Each month
-        #
-        foreach my $month ( 1 ... 12 )
-        {
-            $cache->delete( "archive_" . $year . "_" . $month );
-        }
-    }
 }
 
 

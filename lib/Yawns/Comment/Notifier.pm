@@ -51,7 +51,6 @@ require AutoLoader;
 #
 use conf::SiteConfig;
 use Singleton::DBI;
-use Singleton::Memcache;
 
 use Yawns::Article;
 use Yawns::Mailer;
@@ -175,13 +174,6 @@ sub getNotificationMethod
     my ( $self, $user, $type ) = (@_);
 
     #
-    #  See if we have cached content first.
-    #
-    my $cache  = Singleton::Memcache->instance();
-    my $result = $cache->get( "notify_" . $user . "_" . $type );
-    return $result if ( defined($result) );
-
-    #
     #  Not in the cache so get from the database.
     #
     my $dbi = Singleton::DBI->instance();
@@ -194,14 +186,8 @@ sub getNotificationMethod
     $sql->execute( $user, $type ) or die "Failed to execute " . $dbi->errstr();
 
     my @ret = $sql->fetchrow_array();
-    $result = $ret[0];
+    my $result = $ret[0];
     $sql->finish();
-
-    #
-    #  Update the cache
-    #
-    $cache->set( "notify_" . $user . "_" . $type, $result )
-      if ( defined($result) );
 
     return ($result);
 }
@@ -227,10 +213,6 @@ sub deleteNotifications
       die "failed to delete notifications: " . $dbi->errstr();
     $sql->finish();
 
-    #
-    #  Flush our cache
-    #
-    $self->invalidateCache();
 }
 
 
@@ -593,23 +575,6 @@ EOM
 sub invalidateCache
 {
     my ($self) = (@_);
-
-    #
-    #  Get the cache
-    #
-    my $cache = Singleton::Memcache->instance();
-
-    #
-    #  Get our username.
-    #
-    my $username = $self->{ 'username' };
-
-    my @keys = $self->getNotificationKeys();
-
-    foreach my $key (@keys)
-    {
-        $cache->delete( "notify_" . $username . "_" . $key );
-    }
 }
 
 

@@ -61,7 +61,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 use Yawns::Tags;
 
 
@@ -146,11 +145,6 @@ sub add
     }
 
     #
-    # Invalidate cache.
-    #
-    $class->invalidateCache();
-
-    #
     # Return the current poll.
     return ($id);
 }
@@ -167,15 +161,6 @@ sub getCurrentPoll
 {
     my ($class) = (@_);
 
-    #
-    #  Attempt to fetch from the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $poll  = $cache->get("current_poll");
-    if ( defined($poll) )
-    {
-        return ($poll);
-    }
 
     #
     # Not in cache, so fetch from the database.
@@ -184,12 +169,7 @@ sub getCurrentPoll
     # get the id of the most recent poll.
     my $query = $db->prepare('SELECT MAX(id) FROM poll_questions');
     $query->execute();
-    $poll = $query->fetchrow_array();
-
-    #
-    # Update the cache.
-    #
-    $cache->set( "current_poll", $poll );
+    my $poll = $query->fetchrow_array();
 
     return ($poll);
 
@@ -257,22 +237,6 @@ sub delete
 
     $query->execute($id);
     $query->finish();
-
-    #
-    #  Invalidate the specific poll too.
-    #
-    my $p = Yawns::Poll->new( id => $id );
-    $p->invalidateCache();
-
-    #
-    #  Delete any tags.
-    #
-    my $t = Yawns::Tags->new();
-    $t->deleteTags( poll => $id );
-
-    #
-    #  Invalidate cache in case this was the live poll.
-    $class->invalidateCache();
 }
 
 
@@ -287,15 +251,6 @@ sub getPollArchive
 {
     my ($class) = (@_);
 
-    #
-    #  Attempt to fetch from the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $polls = $cache->get("poll_archive");
-    if ( defined($polls) )
-    {
-        return ($polls);
-    }
 
     #
     # Not in cache, so fetch from the database.
@@ -317,6 +272,9 @@ sub getPollArchive
     my ( $id, $question );
     $query->bind_columns( undef, \$id, \$question );
 
+
+    my $polls;
+
     #
     #  Fetch
     #
@@ -332,8 +290,6 @@ sub getPollArchive
     #
     # Update the cache.
     #
-    $cache->set( "poll_archive", $polls );
-
     return ($polls);
 }
 
@@ -348,13 +304,6 @@ sub getPollArchive
 sub invalidateCache
 {
     my ($class) = (@_);
-
-    #
-    # Delete the current poll, and the archive
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete("current_poll");
-    $cache->delete("poll_archive");
 }
 
 

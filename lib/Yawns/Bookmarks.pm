@@ -55,7 +55,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 
 
 
@@ -178,17 +177,6 @@ sub get
     die "No username " if ( !defined($username) );
 
     #
-    #  Attempt to fetch from the cache first.
-    #
-    my $cache     = Singleton::Memcache->instance();
-    my $bookmarks = $cache->get( "bookmarks_for_" . $username );
-    if ( defined($bookmarks) )
-    {
-        return ($bookmarks);
-    }
-
-
-    #
     #  Fetch from the database.
     #
     my $db = Singleton::DBI->instance();
@@ -199,12 +187,6 @@ sub get
       die "Failed to fetch bookmarks : " . $db->errstr();
     $bookmarks = $sql->fetchall_arrayref();
     $sql->finish();
-
-
-    #
-    # Store in the cache
-    #
-    $cache->set( "bookmarks_for_" . $username, $bookmarks );
 
     #
     # Return.
@@ -231,18 +213,6 @@ sub count
     my $username = $class->{ 'username' };
     die "No username " if ( !defined($username) );
 
-
-    #
-    #  Attempt to fetch from the cache
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $count = "";
-    $count = $cache->get("bookmark_count_$username");
-    if ( defined($count) )
-    {
-        return ($count);
-    }
-
     #
     # Otherwise fetch from the database
     #
@@ -252,14 +222,6 @@ sub count
     );
     $query->execute($username);
     $count = $query->fetchrow_array();
-
-    #
-    #  Update the cache
-    #
-    if ( defined($count) )
-    {
-        $cache->set( "bookmark_count_$username", $count );
-    }
 
     return ($count);
 }
@@ -352,14 +314,6 @@ sub deleteByUser
 sub invalidateCache
 {
     my ($class) = (@_);
-
-
-    #
-    #  Clean the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete( "bookmarks_for_" . $class->{ 'username' } );
-    $cache->delete( "bookmark_count_" . $class->{ 'username' } );
 }
 
 

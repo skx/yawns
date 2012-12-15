@@ -41,7 +41,6 @@ binmode STDOUT, ":utf8";
 #
 use Singleton::DBI;
 use Singleton::CGI;
-use Singleton::Memcache;
 use Singleton::Session;
 
 

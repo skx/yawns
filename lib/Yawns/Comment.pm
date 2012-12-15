@@ -58,7 +58,6 @@ use HTML::Entities;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 use Yawns::Article;
 use Yawns::Date;
 use Yawns::Poll;
@@ -129,17 +128,6 @@ sub get
         $root = $class->{ 'weblog' };
     }
 
-    #
-    #  Fetch from the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-
-    my $data = $cache->get(
-             "single_comment_" . $class->{ 'id' } . "_" . $type . "_" . $root );
-    if ( defined($data) )
-    {
-        return ($data);
-    }
 
     #
     # Gain access to the database
@@ -180,13 +168,6 @@ sub get
             $results{ 'ip' } = $1 . "." . $2 . ".xx.xx";
         }
     }
-
-    #
-    #  Store in the cache.
-    #
-    $cache->set(
-               "single_comment_" . $class->{ 'id' } . "_" . $type . "_" . $root,
-               \%results );
 
     return ( \%results );
 }
@@ -251,21 +232,6 @@ sub editComment
       die "Failed to edit comment: " . $db->errstr();
     $sql->finish();
 
-    #
-    #  Flush the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete(
-             "single_comment_" . $class->{ 'id' } . "_" . $type . "_" . $root );
-
-
-    #
-    #  Invalidate the comments on the poll/article/weblog
-    #
-    my $comments = Yawns::Comments->new( article => $class->{ 'article' },
-                                         poll    => $class->{ 'poll' },
-                                         weblog  => $class->{ 'weblog' } );
-    $comments->invalidateCache();
 }
 
 
@@ -359,7 +325,6 @@ sub add
     #  Get the singletons we require
     #
     my $db    = Singleton::DBI->instance();
-    my $cache = Singleton::Memcache->instance();
 
     #
     # The root and type of comment we will use to add to the database.
@@ -918,11 +883,6 @@ sub _decrease_weblog_comment_count
 sub invalidateCache
 {
     my ($class) = (@_);
-
-    #
-    #  Get the cache object.
-    #
-    my $cache = Singleton::Memcache->instance();
 
 }
 

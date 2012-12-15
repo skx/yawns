@@ -55,7 +55,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 
 
 
@@ -98,16 +97,6 @@ sub countActive
     my ($class) = (@_);
 
     #
-    #  Is this information cached?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $count = $cache->get("advert_count");
-    if ( defined($count) )
-    {
-        return ($count);
-    }
-
-    #
     #  Get the database handle.
     #
     my $db = Singleton::DBI->instance();
@@ -129,13 +118,7 @@ sub countActive
     #
     # Get the result
     #
-    $count = $query->fetchrow_array();
-
-    #
-    # Update the cache.
-    #
-    $cache->set( "advert_count", $count );
-
+    my $count = $query->fetchrow_array();
 
     #
     # Cleanup.
@@ -159,16 +142,6 @@ sub countPending
     my ($class) = (@_);
 
     #
-    #  Is this information cached?
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $count = $cache->get("advert_count_pending");
-    if ( defined($count) )
-    {
-        return ($count);
-    }
-
-    #
     #  Get the database handle.
     #
     my $db = Singleton::DBI->instance();
@@ -189,13 +162,7 @@ sub countPending
     #
     # Get the result
     #
-    $count = $query->fetchrow_array();
-
-    #
-    # Update the cache.
-    #
-    $cache->set( "advert_count_pending", $count );
-
+    my $count = $query->fetchrow_array();
 
     #
     # Cleanup.
@@ -224,11 +191,6 @@ sub addClick
     $sql->execute($id);
     $sql->finish();
 
-    #
-    #  Invalidate advert
-    #
-    $class->{ 'id' } = $id;
-    $class->invalidateCache();
 }
 
 
@@ -273,12 +235,6 @@ sub addAdvert
         $num = $db->{ mysql_insertid };
     }
 
-
-    #
-    # Advert count is wrong.
-    #
-    $class->invalidateCache();
-
     return ($num);
 
 }
@@ -294,16 +250,6 @@ sub addAdvert
 sub getAdvert
 {
     my ( $class, $id ) = (@_);
-
-    #
-    #  Fetch from the cache.
-    #
-    my $cache   = Singleton::Memcache->instance();
-    my $details = $cache->get("advert_$id");
-    if ($details)
-    {
-        return ($details);
-    }
 
     my $db = Singleton::DBI->instance();
     my $sql = $db->prepare(
@@ -331,11 +277,6 @@ sub getAdvert
                    display  => $details[8] );
 
     #
-    #  Add to cache
-    #
-    $cache->set( "advert_$id", \%advert );
-
-    #
     # Return
     #
     return ( \%advert );
@@ -357,32 +298,12 @@ sub deleteByUser
     die "No username!" unless defined($username);
 
     #
-    #  First of all find each advert.
-    #
-    #  This allows us to invalidate each entry.
-    #
-    my $all = $class->advertsByUser($username);
-    foreach my $ent (@$all)
-    {
-        my $id = $ent->{ 'id' };
-        $class->{ 'id' } = $id;
-        $class->invalidateCache();
-    }
-    $class->{ 'id' } = undef;
-
-
-    #
     #  Delete the adverts
     #
     my $db    = Singleton::DBI->instance();
     my $query = $db->prepare("DELETE FROM adverts WHERE owner=?");
     $query->execute($username);
     $query->finish();
-
-    #
-    #  Flush our cache
-    #
-    $class->invalidateCache();
 
 }
 
@@ -397,16 +318,6 @@ sub deleteByUser
 sub advertsByUser
 {
     my ( $class, $username ) = (@_);
-
-    #
-    #  See if the details are in the cache first.
-    #
-    my $cache   = Singleton::Memcache->instance();
-    my $details = $cache->get( "adverts_by_" . $username );
-    if ( defined($details) )
-    {
-        return ($details);
-    }
 
     my $db = Singleton::DBI->instance();
     my $sql = $db->prepare(
@@ -446,11 +357,6 @@ sub advertsByUser
     # Finished with the query.
     $sql->finish();
 
-    #
-    #  Store in the cache
-    #
-    $cache->set( "adverts_by_" . $username, $adverts ) if defined($adverts);
-
     # return the requested values
     return ($adverts);
 }
@@ -471,12 +377,6 @@ sub removeAdvert
     my $sql = $db->prepare("DELETE FROM adverts WHERE id=?");
     $sql->execute($id);
     $sql->finish();
-
-    #
-    # Advert count is wrong.
-    #
-    $class->{ 'id' } = $id;
-    $class->invalidateCache();
 }
 
 
@@ -496,19 +396,6 @@ sub disableAdvert
     $sql->execute($id);
     $sql->finish();
 
-
-    #
-    # Get the advert owner.
-    #
-    my $data  = $class->getAdvert($id);
-    my $owner = $data->{ 'owner' };
-
-    #
-    # Invalidate cache for this advert
-    #
-    $class->{ 'id' }       = $id;
-    $class->{ 'username' } = $id;
-    $class->invalidateCache();
 }
 
 
@@ -523,24 +410,10 @@ sub enableAdvert
     my ( $class, $id ) = (@_);
 
     my $db = Singleton::DBI->instance();
-
     my $sql = $db->prepare("UPDATE adverts SET active='y' WHERE id=?");
     $sql->execute($id);
     $sql->finish();
 
-
-    #
-    # Get the advert owner.
-    #
-    my $data  = $class->getAdvert($id);
-    my $owner = $data->{ 'owner' };
-
-    #
-    # Invalidate cache for this advert
-    #
-    $class->{ 'id' }       = $id;
-    $class->{ 'username' } = $owner;
-    $class->invalidateCache();
 }
 
 
@@ -555,26 +428,11 @@ sub deleteAdvert
 {
     my ( $class, $id ) = (@_);
 
-
-    #
-    # Get the advert owner.
-    #
-    my $data  = $class->getAdvert($id);
-    my $owner = $data->{ 'owner' };
-
     my $db = Singleton::DBI->instance();
-
     my $sql = $db->prepare("DELETE FROM adverts WHERE id=?");
     $sql->execute($id);
     $sql->finish();
 
-
-    #
-    # Invalidate cache for this advert
-    #
-    $class->{ 'id' }       = $id;
-    $class->{ 'username' } = $owner;
-    $class->invalidateCache();
 }
 
 
@@ -645,13 +503,6 @@ sub fetchAllActiveAdverts
     #
     # Attempt to fetch from the cache.
     #
-    my $cache = Singleton::Memcache->instance();
-    my $all   = $cache->get("all_active_adverts");
-    if ($all)
-    {
-        return ($all);
-    }
-
     my $db = Singleton::DBI->instance();
     my $sql = $db->prepare(
         "SELECT  id,link,linktext,text,owner FROM adverts WHERE active='y' AND (shown < display) ORDER by id ASC"
@@ -690,11 +541,6 @@ sub fetchAllActiveAdverts
     # Finished with the query.
     $sql->finish();
 
-    #
-    #  Update the cache.
-    #
-    $cache->set( "all_active_adverts", $adverts );
-
     return ($adverts);
 }
 
@@ -710,15 +556,6 @@ sub fetchAllAdverts
 {
     my ($class) = (@_);
 
-    #
-    # Attempt to fetch from the cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $all   = $cache->get("all_adverts");
-    if ($all)
-    {
-        return ($all);
-    }
 
     my $db = Singleton::DBI->instance();
     my $sql = $db->prepare(
@@ -773,11 +610,6 @@ sub fetchAllAdverts
     # Finished with the query.
     $sql->finish();
 
-    #
-    #  Update the cache.
-    #
-    $cache->set( "all_adverts", $adverts );
-
     return ($adverts);
 }
 
@@ -791,29 +623,6 @@ sub fetchAllAdverts
 sub invalidateCache
 {
     my ($class) = (@_);
-
-    #
-    #  Flush the data we have for the given advert.
-    #
-    my $cache = Singleton::Memcache->instance();
-
-    $cache->delete("all_adverts");
-    $cache->delete("all_active_adverts");
-    $cache->delete("advert_count");
-    $cache->delete("advert_count_pending");
-
-    my $id = $class->{ 'id' };
-    if ( defined($id) )
-    {
-        $cache->delete("advert_$id");
-    }
-
-
-    my $username = $class->{ 'username' };
-    if ( defined($username) )
-    {
-        $cache->delete("adverts_by_$username");
-    }
 }
 
 

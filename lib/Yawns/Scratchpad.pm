@@ -56,7 +56,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Memcache;
 use Yawns::User;
 
 
@@ -103,24 +102,7 @@ sub isPrivate
     #
     my $username = $class->{ 'username' };
 
-    #
-    #  Attempt to fetch from the Memcache first.
-    #
-    my $cache   = Singleton::Memcache->instance();
     my $private = "";
-    $private = $cache->get("user_scratchpad_privacy_$username");
-    if ( defined($private) )
-    {
-
-        if ( $private =~ /^private$/i )
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
 
     #
     #  Not found in memory, so fetch from the database.
@@ -131,11 +113,6 @@ sub isPrivate
     );
     $query->execute($username) or die $db->errstr();
     $private = $query->fetchrow_array();
-
-    if ( defined($private) )
-    {
-        $cache->set( "user_scratchpad_privacy_$username", $private );
-    }
 
     # there is no scratchpad - so it is public.
     return 0 if ( !defined($private) );
@@ -170,13 +147,7 @@ sub get
     #
     #  Attempt to fetch from the Memcache first.
     #
-    my $cache = Singleton::Memcache->instance();
     my $text  = "";
-    $text = $cache->get("user_scratchpad_$username");
-    if ( defined($text) )
-    {
-        return ($text);
-    }
 
 
     #
@@ -190,14 +161,6 @@ sub get
     $text = $query->fetchrow_array();
 
     if ( !defined($text) ) {$text = "";}
-
-    #
-    # Store in cache
-    #
-    if ( defined($text) )
-    {
-        $cache->set( "user_scratchpad_$username", $text );
-    }
 
     return ($text);
 }
@@ -254,18 +217,6 @@ sub set
         $query->finish();
     }
 
-
-    #
-    # Flush our cache.
-    #
-    $class->invalidateCache();
-
-    #
-    #  Invalidate the users cache too.
-    #
-    $user->invalidateCache();
-
-
 }
 
 
@@ -280,12 +231,6 @@ sub invalidateCache
 {
     my ($class) = (@_);
 
-    #
-    #  Flush any cached content we might contain.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete( "user_scratchpad_" . $class->{ 'username' } );
-    $cache->delete( "user_scratchpad_privacy_" . $class->{ 'username' } );
 }
 
 

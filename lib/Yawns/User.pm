@@ -58,7 +58,6 @@ use conf::SiteConfig;
 
 
 use Singleton::DBI;
-use Singleton::Memcache;
 
 use Yawns::Adverts;
 use Yawns::Bookmarks;
@@ -117,17 +116,6 @@ sub get
     my $username = $class->{ 'username' };
 
     #
-    #  Fetch from cache, if it exists.
-    #
-    my $cache   = Singleton::Memcache->instance();
-    my $details = $cache->get("user_info_$username");
-    if ($details)
-    {
-        return ($details);
-    }
-
-
-    #
     # Otherwise fetch from the database.
     #
     my $db = Singleton::DBI->instance();
@@ -173,11 +161,6 @@ sub get
     {
         $the_user{ 'url' } = 'http://' . $the_user{ 'url' };
     }
-
-    #
-    # Update cache
-    #
-    $cache->set( "user_info_$username", \%the_user );
 
     return ( \%the_user );
 }
@@ -232,9 +215,6 @@ sub getModifier
     my $username = $class->{ 'username' };
 
     #
-    #  Is this information cached?
-    #
-    #
     #  Optimization.
     #
     if ( ( $username =~ /^anonymous$/i ) ||
@@ -244,15 +224,7 @@ sub getModifier
     }
 
 
-    #
-    # Get from cache
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $magic = $cache->get("modifier_$username");
-    if ( defined($magic) )
-    {
-        return ($magic);
-    }
+    my $magic = "";
 
 
     #
@@ -324,13 +296,6 @@ sub getModifier
     }
 
 
-    #
-    # Update the cache.
-    #
-    if ( defined($magic) )
-    {
-        $cache->set( "modifier_$username", $magic );
-    }
 
     return ($magic);
 
@@ -357,16 +322,7 @@ sub getWeblogCount
 
     die "No username " if ( !defined($username) );
 
-    #
-    #  Attempt to fetch from the cache
-    #
-    my $cache = Singleton::Memcache->instance();
     my $count = "";
-    $count = $cache->get("weblog_count_$username");
-    if ( defined($count) )
-    {
-        return ($count);
-    }
 
     #
     # Otherwise fetch from the database
@@ -375,14 +331,6 @@ sub getWeblogCount
     my $query = $db->prepare('SELECT COUNT(id) FROM weblogs WHERE username=?');
     $query->execute($username);
     $count = $query->fetchrow_array();
-
-    #
-    #  Update the cache
-    #
-    if ( defined($count) )
-    {
-        $cache->set( "weblog_count_$username", $count );
-    }
 
     return ($count);
 }
@@ -407,15 +355,7 @@ sub getComments
     die "No username " if ( !defined($username) );
 
 
-    #
-    #  Fetch from cache.
-    #
-    my $cache   = Singleton::Memcache->instance();
-    my $details = $cache->get("user_comments_$username");
-    if ($details)
-    {
-        return ($details);
-    }
+    my $details;
 
     #
     # Get the database handle.
@@ -499,13 +439,6 @@ sub getComments
     $sql->finish();
 
 
-    #
-    # Update the cache
-    #
-    if ( defined($resultsloop) )
-    {
-        $cache->set( "user_comments_$username", $resultsloop );
-    }
 
     return ($resultsloop);
 
@@ -531,15 +464,7 @@ sub getArticles
     die "No username " if ( !defined($username) );
 
 
-    #
-    #  Fetch from cache.
-    #
-    my $cache   = Singleton::Memcache->instance();
-    my $details = $cache->get("user_articles_$username");
-    if ($details)
-    {
-        return ($details);
-    }
+    my $details;
 
     #
     # Get the database handle.
@@ -578,14 +503,6 @@ sub getArticles
     }
     $sql->finish();
 
-    #
-    # Store in the cache
-    #
-    if ( defined($resultsloop) )
-    {
-        $cache->set( "user_articles_$username", $resultsloop );
-    }
-
     return ($resultsloop);
 }
 
@@ -610,16 +527,6 @@ sub getCommentCount
 
 
     #
-    #  Fetch from cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $count = $cache->get("user_comments_count_$username");
-    if ( defined($count) )
-    {
-        return ($count);
-    }
-
-    #
     # Get the database handle.
     #
     my $db = Singleton::DBI->instance();
@@ -628,15 +535,7 @@ sub getCommentCount
     my $query =
       $db->prepare('SELECT COUNT(*) FROM comments WHERE score>0 AND author=?');
     $query->execute($username);
-    $count = $query->fetchrow_array();
-
-    #
-    # Update the cache
-    #
-    if ( defined($count) )
-    {
-        $cache->set( "user_comments_count_$username", $count );
-    }
+    my $count = $query->fetchrow_array();
 
     return ($count);
 }
@@ -660,15 +559,6 @@ sub getArticleCount
     my $username = $class->{ 'username' };
     die "No username " if ( !defined($username) );
 
-    #
-    #  Fetch from cache.
-    #
-    my $cache = Singleton::Memcache->instance();
-    my $count = $cache->get("user_articles_count_$username");
-    if ( defined($count) )
-    {
-        return ($count);
-    }
 
     #
     # Get database handle
@@ -679,15 +569,7 @@ sub getArticleCount
     # Fetch data
     my $query = $db->prepare('SELECT COUNT(*) FROM articles WHERE author=?');
     $query->execute($username);
-    $count = $query->fetchrow_array();
-
-    #
-    # Update the cache
-    #
-    if ( defined($count) )
-    {
-        $cache->set( "user_articles_count_$username", $count );
-    }
+    my $count = $query->fetchrow_array();
 
     return ($count);
 
@@ -744,15 +626,6 @@ sub create
     $sql->finish();
 
     #
-    #  Flush the hall of fame count, and the count of users.
-    #
-    my $stats = Yawns::Stats->new();
-    $stats->invalidateCache();
-
-    my $users = Yawns::Users->new();
-    $users->invalidateCache();
-
-    #
     #  Send the new user an email if we're supposed to.
     #
     if ( ( defined( $class->{ 'send_mail' } ) && $class->{ 'send_mail' } ) )
@@ -764,10 +637,6 @@ sub create
         $class->sendMail();
     }
 
-    #
-    #  Invalidate ourself too.
-    #
-    $class->invalidateCache();
 }
 
 
@@ -949,7 +818,6 @@ sub delete
     my $users = Yawns::Users->new();
     $users->invalidateCache();
 
-
     #
     # Delete all weblogs.
     #
@@ -975,11 +843,6 @@ sub delete
     my $bookmarks = Yawns::Bookmarks->new( username => $username );
     $bookmarks->deleteByUser();
 
-
-    #
-    #  Flush our cache
-    #
-    $class->invalidateCache();
 }
 
 
@@ -1019,7 +882,6 @@ sub suspend
     $query->execute( 1, $details, $username );
     $query->finish();
 
-    $class->invalidateCache();
 }
 
 
@@ -1063,11 +925,6 @@ sub save
     $sql->execute( $realname, $realemail, $fakemail, $url, $sig, $bio,
                    $username );
     $sql->finish();
-
-    #
-    #  Invalidate our cached content.
-    #
-    $class->invalidateCache();
 
 }
 
@@ -1153,7 +1010,6 @@ sub savePreferences
 
     }
 
-    $class->invalidateCache();
 }
 
 
@@ -1218,21 +1074,6 @@ sub login
 sub invalidateCache
 {
     my ($class) = (@_);
-
-    my $username = $class->{ username } || "Anonymous";
-
-    #
-    #  Flush the cached count of users.
-    #
-    my $cache = Singleton::Memcache->instance();
-    $cache->delete( "modifier_" . $username );
-    $cache->delete( "weblog_count_" . $username );
-    $cache->delete( "user_info_" . $username );
-    $cache->delete( "user_comments_count_" . $username );
-    $cache->delete( "user_comments_" . $username );
-    $cache->delete( "user_articles_count_" . $username );
-    $cache->delete( "user_articles_" . $username );
-
 }
 
 

@@ -62,7 +62,6 @@ use warnings;
 #
 #  Yawns-specific modules we use.
 #
-use Singleton::Memcache;
 use Singleton::DBI;
 
 
@@ -248,17 +247,6 @@ sub check
 
 
     #
-    #  Is this information cached?
-    #
-    my $cache  = Singleton::Memcache->instance();
-    my $result = $cache->get( "user_priv_" . $username . "_" . $priv );
-    if ( defined($result) )
-    {
-        return ($result);
-    }
-
-
-    #
     #  Get the database handle.
     #
     my $dbh = Singleton::DBI->instance();
@@ -278,13 +266,12 @@ sub check
     #
     #  Get the result
     #
-    $result = 0;
+    my $result = 0;
     $result = 1 if ( $thisuser[0] );
 
     #
     #  Store in cache, and return.
     #
-    $cache->set( "user_priv_" . $username . "_" . $priv, $result );
     return ($result);
 }
 
@@ -380,13 +367,6 @@ sub givePermission
     #
     $sql->finish();
 
-    #
-    #  Flush our cache.
-    #
-    $self->{ 'username' } = $username;
-    $self->invalidateCache();
-
-
 }
 
 
@@ -418,12 +398,6 @@ sub makeAdmin
     {
         $self->givePermission( $username, $key );
     }
-
-    #
-    #  Flush our cache.
-    #
-    $self->{ 'username' } = $username;
-    $self->invalidateCache();
 
 }
 
@@ -457,11 +431,6 @@ sub removeAllPermissions
     #
     $sql->finish();
 
-    #
-    #  Flush our cache.
-    #
-    $self->{ 'username' } = $username;
-    $self->invalidateCache();
 }
 
 
@@ -474,31 +443,6 @@ sub removeAllPermissions
 
 sub invalidateCache
 {
-    my ($class) = (@_);
-
-    #
-    #  The username we're working with.
-    #
-    my $username = $class->{ username };
-
-    #
-    #  Get the cache object.
-    #
-    my $cache = Singleton::Memcache->instance();
-
-    #
-    #  Find all known permission keys
-    #
-    my $known = $class->{ 'priv_keys' };
-
-    #
-    #  Flush each one.
-    #
-    foreach my $key ( keys %$known )
-    {
-        $cache->delete( "user_priv_$username" . "_" . $key );
-    }
-
 }
 
 #
