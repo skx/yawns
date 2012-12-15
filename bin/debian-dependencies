@@ -28,3 +28,6 @@ install libmail-verify-perl
 install libtext-diff-perl
 install libtext-textile-perl
 install liburi-find-perl
+install libsys-cpuload-perl
+install libdbi-mysql-perl
+
