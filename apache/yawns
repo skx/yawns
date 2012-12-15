@@ -1,0 +1,26 @@
+#
+#  Debian Administration domain.
+#
+<VirtualHost *:80>
+   ServerName www.debian-administration.org
+   DirectoryIndex  index.html
+
+   DocumentRoot           /home/yawns/current/htdocs/
+   ScriptAlias  /cgi-bin/ /home/yawns/current/cgi-bin/
+
+   ErrorDocument 404 /about/404
+   ErrorDocument 403 /about/403
+
+   # Document root.
+   <Directory />
+      Options +Indexes
+      AllowOverride All
+   </Directory>
+
+   RewriteEngine on
+   Include /home/yawns/current/apache/rewrite.rules.conf
+
+	# Logfiles
+    ErrorLog  /var/log/apache2/yawns.error.log
+    CustomLog /var/log/apache2/yawns.access.log combined
+</VirtualHost>
