@@ -11,3 +11,4 @@ apt-get install libhtml-tree-perl
 apt-get install libredis-perl
 apt-get install libcgi-session-perl
 apt-get install libhtml-template-perl
+apt-get install libauthen-captcha-perl
