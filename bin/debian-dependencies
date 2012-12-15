@@ -27,3 +27,4 @@ install libtimedate-perl
 install libmail-verify-perl
 install libtext-diff-perl
 install libtext-textile-perl
+install liburi-find-perl
