@@ -42,15 +42,13 @@ package Singleton::Session;
 use conf::SiteConfig;
 
 #
-#  CGI form we use & redis server helper
+#  CGI form we use.
 #
 use Singleton::CGI;
-use Singleton::Redis;
 
 
 # Session information is stored in the database.
 use CGI::Session;
-use CGI::Session::Driver::redis;
 
 
 #
@@ -99,13 +97,10 @@ sub new
     # Gain access to the CGI instance too.
     #
     my $form = Singleton::CGI->instance();
-    my $redis = Singleton::Redis->instance();
 
-    my $t = new CGI::Session( "driver:redis",
+    my $t = new CGI::Session( "driver:file",
                               $form,
-                            {  Redis => $redis,
-                               Expire => 60 * 60 * 24 * 7
-                            }
+                            {  Path => "/tmp" }
                             )
       or
         die($CGI::Session::errstr);
