@@ -185,7 +185,7 @@ sub get
     );
     $sql->execute($username) or
       die "Failed to fetch bookmarks : " . $db->errstr();
-    $bookmarks = $sql->fetchall_arrayref();
+    my $bookmarks = $sql->fetchall_arrayref();
     $sql->finish();
 
     #
@@ -221,7 +221,7 @@ sub count
         'SELECT COUNT(a.id) FROM bookmarks AS a INNER JOIN users AS b WHERE a.user_id=b.id AND b.username=?'
     );
     $query->execute($username);
-    $count = $query->fetchrow_array();
+    my $count = $query->fetchrow_array();
 
     return ($count);
 }

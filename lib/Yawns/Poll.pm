@@ -113,7 +113,7 @@ sub commentCount
     my $query = $db->prepare(
            'SELECT COUNT(*) FROM comments WHERE score>0 AND root=? AND type=?');
     $query->execute( $id, 'p' );
-    $count = $query->fetchrow_array();
+    my $count = $query->fetchrow_array();
 
     return ($count);
 
@@ -154,7 +154,7 @@ sub get
     );
     $query->execute($id);
 
-    ( $question, $total, $author, $date ) = $query->fetchrow_array();
+    my ( $question, $total, $author, $date ) = $query->fetchrow_array();
 
     # get answers and their respective votes
     my $query2 = $db->prepare(
@@ -294,7 +294,7 @@ sub getTitle
     my $sql   = $db->prepare($query);
     $sql->execute($id);
     my @ret = $sql->fetchrow_array();
-    $title = $ret[0];
+    my $title = $ret[0];
     $sql->finish();
 
     return ($title);
@@ -327,7 +327,7 @@ sub getVoteCount
     my $sql   = $db->prepare($query);
     $sql->execute($id);
     my @ret = $sql->fetchrow_array();
-    $count = $ret[0] || 0;
+    my $count = $ret[0] || 0;
     $sql->finish();
 
 
@@ -346,7 +346,6 @@ sub invalidateCache
 {
     my ($class) = (@_);
 
-    my $id = $class->{ 'id' };
 }
 
 
