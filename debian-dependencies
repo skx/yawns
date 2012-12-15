@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Install debian dependencies
+#
+apt-get install libhtml-entities-perl
+apt-get install libcgi-pm-perl
+apt-get install libdbi-perl
+apt-get install libhtml-parser-perl
+apt-get install libhtml-treebuilder-perl
+apt-get install libhtml-tree-perl
+apt-get install libredis-perl
+apt-get install libcgi-session-perl
+apt-get install libhtml-template-perl
