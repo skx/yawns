@@ -2,13 +2,24 @@
 #
 # Install debian dependencies
 #
-apt-get install libhtml-entities-perl
-apt-get install libcgi-pm-perl
-apt-get install libdbi-perl
-apt-get install libhtml-parser-perl
-apt-get install libhtml-treebuilder-perl
-apt-get install libhtml-tree-perl
-apt-get install libredis-perl
-apt-get install libcgi-session-perl
-apt-get install libhtml-template-perl
-apt-get install libauthen-captcha-perl
+
+function install
+{
+    apt-get install $1 --yes --force-yes
+}
+
+
+#
+#  Install what we need
+#
+install perl
+install perl-modules
+install libcgi-pm-perl
+install libdbi-perl
+install libhtml-parser-perl
+install libhtml-treebuilder-perl
+install libhtml-tree-perl
+install libredis-perl
+install libcgi-session-perl
+install libhtml-template-perl
+install libauthen-captcha-perl
