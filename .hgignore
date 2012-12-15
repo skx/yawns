@@ -1,7 +1,0 @@
-syntax: glob
-htdocs/atom.xml
-htdocs/articles.rdf
-htdocs/headlines.rdf
-htdocs/images/auth/*.png
-htdocs/test-output.html
-fabfile.pyc
