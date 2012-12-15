@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<rss version='2.0' xmlns:lj='http://www.livejournal.org/rss/lj/1.0/'>
+	<channel>
+<!-- tmpl_if name='reported' -->
+		<title>Recently Reported Weblog Entries</title>
+		<link>http://debian-administration.org/</link>
+		<description>Recently Reported Weblog Entries</description>
+<!-- tmpl_else -->
+		<title>Weblogs for <!-- tmpl_var name="user" --></title>
+		<link>http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog</link>
+		<description>Weblogs for <!-- tmpl_var name="user" --></description>
+<!-- /tmpl_if -->
+
+	<!-- tmpl_loop name="entries" -->
+	<item>
+		<title><!-- tmpl_var name="title" --></title>
+	        <pubDate><!-- tmpl_var name="ondate" --> <!-- tmpl_var name="attime" -->:00 GMT</pubDate>
+		<link>http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="item_id" --></link>
+		<comments>http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="item_id" -->#comments</comments>
+                <author><!-- tmpl_var name='realname' escape='html' --> (<!-- tmpl_var name='user' escape='html' -->)</author>
+		<guid isPermaLink="true">http://debian-administration.org/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="item_id" --></guid>
+		<description><!-- tmpl_var name="bodytext" --></description>
+	</item>
+	<!-- /tmpl_loop -->
+        </channel>
+</rss>

@@ -1,0 +1,28 @@
+To: <!-- tmpl_var name='to' -->
+From: <!-- tmpl_var name='from' -->
+Subject: New submission [<!-- tmpl_var name="title" -->]
+Content-type: text/plain
+X-Source: <!-- tmpl_var name='ip_address' -->
+
+
+<!-- tmpl_var name="author" --> has submitted a new article:
+
+<!-- tmpl_var name="title" -->
+
+<!-- tmpl_var name="article" -->
+
+
+ You can view the current list of pending submissions here:
+
+      http://www.debian-administration.org/submission/list
+
+ If you wish to disable these mails please visit the following
+ URL:
+
+      http://www.debian-administration.org/edit/notifications
+    
+Steve
+-- 
+
+
+

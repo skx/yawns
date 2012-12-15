@@ -1,0 +1,15 @@
+To: <!-- tmpl_var name="address" -->
+From: <!-- tmpl_var name="sitename" --> <<!-- tmpl_var name="site_email"-->>
+Subject: Re: <!-- tmpl_var name="title" -->
+X-Source: <!-- tmpl_var name='ip_address' -->
+
+  <!-- tmpl_var name="author" --> has posted a new comment in reply to your weblog entry 
+ on the Debian Administration website.
+
+  To view the comment please click the link below:
+
+     <!-- tmpl_var name="comment_link" -->
+
+Steve
+-- 
+<!-- tmpl_var name="home_url" -->

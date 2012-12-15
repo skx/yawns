@@ -1,0 +1,9 @@
+<!-- tmpl_if name='all_tags' -->
+<!-- tmpl_loop name='all_tags' -->
+ <span style="font-size: <!-- tmpl_var name='tsize' -->px">
+   <a href="/tag/<!-- tmpl_var name='tag' escape='html' -->" title="Used <!-- tmpl_var name='count' --> times"><!-- tmpl_var name='tag' --></a>
+ </span>
+<!-- /tmpl_loop -->
+<!-- tmpl_else -->
+<p>No tags.</p>
+<!-- /tmpl_if -->

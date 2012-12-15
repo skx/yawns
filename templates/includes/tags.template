@@ -1,0 +1,7 @@
+Tags: <!-- tmpl_if name='tags' -->
+<!-- tmpl_loop name="tags" -->
+<a href="/tag/<!-- tmpl_var name="tag" escape="html" -->" title="Find more content with this tag" rel="tag"><!-- tmpl_var name="tag" --></a><!-- tmpl_unless name="__last__" -->, <!-- /tmpl_unless -->
+<!-- /tmpl_loop -->
+<!-- tmpl_else -->
+<i>none</i>.
+<!-- /tmpl_if -->

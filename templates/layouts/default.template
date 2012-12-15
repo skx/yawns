@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <!-- tmpl_var name='metadata' -->
+    <!-- tmpl_var name='stylesheet' -->
+<!-- tmpl_if name='title' -->
+    <title><!-- tmpl_var name='title' --></title>
+<!-- tmpl_else -->
+    <title>Debian Administration - Debian Administration Resources</title>
+<!-- /tmpl_if -->
+    <link rel="stylesheet" type="text/css" media="" href="/css/jquery.autocomplete.css">
+    <script src="/js/jquery.js" type="text/javascript"></script>
+    <script src="/js/jquery.autocomplete.min.js" type="text/javascript"></script>
+    <script src="/js/jquery.autogrow.js"     type="text/javascript"></script>
+    <script src="/js/jquery.textboxhints.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+    (function() {
+        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'http://api.flattr.com/js/0.5.0/load.js?mode=auto';
+        t.parentNode.insertBefore(s, t);
+    })();
+/* ]]> */
+</script>
+
+ <script type="text/javascript">
+            $(function(){
+                // find all the input elements with title attributes
+                $('input[title!=""]').textboxhints();
+            });
+ </script>
+
+  </head>
+  <body>
+
+ <div id="header">
+      <div id="logo">
+        <h1><a href="/"><!-- tmpl_var name="site_title" --></a></h1>
+<!-- tmpl_if name='ipv6' -->
+    <h4 id="headerSubTitle"><b>IPv6</b> System Administration Tips and Resources</h4>
+<!-- tmpl_else -->
+    <h4 id="headerSubTitle">System Administration Tips and Resources</h4>
+<!-- /tmpl_if -->
+      </div>
+       <div id="searchy" style="text-align:right; padding-right:5%;">
+ <form id="quickSearch" action="/search/" method="get">
+  <input size="10" id="search"  name="q" title="Quick search ..">
+  <input type="hidden" name="cmd" value="Search!">
+  <input type="submit" name="go" value="Go">
+ </form>
+
+
+       </div>
+      <div id="links">
+        <ul>
+<li> <a href="/about/Debian%20Administration" title="About this site">About</a></li>
+<li> <a href="/archive" title="Archived Articles, by Month">Archive</a></li>
+<li> <a href="/about/FAQ" title="Frequently asked questions with answers">FAQ</a></li>
+<li> <a href="/hof" title="Article statistics">Hall of Fame</a> </li>
+<li> <a href="/about/Search" title="Search the articles which have been posted previously">Search</a> </li>
+<li> <a href="/tag" title="See tagged content">Tag Cloud</a> </li>
+        </ul>
+      </div>
+    </div>
+
+<div id="signup">
+  <!-- tmpl_var name="login_box_text" -->
+</div>
+
+<table width="100%">
+
+<tr>
+ <td width="20%" valign="top">
+  <!-- tmpl_var name="sidebar_text" -->
+ </td>
+ <td width="60%" valign="top">
+
+  <!-- Main body -->
+  <div id="content">
+   <!-- tmpl_include name='###' -->
+  </div>
+ </td>
+ <td width="2%" valign="top"><p>&nbsp;</p></td>
+ <td width="18%" valign="top">
+
+  <p>&nbsp;</p>
+ <div id="flattr">
+ <h3>Flattr</h3>
+ <div style="text-align:center;"><a class="FlattrButton" style="display:none;" href="http://debian-administration.org"></a></div>
+ </div>
+   <!-- tmpl_if  name="show_adverts" -->
+
+        <!-- tmpl_if name="user_adverts" -->
+           <h3>Community Advert</h3>
+           <p></p>
+           <div class="advert" style="border: solid 1px;" onClick="document.location.href='/follow/<!-- tmpl_var name='advert_id' -->';" onMouseOver="this.style.cursor='pointer'; window.status='<!-- tmpl_var name='advert_link' -->';" onMouseOut="window.status='';">
+        <p style="text-align: center;"><a href="/follow/<!-- tmpl_var name='advert_id' -->"><!-- tmpl_var name='advert_link_text' --></a></p>
+        <!-- tmpl_var name='advert_text' -->
+        <p style="text-align: center;"><a href="/follow/<!-- tmpl_var name='advert_id' -->"><!-- tmpl_var name='advert_link_text' --></a></p>
+        </div>
+        <ul>
+        <li><a href="/about/FAQ%20:%20Site%20Adverts#user">What is this?</a></li>
+        </ul>
+        <!-- /tmpl_if -->
+
+        <!-- tmpl_if name="google_adverts" -->
+           <div class="advert">
+<h3>Sponsored Links</h3>
+<p></p>
+<div align="center">
+<script type="text/javascript"><!--
+google_ad_client = "pub-1910202134166551";
+//200x90, created 08/12/07
+google_ad_slot = "2315151555";
+google_ad_width = 200;
+google_ad_height = 90;
+//--></script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+            <!-- tmpl_unless name="logged_in" -->
+	       <p><a href="/about/FAQ%20:%20Site%20Adverts">Why are these adverts here?</a></p>
+            <!-- /tmpl_unless -->
+	    </div>
+	<!-- /tmpl_if -->
+
+   <!-- /tmpl_if -->
+
+<!-- tmpl_if name='logged_in' -->
+ <!-- tmpl_if name='article_id' -->
+  <h3>Bookmark This</h3>
+  <p><a href="/bookmark/onarticle/<!-- tmpl_var name='article_id' -->/<!-- tmpl_var name='session' -->">Bookmark this article</a>.</p>
+ <!-- /tmpl_if -->
+
+ <!-- tmpl_if name='poll' -->
+  <h3>Bookmark This</h3>
+  <p><a href="/bookmark/onpoll/<!-- tmpl_var name='poll' -->/<!-- tmpl_var name='session' -->">Bookmark this poll</a>.</p>
+ <!-- /tmpl_if -->
+
+ <!-- tmpl_if name='onweblog' -->
+  <h3>Bookmark This</h3>
+  <p><a href="/bookmark/onweblog/<!-- tmpl_var name='onweblog' -->/<!-- tmpl_var name='session' -->">Bookmark this weblog</a>.</p>
+ <!-- /tmpl_if -->
+<!-- /tmpl_if -->
+
+
+<!-- tmpl_if name="article_admin" -->
+   <h3>Administrivia</h3>
+   <ul>
+    <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
+    <li><a href="/create/related/<!-- tmpl_var name="article_id" -->">Add Related Link</a></li>
+   </ul>
+<!-- tmpl_else -->
+   <!-- tmpl_if name='article_author' -->
+   <h3>Author Links</h3>
+   <ul>
+   <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
+   </ul>
+   <!-- /tmpl_if -->
+<!-- /tmpl_if -->
+
+  <!-- tmpl_if name="related" -->
+   <h3>Related Links</h3>
+   <ul>
+   <!-- tmpl_loop name="related" -->
+    <li><a href="<!-- tmpl_var name="link" -->"><!-- tmpl_var name="title" --></a> <!-- tmpl_if name="related_admin" -->[ <a href="/delete/related/<!-- tmpl_var name="article" -->/<!-- tmpl_var name="id" -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to delete this link?') );">x</a> ]<!-- /tmpl_if --></li>
+  <!-- /tmpl_loop -->
+   </ul>
+  <!-- /tmpl_if -->
+
+<!-- tmpl_if name='show_poll_archive' -->
+ <h3>Poll Archive</h3>
+<p><a href="/poll/archive">View Prior Polls</a></p>
+
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name='recent_tags' -->
+ <h3>Recent Tags</h3>
+<span id="recent_tags">
+<ul>
+<!-- tmpl_loop name='recent_tags' -->
+<li><a href="/tag/<!-- tmpl_var name='tag' escape='html' -->"><!-- tmpl_var name='tag' escape='html' --></a></li>
+<!-- /tmpl_loop -->
+</ul>
+</span>
+<!-- /tmpl_if -->
+
+
+<!-- tmpl_if name='recent_tips' -->
+<p>&nbsp;</p>
+<div id="tipbox">
+<h3>Recent Tips</h3>
+<div class="weblogs">
+<!-- tmpl_loop name="recent_tips" -->
+	<div class="body">
+	<div class="title"><a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a></div>
+        <div class="tagline">by <a href="/users/<!-- tmpl_var name='poster' -->"><!-- tmpl_var name='poster' --></a></div>
+	<div class="comments"> <!-- tmpl_if name="comments" --> <a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->#comments"><!-- tmpl_var name='comments' --> comment<!-- tmpl_if name='plural' -->s<!-- /tmpl_if --></a><!-- /tmpl_if --></div>
+	</div>
+ <!-- /tmpl_loop -->
+	</div>
+ </div>
+<!-- /tmpl_if name='recent_tips' -->
+ </td>
+</tr>
+
+<tr><td><p>&nbsp;</p></td>
+<td><p>&nbsp;</p></td>
+<td width="2%"></td>
+<td><p>&nbsp;</p></td></tr>
+<tr><td colspan="4" id="footer">
+<p>Articles and comments are the property of their respective posters.</p>
+<p>Trademarks are the property of their respective owners.<br />  Debian is <a
+href="http://tarr.uspto.gov/servlet/tarr?regser=serial&amp;entry=75386376&amp;action=Request+Status">a registered trademark</a> of <a href="http://www.spi-inc.org">Software in the Public Interest, Inc</a>.</p>
+<p>This site is copyright &copy; 2004-2011 <a href="http://www.steve.org.uk/">Steve Kemp</a>.<br />Site hosting provided by <a href="http://www.bytemark.co.uk/">Bytemark Hosting</a>.</p>
+<p><a href="/about/Syndication">Article Feeds in Atom, RSS, &amp; RDF formats</a></p>
+  </td></tr></table>
+  </body>
+</html>
+

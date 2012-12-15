@@ -1,0 +1,24 @@
+<!-- // -*-mode: C++; style: K&R; c-basic-offset: 4 ; -*- */ -->
+
+<!-- tmpl_unless name='anon' -->
+
+<script type="text/javascript">
+   $(function(){
+	$("select#type").change(function(){
+                       $("#progress" ).show();
+                       $('#message').load( "/ajax/setformat/" + $("select#type").val(), function () {
+                       setTimeout( '$("#message").text("");', 4500 );
+                       $("#progress").hide();
+} )
+            }) } );
+</script>
+<!-- /tmpl_unless -->
+
+<select name="type" id="type">
+  <option value="bbcode" <!-- tmpl_if name='bbcode_selected' -->selected<!-- /tmpl_if -->>BBCode</option>
+  <option value="html" <!-- tmpl_if name='html_selected' -->selected<!-- /tmpl_if -->>HTML Text</option>
+  <option value="text" <!-- tmpl_if name='text_selected' -->selected<!-- /tmpl_if -->>Plain Text</option>
+  <option value="textile" <!-- tmpl_if name='textile_selected' -->selected<!-- /tmpl_if -->>Textile</option>
+</select>
+
+<span id="progress" style="display: none;"> <img src="/images/progress.gif" alt="Loading .."/></span><span id="message"></span>

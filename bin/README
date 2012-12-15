@@ -1,0 +1,12 @@
+
+admin/
+-----
+
+  This directory contains administration scripts useful for command
+ line operation by the administrator of a YAWNS powered website.
+
+  Each of the scripts will respond to --help, and --manual, to give
+ you more details about their operation.
+
+Steve
+--

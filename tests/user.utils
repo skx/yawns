@@ -1,0 +1,112 @@
+#!/usr/bin/perl -w -I..
+#
+#  A utility method which makes is used to create and delete temporary
+# users.  This is used by several of the test cases we have.
+#
+#
+
+
+#
+#  Load the modules we use.
+#
+BEGIN { use_ok( 'Yawns::User'); }
+require_ok( 'Yawns::User' );
+BEGIN { use_ok( 'Yawns::Users'); }
+require_ok( 'Yawns::Users' );
+
+
+#
+#  Create a new temporary user, and return both the object and the
+# username of that user.
+#
+sub setupNewUser
+{
+    #  Pick a random username.
+    #
+    my $username = join ( '', map {('a'..'z')[rand 26]} 0..7 );
+
+    #
+    #  Pick a random password
+    #
+    my $password = join ( '', map {('a'..'z')[rand 26]} 0..7 );
+
+    #
+    #  Create a random email address.
+    #
+    my $acct   = join ( '', map {('a'..'z')[rand 26]} 0..7 );
+    my $domain = join ( '', map {('a'..'z')[rand 26]} 0..7 );
+    my @tlds   = qw/ .com .org .net .co.uk /;
+    my $tld    = $tlds[rand @tlds];
+
+    #
+    #  The complete thing.
+    #
+    my $address  = $acct . '@' . $domain . $tld;
+
+
+    #
+    #  Create a new user object.
+    #
+    my $user = Yawns::User->new( username=> $username);
+
+    #
+    # Is the object the correct type?
+    #
+    isa_ok( $user, "Yawns::User" );
+
+    #
+    #  Get a handle on our collection of users.
+    #
+    my $users = Yawns::Users->new();
+    isa_ok( $users, "Yawns::Users" );
+
+    #
+    #  Make sure that user doesn't already exist.
+    #
+    ok( $users->exists( username => $username ) == 0, "User '$username' doesn't exist" );
+    ok( !$user->exists(), "The user really doesn't exist" );
+
+    #
+    #  Now try to create the user.
+    #
+    my $new = Yawns::User->new( username => $username,
+				password => $password,
+				email    => $address );
+    $new->create();
+
+
+    #
+    #  OK the user should now exist.
+    #
+    ok( $users->exists( username => $username ) == 1, "User '$username' now exists" );
+
+
+    return( $user, $username, $address, $password );
+}
+
+
+#
+#  Delete the given user, and ensure that the user is deleted.
+#
+sub deleteUser
+{
+    my ( $user, $username ) = ( @_ );
+
+
+    #
+    #  Delete the user.
+    #
+    $user->delete();
+
+    #
+    #  Make sure the user is gone.
+    #
+    my $users = Yawns::Users->new();
+    ok( $users->exists( username => $username ) == 0, "User '$username' doesn't exist after deletion" );
+    ok( ! $user->exists(), "The user really doesn't exist" );
+}
+
+
+1;
+
+

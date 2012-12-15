@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"  xmlns="http://purl.org/rss/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <channel rdf:about="<!-- tmpl_var name="home_url" -->">
+
+<!-- tmpl_if name='recent_comments' -->
+ <title>Recently submitted comments.</title>
+<!-- /tmpl_if -->
+<!-- tmpl_if name='recent_reported' -->
+ <title>Recently reported comments.</title>
+<!-- /tmpl_if -->
+<!-- tmpl_if name='onarticle' -->
+ <title><!-- tmpl_var name='title' --></title>
+<!-- /tmpl_if -->
+<!-- tmpl_if name='onpoll' -->
+ <title><!-- tmpl_var name='title' --></title>
+<!-- /tmpl_if -->
+<!-- tmpl_if name='onweblog' -->
+ <title><!-- tmpl_var name='title' --></title>
+<!-- /tmpl_if -->
+<!-- tmpl_if name='byuser' -->
+ <title>Comments posted by <!-- tmpl_var name='username' --></title>
+<!-- /tmpl_if -->
+ <link><!-- tmpl_var name="home_url" -->/</link>
+<!-- tmpl_if name='recent_comments' -->
+ <description>Recently Submitted Comments</description>
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name='recent_reported' -->
+ <description>Recently Reported Comments</description>
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name='onarticle' -->
+ <description><!-- tmpl_var name='title' --></description>
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name='onpoll' -->
+ <description><!-- tmpl_var name='title' --></description>
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name='onweblog' -->
+ <description><!-- tmpl_var name='title' --></description>
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name='byuser' -->
+ <description>Comments posted by <!-- tmpl_var name='username' --></description>
+<!-- /tmpl_if -->
+
+ <items>
+  <rdf:Seq>
+   <!-- tmpl_loop name="teasers" -->
+     <rdf:li rdf:resource="<!-- tmpl_var name='link' -->" />
+   <!-- /tmpl_loop -->
+  </rdf:Seq>
+ </items>
+ </channel>
+
+ <image rdf:about="<!-- tmpl_var name="home_url" -->/favicon.ico">
+  <title><!-- tmpl_var name="site_slogan" --></title>
+  <url><!-- tmpl_var name="home_url" -->/favicon.ico</url>
+  <link><!-- tmpl_var name="home_url" -->/</link>
+ </image>
+
+ <!-- tmpl_loop name="comments" -->
+ <item rdf:about="<!-- tmpl_var name='link' -->">
+  <title><!-- tmpl_var name="title" --></title>
+  <link><!-- tmpl_var name='link' --></link>
+  <description><!-- tmpl_var name="body" -->
+  <!-- tmpl_if name='ip' -->
+  &lt;p&gt;<!-- tmpl_var name='postdate' --> <!-- tmpl_var name='posttime' --> <!-- tmpl_var name='author' --> [<!-- tmpl_var name='ip' -->] Score: <!-- tmpl_var name='score' -->&lt;/p&gt;
+  <!-- /tmpl_if -->
+  </description>
+ </item>
+ <!-- /tmpl_loop -->
+</rdf:RDF>

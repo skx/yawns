@@ -1,0 +1,193 @@
+#!/usr/bin/perl -w -I. -I..
+
+=head1 NAME
+
+memcached - Show or update values from the memory cache.
+
+=head1 SYNOPSIS
+
+  memcached [options]
+
+  General Options:
+   --delete   Remove the key from the cache.
+   --show     Show the specified preference.
+   --set      Set a specified preference.
+   --value    The value to set to a preference.
+
+  Help Options:
+   --help     Show this scripts help information.
+   --manual   Read this scripts manual.
+   --verbose  show sending progress.
+   --version  Show the version number and exit.
+
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--delete>
+Delete the given value from the cache.
+
+=item B<--help>
+Show the scripts help information.
+
+=item B<--manual>
+Read the manual.
+
+=item B<--set>
+Set a given value in the cache, specifying the value with B<--value>
+
+=item B<--show>
+Show the contents of the given memory cache key.
+
+=item B<--value>
+Specify the value to set in the cache.
+
+=item B<--verbose>
+Show sending progress.
+
+=item B<--version>
+Show the version number and exit.
+
+=back
+
+
+=head1 DESCRIPTION
+
+  This script allows the values stored in the memory cache with
+ memcached to be displayed, updated, or deleted.
+
+=cut
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+ $Id: memcached,v 1.1 2007-02-04 16:53:38 steve Exp $
+
+=cut
+
+
+use strict;
+use warnings;
+
+use Data::Dumper;
+use Getopt::Long;
+use Pod::Usage;
+use Singleton::DBI;
+use Yawns::Preferences;
+
+
+#
+#  Options.
+#
+my %CONFIG;
+$CONFIG{'verbose'} = 0;
+
+
+#
+#  Parse our command line arguments
+#
+parseCommandLineArguments();
+
+#
+#  Get the cache handle
+#
+my $cache = Singleton::Memcache->instance();
+
+
+#
+# See what we're doing.
+#
+if ( $CONFIG{'delete'} )
+{
+    #
+    #  Delete from the cache.
+    #
+    $cache->delete( $CONFIG{'delete'} );
+    exit;
+}
+elsif ( $CONFIG{'set'} )
+{
+    #
+    #  Set the value - after checking we have something
+    #
+    if ( ! $CONFIG{'value'} )
+    {
+        print "You must specify a value to set.\n";
+    }
+    else
+    {
+        $cache->set( $CONFIG{'set'}, $CONFIG{'value'} );
+    }
+    exit;
+}
+elsif ( $CONFIG{'show'} )
+{
+    #
+    #  Show a value.
+    #
+    my $value = $cache->get( $CONFIG{'show'} );
+    print Dumper( \$value );
+    exit;
+}
+else
+{
+    print "You must specify either --delete, --set, or --show\n";
+    exit;
+}
+
+#
+#  All done.
+#
+exit;
+
+
+
+=begin doc
+
+  Parse the arguments specified upon the command line.
+
+=end doc
+
+=cut
+
+sub parseCommandLineArguments
+{
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
+
+    #
+    #  Parse the options we accept
+    #
+    GetOptions(
+               "delete=s",   \$CONFIG{'delete'},
+               "set=s",      \$CONFIG{'set'},
+               "user=s",     \$CONFIG{'user'},
+               "show=s",     \$CONFIG{'show'},
+               "value=s",    \$CONFIG{'value'},
+               "help",       \$HELP,
+               "manual",     \$MANUAL,
+               "verbose",    \$CONFIG{'verbose'},
+               "version",    \$VERSION,
+             );
+
+    pod2usage(1) if $HELP;
+    pod2usage(-verbose => 2 ) if $MANUAL;
+
+
+    if ( $VERSION )
+    {
+        my $REVISION      = '$Revision: 1.1 $';
+        if ( $REVISION =~ /1.([0-9.]+) / )
+        {
+            $REVISION = $1;
+        }
+
+        print "CVS Revision: $REVISION\n";
+        exit;
+    }
+}

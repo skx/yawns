@@ -1,0 +1,104 @@
+<!-- tmpl_loop name='comments' -->
+
+<!-- Indent comments.
+     See matching loop to correctly terminate the comment indentation.
+  -->
+
+<!-- tmpl_loop name="indent" -->
+ <div class="indent">
+ <!-- tmpl_var name='space' -->
+<!-- /tmpl_loop -->
+
+
+<!-- Comment entry -->
+<div class="comment">
+  <div class="link">
+   <!-- tmpl_if name='is_poll' -->
+    <a href="/polls/<!-- tmpl_var name='poll' -->#comment_<!-- tmpl_var name='comment_id' -->">#<!-- tmpl_var name='comment_id' --></a>
+   <!-- /tmpl_if -->
+   <!-- tmpl_if name="article_id" -->
+    <a href="/articles/<!-- tmpl_var name='article_id' -->#comment_<!-- tmpl_var name='comment_id' -->">#<!-- tmpl_var name='comment_id' --></a>
+   <!-- /tmpl_if -->
+   <!-- tmpl_if name="weblog_id" -->
+    <a href="<!-- tmpl_var name="weblog_link" -->#comment_<!-- tmpl_var name='comment_id' -->">#<!-- tmpl_var name="comment_id" --></a>
+   <!-- /tmpl_if -->
+  </div>
+
+ <div class="title"><a name="comment_<!-- tmpl_var name='comment_id' -->"><!-- tmpl_var name='title' --></a>
+
+ </div>
+
+ <div class="tagline">
+ Posted by <!-- tmpl_if name="suspended" -->suspended user <strike><!-- tmpl_var name='byuser' --></strike><!-- tmpl_else --><a href="/users/<!-- tmpl_var escape='url' name='byuser' -->"><!-- tmpl_var name='byuser' --></a><!-- /tmpl_if --> <!-- tmpl_if name="ip" --> (<!-- tmpl_var name="ip" -->)<!-- /tmpl_if --> on <!-- tmpl_var name='ondate' -->  at <!-- tmpl_var name='attime' --> <br />
+<!-- tmpl_if name='modifier' --><!-- tmpl_var name='modifier' --><!-- /tmpl_if --></div>
+
+ <div class="body">
+  <!-- tmpl_var name='body' -->
+ </div>
+
+<p class="foot">
+ [
+ <!-- tmpl_if name="parent" -->
+  <a href="#comment_<!-- tmpl_var name="parent" -->">Parent</a>
+ <!-- tmpl_else -->
+  Parent
+ <!-- /tmpl_if -->
+
+ <!-- tmpl_if name='is_poll' -->
+  <!-- tmpl_if name='enabled'-->
+   | <a href="/comment/onpoll/<!-- tmpl_var name='poll'>/<!-- tmpl_var name='comment_id' -->">Reply to this comment</a>
+   <!-- /tmpl_if -->
+ <!-- /tmpl_if -->
+
+ <!-- tmpl_if name="article_id" -->
+  | <a href="/comment/onarticle/<!-- tmpl_var name='article_id'>/<!-- tmpl_var name='comment_id' -->">Reply to this comment</a>
+ <!-- /tmpl_if -->
+
+ <!-- tmpl_if name="weblog_id" -->
+  <!-- tmpl_if name='enabled'-->
+  | <a href="/comment/onweblog/<!-- tmpl_var name='weblog_id'>/<!-- tmpl_var name='comment_id' -->">Reply to this comment</a>
+ <!-- /tmpl_if -->
+ <!-- /tmpl_if -->
+
+ <!-- tmpl_if name="is_poll" -->
+  <!-- tmpl_if name="comment_admin" -->
+   | <a href="/edit/comment/onpoll/<!-- tmpl_var name='poll'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to edit this comment?') );">Edit this comment</a>
+   | <!-- tmpl_if name='ip' --><a href="/ban/<!-- tmpl_var name="ip" escape='html' -->">ban ip</a><!-- /tmpl_if -->
+  <!-- /tmpl_if -->
+  <!-- tmpl_if name='report' -->
+   | <a href="/report/comment/onpoll/<!-- tmpl_var name='poll'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to report this comment as abusive or spam?') );">Report this comment</a>
+  <!-- /tmpl_if -->
+ <!-- /tmpl_if -->
+
+ <!-- tmpl_if name="article_id" -->
+  <!-- tmpl_if name="comment_admin" -->
+   | <a href="/edit/comment/onarticle/<!-- tmpl_var name='article_id'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to edit this comment?') );">Edit this comment</a>
+   | <!-- tmpl_if name='ip' --><a href="/ban/<!-- tmpl_var name="ip" escape='html' -->">ban ip</a><!-- /tmpl_if -->
+  <!-- /tmpl_if -->
+  <!-- tmpl_if name='report' -->
+   | <a href="/report/comment/onarticle/<!-- tmpl_var name='article_id'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to report this comment as abusive or spam?') );">Report this comment</a>
+  <!-- /tmpl_if -->
+ <!-- /tmpl_if -->
+
+ <!-- tmpl_if name="weblog_id" -->
+  <!-- tmpl_if name="comment_admin" -->
+   | <a href="/edit/comment/onweblog/<!-- tmpl_var name='weblog_id'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to edit this comment?') );">Edit this comment</a>
+   | <!-- tmpl_if name='ip' --><a href="/ban/<!-- tmpl_var name="ip" escape='html' -->">ban ip</a><!-- /tmpl_if -->
+  <!-- /tmpl_if -->
+  <!-- tmpl_if name='report' -->
+   | <a href="/report/comment/onweblog/<!-- tmpl_var name='weblog_id'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to report this comment as abusive or spam?') );">Report this comment</a>
+  <!-- /tmpl_if -->
+ <!-- /tmpl_if -->
+]
+</p>
+
+</div>
+
+<!-- Terminate the indentation of the comments. -->
+<!-- tmpl_loop name="indent" -->
+ </div>
+ <!-- tmpl_var name='space' -->
+<!-- /tmpl_loop -->
+
+<p></p>
+<!-- /tmpl_loop -->

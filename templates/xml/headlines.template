@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"  xmlns="http://purl.org/rss/1.0/">
+
+ <channel rdf:about="<!-- tmpl_var name="home_url" -->/">
+ <title><!-- tmpl_var name="site_slogan" --></title>
+ <link><!-- tmpl_var name="home_url" -->/</link>
+ <description><!-- tmpl_var name="site_desc" --></description>
+  <items>
+   <rdf:Seq>
+    <!-- tmpl_loop name="headlines" -->
+       <rdf:li rdf:resource="<!-- tmpl_var name="home_url" -->/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name="slug" -->" />
+    <!-- /tmpl_loop -->
+   </rdf:Seq>
+  </items>
+ </channel>
+
+ <image rdf:about="<!-- tmpl_var name="home_url" -->/favicon.ico">
+  <title><!-- tmpl_var name="site_slogan" --></title>
+  <url><!-- tmpl_var name="home_url" -->/favicon.ico</url>
+  <link><!-- tmpl_var name="home_url" -->/</link>
+ </image>
+
+ <!-- tmpl_loop name='headlines' -->
+ <item rdf:about="<!-- tmpl_var name="home_url" -->/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name="slug" -->">
+  <title><!-- tmpl_var name="title" --></title>
+  <pubDate><!-- tmpl_var name='pubdate' --></pubDate>
+  <link><!-- tmpl_var name="home_url" -->/article/<!-- tmpl_var name="slug" --></link>
+ </item>
+ <!-- /tmpl_loop -->
+</rdf:RDF>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+ <ShortName>Debian Administration</ShortName>
+ <Description>Search Debian-Administration.org</Description>
+ <Tags>debian-administration</Tags>
+ <Url type="text/html" template="http://www.debian-administration.org/search/?q={searchTerms}&cmd=Search!&go=Go"/>
+</OpenSearchDescription>

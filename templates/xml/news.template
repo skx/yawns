@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<rss version='2.0' xmlns:lj='http://www.livejournal.org/rss/lj/1.0/'>
+	<channel>
+         <title>Recent Site News</title>
+         <link>http://debian-administration.org/News</link>
+         <description>Recent Site News</description>
+
+	<!-- tmpl_loop name="entries" -->
+	<item>
+<!-- tmpl_if name='status' --><!-- /tmpl_if -->
+		<title><!-- tmpl_var name="ondate" --></title>
+	        <pubDate><!-- tmpl_var name="ondate" -->:00 GMT</pubDate>
+		<link>http://debian-administration.org/News/#id_<!-- tmpl_var name="id" --></link>
+		<guid isPermaLink="true">http://debian-administration.org/News/#<!-- tmpl_var name="id" --></guid>
+		<description><!-- tmpl_var name="news" escape="html" --></description>
+	</item>
+	<!-- /tmpl_loop -->
+        </channel>
+</rss>

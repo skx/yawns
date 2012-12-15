@@ -1,0 +1,122 @@
+#!/usr/bin/perl -w -I. -I..
+
+=head1 NAME
+
+users - Show the count of users.
+
+=head1 SYNOPSIS
+
+  users [options]
+
+  Help Options:
+   --help     Show this scripts help information.
+   --manual   Read this scripts manual.
+   --version  Show the version number and exit.
+
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--help>
+Show the scripts help information.
+
+=item B<--manual>
+Read the manual.
+
+=item B<--version>
+Show the version number and exit.
+
+=back
+
+
+=head1 DESCRIPTION
+
+  This is a simple utility to show the number of registered site
+ users upon your site.
+
+=cut
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+ $Id: users,v 1.5 2007-02-04 19:54:50 steve Exp $
+
+=cut
+
+
+use strict;
+use warnings;
+use Getopt::Long;
+use Pod::Usage;
+use Yawns::Users;
+
+
+#
+#  Options.
+#
+my %CONFIG;
+
+
+#
+#  Parse our command line arguments
+#
+parseCommandLineArguments();
+
+
+#
+#  Count the users
+#
+my $users = Yawns::Users->new();
+print "User count: " . $users->count() . "\n";
+
+
+#
+#  All done
+#
+exit;
+
+
+
+=begin doc
+
+  Parse the arguments specified upon the command line.
+
+=end doc
+
+=cut
+
+sub parseCommandLineArguments
+{
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
+
+    #
+    #  Parse the options we accept
+    #
+    GetOptions(
+               "help",       \$HELP,
+               "manual",     \$MANUAL,
+               "version",    \$VERSION,
+             );
+
+    pod2usage(1) if $HELP;
+    pod2usage(-verbose => 2 ) if $MANUAL;
+
+    if ( $VERSION )
+    {
+        my $REVISION      = '$Revision: 1.5 $';
+        if ( $REVISION =~ /1.([0-9.]+) / )
+        {
+            $REVISION = $1;
+        }
+
+        print "CVS Revision: $REVISION\n";
+        exit;
+    }
+}
+

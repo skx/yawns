@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ <title><!-- tmpl_var name="site_slogan" --></title>
+ <subtitle><!-- tmpl_var name="site_desc" --></subtitle>
+ <link href="<!-- tmpl_var name="home_url" -->/" />
+ <link rel="self" href="<!-- tmpl_var name="home_url" -->/atom.xml" />
+ <updated><!-- tmpl_var name="now" --></updated>
+ <author>
+   <name>Steve Kemp</name>
+   <uri><!-- tmpl_var name="home_url" -->/</uri>
+ </author>
+ <icon><!-- tmpl_var name="home_url" -->/favicon.ico</icon>
+ <id><!-- tmpl_var name="home_url" -->/</id>
+
+ <!-- tmpl_loop name="teasers" -->
+  <entry>
+   <id><!-- tmpl_var name="home_url" -->/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name="slug" --></id>
+   <title><!-- tmpl_var name="title" --></title>
+   <link href="<!-- tmpl_var name="home_url" -->/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name="slug" -->" />
+   <updated><!-- tmpl_var name="ondate" --></updated>
+   <summary type="html"><!-- tmpl_var name="leadtext" --></summary>
+   <author>
+    <name><!-- tmpl_var name="author" --></name>
+    <uri><!-- tmpl_var name="home_url" -->/users/<!-- tmpl_var name="author" --></uri>
+   </author>
+
+ </entry>
+ <!-- /tmpl_loop -->
+
+</feed>

@@ -1,0 +1,31 @@
+To: <!-- tmpl_var name="address" -->
+From: <!-- tmpl_var name="sitename" --> <<!-- tmpl_var name="site_email" -->>
+Subject: <!-- tmpl_var name="sitename" --> account details for <!-- tmpl_var name="name" -->
+Content-type: text/plain
+
+
+  Here are your details for the new account registration at
+ the Debian Administration website:
+
+Username: <!-- tmpl_var name="name" -->
+Password: <!-- tmpl_var name="password" -->
+Email:    <!-- tmpl_var name="address"  -->
+
+  Please log in to the site using the small login box at the side 
+ of any page.  Once you have done so you will be able to post comments
+ using your password protected identity, as well as altering some
+ personalisation settings which affect the way the site looks and acts
+ when you visit it.
+
+  If you did not create an account, then please ignore this email and
+ the account will be deleted after a period of not being used.  
+
+  We do not sell, trade, or otherwise disclose email addresses, so
+ you do not need to take any further action to protect your privacy.
+
+  Regards,
+
+Steve
+-- 
+http://www.debian-administration.org/
+

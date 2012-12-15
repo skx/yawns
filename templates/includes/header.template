@@ -1,0 +1,18 @@
+   <!-- ##### Header ##### -->
+   <div id="header">
+    <div class="midHeader">
+    <h1 class="headerTitle"><a href="/"><!-- tmpl_var name="site_title" --></a></h1>
+    <h2 id="headerSubTitle">System Administration Tips and Resources</h2>
+    </div>
+    <div class="subHeader">
+    [ 
+ <a href="/about/Debian%20Administration" title="About this site">About</a> |
+ <a href="/adverts/all" title="See our community adverts">Adverts</a> |
+ <a href="/archive" title="Archived Articles, by Month">Archive</a> |
+ <a href="/about/FAQ" title="Frequently asked questions with answers">FAQ</a> |
+ <a href="/hof" title="Article statistics">Hall of Fame</a> |
+ <a href="/about/Search" title="Search the articles which have been posted previously">Search</a> |
+ <a href="/tag" title="See tagged content">Tag Cloud</a> |
+
+      </div>
+    </div>

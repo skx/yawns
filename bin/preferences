@@ -1,0 +1,337 @@
+#!/usr/bin/perl -w -I. -I..
+
+=head1 NAME
+
+preferences - Show or update user preferences.
+
+=head1 SYNOPSIS
+
+  preferenecs [options]
+
+  General Options:
+   --user     Specify the user to work with for showing, or setting.
+   --show     Show the specified preference.
+   --showuser Show all preferences of the given user.
+   --set      Set a specified preference.
+   --value    The value to set to a preference.
+
+  Help Options:
+   --help     Show this scripts help information.
+   --manual   Read this scripts manual.
+   --verbose  show sending progress.
+   --version  Show the version number and exit.
+
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--help>
+Show the scripts help information.
+
+=item B<--manual>
+Read the manual.
+
+=item B<--set>
+Set a given preference value
+
+=item B<--show>
+Show the contents of the given preference.
+
+=item B<--showuser>
+Show all the preferences of the given user.
+
+=item B<--user>
+The user to work with, if this isn't set all users are assumed.
+
+=item B<--verbose>
+Show sending progress.
+
+=item B<--version>
+Show the version number and exit.
+
+=back
+
+
+=head1 DESCRIPTION
+
+  This script allows the values stored in the Yawns.preferences
+ table to be manipulated.
+
+=cut
+
+=head1 EXAMPLES
+
+  To show all preferences for a given user:
+
+=for begin example
+
+   preferences --showuser=Steve
+
+=for example end
+
+  To show all the values of the key "stylesheet" :
+
+=for example begin
+
+   preference --show=stylesheet
+
+=for example end
+
+  Or to just see what Steve has set for that key:
+
+=for example begin
+
+   preferenc --show=stylesheet --user=Steve
+
+=for example end
+
+=cut
+
+=head1 TODO
+
+  When showing the preference for all users "--show foo" we should
+ show the username too.
+
+=cut
+
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+ $Id: preferences,v 1.4 2007-02-04 21:59:22 steve Exp $
+
+=cut
+
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Pod::Usage;
+use Singleton::DBI;
+use Yawns::Preferences;
+
+
+#
+#  Options.
+#
+my %CONFIG;
+$CONFIG{'verbose'} = 0;
+
+
+#
+#  Parse our command line arguments
+#
+parseCommandLineArguments();
+
+
+#
+# See what we're doing.
+#
+if ( $CONFIG{'show'} )
+{
+    showPreference( $CONFIG{'show'} );
+}
+elsif ( $CONFIG{'showuser'} )
+{
+    showUser( $CONFIG{'showuser'} );
+}
+elsif ( $CONFIG{'set'} )
+{
+    setPreference( $CONFIG{'set'} );
+}
+else
+{
+    print "You must specify either --set or --show\n";
+    exit;
+}
+
+#
+#  All done.
+#
+exit;
+
+
+
+=begin doc
+
+  Show the values of the given preference string.
+
+=end doc
+
+=cut
+
+sub showPreference
+{
+    my( $pref ) = ( @_ );
+
+
+    #  Get database handle
+    my $dbi = Singleton::DBI->instance();
+
+    # The sql
+    my $sql;
+
+    # Single user.
+    if ( $CONFIG{'user'} )
+    {
+        $sql = $dbi->prepare( "SELECT a.pref_value,b.username FROM preferences AS a INNER JOIN users b WHERE a.user_id = b.id AND b.username=? AND a.pref_name=?" );
+        $sql->execute( $CONFIG{'user'}, $CONFIG{'show'} )
+          or die "Failed to execute " . $dbi->errstr();
+    }
+    else
+    {
+        # All users.
+        $sql = $dbi->prepare( "SELECT a.pref_value,b.username FROM preferences AS a INNER JOIN users b WHERE a.user_id=b.id AND a.pref_name=?" );
+        $sql->execute( $CONFIG{'show'} )
+          or die "Failed to execute " . $dbi->errstr();
+    }
+
+    #
+    #  Bind and show results.
+    #
+    my ($value, $username );
+    $sql->bind_columns( undef, \$value, \$username );
+    while( $sql->fetch() )
+    {
+        print "$username: $value\n";
+    }
+    $sql->finish();
+}
+
+
+
+
+=begin doc
+
+  Show all preferences for the given user.
+
+=end doc
+
+=cut
+
+sub showUser
+{
+    my( $user ) = ( @_ );
+
+
+    # Get the accessor.
+    my $prefs = Yawns::Preferences->new( username => $user );
+    my $all   = $prefs->getAll();
+
+    foreach my $k ( keys %$all )
+    {
+        print $k . " => " . $all->{$k} . "\n";
+    }
+}
+
+
+
+
+=begin doc
+
+
+  Set the given preference key and value, either globally or for a user
+=end doc
+
+=cut
+
+sub setPreference
+{
+    my ( $key ) = ( @_ );
+
+    # get the value, and make sure it is set.
+    my $val = $CONFIG{'value'};
+    die "No value specified" unless( $val );
+
+    if ( $CONFIG{'user'} )
+    {
+        # Single user?
+        my $prefs = Yawns::Preferences->new( username => $CONFIG{'user'} );
+        $prefs->setPreference( $key, $val );
+        return;
+    }
+
+    #
+    #  OK we're updating a preference for all users - that means
+    # we:
+    #
+    #  1.  Find all usernames.
+    #  2.  Get their preferences.
+    #  3.  Setup the new key.
+    #
+    my $dbi = Singleton::DBI->instance();
+    my $sql = $dbi->prepare( "SELECT username FROM users" );
+    $sql->execute() or die $dbi->errstr();
+
+    #
+    # Bind the results.
+    #
+    my $username;
+    $sql->bind_columns( undef, \$username );
+
+    #
+    #  For each username, set the preference.
+    #
+    while( $sql->fetch() )
+    {
+        $CONFIG{'verbose'} && print "Setting value for $username\n";
+
+        my $prefs = Yawns::Preferences->new( username => $username );
+        $prefs->setPreference( $key, $val );
+    }
+    $sql->finish();
+
+}
+
+
+
+=begin doc
+
+  Parse the arguments specified upon the command line.
+
+=end doc
+
+=cut
+
+sub parseCommandLineArguments
+{
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
+
+    #
+    #  Parse the options we accept
+    #
+    GetOptions(
+               "set=s",      \$CONFIG{'set'},
+               "user=s",     \$CONFIG{'user'},
+               "show=s",     \$CONFIG{'show'},
+               "showuser=s", \$CONFIG{'showuser'},
+               "value=s",    \$CONFIG{'value'},
+               "help",       \$HELP,
+               "manual",     \$MANUAL,
+               "verbose",    \$CONFIG{'verbose'},
+               "version",    \$VERSION,
+             );
+
+    pod2usage(1) if $HELP;
+    pod2usage(-verbose => 2 ) if $MANUAL;
+
+
+    if ( $VERSION )
+    {
+        my $REVISION      = '$Revision: 1.4 $';
+        if ( $REVISION =~ /1.([0-9.]+) / )
+        {
+            $REVISION = $1;
+        }
+
+        print "CVS Revision: $REVISION\n";
+        exit;
+    }
+}

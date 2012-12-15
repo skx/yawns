@@ -1,0 +1,44 @@
+#!/usr/bin/perl -w -I./lib -I../lib/
+#
+#  Remove all cached files.
+#
+# Steve
+# --
+#
+
+
+
+use strict;
+use warnings;
+
+use conf::SiteConfig;
+
+
+#
+#  For each possible cache
+#
+foreach my $key ( qw! art_cache_dir blog_cache_dir comment_cache_dir ! )
+{
+
+   my $dir = get_conf( $key );
+
+   if ( defined( $dir ) && ( -d $dir ) )
+   {
+       cleanCache( $dir );
+   }
+}
+
+exit 0;
+
+
+sub cleanCache
+{
+    my( $dir ) = ( @_ );
+
+    return unless( -d $dir );
+
+    foreach my $file ( sort( glob( $dir . "/*" ) ) )
+    {
+        unlink( $file );
+    }
+}

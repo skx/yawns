@@ -1,0 +1,11 @@
+UPDATE adverts SET owner="ltackmann" WHERE owner="lroland";
+UPDATE articles SET author="ltackmann" WHERE author="lroland";
+UPDATE comments SET author="ltackmann" WHERE author="lroland";
+UPDATE messages SET sender="ltackmann" WHERE sender="lroland";
+UPDATE messages SET recipient="ltackmann" WHERE recipient="lroland";
+UPDATE notifications SET username="ltackmann" WHERE username="lroland";
+UPDATE permissions SET username="ltackmann" WHERE username="lroland";
+UPDATE users SET username="ltackmann" WHERE username="lroland";
+UPDATE weblogs SET username="ltackmann" WHERE username="lroland";
+UPDATE poll_submissions SET author="ltackmann" WHERE author="lroland";
+UPDATE poll_voters SET username="ltackmann" WHERE username="lroland";

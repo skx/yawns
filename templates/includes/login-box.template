@@ -1,0 +1,46 @@
+<!-- tmpl_if name='logged_in' -->
+
+<div style="background-color: white; width:100%; color:black !important; font-weight: bold; font-family: fixed;">
+<a style="color:black;" href="/users/<!-- tmpl_var name='username' -->"><b><!-- tmpl_var name='username' --></b></a>
+
+[ <a href="/edit/prefs">options</a> |
+
+<!-- tmpl_if name='show_messages' -->
+<a href="/view/messages"><!-- tmpl_var name='new_messages' --> / <!-- tmpl_var name='total_messages' --> messages </a>
+<!-- /tmpl_if -->
+
+<a href="/users/<!-- tmpl_var name='username' -->/bookmarks">bookmarks</a> |
+<!-- tmpl_if name='show_adverts' -->
+<a href="/users/<!-- tmpl_var name='username' -->/adverts">adverts</a> |
+<!-- /tmpl_if -->
+<a href="/users/<!-- tmpl_var name='username' -->/weblog">blog</a>  |
+
+<!--
+	<!-- tmpl_if name='show_submissions' -->
+	<p>Submissions</p>
+	<ul>
+	<!-- tmpl_loop name='submitted_articles' -->
+	<li><a href="/view/submission/<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a></li>
+	<!-- /tmpl_loop -->
+	</ul>
+	<!-- /tmpl_if -->
+-->
+ 
+<!-- <a href="/edit/user">User information</a> -->
+<a href="/logout/<!-- tmpl_var name='session' -->">logout</a> ]
+</div>
+
+<!-- tmpl_else -->
+
+
+<!-- tmpl_if name="failed_login" -->
+<b>Login Failed</b>: [ <a href="/password/sendmail">forgotten your password?</a> | <a href="/login/">try again?</a> ]
+
+<!-- tmpl_else -->
+<form id="user-login" action="/" method="post"><input type="hidden" name="target" value="<!-- tmpl_var name="target" -->" />New User?  <a href="/create/user/">Register here</a> - Existing Users: <b>Username</b>: <input id="name" name="lname" type="text" size="14" maxlength="25" />  <b>Password</b>: <input id="pass" name="lpass" type="password" size="15" maxlength="25" /> <input type="submit" name="login" value="Login" /> [<a href="/login">Advanced Login</a>]
+    <!-- /tmpl_if -->
+
+            </form>
+
+
+<!-- /tmpl_if -->

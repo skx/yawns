@@ -1,0 +1,140 @@
+#!/usr/bin/perl -w -I. -I..
+
+=head1 NAME
+
+pending - Show pending submissions from the queue.
+
+=head1 SYNOPSIS
+
+  pending [options]
+
+  Help Options:
+   --help     Show this scripts help information.
+   --manual   Read this scripts manual.
+   --version  Show the version number and exit.
+
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--help>
+Show the scripts help information.
+
+=item B<--manual>
+Read the manual.
+
+=item B<--version>
+Show the version number and exit.
+
+=back
+
+
+=head1 DESCRIPTION
+
+  This is a simple utility to show the ID and title of each pending
+ article submission.
+
+  (The ID can be used by the B<post-article> script to post to the
+ front-page.)
+
+=cut
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+ $Id: pending,v 1.5 2007-02-04 15:56:59 steve Exp $
+
+=cut
+
+
+use strict;
+use warnings;
+use Getopt::Long;
+use Pod::Usage;
+use Singleton::DBI;
+
+
+#
+#  Options.
+#
+my %CONFIG;
+
+
+#
+#  Parse our command line arguments
+#
+parseCommandLineArguments();
+
+
+#
+#  Prepare the query.
+#
+my $dbi = Singleton::DBI->instance();
+my $sql = $dbi->prepare( "select id,title from submissions" );
+$sql->execute();
+
+#
+#  Bind the columns
+#
+my ($id,$title);
+$sql->bind_columns( undef, \$id, \$title );
+
+#
+#  Show the output.
+#
+while( $sql->fetch() )
+{
+    print "$id: $title\n";
+}
+
+#
+#  All done
+#
+$sql->finish();
+
+exit;
+
+
+=begin doc
+
+  Parse the arguments specified upon the command line.
+
+=end doc
+
+=cut
+
+sub parseCommandLineArguments
+{
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
+
+    #
+    #  Parse the options we accept
+    #
+    GetOptions(
+               "help",       \$HELP,
+               "manual",     \$MANUAL,
+               "version",    \$VERSION,
+             );
+
+    pod2usage(1) if $HELP;
+    pod2usage(-verbose => 2 ) if $MANUAL;
+
+    if ( $VERSION )
+    {
+        my $REVISION      = '$Revision: 1.5 $';
+        if ( $REVISION =~ /1.([0-9.]+) / )
+        {
+            $REVISION = $1;
+        }
+
+        print "CVS Revision: $REVISION\n";
+        exit;
+    }
+}
+

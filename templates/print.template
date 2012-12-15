@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en">
+<head>
+  <title><!-- tmpl_var name='sitename' --><!-- tmpl_var name='separator' --><!-- tmpl_var name='article_title' --></title>
+</head>
+<body>
+<!-- tmpl_if name="error" -->
+      <h1>Error</h1>
+	<p>The article you've specified doesn't exist.</p>
+        <p>Please return to the <a href="/">front page</a>, or try <a href="/about/Search">searching for articles</a> that match your interest.</p>
+<!-- tmpl_else -->
+<h1><a href="/article/<!-- tmpl_var name='slug' -->""><!-- tmpl_var name='article_title' --></a></h1>
+<p align="right">Posted by <a href="<!-- tmpl_var name='home_url' -->/users/<!-- tmpl_var name='article_byuser' -->"><!-- tmpl_var name='article_byuser' --></a> on <!-- tmpl_var name='article_ondate' --> at <!-- tmpl_var name='article_attime' --></p>
+
+<!-- tmpl_var name='article_body' -->
+<hr />
+<p>This article can be found online at the <b><!-- tmpl_var name='sitename' --> </b> website at the following bookmarkable URL (along with associated comments):</p>
+<ul>
+<li><a href="/article/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='home_url' -->/article/<!-- tmpl_var name='slug' --></a></li>
+</ul>
+<p>This article is copyright <!-- tmpl_var name='year' --> <a href="<!-- tmpl_var name='home_url' -->/users/<!-- tmpl_var name='article_byuser' -->"><!-- tmpl_var name='article_byuser' --></a> - please ask for permission to republish or translate.</p>
+<!-- /tmpl_if -->
+</body>
+</html>
