@@ -15,8 +15,8 @@
 <!-- /tmpl_unless -->
 
 <select name="type" id="type">
-  <option value="bbcode" <!-- tmpl_if name='bbcode_selected' -->selected<!-- /tmpl_if -->>BBCode</option>
   <option value="html" <!-- tmpl_if name='html_selected' -->selected<!-- /tmpl_if -->>HTML Text</option>
+  <option value="markdown" <!-- tmpl_if name='markdown_selected' -->selected<!-- /tmpl_if -->>Markdown</option>
   <option value="text" <!-- tmpl_if name='text_selected' -->selected<!-- /tmpl_if -->>Plain Text</option>
   <option value="textile" <!-- tmpl_if name='textile_selected' -->selected<!-- /tmpl_if -->>Textile</option>
 </select>
