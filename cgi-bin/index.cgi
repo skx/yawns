@@ -251,7 +251,7 @@ if ( $form->param('login') )
             print $form->header(
                      -type     => 'text/html',
                      -cookie   => $sessionCookie,
-                     -location => => $protocol . $ENV{ "SERVER_NAME" } . $target
+                     -location => $protocol . $ENV{ "SERVER_NAME" } . $target
             );
             exit;
         }
@@ -302,7 +302,10 @@ if ( defined $form->param('logout') )
     #
     # Redirect to the server /, whilst making sure we don't setup the cookie.
     #
-    print $form->redirect( $protocol . $ENV{ "SERVER_NAME" } . "/" );
+    $sessionCookie->expires( "-10m" );
+    print $form->redirect( -type => 'text/html',
+                           -cookie => $sessionCookie,
+                           -location =>  "/" );
     $session->close();
     $db->disconnect();
     exit;
@@ -379,7 +382,7 @@ my $perms = Yawns::Permissions->new( username => $username );
 #  Before we output any headers, etc, we should make sure that the
 # cookie is sent to the clients browser/user-agent.
 #
-print "Set-Cookie: $sessionCookie; HttpOnly\n";
+print "Set-Cookie: $sessionCookie; HttpOnly\n" unless( $anonymous );
 
 
 
