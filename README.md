@@ -69,7 +69,12 @@ da-web1.vm
 da-web2.vm
 da-web3.vm
  3 x Apache.
- Each host uses a shared IP and has heartbeat configured, again with ucarp.
+ Each host has a been configured with ucarp so that they can potentially
+ own the master IP.
+
+ The master IP runs pound on port 80, and will use each of the three backends.
+ This complicates the server because each can be alive, or dead, at random, but
+ it should mean we have a site if at least one node is running.
 
 
 All data is stored in MySQL *except* login sessions.  Login sessions go
