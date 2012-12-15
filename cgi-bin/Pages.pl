@@ -7081,12 +7081,9 @@ sub tag_feed
     $template->param( site_slogan => get_conf('site_slogan') );
 
     #
-    #  Store the complete output page in the memcache.
+    #  Output the page
     #
-    $value = $template->output();
-
-    # generate the output
-    print $value;
+    print $template->output();
 }
 
 
