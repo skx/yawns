@@ -68,17 +68,13 @@
       </div>
     </div>
 
-<div id="signup">
-  <!-- tmpl_var name="login_box_text" -->
-</div>
 
 <table width="100%">
 
 <tr>
- <td width="20%" valign="top">
-  <!-- tmpl_var name="sidebar_text" -->
+ <td width="2%" valign="top">
  </td>
- <td width="60%" valign="top">
+ <td width="78%" valign="top">
 
   <!-- Main body -->
   <div id="content">
@@ -87,12 +83,13 @@
  </td>
  <td width="2%" valign="top"><p>&nbsp;</p></td>
  <td width="18%" valign="top">
+  <p>&nbsp;</p>
+  <!-- tmpl_var name="login_box_text" -->
+
+  <!-- tmpl_var name="sidebar_text" -->
 
   <p>&nbsp;</p>
- <div id="flattr">
- <h3>Flattr</h3>
- <div style="text-align:center;"><a class="FlattrButton" style="display:none;" href="http://debian-administration.org"></a></div>
- </div>
+
    <!-- tmpl_if  name="show_adverts" -->
 
         <!-- tmpl_if name="user_adverts" -->
@@ -176,6 +173,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 
 <!-- tmpl_if name='recent_tips' -->
+
 <p>&nbsp;</p>
 <div id="tipbox">
 <h3>Recent Tips</h3>
@@ -190,6 +188,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	</div>
  </div>
 <!-- /tmpl_if name='recent_tips' -->
+
  </td>
 </tr>
 

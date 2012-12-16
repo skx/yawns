@@ -1,19 +1,19 @@
 <!-- tmpl_if name='logged_in' -->
 
-<div style="background-color: white; width:100%; color:black !important; font-weight: bold; font-family: fixed;">
-<a style="color:black;" href="/users/<!-- tmpl_var name='username' -->"><b><!-- tmpl_var name='username' --></b></a>
-
-[ <a href="/edit/prefs">options</a> |
-
+<h4><a style="color:black;" href="/users/<!-- tmpl_var name='username' -->"><b><!-- tmpl_var name='username' --></b></a></h4>
+<ul>
+<li><a href="/edit/prefs">options</a></li>
 <!-- tmpl_if name='show_messages' -->
-<a href="/view/messages"><!-- tmpl_var name='new_messages' --> / <!-- tmpl_var name='total_messages' --> messages </a>
+<li><a href="/view/messages"><!-- tmpl_var name='new_messages' --> / <!-- tmpl_var name='total_messages' --> messages </a></li>
 <!-- /tmpl_if -->
-
 <!-- tmpl_if name='show_adverts' -->
-<a href="/users/<!-- tmpl_var name='username' -->/adverts">adverts</a> |
+<li><a href="/users/<!-- tmpl_var name='username' -->/adverts">adverts</a></li>
 <!-- /tmpl_if -->
-<a href="/users/<!-- tmpl_var name='username' -->/weblog">blog</a>  |
+<li><a href="/users/<!-- tmpl_var name='username' -->/weblog">blog</a></li>
+<li><a href="/logout/<!-- tmpl_var name='session' -->">logout</a></li>
+</ul>
 
+<!-- <a href="/edit/user">User information</a> -->
 <!--
 	<!-- tmpl_if name='show_submissions' -->
 	<p>Submissions</p>
@@ -25,19 +25,30 @@
 	<!-- /tmpl_if -->
 -->
  
-<!-- <a href="/edit/user">User information</a> -->
-<a href="/logout/<!-- tmpl_var name='session' -->">logout</a> ]
-</div>
 
 <!-- tmpl_else -->
 
 
 <!-- tmpl_if name="failed_login" -->
-<b>Login Failed</b>: [ <a href="/password/sendmail">forgotten your password?</a> | <a href="/login/">try again?</a> ]
+<h4>Login Failed</h4>
+<ul>
+<li><a href="/password/sendmail">forgotten your password?</a></li>
+<li><a href="/login/">try again?</a></li>
+</ul>
+
 
 <!-- tmpl_else -->
-<form id="user-login" action="/" method="post"><input type="hidden" name="target" value="<!-- tmpl_var name="target" -->" />New User?  <a href="/create/user/">Register here</a> - Existing Users: <b>Username</b>: <input id="name" name="lname" type="text" size="14" maxlength="25" />  <b>Password</b>: <input id="pass" name="lpass" type="password" size="15" maxlength="25" /> <input type="submit" name="login" value="Login" /> [<a href="/login">Advanced Login</a>]
-    <!-- /tmpl_if -->
+
+<h4>Sign In</h4>
+<form id="user-login" action="/" method="post">
+<input type="hidden" name="target" value="<!-- tmpl_var name="target" -->" />
+
+<p><b>Username</b>:<br/> <input id="name" name="lname" type="text" size="14" maxlength="25" /></p>
+<p><b>Password</b>:<br /> <input id="pass" name="lpass" type="password" size="15" maxlength="25" /></p>
+<p><input type="submit" name="login" value="Login" /> </p>
+<p>[<a href="/create/user/">Register</a>|<a href="/login">Advanced</a>]</p>
+
+ <!-- /tmpl_if name='failed_login'-->
 
             </form>
 
