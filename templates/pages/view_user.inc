@@ -82,7 +82,10 @@
          <tr><td valign="top" colspan="2"><b>Recent articles:</b>
 		<ul>
                       <!-- tmpl_loop name='articles' -->
-                      <li><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='title' --></a> posted on <!-- tmpl_var name='ondate' -->.</li>
+                      <li><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='title' --></a>
+                      <ul>
+                      <li>Posted on <!-- tmpl_var name='ondate' -->.</li>
+                      </ul></li>
                       <!-- /tmpl_loop -->
 		    </ul></td></tr>
          <tr><td valign="top"><p></p></td>
@@ -96,14 +99,17 @@
 		<ul>
                       <!-- tmpl_loop name='comments' -->
 		<!-- tmpl_if name='is_poll'-->
-                      <li><a href="/polls/<!-- tmpl_var name='poll' -->#comment_<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a> posted on <!-- tmpl_var name='ondate' -->.</li>
+                      <li><a href="/polls/<!-- tmpl_var name='poll' -->#comment_<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a>
 		<!-- /tmpl_if -->
 		<!-- tmpl_if name="article" -->
-                      <li><a href="/articles/<!-- tmpl_var name='article' -->#comment_<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a> posted on <!-- tmpl_var name='ondate' -->.</li>
+                      <li><a href="/articles/<!-- tmpl_var name='article' -->#comment_<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a>
 		<!-- /tmpl_if -->
 		<!-- tmpl_if name="weblog_link" -->
-                      <li><a href="<!-- tmpl_var name="weblog_link" -->#comment_<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a> posted on <!-- tmpl_var name='ondate' -->.</li>
+                      <li><a href="<!-- tmpl_var name="weblog_link" -->#comment_<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a>
 		<!-- /tmpl_if -->
+                <ul>
+                <li>Posted on <!-- tmpl_var name='ondate' -->.</li>
+                </ul></li>
                       <!-- /tmpl_loop -->
 		    </ul>                    </td></tr>
          <tr><td valign="top"><p></p></td>
