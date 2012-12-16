@@ -5,12 +5,14 @@ Yet Another Weblog/News System
 YAWNS is a simple CMS which was originally writen by Danny.
 
 It was forked from that code by Steve Kemp, and updated considerably
-such that it could be used for the website :
+such that it could be used for [his Debian-Administration website](http://www.debian-administration.org/).
 
-* http://www.debian-administration.org/
+The code is now undergoing more work such that it can be redeployed upon
+multiple hosts, as part of a cluster.
 
-The code is now undergoing more work such that I can re-deploy it upon
-a modular architecture.
+This re-development means that there are slightly more assumptions made
+about the operating environment than in the past.  That said it is still
+a bug if this cannot be installed by a perl-aware sysadmin, or developer.
 
 
 Overview
@@ -26,11 +28,15 @@ with these objects and presents the site interface.
 Caching
 -------
 
-Lots of the SQL queries are suboptimal.  To counter this two layers of caching
-were added:
+As is common in dynamic frameworks the codebase does make a fair number of
+MySQL queries in the generation of pages.  This can mean that if you're running
+with a lot of traffic, or on a single server, you might find performance begins
+to suffer.
 
-* memcached caching of SQL queries/results
-* static file caching of rendered articles
+In the past there were two layers of caching to deal wih this:
+
+* Memcached caching of SQL queries/results.
+* Static file caching of rendered articles.
 
 This is currently being removed and reworked to allow Varnish to be used instead.
 
@@ -44,9 +50,15 @@ Installation is threefold:
 * Deploy the code.
 * Configure Apache, etc.
 
-The mysql configuration is simple.  The code assumes a Unix user called "yawns"
-is present - all code will be installed beneath that users homedirectory.
-There is a supplied "fabric" file which can be used to do that.
+The mysql configuration is simple.
+
+The code assumes a Unix user called "yawns" is present - all code will be
+installed beneath that users home-directory, specifically the code
+**must** be installed in ~/current/.  This is because the path used to
+generate RSS feeds, etc, assumes this prefix.
+
+The sample "fabric" script demonstrates how this is done, via the GitHub
+repository.
 
 The Apache configuration can be copied from the included ~/apache/ file.
 
@@ -56,7 +68,6 @@ Live Usage
 ----------
 
 The code is deployed upon five hosts:
-
 
 da-db1.vm
 da-db2.vm
@@ -80,3 +91,22 @@ da-web3.vm
 All data is stored in MySQL *except* login sessions.  Login sessions go
 to memcached, which is configured via ucarp to ensure that it is always
 available.
+
+
+This means the hosts run the following services:
+
+db-db1.dh - MySQL
+db-db2.dh - MySQL
+
+db-web1.dh - ucarp, memcache, varnish, pound, apache
+db-web2.dh - ucarp, memcache, varnish, pound, apache
+db-web3.dh - ucarp, memcache, varnish, pound, apache
+ - Because only one host is the "master" at any given time the actual
+   deployment is more like this:
+
+    db-web1.dh - ucarp, memcache, varnish, pound, apache
+    db-web2.dh - ucarp, apache
+    db-web3.dh - ucarp, apache
+
+The use of ucarp ensures that the site is functional if only a single
+host is alive.
