@@ -472,12 +472,6 @@ my %dispatch = (
         type  => "Content-Type: text/html\n\n",
       },
 
-    "add_bookmark" =>    # Add a bookmark
-      { sub      => \&bookmark_add,
-        login    => 1,
-        redirect => "/users/$username/bookmarks",
-      },
-
     "add_related" =>     # Add a related link to an article
       { sub  => \&add_related,
         type => "Content-Type: text/html\n\n",

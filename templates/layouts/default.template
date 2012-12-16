@@ -133,24 +133,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
    <!-- /tmpl_if -->
 
-<!-- tmpl_if name='logged_in' -->
- <!-- tmpl_if name='article_id' -->
-  <h3>Bookmark This</h3>
-  <p><a href="/bookmark/onarticle/<!-- tmpl_var name='article_id' -->/<!-- tmpl_var name='session' -->">Bookmark this article</a>.</p>
- <!-- /tmpl_if -->
-
- <!-- tmpl_if name='poll' -->
-  <h3>Bookmark This</h3>
-  <p><a href="/bookmark/onpoll/<!-- tmpl_var name='poll' -->/<!-- tmpl_var name='session' -->">Bookmark this poll</a>.</p>
- <!-- /tmpl_if -->
-
- <!-- tmpl_if name='onweblog' -->
-  <h3>Bookmark This</h3>
-  <p><a href="/bookmark/onweblog/<!-- tmpl_var name='onweblog' -->/<!-- tmpl_var name='session' -->">Bookmark this weblog</a>.</p>
- <!-- /tmpl_if -->
-<!-- /tmpl_if -->
-
-
 <!-- tmpl_if name="article_admin" -->
    <h3>Administrivia</h3>
    <ul>

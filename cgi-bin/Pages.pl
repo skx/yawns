@@ -7424,47 +7424,6 @@ sub ban_ip
 }
 
 
-
-# ===========================================================================
-#  Add a bookmark
-# ===========================================================================
-sub bookmark_add
-{
-
-    # validate session token
-    validateSession();
-
-    #
-    #  Get access to the form
-    #
-    my $form = Singleton::CGI->instance();
-
-    #
-    #  See what we're adding.
-    #
-    my $session  = Singleton::Session->instance();
-    my $username = $session->param("logged_in");
-
-    #
-    #  Get the type
-    #
-    my $onarticle = $form->param("onarticle");
-    my $onpoll    = $form->param("onpoll");
-    my $onweblog  = $form->param("onweblog");
-
-    #
-    #  Do the addition
-    #
-    my $bookmarks = Yawns::Bookmarks->new( username => $username );
-    $bookmarks->add( weblog  => $onweblog,
-                     article => $onarticle,
-                     poll    => $onpoll
-                   );
-
-
-}
-
-
 # ===========================================================================
 #  Delete an existing bookmark
 # ===========================================================================

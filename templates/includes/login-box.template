@@ -9,7 +9,6 @@
 <a href="/view/messages"><!-- tmpl_var name='new_messages' --> / <!-- tmpl_var name='total_messages' --> messages </a>
 <!-- /tmpl_if -->
 
-<a href="/users/<!-- tmpl_var name='username' -->/bookmarks">bookmarks</a> |
 <!-- tmpl_if name='show_adverts' -->
 <a href="/users/<!-- tmpl_var name='username' -->/adverts">adverts</a> |
 <!-- /tmpl_if -->
