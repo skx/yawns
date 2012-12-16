@@ -45,13 +45,6 @@
                 <!-- /tmpl_if -->
 
 </p>
-<p>
-                <!-- tmpl_if name="viewpast" -->
-                <input type="checkbox" name="viewpast" value="1" checked>  View previous headlines
-                <!-- tmpl_else -->
-                <input type="checkbox" name="viewpast" value="1"> View previous headlines.
-                <!-- /tmpl_if -->
-</p>
             </fieldset>
 
             </td>

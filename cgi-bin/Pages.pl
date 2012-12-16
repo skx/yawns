@@ -2504,7 +2504,6 @@ sub edit_prefs
         if ( $form->param('update') eq 'Update' )
         {
             my $polls   = $form->param('viewpolls')   || 0;
-            my $past    = $form->param('viewpast')    || 0;
             my $adverts = $form->param('wantadverts') || 0;
             my $blogs   = $form->param('viewblogs')   || 0;
 
@@ -2514,7 +2513,6 @@ sub edit_prefs
             #
             my $user = Yawns::User->new( username => $edituser );
             $user->savePreferences( view_polls     => $polls,
-                                    view_headlines => $past,
                                     view_adverts   => $adverts,
                                     view_blogs     => $blogs
                                   );
@@ -2602,7 +2600,6 @@ sub edit_prefs
     my $user        = Yawns::User->new( username => $edituser );
     my $prefsdata   = $user->get();
     my $viewpolls   = $prefsdata->{ 'polls' };
-    my $viewpast    = $prefsdata->{ 'headlines' };
     my $wantadverts = $prefsdata->{ 'viewadverts' };
     my $wantblogs   = $prefsdata->{ 'blogs' };
 
@@ -2649,7 +2646,6 @@ sub edit_prefs
     $template->param( username          => $edituser,
                       saved             => $saved,
                       viewpolls         => $viewpolls,
-                      viewpast          => $viewpast,
                       password_saved    => $password_saved,
                       password_simple   => $password_simple,
                       password_mismatch => $password_mismatch,

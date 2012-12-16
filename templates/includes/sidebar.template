@@ -106,15 +106,3 @@
 
 	    <!-- /tmpl_unless -->
 <!-- /tmpl_if -->
-
-<!-- tmpl_if name='show_previous_headlines' -->
-<!-- <p>&nbsp;</p>
-<div id="headlines">
-      <h3>Previous Headlines</h3>
-            <ul>
-              <!-- tmpl_loop name="previous_headlines" -->
-                <li><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name="slug" -->"><!-- tmpl_var name="title" --></a></li>
-              <!-- /tmpl_loop -->
-            </ul>
-</div> -->
-<!-- /tmpl_if -->

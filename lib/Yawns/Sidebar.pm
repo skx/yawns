@@ -119,7 +119,6 @@ sub getMenu
     # Determine the default display options for the sidebar.
     #
     my $show_polls         = conf::SiteConfig::get_conf('sidebar_polls');
-    my $show_old_headlines = conf::SiteConfig::get_conf('sidebar_headlines');
     my $show_blogs         = conf::SiteConfig::get_conf('sidebar_blogs');
 
 
@@ -131,7 +130,6 @@ sub getMenu
         my $user = Yawns::User->new( username => $username );
         my $userprefs = $user->get();
         $show_polls         = $userprefs->{ 'polls' };
-        $show_old_headlines = $userprefs->{ 'headlines' };
         $show_blogs         = $userprefs->{ 'blogs' };
 
     }
@@ -195,7 +193,6 @@ sub getMenu
     # Setup the default parameters.
     #
     $sidebar->param( show_pollbooth          => $show_polls,
-                     show_previous_headlines => $show_old_headlines,
                      show_blogs              => $show_blogs,
                    );
 
@@ -220,17 +217,6 @@ sub getMenu
             $sidebar->param(
                           poll_error => "The administrator should add a poll" );
         }
-    }
-    if ($show_old_headlines)
-    {
-
-        #
-        # Fetch the old headlines.
-        #
-        my $articles           = Yawns::Articles->new();
-        my $previous_headlines = $articles->getPreviousHeadlines();
-
-        $sidebar->param( previous_headlines => $previous_headlines );
     }
     if ($show_blogs)
     {
