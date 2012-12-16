@@ -7490,6 +7490,38 @@ sub month_to_name
 }
 
 
+sub dump_details
+{
+    my $date = `date`;
+    chomp( $date );
+    my $host = `hostname`;
+    chomp( $host );
+
+    print "This request was received at $date on $host.\n\n";
+
+    #
+    #  Environment dump.
+    #
+    print "\n\n";
+    print "Environment\n";
+    foreach my $key ( sort keys %ENV )
+    {
+        print "$key\t\t\t$ENV{$key}\n";
+    }
+
+    print "\n\n";
+    print "Submissions\n";
+    my $form    = Singleton::CGI->instance();
+
+    foreach my $key ( $form->param() )
+    {
+        print $key . "\t\t\t" . $form->param( $key );
+        print "\n";
+    }
+}
+
+
+
 1;
 
 

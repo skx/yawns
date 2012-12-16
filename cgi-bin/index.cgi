@@ -453,6 +453,11 @@ my %dispatch = (
         type => "Content-Type: text/html\n\n",
       },
 
+    "dump" =>    # Dump details of a request.
+      { sub  => \&dump_details,
+        type => "Content-Type: text/plain\n\n",
+      },
+
     "add_weblog" =>    # Add a new weblog entry
       { sub   => \&add_weblog,
         login => 1,
