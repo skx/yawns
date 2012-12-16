@@ -340,7 +340,7 @@ div.weblog {
        border-bottom: 1px solid rgb(128, 128, 128);
        background-color: white;
        margin: 5px 0px;
-       width: 70%;
+    //   width: 70%;
 }
 
 div.weblog div.body {
