@@ -15,7 +15,7 @@ function install
 install perl
 install perl-modules
 install libcgi-pm-perl
-install libdbi-perl
+install libdbi-perl libdbd-mysql-perl
 install libhtml-parser-perl
 install libhtml-treebuilder-perl
 install libhtml-tree-perl
@@ -29,6 +29,5 @@ install libtext-diff-perl
 install libtext-textile-perl
 install liburi-find-perl
 install libsys-cpuload-perl
-install libdbi-mysql-perl
 install libcache-memcached-perl
 install libtext-markdown-perl
