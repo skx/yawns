@@ -122,12 +122,20 @@ sub output
 
 
     #
+    #  Get my current home directory.  We assume this code
+    # is deployed beneath ~/current/
+    #
+    #
+    my $login = getlogin || getpwuid($<);
+    my (undef,undef,undef,undef, undef,undef,undef,$home,undef,undef) = getpwnam( $login );
+
+    #
     #  Get the filenames we output, falling back to the defaults
     # if none are specified in the constructor.
     #
-    my $articles  = $class->{ 'articles' }  || "/srv/yawns/current/htdocs/articles.rdf";
-    my $headlines = $class->{ 'headlines' } || "/srv/yawns/current/htdocs/headlines.rdf";
-    my $atom      = $class->{ 'atom' }      || "/srv/yawns/current/htdocs/atom.xml";
+    my $articles  = $class->{ 'articles' }  || $home . "/current/htdocs/articles.rdf";
+    my $headlines = $class->{ 'headlines' } || $home . "/current/htdocs/headlines.rdf";
+    my $atom      = $class->{ 'atom' }      || $home . "/current/htdocs/atom.xml";
 
 
     #

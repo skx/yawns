@@ -40,8 +40,8 @@ daily:  clean oldmessages uncache
 
 feeds:
 	@./bin/gen-feeds
-	@chmod 777 /srv/yawns/current/htdocs/*.xml
-	@chmod 777 /srv/yawns/current/htdocs/*.rdf
+	@chmod 777 ~/current/htdocs/*.xml
+	@chmod 777 ~/current/htdocs/*.rdf
 
 oldmessages:
 	@./bin/expire-messages
