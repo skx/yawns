@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# TODO - allow this to be parametized
+#
+
+#
+#  If you're not using varnish unset this
+#
+host=localhost:6082
+# host=
+
+
+#
+#  If we have a host then set the flag.
+#
+if [ ! -z "$host" ]; then
+  host="-T $host"
+fi
+
+
+#
+#  If we have varnishadmin then purge the site
+#
+[ -x /usr/bin/varnishadm ] && varnishadm $host 'purge req.url ~ /'
+
+
