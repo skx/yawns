@@ -4566,7 +4566,7 @@ sub poll_results
     }
 
     # open the html template
-    my $template = load_layout( "poll_results.inc", session => 1 );
+    my $template = load_layout( "poll_results.inc", );
 
     #
     #  Tag addition URL
@@ -5702,8 +5702,6 @@ sub view_single_weblog
             $template->param( comment_text => $comment_text )
               if ($comment_text);
         }
-
-        $template->param( onweblog => $gid, );
     }
 
     #
