@@ -428,6 +428,7 @@ body {
   float:left;
   width:100%;
   margin-right:-230px;
+  margin-right: 1em;
   position:relative;
   /*min-height:0;*/ /* hasLayout prevents jumping content in IE */
 }
