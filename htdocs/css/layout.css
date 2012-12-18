@@ -447,10 +447,10 @@ padding: 5px;
   width:225px;
   position:relative;
   overflow:hidden
+  border-left: 1px solid red;
 }
 
 .slide {
-  border-left: 1px solid red;
   position:relative;
   color: black;
   top:0;
