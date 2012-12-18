@@ -369,7 +369,7 @@ if ( ( $session->param("ssl") ) &&
 #  Used in some of the target dispatch handlers.
 #
 my $username = $session->param("logged_in");
-my $anonymous = ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+my $anonymous = ( ( !$username ) || ( $username =~ /^anonymous$/i ) );
 
 
 #
