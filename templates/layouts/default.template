@@ -2,36 +2,26 @@
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
-    <!-- tmpl_var name='metadata' -->
-    <!-- tmpl_var name='stylesheet' -->
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <!-- tmpl_var name='metadata' -->
+  <!-- tmpl_var name='stylesheet' -->
 <!-- tmpl_if name='title' -->
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title><!-- tmpl_var name='title' --></title>
+  <title><!-- tmpl_var name='title' --></title>
 <!-- tmpl_else -->
-    <title>Debian Administration - Debian Administration Resources</title>
+  <title>Debian Administration - Debian Administration Resources</title>
 <!-- /tmpl_if -->
-
-<style type='text/css'>
-/* --- Misc --- */
-</style>
-
-<!--[if lte IE 6]>
-<style type='text/css'>
-  * html #main, * html #container {height:1%}
-</style>
-<![endif]-->
-
-<!--[if !lt IE 6]><!-->
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-
+  <!--[if lte IE 6]>
+   <style type='text/css'>
+    * html #main, * html #container {height:1%}
+   </style>
+  <![endif]-->
+  <!--[if !lt IE 6]><!-->
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/jquery.autocomplete.css">
     <script src="/js/jquery.autocomplete.min.js" type="text/javascript"></script>
     <script src="/js/jquery.autogrow.js"     type="text/javascript"></script>
-    <script src="/js/jquery.textboxhints.js" type="text/javascript"></script>
-
-<script type="text/javascript">
+  <script type="text/javascript">
 /* <![CDATA[ */
     (function() {
         var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
@@ -41,17 +31,9 @@
         t.parentNode.insertBefore(s, t);
     })();
 /* ]]> */
-</script>
-
- <script type="text/javascript">
-            $(function(){
-                // find all the input elements with title attributes
-                $('input[title!=""]').textboxhints();
-            });
- </script>
-
-<script type="text/javascript" src="/js/jquery.sidebarToggler.102.js"></script>
-<script type="text/javascript">
+  </script>
+  <script type="text/javascript" src="/js/jquery.sidebarToggler.102.js"></script>
+  <script type="text/javascript">
 <!--//--><![CDATA[//><!--
 $(function() {
   $("#rightcol").toggleSidebar({animation: "queuedEffects",
@@ -60,44 +42,35 @@ $(function() {
 				triggerShow: "Menu"});
 });
 //--><!]]>
-</script>
+   </script>
 <!--<![endif]-->
-
-</head>
-
-
-<body>
-
-        <h1><a href="/"><!-- tmpl_var name="site_title" --></a></h1>
-
+ </head>
+ <body>
+    <!-- TODO : Header -->
+    <h1><a href="/"><!-- tmpl_var name="site_title" --></a></h1>
     <div id="wrapper">
       <div id="content">
         <div id="container">
             <div id="inner">
                 <div id="main">
-   <!-- tmpl_include name='###' -->
+                  <!-- tmpl_include name='###' -->
                 </div>
             </div>
         </div>
         <div id="rightcol" class="side">
             <div class="slide">
-
-  <!-- tmpl_var name="login_box_text" -->
-
-  <!-- tmpl_var name="sidebar_text" -->
-
-  <p>&nbsp;</p>
-
-   <!-- tmpl_if  name="show_adverts" -->
-
-        <!-- tmpl_if name="user_adverts" -->
-           <h3>Community Advert</h3>
-           <p></p>
-           <div class="advert" style="border: solid 1px;" onClick="document.location.href='/follow/<!-- tmpl_var name='advert_id' -->';" onMouseOver="this.style.cursor='pointer'; window.status='<!-- tmpl_var name='advert_link' -->';" onMouseOut="window.status='';">
-        <p style="text-align: center;"><a href="/follow/<!-- tmpl_var name='advert_id' -->"><!-- tmpl_var name='advert_link_text' --></a></p>
-        <!-- tmpl_var name='advert_text' -->
-        <p style="text-align: center;"><a href="/follow/<!-- tmpl_var name='advert_id' -->"><!-- tmpl_var name='advert_link_text' --></a></p>
-        </div>
+              <!-- tmpl_var name="login_box_text" -->
+              <!-- tmpl_var name="sidebar_text" -->
+              <p>&nbsp;</p>
+<!-- tmpl_if  name="show_adverts" -->
+              <!-- tmpl_if name="user_adverts" -->
+             <h3>Community Advert</h3>
+             <p></p>
+             <div class="advert" style="border: solid 1px;" onClick="document.location.href='/follow/<!-- tmpl_var name='advert_id' -->';" onMouseOver="this.style.cursor='pointer'; window.status='<!-- tmpl_var name='advert_link' -->';" onMouseOut="window.status='';">
+             <p style="text-align: center;"><a href="/follow/<!-- tmpl_var name='advert_id' -->"><!-- tmpl_var name='advert_link_text' --></a></p>
+             <!-- tmpl_var name='advert_text' -->
+             <p style="text-align: center;"><a href="/follow/<!-- tmpl_var name='advert_id' -->"><!-- tmpl_var name='advert_link_text' --></a></p>
+             </div>
         <ul>
         <li><a href="/about/FAQ%20:%20Site%20Adverts#user">What is this?</a></li>
         </ul>
@@ -119,8 +92,7 @@ google_ad_height = 90;
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
 </div>
-
-            <!-- tmpl_unless name="logged_in" -->
+           <!-- tmpl_unless name="logged_in" -->
 	       <p><a href="/about/FAQ%20:%20Site%20Adverts">Why are these adverts here?</a></p>
             <!-- /tmpl_unless -->
 	    </div>
@@ -155,7 +127,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <!-- tmpl_if name='show_poll_archive' -->
  <h3>Poll Archive</h3>
 <p><a href="/poll/archive">View Prior Polls</a></p>
-
 <!-- /tmpl_if -->
 
 <!-- tmpl_if name='recent_tags' -->
@@ -171,7 +142,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 
 <!-- tmpl_if name='recent_tips' -->
-
 <p>&nbsp;</p>
 <div id="tipbox">
 <h3>Recent Tips</h3>
