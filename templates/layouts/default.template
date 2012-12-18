@@ -1,7 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-  <head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en" />
     <!-- tmpl_var name='metadata' -->
     <!-- tmpl_var name='stylesheet' -->
 <!-- tmpl_if name='title' -->
@@ -10,8 +12,21 @@
 <!-- tmpl_else -->
     <title>Debian Administration - Debian Administration Resources</title>
 <!-- /tmpl_if -->
-    <link rel="stylesheet" type="text/css" media="" href="/css/jquery.autocomplete.css">
-    <script src="/js/jquery.js" type="text/javascript"></script>
+
+<style type='text/css'>
+/* --- Misc --- */
+</style>
+
+<!--[if lte IE 6]>
+<style type='text/css'>
+  * html #main, * html #container {height:1%}
+</style>
+<![endif]-->
+
+<!--[if !lt IE 6]><!-->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/jquery.autocomplete.css">
     <script src="/js/jquery.autocomplete.min.js" type="text/javascript"></script>
     <script src="/js/jquery.autogrow.js"     type="text/javascript"></script>
     <script src="/js/jquery.textboxhints.js" type="text/javascript"></script>
@@ -35,55 +50,38 @@
             });
  </script>
 
-  </head>
-  <body>
+<script type="text/javascript" src="/js/jquery.sidebarToggler.102.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+$(function() {
+  $("#rightcol").toggleSidebar({animation: "queuedEffects",
+				initState:"shown",
+				event:"click",
+				triggerShow: "Menu"});
+});
+//--><!]]>
+</script>
+<!--<![endif]-->
 
- <div id="header">
-      <div id="logo">
+</head>
+
+
+<body>
+
         <h1><a href="/"><!-- tmpl_var name="site_title" --></a></h1>
-<!-- tmpl_if name='ipv6' -->
-    <h4 id="headerSubTitle"><b>IPv6</b> System Administration Tips and Resources</h4>
-<!-- tmpl_else -->
-    <h4 id="headerSubTitle">System Administration Tips and Resources</h4>
-<!-- /tmpl_if -->
-      </div>
-       <div id="searchy" style="text-align:right; padding-right:5%;">
- <form id="quickSearch" action="/search/" method="get">
-  <input size="10" id="search"  name="q" title="Quick search ..">
-  <input type="hidden" name="cmd" value="Search!">
-  <input type="submit" name="go" value="Go">
- </form>
 
-
-       </div>
-      <div id="links">
-        <ul>
-<li> <a href="/about/Debian%20Administration" title="About this site">About</a></li>
-<li> <a href="/archive" title="Archived Articles, by Month">Archive</a></li>
-<li> <a href="/about/FAQ" title="Frequently asked questions with answers">FAQ</a></li>
-<li> <a href="/hof" title="Article statistics">Hall of Fame</a> </li>
-<li> <a href="/about/Search" title="Search the articles which have been posted previously">Search</a> </li>
-<li> <a href="/tag" title="See tagged content">Tag Cloud</a> </li>
-        </ul>
-      </div>
-    </div>
-
-
-<table width="100%">
-
-<tr>
- <td width="2%" valign="top">
- </td>
- <td width="78%" valign="top">
-
-  <!-- Main body -->
-  <div id="content">
+    <div id="wrapper">
+      <div id="content">
+        <div id="container">
+            <div id="inner">
+                <div id="main">
    <!-- tmpl_include name='###' -->
-  </div>
- </td>
- <td width="2%" valign="top"><p>&nbsp;</p></td>
- <td width="18%" valign="top">
-  <p>&nbsp;</p>
+                </div>
+            </div>
+        </div>
+        <div id="rightcol" class="side">
+            <div class="slide">
+
   <!-- tmpl_var name="login_box_text" -->
 
   <!-- tmpl_var name="sidebar_text" -->
@@ -188,21 +186,9 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	</div>
  </div>
 <!-- /tmpl_if name='recent_tips' -->
-
- </td>
-</tr>
-
-<tr><td><p>&nbsp;</p></td>
-<td><p>&nbsp;</p></td>
-<td width="2%"></td>
-<td><p>&nbsp;</p></td></tr>
-<tr><td colspan="4" id="footer">
-<p>Articles and comments are the property of their respective posters.</p>
-<p>Trademarks are the property of their respective owners.<br />  Debian is <a
-href="http://tarr.uspto.gov/servlet/tarr?regser=serial&amp;entry=75386376&amp;action=Request+Status">a registered trademark</a> of <a href="http://www.spi-inc.org">Software in the Public Interest, Inc</a>.</p>
-<p>This site is copyright &copy; 2004-2011 <a href="http://www.steve.org.uk/">Steve Kemp</a>.<br />Site hosting provided by <a href="http://www.bytemark.co.uk/">Bytemark Hosting</a>.</p>
-<p><a href="/about/Syndication">Article Feeds in Atom, RSS, &amp; RDF formats</a></p>
-  </td></tr></table>
-  </body>
+            </div>
+        </div>
+      </div> <!-- end #content -->
+    </div> <!-- end #wrapper -->
+</body>
 </html>
-
