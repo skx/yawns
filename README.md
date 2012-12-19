@@ -71,20 +71,19 @@ The code is deployed upon five hosts:
 
 * da-db1.vm
 *  da-db2.vm
-** 2 x MySQL running in master-master.  Only one is used for real, the other is present for fail-over.  These hosts also run MemCached via ucarp.
+    * 2 x MySQL running in master-master.  Only one is used for real, the other is present for fail-over.
+    * These hosts also run MemCached via ucarp.
 
 
-da-web1.vm
-da-web2.vm
-da-web3.vm
- 3 x Apache.
- Each host has a been configured with ucarp so that they can potentially
- own the master IP.
+* da-web1.vm
+* da-web2.vm
+* da-web3.vm
+    * pound
+    * varnish
+    * apache
+    * Each host has a been configured with ucarp so that they can potentially own the master IP.
 
- The master IP runs pound on port 80, and will use each of the three backends.
- This complicates the server because each can be alive, or dead, at random, but
- it should mean we have a site if at least one node is running.
-
+The master IP runs pound on port 80, which routes traffic to varnish on each host, listening on :8000, which passes traffic to Apache on localhost:8080.
 
 All data is stored in MySQL *except* login sessions.  Login sessions go
 to memcached, which is configured via ucarp to ensure that it is always
@@ -93,18 +92,19 @@ available.
 
 This means the hosts run the following services:
 
-db-db1.dh - MySQL
-db-db2.dh - MySQL
+* db-db1.dh - MySQL
+* db-db2.dh - MySQL
 
-db-web1.dh - ucarp, memcache, varnish, pound, apache
-db-web2.dh - ucarp, memcache, varnish, pound, apache
-db-web3.dh - ucarp, memcache, varnish, pound, apache
- - Because only one host is the "master" at any given time the actual
-   deployment is more like this:
+* db-web1.dh - ucarp, memcache, varnish, pound, apache
+* db-web2.dh - ucarp, memcache, varnish, pound, apache
+* db-web3.dh - ucarp, memcache, varnish, pound, apache
 
-    db-web1.dh - ucarp, memcache, varnish, pound, apache
-    db-web2.dh - ucarp, apache
-    db-web3.dh - ucarp, apache
+
+Because only one host is the "master" at any given time the actual deployment is more like this:
+
+* db-web1.dh - ucarp, memcache, varnish, pound, apache
+* db-web2.dh - ucarp, apache
+* db-web3.dh - ucarp, apache
 
 The use of ucarp ensures that the site is functional if only a single
 host is alive.
