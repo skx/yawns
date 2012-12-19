@@ -69,11 +69,9 @@ Live Usage
 
 The code is deployed upon five hosts:
 
-da-db1.vm
-da-db2.vm
- 2 x MySQL running in master-master.  Only one is used for real, the other
- is present for fail-over.
- These hosts also run MemCached via ucarp.
+* da-db1.vm
+*  da-db2.vm
+*   * 2 x MySQL running in master-master.  Only one is used for real, the other is present for fail-over.  These hosts also run MemCached via ucarp.
 
 
 da-web1.vm
