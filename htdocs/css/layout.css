@@ -59,7 +59,7 @@ dt {
         height:110px;
         background-color: white;
         border-bottom:1px solid black;
-  	background-image: url(/images/logo.png);
+	background-image: url(/images/logo.png);
 	background-repeat: no-repeat;
 	padding-left:80px;
 }
@@ -207,7 +207,6 @@ div.comment p.foot {
  */
 div.article .title {
 	font-size: 110%;
-//        margin-left: -20px;
         border-bottom: 1px solid #cc0033;
 	padding: 0;
 
@@ -238,10 +237,9 @@ div.teaser div.body {
 
 div.teaser .title {
 	font-size: 110%;
-//        margin-left: -20px;
-        border-bottom: 1px solid #cc0033;
-	padding: 0;
-        margin-bottom: 0px;
+    border-bottom: 1px solid #cc0033;
+padding: 0;
+margin-bottom: 0px;
 }
 
 div.teaser .title a {
@@ -325,7 +323,6 @@ div.weblog {
        border-bottom: 1px solid rgb(128, 128, 128);
        background-color: white;
        margin: 5px 0px;
-    //   width: 70%;
 }
 
 div.weblog div.body {
@@ -394,7 +391,6 @@ pre.terminal span.hiddeninput { font-style: italic; color: #afa; }
 /* --------
   The CSS rules offered here are just an example.
  --------- */
-* {margin:0; padding:0}
 
 /* --- Page Structure  --- */
 html, body {
@@ -410,7 +406,8 @@ body {
   height:101%;
   background:white;
   color:black;
-  font:76%/1.6 verdana,geneva,lucida,'lucida grande',arial,helvetica,sans-serif;
+  font-family: Georgia, "Hoefler Text", "DejaVu Serif", "Bistream Vera Serif", "Lucida Bright", serif;
+
 }
 #wrapper{
   padding:10px 2.5%;
@@ -457,7 +454,7 @@ padding: 5px;
   float:left;
   width:100%;
   padding-bottom:2em;
-  padding-left:2em;
+  padding-left:1em;
   z-index:9
 }
 .trigger {
