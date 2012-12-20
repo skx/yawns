@@ -4727,8 +4727,10 @@ sub view_scratchpad
     # Show the edit link?
     #
     my $edit = 0;
-    if ( ( lc($view) eq lc($username) ) || ($admin) )
+    if ( ( ( lc($view) eq lc($username) ) || ($admin) ) &&
+         ( $username !~ /^anonymous$/i ) )
     {
+
         $edit    = 1;
         $private = 0;
     }
