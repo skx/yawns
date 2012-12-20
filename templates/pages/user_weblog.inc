@@ -4,7 +4,7 @@
 	<!-- tmpl_if name='is_owner' -->
 	<p>You've not yet written any weblog entries, but if you like you may <a href="/create/weblog">create a new entry</a>.</p>
         <!-- tmpl_else -->
-	<p>This user <a href="/users/<!-- tmpl_var name='viewusername' escape='html' -->"><!-- tmpl_var name='viewusername' escape='html' --></a> has made no weblog entries.</p>
+	<p><a href="/users/<!-- tmpl_var name='viewusername' escape='html' -->"><!-- tmpl_var name='viewusername' escape='html' --></a> has made no weblog entries.</p>
 	<!-- /tmpl_if -->
 
 	<!-- tmpl_else -->
