@@ -41,7 +41,7 @@
 
 <h4>Sign In</h4>
 <form id="user-login" action="/" method="post">
-<input type="hidden" name="target" value="<!-- tmpl_var name="target" -->" />
+<input type="hidden" name="target" value="<!-- tmpl_var name="target" -->" escape='html' />
 
 <p><b>Username</b>:<br/> <input id="name" name="lname" type="text" size="14" maxlength="25" /></p>
 <p><b>Password</b>:<br /> <input id="pass" name="lpass" type="password" size="15" maxlength="25" /></p>
