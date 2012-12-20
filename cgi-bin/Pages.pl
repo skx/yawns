@@ -5797,7 +5797,7 @@ sub view_user_weblog
 
     if ( lc($username) eq lc($viewusername) )
     {
-        $is_owner = 1;
+        $is_owner = 1 unless( $anon );
     }
 
     #
