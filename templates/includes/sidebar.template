@@ -47,8 +47,8 @@
 <div id="contribute">
 <h3>Contribute</h3>
 <ul>
-<li><a href="/create/article">Submit an Article</a></li>
-<li><a href="/create/poll">Submit a Poll</a></li>
+<li><a href="/create/article">Submit Article</a></li>
+<li><a href="/create/poll">Submit Poll</a></li>
 </ul>
 </div>
 
