@@ -2253,7 +2253,7 @@ sub view_user
     my $is_owner = 0;
     if ( lc($username) eq lc($viewusername) )
     {
-        $is_owner = 1;
+        $is_owner = 1 unless( $anon );
     }
 
 
