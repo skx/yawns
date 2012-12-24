@@ -30,7 +30,6 @@ install perl-modules
 install libcgi-pm-perl
 install libdbi-perl libdbd-mysql-perl
 install libhtml-parser-perl
-install libhtml-treebuilder-perl
 install libhtml-tree-perl
 install libredis-perl
 install libcgi-session-perl
