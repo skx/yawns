@@ -31,3 +31,5 @@ install liburi-find-perl
 install libsys-cpuload-perl
 install libcache-memcached-perl
 install libtext-markdown-perl
+install libdbd-mysql-perl
+
