@@ -44,6 +44,7 @@ install libsys-cpuload-perl
 install libcache-memcached-perl
 install libtext-markdown-perl
 install libdbd-mysql-perl
+install libtest-file-perl
 
 
 
