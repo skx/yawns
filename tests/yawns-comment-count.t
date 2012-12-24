@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I..
+#!/usr/bin/perl -w -Ilib/
 #
 #  Test that we can keep track of comment counts.
 #

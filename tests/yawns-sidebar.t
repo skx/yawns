@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I..
+#!/usr/bin/perl -w -Ilib/
 #
 #  Test that we can create the sidebar appropriately, that it is
 # free of HTML errors and that it is modified appropriately by

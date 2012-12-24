@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I..
+#!/usr/bin/perl -w -Ilib/
 #
 #  Test that we can get, edit, and delete a static page.
 #

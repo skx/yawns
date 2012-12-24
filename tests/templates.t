@@ -1,5 +1,4 @@
-
-#!/usr/bin/perl -w
+#!/usr/bin/perl -w -Ilib/
 #
 #  Test that all the site templates we use have the long-form for the
 # HTML Templates.

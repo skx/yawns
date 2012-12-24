@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -w -Ilib/
 
 #
 #  Test that the POD we use in our modules is valid.

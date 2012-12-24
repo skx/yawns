@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I..
+#!/usr/bin/perl -w -Ilib/
 #
 #  Test that our XML output feeds are valid.
 #

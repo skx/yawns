@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I..
+#!/usr/bin/perl -w -Ilib/
 #
 #  Test that we have only a single number for each migration script.
 #

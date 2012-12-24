@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I..
+#!/usr/bin/perl -w -Ilib/
 #
 #  Test that the various feed output files exists.
 #  (Run 'make feeds' if they do not)

@@ -11,7 +11,7 @@
 #
 
 cat <<EOF
-#!/usr/bin/perl -w -I..
+#!/usr/bin/perl -w -Ilib/
 #
 #  Test that all the Perl modules we require are available.
 #
@@ -27,6 +27,6 @@ for i in `rgrep '^use ' .. | grep -v stats | grep -v file |grep -v POSIX | awk '
     do \
      echo "BEGIN{ use_ok( '$i' ); }"; \
      echo "require_ok( '$i' );" ; \
-     echo -e "\n" ; \
+
 done
 

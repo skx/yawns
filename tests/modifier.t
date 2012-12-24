@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I..
+#!/usr/bin/perl -w -Ilib/
 #
 #  Test that we can get a modifier successfully, and that it changes
 # as weblogs and scratchpads are added.
