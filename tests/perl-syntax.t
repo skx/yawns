@@ -33,7 +33,7 @@ sub checkFile
 
     # We don't care about directories
     return if ( ! -f $file );
-    return if ( $file =~ /\.hg/ );
+    return if ( $file =~ /(\.hg|\.git)/ );
     return if ( $file =~ /\/articles\// );
 
     # We have some false positives which fail our test but
