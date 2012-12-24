@@ -23,6 +23,8 @@ my $text =<<EOF;
 
 *This* is _italic_
 
+**This** is __bold__.
+
 http://foo.com/
 EOF
 
