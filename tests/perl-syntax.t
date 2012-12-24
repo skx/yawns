@@ -75,7 +75,7 @@ sub checkFile
     #  Now run 'perl -c $file' to see if we pass the syntax
     # check.
     #
-    my $retval = system( "perl -c $file 2>/dev/null >/dev/null" );
+    my $retval = system( "perl -Ilib/ -c $file 2>/dev/null >/dev/null" );
 
 
     is( $retval, 0, "Perl file passes our syntax check: $file" );
