@@ -3,10 +3,23 @@
 # Install debian dependencies
 #
 
+
+#
+# Install the given pacakge
+#
 function install
 {
-    apt-get install $1 --yes --force-yes
+    dpkg --list $1  >/dev/null 2>/dev/null || apt-get install $1 --yes --force-yes
 }
+
+#
+#  Enable the given Apache module
+#
+function modenable
+{
+    [ -e /etc/apache2/mods-enabled/$1.conf ] || a2enmod $1
+}
+
 
 
 #
@@ -32,4 +45,20 @@ install libsys-cpuload-perl
 install libcache-memcached-perl
 install libtext-markdown-perl
 install libdbd-mysql-perl
+
+
+
+#
+#  Install Apache modules
+#
+modenable alias
+modenable autoindex
+modenable cgid
+modenable deflate
+modenable dir
+modenable mime
+modenable negotiation
+modenable reqtimeout
+modenable rpaf
+modenable setenvif
 
