@@ -15,17 +15,15 @@ BEGIN { use_ok( 'Test::File' ); }
 require_ok( 'Test::File' );
 
 
-file_exists_ok( "articles.rdf", "Articles RDF exists " );
-file_writeable_ok( "articles.rdf", "Articles RDF writable " );
+file_exists_ok( "htdocs/articles.rdf", "Articles RDF exists " );
+file_writeable_ok( "htdocs/articles.rdf", "Articles RDF writable " );
 
 
-file_exists_ok( "headlines.rdf", "Headlines RDF exists " );
-file_writeable_ok( "headlines.rdf", "Headlines RDF writable " );
+file_exists_ok( "htdocs/headlines.rdf", "Headlines RDF exists " );
+file_writeable_ok( "htdocs/headlines.rdf", "Headlines RDF writable " );
 
 
-file_exists_ok( "atom.xml", "Atom XML exists " );
-file_writeable_ok( "atom.xml", "Atom XML writable " );
+file_exists_ok( "htdocs/atom.xml", "Atom XML exists " );
+file_writeable_ok( "htdocs/atom.xml", "Atom XML writable " );
 
 
-ok( -d "images/auth", "CAPTCHA directory exists" );
-ok( -w "images/auth", "CAPTCHA directory writable" );
