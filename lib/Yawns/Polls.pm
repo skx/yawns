@@ -237,6 +237,12 @@ sub delete
 
     $query->execute($id);
     $query->finish();
+
+    #
+    # Delete the tags on this poll
+    #
+    my $tags = Yawns::Tags->new();
+    $tags->deleteTags( poll => $id );
 }
 
 
