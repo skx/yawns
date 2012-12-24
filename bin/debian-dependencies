@@ -45,6 +45,7 @@ install libcache-memcached-perl
 install libtext-markdown-perl
 install libdbd-mysql-perl
 install libtest-file-perl
+install libtest-pod-perl
 
 
 
