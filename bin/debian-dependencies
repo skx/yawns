@@ -44,8 +44,11 @@ install libsys-cpuload-perl
 install libcache-memcached-perl
 install libtext-markdown-perl
 install libdbd-mysql-perl
+
+# for test-suite
 install libtest-file-perl
 install libtest-pod-perl
+install libxml2-utils
 
 
 
