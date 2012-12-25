@@ -59,7 +59,6 @@ foreach my $url ( qw!
                        /recent/comments
                        /recent/reported
                        /recent/reported/weblogs
-                       /News/feed/
                        /submission/feed/
                        /comment/feed/onweblog/0
                        /comment/feed/onarticle/0
