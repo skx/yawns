@@ -12,19 +12,13 @@ nop:
 	@echo " "
 	@echo " Debian-Administration.org specific:"
 	@echo " "
-	@echo " cache     - Show cache hits & misses"
-	@echo " daily     - Run daily cleanup tasks"
-	@echo " restart   - Restart Apache2 + Memcached."
-	@echo " test      - Simple code tests."
+	@echo " test         - Simple code tests."
+	@echo " test-verbose - Simple code tests."
 	@echo " "
 
 
 .PHONY:
 	@true
-
-cache:
-	@echo -e 'stats\r\nquit\r\n' | nc localhost 11211 | grep 'hit' | awk '{ printf("hits  : %8s\n", $$3)}'
-	@echo -e 'stats\r\nquit\r\n' | nc localhost 11211 | grep 'miss' | awk '{ printf("misses: %8s\n", $$3)}'
 
 
 clean:
@@ -35,25 +29,14 @@ clean:
 	@[ -e fabfile.pyc ] && rm fabfile.pyc || true
 
 
-daily:  clean oldmessages uncache
-
 
 feeds:
 	@./bin/gen-feeds
 	@chmod 777 ~/current/htdocs/*.xml
 	@chmod 777 ~/current/htdocs/*.rdf
 
-oldmessages:
-	@./bin/expire-messages
-
-uncache:
-	@./bin/uncache-all
-
 test:
 	prove --shuffle tests/
-
-test-output:
-	@./bin/test-output
 
 test-verbose:
 	prove --shuffle --verbose tests/
