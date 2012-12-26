@@ -1,0 +1,17 @@
+#!/usr/bin/perl -Itests-lib/
+#
+#  This is a simple test.
+#
+
+use TAP::Harness;
+use TAP::Formatter::HTML;
+
+my @tests = glob( 'tests/*.t' );
+my $fmt = TAP::Formatter::HTML->new;
+my $harness = TAP::Harness->new({ formatter => $fmt } );
+
+$fmt->output_file( './htdocs/test-output.html' );
+$fmt->css_uris( [ ] );
+$fmt->js_uris( [ ] );
+
+$harness->runtests( @tests );

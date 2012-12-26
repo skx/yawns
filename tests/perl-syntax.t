@@ -35,6 +35,7 @@ sub checkFile
     return if ( ! -f $file );
     return if ( $file =~ /(\.hg|\.git)/ );
     return if ( $file =~ /\/articles\// );
+    return if ( $file =~ /\/tests-lib\// );
 
     # We have some false positives which fail our test but
     # are actually ok.  Skip them.
