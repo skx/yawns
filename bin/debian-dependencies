@@ -61,6 +61,7 @@ modenable autoindex
 modenable cgid
 modenable deflate
 modenable dir
+modenable headers
 modenable mime
 modenable negotiation
 modenable reqtimeout
