@@ -49,6 +49,7 @@ install libdbd-mysql-perl
 install libtest-file-perl
 install libtest-pod-perl
 install libxml2-utils
+install libtemplate-perl
 
 
 
