@@ -49,10 +49,10 @@ $(function() {
    <div id="header">
      <h1><a href="/"><!-- tmpl_var name="site_title" --></a></h1>
      <ul>
-       <li><a href="/">Home</a></li>
        <li><a href="/about/Debian%20Administration">About</a></li>
        <li><a href="/archive/">Archive</a></li>
-       <li><a href="/about/FAQ/">FAQ</a></li>
+       <li><a href="/about/contribute">Archive</a></li>
+       <li><a href="/about/FAQ">FAQ</a></li>
        <li><a href="/about/Search">Search</a></li>
        <li><a href="/tag/">Tags</a></li>
      </ul>
