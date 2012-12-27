@@ -93,7 +93,7 @@ dt {
     text-decoration:none;
     text-transform:uppercase;
 }
-#header a:hover, #header ul li a:hover {
+#header ul li a:hover, #header ul li a:hover {
     background-color:#cc0033;
 }
 
