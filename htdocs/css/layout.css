@@ -64,11 +64,7 @@ dt {
 	padding-left:120px;
 }
 
-#header h1 {
-    color: black !important;
-    text-decoration: none !important;
-}
-#header h1 a:hover {
+#header h1, #header h1 a, #header h1 a:hover {
     color: black !important;
     text-decoration: none !important;
 }

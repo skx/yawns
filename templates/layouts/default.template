@@ -51,7 +51,7 @@ $(function() {
      <ul>
        <li><a href="/about/Debian%20Administration">About</a></li>
        <li><a href="/archive/">Archive</a></li>
-       <li><a href="/about/contribute">Archive</a></li>
+       <li><a href="/about/contribute">Contribute</a></li>
        <li><a href="/about/FAQ">FAQ</a></li>
        <li><a href="/about/Search">Search</a></li>
        <li><a href="/tag/">Tags</a></li>
