@@ -61,7 +61,16 @@ dt {
         border-bottom:1px solid black;
 	background-image: url(/images/logo.png);
 	background-repeat: no-repeat;
-	padding-left:80px;
+	padding-left:120px;
+}
+
+#header h1 {
+    color: black !important;
+    text-decoration: none !important;
+}
+#header h1 a:hover {
+    color: black !important;
+    text-decoration: none !important;
 }
 
 #header ul {
@@ -73,9 +82,9 @@ dt {
 #header li {
     float:left;
 }
-#header a:link, #header ul li a:link {
+#header ul li a:link {
     display:block;
-    width:120px;
+    width:110px;
     font-weight:bold;
     color:black;
     background-color:white;
