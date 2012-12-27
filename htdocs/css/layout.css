@@ -87,7 +87,6 @@ dt {
     text-align:center;
     padding:4px;
     text-decoration:none;
-    text-transform:uppercase;
 }
 #header ul li a:hover, #header ul li a:hover {
     background-color:#cc0033;
