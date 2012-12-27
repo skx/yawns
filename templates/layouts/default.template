@@ -46,8 +46,15 @@ $(function() {
 <!--<![endif]-->
  </head>
  <body>
-    <!-- TODO : Header -->
-    <h1><a href="/"><!-- tmpl_var name="site_title" --></a></h1>
+   <div id="header">
+     <h1><a href="/"><!-- tmpl_var name="site_title" --></a></h1>
+     <ul>
+       <li><a href="#home">Home</a></li>
+       <li><a href="#news">News</a></li>
+       <li><a href="#contact">Contact</a></li>
+       <li><a href="#about">About</a></li>
+     </ul>
+   </div>
     <div id="wrapper">
       <div id="content">
         <div id="container">
