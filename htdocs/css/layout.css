@@ -73,7 +73,7 @@ dt {
 #header li {
     float:left;
 }
-#header a:link, ul li a:link {
+#header a:link, #header ul li a:link {
     display:block;
     width:120px;
     font-weight:bold;
