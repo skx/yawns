@@ -161,6 +161,13 @@ sub load_layout
 sub validateSession
 {
     my $session = Singleton::Session->instance();
+
+    #
+    #  We cannot validate a session if we have no cookie.
+    #
+    my $username = $session->param("logged_in") || "Anonymous";
+    return if ( !defined( $username ) || ( $username =~ /^anonymous$/i) );
+
     my $form    = Singleton::CGI->instance();
 
     # This is the session token we're expecting.
