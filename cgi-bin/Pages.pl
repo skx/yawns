@@ -36,7 +36,6 @@ use warnings;
 
 
 # standard perl modules
-use Authen::Captcha;
 use Digest::MD5 qw(md5_base64 md5_hex);
 use HTML::Entities;
 use HTML::Template;    # Template library for webpage generation
@@ -2823,27 +2822,6 @@ sub new_user
     my $invalid_hash     = 0;
 
 
-    #
-    #  Captcha handling
-    #
-    my $auth_create = 0;
-    my $auth_hash   = '';
-    my $auth_guess  = '';
-
-    #
-    #  Create a new CAPTCHA image for the user.
-    #
-    my $auth_data_dir = "/var/tmp/yawns";
-    if ( !-d $auth_data_dir )
-    {
-        mkdir $auth_data_dir, 777;
-    }
-
-    #
-    #  Image directory
-    #
-    my $auth_image_dir = $ENV{ 'DOCUMENT_ROOT' } . "/images/auth";
-
 
     if ( $form->param('new_user') eq 'Create User' )
     {
@@ -2854,12 +2832,6 @@ sub new_user
         $new_user_name = $form->param('new_user_name');
         $new_user_name =~ s/&/\+/g;
         $new_user_email = $form->param('new_user_email');
-
-        #
-        #  Captcha variables.
-        #
-        $auth_hash  = $form->param('auth_hash');
-        $auth_guess = $form->param('auth_guess');
 
         if ( $new_user_name =~ /^([0-9a-zA-Z_-]+)$/ )
         {
@@ -2900,43 +2872,25 @@ sub new_user
                 }
                 else
                 {
+                    my $password = '';
+                    $password = join( '', map {( 'a' .. 'z' )[rand 26]} 0 .. 7 );
 
-                    #
-                    #  All looks good, so we'll test the captcha value.
-                    #
-                    my $captcha =
-                      Authen::Captcha->new( data_folder   => $auth_data_dir,
-                                            output_folder => $auth_image_dir );
-                    my $result =
-                      $captcha->check_code( $auth_guess, $auth_hash );
-
-                    if ( $result == 1 )
+                    my $ip = $ENV{ 'REMOTE_ADDR' };
+                    if ( $ip =~ /^::ffff:(.*)/ )
                     {
-                        my $password = '';
-                        $password =
-                          join( '', map {( 'a' .. 'z' )[rand 26]} 0 .. 7 );
-
-                        my $ip = $ENV{ 'REMOTE_ADDR' };
-                        if ( $ip =~ /^::ffff:(.*)/ )
-                        {
-                            $ip = $1;
-                        }
-
-                        my $user =
-                          Yawns::User->new( username  => $new_user_name,
-                                            email     => $new_user_email,
-                                            password  => $password,
-                                            ip        => $ip,
-                                            send_mail => 1
-                                          );
-                        $user->create();
-
-                        $new_user_sent = 1;
+                        $ip = $1;
                     }
-                    else
-                    {
-                        $invalid_hash = 1;
-                    }
+
+                    my $user =
+                      Yawns::User->new( username  => $new_user_name,
+                                        email     => $new_user_email,
+                                        password  => $password,
+                                        ip        => $ip,
+                                        send_mail => 1
+                                      );
+                    $user->create();
+
+                    $new_user_sent = 1;
                 }
             }
         }
@@ -2952,40 +2906,6 @@ sub new_user
             }
         }
     }
-    else
-    {
-
-        #
-        #  Showing the form, so create a new image.
-        #
-        $auth_create = 1;
-    }
-
-    if ( $already_exists ||
-         $blank_email ||
-         $invalid_email ||
-         $blank_username ||
-         $invalid_username ||
-         $invalid_hash )
-    {
-
-        #
-        #  The users submission failed so create a new code.
-        #
-        $auth_create = 1;
-    }
-
-    #
-    #  Create a new image.
-    #
-    if ($auth_create)
-    {
-        my $captcha =
-          Authen::Captcha->new( data_folder   => $auth_data_dir,
-                                output_folder => $auth_image_dir );
-
-        $auth_hash = $captcha->generate_code(6);
-    }
 
 
     # open the html template
@@ -2996,13 +2916,11 @@ sub new_user
                       new_user_email   => $new_user_email,
                       already_exists   => $already_exists,
                       invalid_email    => $invalid_email,
-                      invalid_hash     => $invalid_hash,
                       invalid_username => $invalid_username,
                       blank_email      => $blank_email,
                       blank_username   => $blank_username,
                       new_user_name    => $new_user_name,
                       new_user_email   => $new_user_email,
-                      auth_hash        => $auth_hash,
                       title            => "Register Account",
                     );
 

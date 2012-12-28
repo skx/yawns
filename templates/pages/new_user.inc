@@ -8,7 +8,6 @@
 	<p>To register an account please fill out the following details:</p>
                   <form action="/create/user" method="post">
        <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
-        <input type="hidden" name="auth_hash" value="<!-- tmpl_var name='auth_hash' -->" />
 <table>
 <tr>
  <td valign="top"><b>Username:</b></td>
@@ -37,18 +36,8 @@
 		  <!-- /tmpl_if -->
  </td></tr>
 
- <td valign="top"><b>Human-Test:</b></td>
- <td><img src="/images/auth/<!-- tmpl_var name='auth_hash' -->.png" alt="CAPTCHA Test">
-<br />
-        <!-- tmpl_if name='invalid_hash' -->
-        <p>Sorry the code you entered was incorrect.</p>
-        <!-- /tmpl_if -->
-        <p>Please enter the code shown above.  Reloading the page will give you a new image if the current one is too hard to read.</p>
-     <input name="auth_guess" type="text" size="50" maxlength="50" value=""/>
- </td></tr>
-
-<tr><td></td><td>  
-                    <p><input type="submit" name="new_user" value="Create User" /> &nbsp; 
+<tr><td></td><td>
+                    <p><input type="submit" name="new_user" value="Create User" /> &nbsp;
                   </form>
 </td></tr></table>
                     <p>Your email address is needed to send you your password.  If you wish you can also receive email notification of new replies to any articles and comments you post.</p>
