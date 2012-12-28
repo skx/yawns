@@ -17,7 +17,7 @@ function install
 #
 function modenable
 {
-    [ -e /etc/apache2/mods-enabled/$1.conf ] || a2enmod $1
+    [ -e /etc/apache2/mods-enabled/$1.load ] || a2enmod $1
 }
 
 
