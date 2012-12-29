@@ -2943,6 +2943,15 @@ sub new_user
 # ===========================================================================
 sub send_reset_password
 {
+    #
+    # Deny access if the user is already logged in.
+    #
+    my $session  = Singleton::Session->instance();
+    my $uname = $session->param("logged_in");
+    if ( $uname !~ /^anonymous$/i )
+    {
+        return ( permission_denied( already_logged_in => 1 ) );
+    }
 
     #
     #  Gain access to the objects we use.
