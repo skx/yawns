@@ -567,7 +567,6 @@ sub getArchivedArticles
              title      => $title,
              slug       => $slug,
              teaser     => $teaser,
-             month      => $month,
              name       => $name,
              year       => $year,
             } );
