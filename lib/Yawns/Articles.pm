@@ -551,7 +551,7 @@ sub getArchivedArticles
     {
         my @article = @$article;
 
-        my $month = $article[0];
+        my $month  = $article[0];
         my $name   = $article[1];
         my $year   = $article[2];
         my $id     = $article[3];
@@ -567,8 +567,7 @@ sub getArchivedArticles
              title      => $title,
              slug       => $slug,
              teaser     => $teaser,
-             name       => $name,
-             year       => $year,
+             # year       => $year,
             } );
 
     }
