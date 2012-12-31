@@ -7060,7 +7060,7 @@ sub show_archive
     #
     my $articles     = Yawns::Articles->new();
     my %years        = $articles->getArticleYears();
-    my $the_articles = $articles->getArchivedArticles( $month, $year );
+    my $the_articles = $articles->getArchivedArticles( $year );
 
     #
     # Load the display template.
