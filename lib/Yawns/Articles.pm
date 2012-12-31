@@ -526,36 +526,18 @@ sub getArticleYears
 
 sub getArchivedArticles
 {
-    my ( $class, $month, $year ) = (@_);
+    my ( $class, $year ) = (@_);
 
-    $month = "" if !defined($month);
-
-    #
-    # Cache fetch failed, so get from the database.
-    #
     my $db = Singleton::DBI->instance();
 
     my $sql;
-    my $show_month = 0;
 
 
     # get required data
-    if ( ( length($month) ) &&
-         ( $month =~ /^[0-9]+$/ ) )
-    {
-        my $query =
-          "SELECT month(ondate),monthname(ondate),year(ondate),id,title,leadtext FROM articles WHERE month(ondate)=? AND year(ondate)=?  ORDER BY id ASC";
-        $sql = $db->prepare($query);
-        $sql->execute( $month, $year ) or die "Error: " . $db->errstr();
-        $show_month = 1;
-    }
-    else
-    {
-        my $query =
-          "SELECT month(ondate),monthname(ondate),year(ondate),id,title,leadtext FROM articles WHERE year(ondate)=?  ORDER BY id ASC";
-        $sql = $db->prepare($query);
-        $sql->execute($year) or die "Error : " . $db->errstr();
-    }
+    my $query =
+      "SELECT month(ondate),monthname(ondate),year(ondate),id,title,leadtext FROM articles WHERE year(ondate)=?  ORDER BY id DESC";
+    $sql = $db->prepare($query);
+    $sql->execute($year) or die "Error : " . $db->errstr();
 
     my $articleref  = $sql->fetchall_arrayref();
     my @articlelist = @$articleref;
@@ -565,13 +547,11 @@ sub getArchivedArticles
     my $article;
 
 
-    my $prevMonth = '';
-
     foreach $article (@articlelist)
     {
         my @article = @$article;
 
-        $month = $article[0];
+        my $month = $article[0];
         my $name   = $article[1];
         my $year   = $article[2];
         my $id     = $article[3];
@@ -580,27 +560,18 @@ sub getArchivedArticles
 
         my $slug = $class->makeSlug($title);
 
-        my $newMonth = 0;
-
-        if ( $prevMonth ne $name )
-        {
-            $newMonth = 1;
-        }
         push(
             @$articles,
             {
              id         => $id,
-               title      => $title,
-               slug       => $slug,
-               teaser     => $teaser,
-               month      => $month,
-               name       => $name,
-               year       => $year,
-               new_month  => $newMonth,
-               show_month => $show_month
+             title      => $title,
+             slug       => $slug,
+             teaser     => $teaser,
+             month      => $month,
+             name       => $name,
+             year       => $year,
             } );
 
-        $prevMonth = $name;
     }
 
     # return the requested values

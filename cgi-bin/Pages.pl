@@ -7019,7 +7019,7 @@ sub tag_feed
 
 
 # ===========================================================================
-# Show time-based archives of articles.
+# Show year-based archives of articles.
 # ===========================================================================
 sub show_archive
 {
@@ -7033,31 +7033,26 @@ sub show_archive
     #
     #  Get the current month and year.
     #
-    my $year  = undef;
-    my $month = undef;
-    $year  = $form->param('year')  if $form->param('year');
-    $month = $form->param('month') if $form->param('month');
+    my $year = undef;
+    $year    = $form->param('year')  if $form->param('year');
 
 
     #
-    #  Get the current month and year
+    #  Get the current year
     #
     my ( $sec, $min, $hour, $mday, $mon, $yr, $wday, $yday, $isdst );
     ( $sec, $min, $hour, $mday, $mon, $yr, $wday, $yday, $isdst ) =
       localtime(time);
 
-    my $current_month = $mon + 1;
     my $current_year  = $yr + 1900;
 
 
     #
-    #  If there is no year then the year is this one, and the month
-    # is the current one.
+    #  If there is no year then the year is this one.
     #
     if ( !defined($year) )
     {
         $year  = $current_year;
-        $month = $current_month;
     }
 
     #
@@ -7077,62 +7072,13 @@ sub show_archive
     #
     $template->param( articles => $the_articles ) if $the_articles;
 
-    #
-    #  Are we showing the articles for a month?
-    #
-    $template->param( month_view => 1 ) if $month;
 
-    #
-    #  Now we need to work out whether to show the links to the
-    # previous and next month.
-    #
-    if ( $month > 1 )
-    {
-        $template->param( show_prev_month => 1,
-                          prev_month      => $month - 1 );
-    }
-    if ( $month < 12 )
-    {
-
-        #
-        #  Don't allow to move into the future.
-        #
-        if ( ( $year != $current_year ) ||
-             ( ( $year eq $current_year ) && ( $month < $current_month ) ) )
-        {
-            $template->param( show_next_month => 1,
-                              next_month      => $month + 1 );
-        }
-    }
-
-    #
-    #  Show the previous year?
-    #
-    if ( ( $month == 1 ) &&
-         ( $years{ $year - 1 } ) )
-    {
-        $template->param( show_prev_year => 1,
-                          prev_year      => $year - 1 );
-    }
-
-    #
-    #  Show the next year?
-    #
-    if ( ( $month == 12 ) &&
-         ( $years{ $year + 1 } ) )
-    {
-        $template->param( show_next_year => 1,
-                          next_year      => $year + 1 );
-    }
-
-    my $title = "Archive for ";
-    $title .= month_to_name($month) . " " . $year;
+    my $title = "Archive for $year";
 
     #
     #  Show the month name, and the currently viewed year.
     #
-    $template->param( month_name => month_to_name($month),
-                      year       => $year,
+    $template->param( year       => $year,
                       title      => $title
                     );
 
