@@ -81,7 +81,7 @@ sub send
     my ($class, $msg ) = (@_);
 
     my $sock = IO::Socket::INET->new( Proto    => 'udp',
-                                      PeerPort => 12345,
+                                      PeerPort => 4433,
                                       PeerAddr => "da-misc.debian-administration.org",
                                     ) or
                                       return;
