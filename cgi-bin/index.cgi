@@ -426,6 +426,7 @@ if ( !$perms->check( priv => "raw_html" ) )
 #   3.  redirect - An URI to redirect to once the routine has been called.
 #   4.  login    - Should this function require a user-login?
 #   5.  priv     - A permissions check to test access against.
+#   6.  cache    - Should the cache be flushed once this is completed?
 #
 # ===========================================================================
 my %dispatch = (
@@ -440,6 +441,7 @@ my %dispatch = (
     "comment" =>    # Submit a comment
       { sub  => \&submit_comment,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "dump" =>    # Dump details of a request.
@@ -451,10 +453,10 @@ my %dispatch = (
       { sub   => \&add_weblog,
         login => 1,
         type  => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     # end explicit ordering.
-
     "about" =>         # View a static page
       { sub  => \&view_about_section,
         type => "Content-Type: text/html\n\n",
@@ -464,18 +466,21 @@ my %dispatch = (
       { sub   => \&add_new_advert,
         login => 1,
         type  => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "add_related" =>     # Add a related link to an article
       { sub  => \&add_related,
         type => "Content-Type: text/html\n\n",
         priv => "related_admin",
+        cache => 1,
       },
 
     "add_submission_note" =>    # Add a note to a pending article
       { sub  => \&add_submission_note,
         priv => "article_admin",
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
     "adverts_byuser" =>         # View all adverts by a given user.
       { sub   => \&adverts_byuser,
@@ -513,6 +518,7 @@ my %dispatch = (
       { sub  => \&ban_ip,
         type => "Content-Type: text/html\n\n",
         priv => "ban_ip",
+        cache => 1,
       },
 
     "bookmarks" =>              # View a users bookmark list.
@@ -524,90 +530,106 @@ my %dispatch = (
       { sub  => \&delete_advert,
         priv => "advert_admin",
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "delete_bookmark" =>        # Remove an existing bookmark.
       { sub      => \&bookmark_delete,
         login    => 1,
         redirect => "/users/$username/bookmarks",
+        cache => 1,
       },
 
     "delete_message" =>         # Remove a site-message
       { sub      => \&delete_message,
         login    => 1,
         redirect => "/view/messages",
+        cache => 1,
       },
 
     "delete_related" =>         # Remove a related link from an article
       { sub  => \&delete_related,
         priv => "related_admin",
+        cache => 1,
       },
 
     "delete_weblog" =>          # Delete a weblog entry
       { sub   => \&delete_weblog,
         login => 1,
         type  => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "disable_advert" =>         # Disable an advert
       { sub  => \&disable_advert,
         priv => "advert_admin",
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "edit_about" =>             # Edit a static page
       { sub  => \&edit_about,
         type => "Content-Type: text/html\n\n",
         priv => "edit_about",
+        cache => 1,
       },
 
     "edit_adverts" =>           # Edit a site advert
       { sub  => \&edit_adverts,
         type => "Content-Type: text/html\n\n",
         priv => "advert_admin",
+        cache => 1,
       },
 
     "edit_article" =>           # Edit an existing, live, advert.
       { sub  => \&edit_article,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "edit_comment" =>           # Edit a comment
       { sub  => \&edit_comment,
         type => "Content-Type: text/html\n\n",
         priv => "edit_comments",
+        cache => 1,
       },
 
     "edit_user" =>              # Edit a user.
       { sub  => \&edit_user,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "edit_permissions" =>       # Edit the permissions associated with a user.
       { sub  => \&edit_permissions,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "edit_prefs" =>             # Edit a users preferences
       { sub  => \&edit_prefs,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "edit_scratchpad" =>        # Edit a users scratchpad
       { sub  => \&edit_scratchpad,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "edit_weblog" =>            # Edit a weblog entry
       { sub   => \&edit_weblog,
         login => 1,
         type  => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "enable_advert" =>          # Enable an advert
       { sub  => \&enable_advert,
         priv => "advert_admin",
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "follow_advert" =>          # Click on a user-advert
@@ -622,11 +644,13 @@ my %dispatch = (
       { sub      => \&message_reply,
         login    => 1,
         redirect => "/view/messages",
+        cache => 1,
       },
 
     "new_user" =>               # Create a new user account
       { sub  => \&new_user,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "send_reset_password" =>    # Mail the user a link to reset their password.
@@ -642,6 +666,7 @@ my %dispatch = (
     "pollvote" =>               # Vote in a poll.
       { sub  => \&pollvote,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "poll" =>                   # View a poll.
@@ -653,6 +678,7 @@ my %dispatch = (
       { sub  => \&poll_edit,
         priv => "poll_admin",
         type => "Content-type: text/html\n\n",
+        cache => 1,
       },
 
     "poll_list" =>              # View archive of old polls
@@ -664,18 +690,21 @@ my %dispatch = (
       { sub      => \&poll_post,
         priv     => "poll_admin",
         redirect => "/submissions/polls",
+        cache => 1,
       },
 
     "poll_reject" =>            # Reject pending poll submissions
       { sub      => \&poll_reject,
         priv     => "poll_admin",
         redirect => "/submissions/polls",
+        cache => 1,
       },
 
     "poll_submissions" =>       # View pending poll submissions
       { sub  => \&poll_submissions,
         type => "Content-Type: text/html\n\n",
         priv => "poll_admin",
+        cache => 1,
       },
 
     "printable" =>              # Display the printable version of an article
@@ -685,16 +714,18 @@ my %dispatch = (
       { sub  => \&recent_users,
         type => "Content-Type: text/html\n\n",
         priv => "recent_users",
-      },
+       },
 
     "report" =>                 # Report an abusive comment.
       { sub  => \&report_comment,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "report_weblog" =>          # Report a weblog entry.
       { sub  => \&report_weblog,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "scratchpad" =>             # View a users scratchpad area.
@@ -705,6 +736,7 @@ my %dispatch = (
     "send_message" =>           # Send a site message
       { sub  => \&send_message,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "single_weblog" =>          # View a single weblog entry.
@@ -720,6 +752,7 @@ my %dispatch = (
     "submission_edit" =>        # Edit a pending article
       { sub  => \&edit_submission,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "submission_view" =>        # View a pending article
@@ -737,22 +770,26 @@ my %dispatch = (
       { sub  => \&submission_post,
         type => "Content-Type: text/html\n\n",
         priv => "article_admin",
+        cache => 1,
       },
 
     "submission_reject" =>      # Reject a pending article submissions
       { sub  => \&submission_reject,
         type => "Content-Type: text/html\n\n",
         priv => "article_admin",
+        cache => 1,
       },
 
     "submit" =>                 # Submit an article
       { sub  => \&submit_article,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "submit_poll" =>            # Submit a new poll
       { sub  => \&submit_poll,
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "tag_browse" =>             # See the tag field
@@ -779,12 +816,14 @@ my %dispatch = (
       { sub  => \&user_administration,
         priv => "user_admin",
         type => "Content-Type: text/html\n\n",
+        cache => 1,
       },
 
     "view_messages" =>          # View site-message.
       { sub   => \&view_messages,
         type  => "Content-Type: text/html\n\n",
         login => 1
+        cache => 1,
       },
 
     "view_message" =>           # View a specific message.
@@ -898,6 +937,13 @@ foreach my $key ( $form->param() )
             print $form->redirect(
                    $protocol . $ENV{ "SERVER_NAME" } . $match->{ 'redirect' } );
         }
+
+        my $flush = $match->{ 'cache' } || 0;
+        if ( $flush )
+        {
+            # TODO - flush cache
+        }
+
 
         #
         #  Now cleanup and exit since each incoming request will only
