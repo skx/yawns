@@ -307,10 +307,17 @@ if ( defined $form->param('logout') )
     $session->param( "session_ip",   undef );
     $session->delete();
 
+    my $logoutCookie = $form->cookie( -name    => 'CGISESSID',
+                                      -value   => $session->id,
+                                      -expires => '-1d'
+                                 );
+
     #
     # Redirect to the server /, whilst making sure we don't setup the cookie.
     #
     print $form->redirect( -type => 'text/html',
+                           -cookie   => $logoutCookie,
+
                            -location =>  "/" );
     $session->close();
     $db->disconnect();
