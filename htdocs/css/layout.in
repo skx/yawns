@@ -64,7 +64,7 @@ dt {
 	padding-left:120px;
 }
 
-#header h1, #header h1 a, #header h1 a:hover {
+#header h1, #header h1 a, #header h1 a:hover, #header h1 a:visited {
     color: black !important;
     text-decoration: none !important;
 }
@@ -78,7 +78,7 @@ dt {
 #header li {
     float:left;
 }
-#header ul li a:link {
+#header ul li a:link, #header ul li a:visited {
     display:block;
     width:110px;
     font-weight:bold;
@@ -88,7 +88,7 @@ dt {
     padding:4px;
     text-decoration:none;
 }
-#header ul li a:hover, #header ul li a:hover {
+#header ul li a:hover, #header ul li a:visited {
     background-color:#cc0033;
 }
 
