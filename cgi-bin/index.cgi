@@ -414,25 +414,6 @@ if ( !$perms->check( priv => "raw_html" ) )
 
 
 
-# ===========================================================================
-# Are we down for maintainence?
-# ===========================================================================
-if ( -e ( get_conf('maintainence_file') ) )
-{
-    open( ERROR, "<", get_conf('maintainence_file') );
-    foreach my $line (<ERROR>)
-    {
-        print $line;
-    }
-
-    # Disconnect from the database and close our session.
-    $session->close();
-    $db->disconnect();
-
-    # End-game.
-    exit;
-}
-
 
 # ===========================================================================
 #  Dispatch hander.  Attempt to redirect control to the function which
