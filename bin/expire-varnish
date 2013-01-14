@@ -21,6 +21,6 @@ fi
 #
 #  If we have varnishadmin then purge the site
 #
-[ -x /usr/bin/varnishadm ] && varnishadm $host 'purge req.url ~ /'
+[ -x /usr/bin/varnishadm ] && varnishadm $host 'ban req.url ~ /'
 
 
