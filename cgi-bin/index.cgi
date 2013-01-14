@@ -940,8 +940,10 @@ foreach my $key ( $form->param() )
         my $flush = $match->{ 'cache' } || 0;
         if ( $flush )
         {
-            # TODO - flush cache
+            my $cmd = "/root/current/bin/expire-varnish";
+            system("$cmd >/dev/null 2>&1 &");
         }
+
 
 
         #
