@@ -312,7 +312,6 @@ if ( defined $form->param('logout') )
     #
     $sessionCookie->expires( "-10m" );
     print $form->redirect( -type => 'text/html',
-                           -cookie => $sessionCookie,
                            -location =>  "/" );
     $session->close();
     $db->disconnect();
