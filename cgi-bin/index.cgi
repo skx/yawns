@@ -139,7 +139,7 @@ $session->expires("+1d");
 # The sessions will be handled by our clients as a cookie.  Expire it at the
 # same time as our session actually epires.
 # ===========================================================================
-my $sessionCookie = $form->cookie( -name    => 'CGISESSID',
+my $sessionCookie = $form->cookie( -name    => 'SESS',
                                    -value   => $session->id,
                                    -expires => '+1d'
                                  );
@@ -229,7 +229,7 @@ if ( $form->param('login') )
             # and reset the cookie to only use ssl:
             #
             $sessionCookie =
-              $form->cookie( -name    => 'CGISESSID',
+              $form->cookie( -name    => 'SESS',
                              -value   => $session->id,
                              -expires => '+1d',
                              -secure  => 1
@@ -307,7 +307,7 @@ if ( defined $form->param('logout') )
     $session->param( "session_ip",   undef );
     $session->delete();
 
-    my $logoutCookie = $form->cookie( -name    => 'CGISESSID',
+    my $logoutCookie = $form->cookie( -name    => 'SESS',
                                       -value   => $session->id,
                                       -expires => '-1d'
                                  );
