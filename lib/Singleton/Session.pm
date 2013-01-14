@@ -49,7 +49,7 @@ use Singleton::CGI;
 
 # Session information is stored in the database.
 use CGI::Session;
-use Cache::Memcaced;
+use Cache::Memcached;
 
 #
 #  The single, global, instance of this object
