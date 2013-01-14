@@ -2897,6 +2897,9 @@ sub new_user
                                       );
                     $user->create();
 
+                    my $event = Yawns::Event->new();
+                    $event->send( "New user, $new_user_name, created from $ip" );
+
                     $new_user_sent = 1;
                 }
             }
