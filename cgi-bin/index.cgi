@@ -388,7 +388,20 @@ my $perms = Yawns::Permissions->new( username => $username );
 #  Before we output any headers, etc, we should make sure that the
 # cookie is sent to the clients browser/user-agent.
 #
-print "Set-Cookie: $sessionCookie; HttpOnly\n" unless( $anonymous );
+if ( $anonymous )
+{
+            $sessionCookie =
+              $form->cookie( -name    => 'CGISESSID',
+                             -value   => $session->id,
+                             -expires => '-1d',
+                           );
+    print "Set-Cookie: $sessionCookie; HttpOnly\n" unless( $anonymous );
+
+}
+else
+{
+    print "Set-Cookie: $sessionCookie; HttpOnly\n" unless( $anonymous );
+}
 
 
 
