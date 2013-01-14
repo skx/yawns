@@ -121,6 +121,11 @@ sub vcl_fetch
          unset req.http.Cookie;
     }
 
+    if (req.url ~ "\.(css|js|png|gif|jpg)$") {
+       unset beresp.http.set-cookie;
+       set beresp.ttl = 72000s;
+    }
+
     # if the TTL is less then two minutes set it to be 1m for stuff
     # that is non-cacheable and 5m otherwise
     if (beresp.ttl < 120s) {
@@ -151,7 +156,7 @@ sub vcl_hit {
 sub vcl_miss {
     if (req.request == "PURGE") {
         purge;
-        error 200 "Purged.";
+        error 404 "Not in cache";
     }
 }
 
