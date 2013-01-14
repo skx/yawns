@@ -90,7 +90,7 @@ sub send
     #
     #  Send the computed values
     #
-    $sock->send( "event:" . $msg );
+    $sock->send( $msg );
 
 }
 
