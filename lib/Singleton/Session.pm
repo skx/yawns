@@ -96,7 +96,7 @@ sub new
     #
     # Gain access to the CGI instance too.
     #
-    my $mem  = Cache::Memcaced->new({ servers => [ '212.110.179.77:11211' ],
+    my $mem  = Cache::Memcached->new({ servers => [ '212.110.179.77:11211' ],
                                       debug => 0 } );
     my $form = Singleton::CGI->instance();
 
