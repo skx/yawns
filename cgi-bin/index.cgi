@@ -61,6 +61,7 @@ use Yawns::Articles;
 use Yawns::Bookmarks;
 use Yawns::Comment;
 use Yawns::Comments;
+use Yawns::Event;
 use Yawns::Messages;
 use Yawns::Permissions;
 use Yawns::Poll;
@@ -194,6 +195,9 @@ if ( $form->param('login') )
     if ( ($logged_in) and ( !( lc($logged_in) eq lc('Anonymous') ) ) )
     {
 
+        my $event = Yawns::Event->new();
+        $event->send( "Successful login for $logged_in" );
+
         #
         #  Setup the session variables.
         #
@@ -258,6 +262,10 @@ if ( $form->param('login') )
     }
     else
     {
+
+        my $event = Yawns::Event->new();
+        $lname = "_unknown_" if ( ! defined( $lname ) );
+        $event->send( "Failed login for $lname from " . $ENV{ 'REMOTE_ADDR' } );
 
         #
         # Login failed:  Invalid username or wrong password.
