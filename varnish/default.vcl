@@ -1,62 +1,169 @@
-
+# This is a basic VCL configuration file for varnish.  See the vcl(7)
+# man page for details on VCL syntax and semantics.
 #
-# Default backend definition.
-# 
-backend default {
-    .host = "127.0.0.1";
-    .port = "8080";
-    .connect_timeout = 600s;
-    .first_byte_timeout = 600s;
-    .between_bytes_timeout = 600s;
-    .max_connections = 800;
+# Default backend definition.  Set this to point to your content
+# server.
+#
+backend web1 { .host = "212.110.179.73";
+               .port = "8080";
+               .probe = {
+                   .url       = "/";
+                   .interval  = 5s;
+                   .timeout   = 1s;
+                   .window    = 5;
+                   .threshold = 3;
+             }}
+
+backend web2 { .host = "212.110.179.74";
+               .port = "8080";
+               .probe = {
+                   .url       = "/";
+                   .interval  = 5s;
+                   .timeout   = 1s;
+                   .window    = 5;
+                   .threshold = 3;
+             }}
+
+backend web3 { .host = "212.110.179.75";
+               .port = "8080";
+               .probe = {
+                   .url       = "/";
+                   .interval  = 5s;
+                   .timeout   = 1s;
+                   .window    = 5;
+                   .threshold = 3;
+             }}
+
+backend web4 { .host = "212.110.179.70";
+               .port = "8080";
+               .probe = {
+                   .url       = "/";
+                   .interval  = 5s;
+                   .timeout   = 1s;
+                   .window    = 5;
+                   .threshold = 3;
+             }}
+
+
+director default_director round-robin {
+  { .backend = web1; }
+  { .backend = web2; }
+  { .backend = web3; }
+  { .backend = web4; }
 }
 
-# 
-# Below is a commented-out copy of the default VCL logic.  If you
-# redefine any of these subroutines, the built-in logic will be
-# appended to your code.
-# 
-sub vcl_recv {
-  # Ignore all "POST" requests - nothing cacheable there
-  if (req.request == "POST") {
-      return (pass);
-  }
+acl admin {
+    "127.0.0.1";
+    "212.110.179.65"/28;
+}
 
-  if (req.http.Accept-Encoding) {
-    if (req.url ~ "\.(jpg|png|gif|gz|tgz|bz2|tbz|mp3|ogg)$") {
-        # No point in compressing these
-        remove req.http.Accept-Encoding;
-    } elsif (req.http.Accept-Encoding ~ "gzip") {
-        set req.http.Accept-Encoding = "gzip";
-    } elsif (req.http.Accept-Encoding ~ "deflate") {
-        set req.http.Accept-Encoding = "deflate";
+sub vcl_recv
+{
+    # the round-robin behaviour
+    set req.backend = default_director;
+
+    # Tell Varnish to use X-Forwarded-For, to set "real"
+    # IP addresses on all requests
+    remove req.http.X-Forwarded-For;
+    set req.http.X-Forwarded-For = req.http.rlnclientipaddr;
+
+    # Allow the backend to serve up stale content if it is responding slowly.
+    if (! req.backend.healthy) {
+       set req.grace = 60m;
     } else {
-        # unknown algorithm
-        remove req.http.Accept-Encoding;
+       set req.grace = 15s;
     }
-  }
 
-  # In the event of a backend overload (HA!),
-  # serve stale objects for up to two minutes
-  set req.grace = 10m;
+    # Ignore all "POST" requests - nothing cacheable there
+    if (req.request == "POST") {
+           return (pass);
+    }
 
-  # Remove cookies from most kinds of static objects, since we want
-  # all of these things to be cached whenever possible.
-  if (req.url ~ "\.(png|gif|jpeg|jpg|ico|swf|css|js|html|htm|woff|ttf|eot|svg)(\?[a-zA-Z0-9\=\.\-]+)?$") {
+    if (req.http.Cookie == "") {
       remove req.http.Cookie;
-  }
+    }
 
-  if (req.http.Cookie == "") {
-      remove req.http.Cookie;
-  }
+   # Always cache the following file types for all users.
+    if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
+         unset req.http.Cookie;
+    }
 
-  # Tell Varnish to use X-Forwarded-For, to set "real"
-  # IP addresses on all requests
-  remove req.http.X-Forwarded-For;
-  set req.http.X-Forwarded-For = req.http.rlnclientipaddr;
+    # Handle compression correctly. Different browsers send different
+    # "Accept-Encoding" headers, even though they mostly all support the same
+    # compression mechanisms. By consolidating these compression headers into
+    # a consistent format, we can reduce the size of the cache and get more hits.
+    # @see: http:// varnish.projects.linpro.no/wiki/FAQ/Compression
+    if (req.http.Accept-Encoding) {
+      if (req.http.Accept-Encoding ~ "gzip") {
+        # If the browser supports it, we'll use gzip.
+        set req.http.Accept-Encoding = "gzip";
+      }
+      else if (req.http.Accept-Encoding ~ "deflate") {
+        # Next, try deflate if it is supported.
+        set req.http.Accept-Encoding = "deflate";
+      }
+      else {
+        # Unknown algorithm. Remove it and send unencoded.
+        unset req.http.Accept-Encoding;
+      }
+    }
+
+    if (req.request == "PURGE") {
+        if (!client.ip ~ admin) {
+            error 405 "Not allowed.";
+        }
+        return (lookup);
+    }
 }
 
 
+sub vcl_fetch
+{
+    # allow cached content to live on, even when stale.
+    set beresp.grace = 80m;
+
+    # Use anonymous, cached pages if all backends are down.
+    if (!req.backend.healthy) {
+         unset req.http.Cookie;
+    }
+
+    # if the TTL is less then two minutes set it to be 1m for stuff
+    # that is non-cacheable and 5m otherwise
+    if (beresp.ttl < 120s) {
+       if (beresp.http.Cache-Control ~ "(private|no-cache|no-store)") {
+         set beresp.ttl = 60s;
+       }
+       else {
+         set beresp.ttl = 300s;
+       }
+    }
+
+    # if the back-end gives an error don't retry that one again for 10s.  
+    if (beresp.status == 500) {
+      set beresp.saintmode = 10s;
+      return(restart);
+    }
+
+    # gzip text content.
+    if (beresp.http.content-type ~ "text") {
+              set beresp.do_gzip = true;
+    }
+
+}
+
+sub vcl_hit {
+    if (req.request == "PURGE") {
+        purge;
+        error 200 "Purged.";
+    }
+}
+
+sub vcl_miss {
+    if (req.request == "PURGE") {
+        purge;
+        error 200 "Purged.";
+    }
+}
 
 sub vcl_pipe {
   set bereq.http.connection = "close";
@@ -78,50 +185,42 @@ sub vcl_pass {
   }
 }
 
-sub vcl_fetch {
-  set beresp.grace = 10m;
-
-  # Strip cookies before static items are inserted into cache.
-  if (req.url ~ "\.(png|gif|jpg|swf|css|js|ico|html|htm|woff|eof|ttf|svg)$") {
-      remove beresp.http.set-cookie;
-  }
-
-  # if the TTL is less then two minutes set it to be 1m for stuff
-  # that is non-cacheable and 5m otherwise
-  if (beresp.ttl < 120s) {
-     if (beresp.http.Cache-Control ~ "(private|no-cache|no-store)") {
-         set beresp.ttl = 60s;
-     }
-     else {
-         set beresp.ttl = 300s;
-     }
-  }
-}
-
-# 
+#
 sub vcl_hash {
-     set req.hash += req.url;
-     if (req.http.host) {
-         set req.hash += req.http.host;
-     } else {
-         set req.hash += server.ip;
-     }
-     if (req.http.Cookie ) {
-         set req.hash += req.http.Cookie;
-     }
-   
-     return (hash);
+    hash_data(req.url);
+    if (req.http.host) {
+        hash_data(req.http.host);
+    } else {
+        hash_data(server.ip);
+    }
+
+    if (req.http.Cookie ) {
+        hash_data(req.http.Cookie);
+    }
+
+    return (hash);
 }
- 
+#
+# sub vcl_hit {
+#     return (deliver);
+# }
+#
+# sub vcl_miss {
+#     return (fetch);
+# }
+#
 sub vcl_fetch {
-     if (!beresp.cacheable) {
-         return (pass);
-     }
-     if (beresp.http.Set-Cookie) {
-         return (pass);
+     if (beresp.ttl <= 0s ||
+         beresp.http.Set-Cookie ||
+         beresp.http.Vary == "*") {
+ 		/*
+		 * Mark as "Hit-For-Pass" for the next 2 minutes
+ 		 */
+ 		set beresp.ttl = 120 s;
+ 		return (hit_for_pass);
      }
      return (deliver);
- }
+}
 
 sub vcl_deliver {
   # Display hit/miss info
@@ -140,29 +239,38 @@ sub vcl_deliver {
   set resp.http.X-Are-Dinosaurs-Awesome = "HELL YES";
 
   # Remove custom error header
-  remove resp.http.MyError;
   return (deliver);
 }
- 
-sub vcl_error {
-     set obj.http.Content-Type = "text/html; charset=utf-8";
-     synthetic {"
- <?xml version="1.0" encoding="utf-8"?>
- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
- <html>
-   <head>
-     <title>"} obj.status " " obj.response {"</title>
-   </head>
-   <body>
-     <h1>Error "} obj.status " " obj.response {"</h1>
-     <p>"} obj.response {"</p>
-     <h3>Guru Meditation:</h3>
-     <p>XID: "} req.xid {"</p>
-     <hr>
-     <p>Varnish cache server</p>
-   </body>
- </html>
- "};
-     return (deliver);
- }
+
+#
+# sub vcl_error {
+#     set obj.http.Content-Type = "text/html; charset=utf-8";
+#     set obj.http.Retry-After = "5";
+#     synthetic {"
+# <?xml version="1.0" encoding="utf-8"?>
+# <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+#  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+# <html>
+#   <head>
+#     <title>"} + obj.status + " " + obj.response + {"</title>
+#   </head>
+#   <body>
+#     <h1>Error "} + obj.status + " " + obj.response + {"</h1>
+#     <p>"} + obj.response + {"</p>
+#     <h3>Guru Meditation:</h3>
+#     <p>XID: "} + req.xid + {"</p>
+#     <hr>
+#     <p>Varnish cache server</p>
+#   </body>
+# </html>
+# "};
+#     return (deliver);
+# }
+#
+# sub vcl_init {
+# 	return (ok);
+# }
+#
+# sub vcl_fini {
+# 	return (ok);
+# }
