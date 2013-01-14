@@ -822,7 +822,7 @@ my %dispatch = (
     "view_messages" =>          # View site-message.
       { sub   => \&view_messages,
         type  => "Content-Type: text/html\n\n",
-        login => 1
+        login => 1,
         cache => 1,
       },
 
