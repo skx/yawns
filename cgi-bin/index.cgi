@@ -310,7 +310,6 @@ if ( defined $form->param('logout') )
     #
     # Redirect to the server /, whilst making sure we don't setup the cookie.
     #
-    $sessionCookie->expires( "-10m" );
     print $form->redirect( -type => 'text/html',
                            -location =>  "/" );
     $session->close();
@@ -390,6 +389,8 @@ my $perms = Yawns::Permissions->new( username => $username );
 # cookie is sent to the clients browser/user-agent.
 #
 print "Set-Cookie: $sessionCookie; HttpOnly\n" unless( $anonymous );
+print "Content-type: text/plain\n\n";
+print "Username: $anonymous - $sessionCookie\n";
 
 
 
