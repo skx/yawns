@@ -64,8 +64,12 @@ dt {
 	padding-left:120px;
 }
 
-#header h1, #header h1 a, #header h1 a:hover, #header h1 a:visited {
+#header h1 {
     color: black !important;
+}
+
+#header h1 a, #header h1 a:hover, #header h1 a:visited {
+    color: #cc0033;
     text-decoration: none !important;
 }
 
@@ -88,7 +92,7 @@ dt {
     padding:4px;
     text-decoration:none;
 }
-#header ul li a:hover, #header ul li a:visited {
+#header ul li a:hover, #header ul li a:visited #header h1 a:hover  {
     background-color:#cc0033;
 }
 
