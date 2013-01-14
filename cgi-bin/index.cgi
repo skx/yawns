@@ -389,8 +389,6 @@ my $perms = Yawns::Permissions->new( username => $username );
 # cookie is sent to the clients browser/user-agent.
 #
 print "Set-Cookie: $sessionCookie; HttpOnly\n" unless( $anonymous );
-print "Content-type: text/plain\n\n";
-print "Username: $anonymous - $sessionCookie\n";
 
 
 
