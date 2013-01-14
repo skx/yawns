@@ -131,7 +131,7 @@ my $form = Singleton::CGI->instance();
 # Setup the session object, only lasting a week.
 # ===========================================================================
 my $session = Singleton::Session->instance();
-$session->expires("+7d");
+$session->expires("+1d");
 
 
 
@@ -141,7 +141,7 @@ $session->expires("+7d");
 # ===========================================================================
 my $sessionCookie = $form->cookie( -name    => 'CGISESSID',
                                    -value   => $session->id,
-                                   -expires => '+7d'
+                                   -expires => '+1d'
                                  );
 
 
@@ -231,7 +231,7 @@ if ( $form->param('login') )
             $sessionCookie =
               $form->cookie( -name    => 'CGISESSID',
                              -value   => $session->id,
-                             -expires => '+7d',
+                             -expires => '+1d',
                              -secure  => 1
                            );
         }
@@ -388,20 +388,7 @@ my $perms = Yawns::Permissions->new( username => $username );
 #  Before we output any headers, etc, we should make sure that the
 # cookie is sent to the clients browser/user-agent.
 #
-if ( $anonymous )
-{
-            $sessionCookie =
-              $form->cookie( -name    => 'CGISESSID',
-                             -value   => $session->id,
-                             -expires => '-1d',
-                           );
-    print "Set-Cookie: $sessionCookie; HttpOnly\n" unless( $anonymous );
-
-}
-else
-{
-    print "Set-Cookie: $sessionCookie; HttpOnly\n" unless( $anonymous );
-}
+print "Set-Cookie: $sessionCookie; HttpOnly\n" unless( $anonymous );
 
 
 
