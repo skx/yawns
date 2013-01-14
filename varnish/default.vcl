@@ -1,9 +1,3 @@
-# This is a basic VCL configuration file for varnish.  See the vcl(7)
-# man page for details on VCL syntax and semantics.
-#
-# Default backend definition.  Set this to point to your content
-# server.
-#
 backend web1 { .host = "212.110.179.73";
                .port = "8080";
                .probe = {
@@ -83,7 +77,7 @@ sub vcl_recv
       remove req.http.Cookie;
     }
 
-   # Always cache the following file types for all users.
+    # Always cache the following file types for all users.
     if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
          unset req.http.Cookie;
     }
@@ -112,8 +106,8 @@ sub vcl_recv
         if (!client.ip ~ admin) {
             error 405 "Not allowed.";
         }
-        return (lookup);
     }
+    return (lookup);
 }
 
 
@@ -138,17 +132,13 @@ sub vcl_fetch
        }
     }
 
-    # if the back-end gives an error don't retry that one again for 10s.  
+    # if the back-end gives an error don't retry that one again for 10s.
     if (beresp.status == 500) {
       set beresp.saintmode = 10s;
       return(restart);
     }
 
-    # gzip text content.
-    if (beresp.http.content-type ~ "text") {
-              set beresp.do_gzip = true;
-    }
-
+    return( deliver );
 }
 
 sub vcl_hit {
@@ -213,11 +203,11 @@ sub vcl_fetch {
      if (beresp.ttl <= 0s ||
          beresp.http.Set-Cookie ||
          beresp.http.Vary == "*") {
- 		/*
+		/*
 		 * Mark as "Hit-For-Pass" for the next 2 minutes
- 		 */
- 		set beresp.ttl = 120 s;
- 		return (hit_for_pass);
+		 */
+		set beresp.ttl = 120 s;
+		return (hit_for_pass);
      }
      return (deliver);
 }
@@ -232,40 +222,41 @@ sub vcl_deliver {
      set resp.http.X-Cache = "MISS";
   }
 
-  # Remove the Varnish header
+  # Remove the Varnish/Apache headers
   remove resp.http.X-Varnish;
+  remove resp.http.Server;
 
   # Display my header
-  set resp.http.X-Are-Dinosaurs-Awesome = "HELL YES";
+  set resp.http.X-Is-Debian-Awesome = "HELL YES";
 
   # Remove custom error header
   return (deliver);
 }
 
 #
-# sub vcl_error {
-#     set obj.http.Content-Type = "text/html; charset=utf-8";
-#     set obj.http.Retry-After = "5";
-#     synthetic {"
-# <?xml version="1.0" encoding="utf-8"?>
-# <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-#  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-# <html>
-#   <head>
-#     <title>"} + obj.status + " " + obj.response + {"</title>
-#   </head>
-#   <body>
-#     <h1>Error "} + obj.status + " " + obj.response + {"</h1>
-#     <p>"} + obj.response + {"</p>
-#     <h3>Guru Meditation:</h3>
-#     <p>XID: "} + req.xid + {"</p>
-#     <hr>
-#     <p>Varnish cache server</p>
-#   </body>
-# </html>
-# "};
-#     return (deliver);
-# }
+sub vcl_error {
+     set obj.http.Content-Type = "text/html; charset=utf-8";
+     set obj.http.Retry-After = "5";
+     synthetic {"
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+ <html>
+   <head>
+     <title>"} + obj.status + " " + obj.response + {"</title>
+   </head>
+   <body>
+     <h1>Cache Error "} + obj.status + " " + obj.response + {"</h1>
+     <p>"} + obj.response + {"</p>
+     <h3>Guru Meditation:</h3>
+     <p>XID: "} + req.xid + {"</p>
+     <hr>
+     <p>Varnish cache server</p>
+   </body>
+ </html>
+"};
+    return (deliver);
+}
 #
 # sub vcl_init {
 # 	return (ok);
