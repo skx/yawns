@@ -1,13 +1,12 @@
 #!/bin/sh
 #
-# TODO - allow this to be parametized
+# Flush the sole varnish cache
 #
 
 #
-#  If you're not using varnish unset this
+#  If you're not using varnish unset this.
 #
-host=localhost:6082
-# host=
+host=212.110.179.78:6082
 
 
 #
@@ -22,5 +21,3 @@ fi
 #  If we have varnishadmin then purge the site
 #
 [ -x /usr/bin/varnishadm ] && varnishadm $host 'ban req.url ~ /'
-
-
