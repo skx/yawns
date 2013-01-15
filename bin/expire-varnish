@@ -20,11 +20,14 @@ fi
 #
 #  If we have varnishadmin then purge the site
 #
-[ -x /usr/bin/varnishadm ] && varnishadm $host 'ban req.url ~ /' >/dev/null
-
-#
-#  If we have the messager then expire it
-#
-if [ -x /root/current/bin/alert ]; then
-    /root/current/bin/alert "Flushed cache"
+if [ -x /usr/bin/varnishadm ] ; then
+    if ( varnishadm $host 'ban req.url ~ /' >/dev/null 2>/dev/null ); then
+        if [ -x /root/current/bin/alert ]; then
+            /root/current/bin/alert "varnish cache flushed"
+        fi
+    else
+         if [ -x /root/current/bin/alert ]; then
+            /root/current/bin/alert "varnish cache flush failed"
+        fi
+    fi
 fi
