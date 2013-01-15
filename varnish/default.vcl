@@ -2,8 +2,8 @@ backend web1 { .host = "212.110.179.73";
                .port = "8080";
                .probe = {
                    .url       = "/";
-                   .interval  = 5s;
-                   .timeout   = 1s;
+                   .interval  = 15s;
+                   .timeout   = 5s;
                    .window    = 5;
                    .threshold = 3;
              }}
@@ -12,8 +12,8 @@ backend web2 { .host = "212.110.179.74";
                .port = "8080";
                .probe = {
                    .url       = "/";
-                   .interval  = 5s;
-                   .timeout   = 1s;
+                   .interval  = 15s;
+                   .timeout   = 5s;
                    .window    = 5;
                    .threshold = 3;
              }}
@@ -22,8 +22,8 @@ backend web3 { .host = "212.110.179.75";
                .port = "8080";
                .probe = {
                    .url       = "/";
-                   .interval  = 5s;
-                   .timeout   = 1s;
+                   .interval  = 15s;
+                   .timeout   = 5s;
                    .window    = 5;
                    .threshold = 3;
              }}
@@ -32,8 +32,8 @@ backend web4 { .host = "212.110.179.70";
                .port = "8080";
                .probe = {
                    .url       = "/";
-                   .interval  = 5s;
-                   .timeout   = 1s;
+                   .interval  = 15s;
+                   .timeout   = 5s;
                    .window    = 5;
                    .threshold = 3;
              }}
@@ -142,8 +142,16 @@ sub vcl_fetch
       set beresp.saintmode = 10s;
       return(restart);
     }
-
-    return( deliver );
+     if (beresp.ttl <= 0s ||
+         beresp.http.Set-Cookie ||
+         beresp.http.Vary == "*") {
+		/*
+		 * Mark as "Hit-For-Pass" for the next minute.
+		 */
+		set beresp.ttl = 60 s;
+		return (hit_for_pass);
+     }
+     return (deliver);
 }
 
 sub vcl_hit {
@@ -183,6 +191,7 @@ sub vcl_pass {
 #
 sub vcl_hash {
     hash_data(req.url);
+
     if (req.http.host) {
         hash_data(req.http.host);
     } else {
@@ -195,27 +204,7 @@ sub vcl_hash {
 
     return (hash);
 }
-#
-# sub vcl_hit {
-#     return (deliver);
-# }
-#
-# sub vcl_miss {
-#     return (fetch);
-# }
-#
-sub vcl_fetch {
-     if (beresp.ttl <= 0s ||
-         beresp.http.Set-Cookie ||
-         beresp.http.Vary == "*") {
-		/*
-		 * Mark as "Hit-For-Pass" for the next 2 minutes
-		 */
-		set beresp.ttl = 120 s;
-		return (hit_for_pass);
-     }
-     return (deliver);
-}
+
 
 sub vcl_deliver {
   # Display hit/miss info
