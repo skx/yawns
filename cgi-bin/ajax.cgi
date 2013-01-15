@@ -95,7 +95,7 @@ $session->expires("+7d");
 # The sessions will be handled by our clients as a cookie.  Expire it at the
 # same time as our session actually epires.
 # ===========================================================================
-my $sessionCookie = $form->cookie( -name    => 'SESS',
+my $sessionCookie = $form->cookie( -name    => 'CGISESSID',
                                    -value   => $session->id,
                                    -expires => '+1d'
                                  );
