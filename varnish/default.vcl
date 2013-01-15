@@ -105,9 +105,9 @@ sub vcl_recv
     if (req.request == "PURGE") {
         if (!client.ip ~ admin) {
             error 405 "Not allowed.";
+    return (lookup);
         }
     }
-    return (lookup);
 }
 
 

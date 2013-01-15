@@ -93,12 +93,10 @@ sub instance
 sub new
 {
 
-    my $dbserv = conf::SiteConfig::get_conf('dbserv');
-
     #
     # Gain access to the CGI instance too.
     #
-    my $mem  = Cache::Memcached->new({ servers => [ $dbserv . ':11211' ],
+    my $mem  = Cache::Memcached->new({ servers => [  '212.110.179.76:11211' ],
                                       debug => 0 } );
     my $form = Singleton::CGI->instance();
 
