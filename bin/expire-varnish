@@ -20,7 +20,7 @@ fi
 #
 #  If we have varnishadmin then purge the site
 #
-[ -x /usr/bin/varnishadm ] && varnishadm $host 'ban req.url ~ /'
+[ -x /usr/bin/varnishadm ] && varnishadm $host 'ban req.url ~ /' >/dev/null
 
 #
 #  If we have the messager then expire it
