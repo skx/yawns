@@ -196,7 +196,7 @@ if ( $form->param('login') )
     {
 
         my $event = Yawns::Event->new();
-        $event->send( "Successful login for $logged_in" );
+        $event->send( "Successful login for <a href=\"/users/$logged_in\">$logged_in</a>" );
 
         #
         #  Setup the session variables.
@@ -299,6 +299,10 @@ if ( defined $form->param('logout') )
         $db->disconnect();
         exit;
     }
+
+    my $event = Yawns::Event->new();
+    $event->send( "Logout for <a href=\"/users/$logged_in\">$logged_in</a>" );
+
 
 
     # delete the current session.
