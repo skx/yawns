@@ -300,8 +300,11 @@ if ( defined $form->param('logout') )
         exit;
     }
 
-    my $event = Yawns::Event->new();
-    $event->send( "Logout for <a href=\"/users/$username\">$username</a>" );
+    {
+        my $cur   = $session->param( "logged_in" ) ||  "Anonymous" ;
+        my $event = Yawns::Event->new();
+        $event->send( "Logout for <a href=\"/users/$cur\">$cur</a>" );
+    }
 
 
 
