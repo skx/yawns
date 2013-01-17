@@ -77,6 +77,11 @@ sub vcl_recv
       remove req.http.Cookie;
     }
 
+    if ( req.url ~ "(articles.rdf|atom.xml|headlines.rdf)$" ) {
+         unset req.http.Cookie;
+        return( lookup );
+    }
+
     # Always cache the following file types for all users.
     if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
          unset req.http.Cookie;
