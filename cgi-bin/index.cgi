@@ -301,7 +301,7 @@ if ( defined $form->param('logout') )
     }
 
     my $event = Yawns::Event->new();
-    $event->send( "Logout for <a href=\"/users/$logged_in\">$logged_in</a>" );
+    $event->send( "Logout for <a href=\"/users/$username\">$username</a>" );
 
 
 
