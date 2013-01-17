@@ -196,7 +196,8 @@ if ( $form->param('login') )
     {
 
         my $event = Yawns::Event->new();
-        $event->send( "Successful login for <a href=\"/users/$logged_in\">$logged_in</a>" );
+        my $link  = $protocol . $ENV{ "SERVER_NAME" } . "/users/$logged_in";
+        $event->send( "Successful login for <a href=\"$link\">$logged_in</a>" );
 
         #
         #  Setup the session variables.
@@ -302,8 +303,9 @@ if ( defined $form->param('logout') )
 
     {
         my $cur   = $session->param( "logged_in" ) ||  "Anonymous" ;
+        my $link  = $protocol . $ENV{ "SERVER_NAME" } . "/users/$cur";
         my $event = Yawns::Event->new();
-        $event->send( "Logout for <a href=\"/users/$cur\">$cur</a>" );
+        $event->send( "Logout for <a href=\"$link\">$cur</a>" );
     }
 
 
