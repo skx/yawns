@@ -181,7 +181,7 @@ sub hashFile
             my $object = $module->new;
 
             open my $handle, "<", $file or
-              die "Failed to read $file to hash contents with $module - $!";
+              return "Failed to read $file to hash contents with $module - $!";
             $object->addfile($handle);
             close($handle);
 
