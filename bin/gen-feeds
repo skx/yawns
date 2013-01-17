@@ -71,12 +71,51 @@ my %CONFIG;
 parseCommandLineArguments();
 
 
+#
+#  Find our home directory.
+#
+my $login = getlogin || getpwuid($<);
+my ( undef, undef, undef, undef, undef, undef, undef, $home, undef, undef ) =
+  getpwnam($login);
+
+#
+#  Get the filenames we output, and get their hashes.
+#
+my %HASH1;
+
+$HASH1{ 'articles' }  = hashFile( $home . "/current/htdocs/articles.rdf" );
+$HASH1{ 'headlines' } = hashFile( $home . "/current/htdocs/headlines.rdf" );
+$HASH1{ 'atom' }      = hashFile( $home . "/current/htdocs/atom.xml" );
+
 
 #
 #  Generate the feeds.
 #
 my $feeds = Yawns::RSS->new();
 $feeds->output();
+
+#
+#  Now re-hash the files.
+#
+my %HASH2;
+
+$HASH2{ 'articles' }  = hashFile( $home . "/current/htdocs/articles.rdf" );
+$HASH2{ 'headlines' } = hashFile( $home . "/current/htdocs/headlines.rdf" );
+$HASH2{ 'atom' }      = hashFile( $home . "/current/htdocs/atom.xml" );
+
+
+#
+#  If the hashes differ then we need to flush
+#
+if ( ( $HASH1{ 'articles' } ne $HASH2{ 'articles' } ) ||
+     ( $HASH1{ 'headlines' } ne $HASH2{ 'headlines' } ) ||
+     ( $HASH1{ 'atom' } ne $HASH2{ 'atom' } ) )
+{
+    system( "/root/current/bin/alert", "RSS Feeds replaced" );
+    system("/root/current/bin/expire-varnish");
+}
+
+
 
 
 =begin doc
@@ -96,18 +135,14 @@ sub parseCommandLineArguments
     #
     #  Parse the options we accept
     #
-    GetOptions(
-               "help",       \$HELP,
-               "manual",     \$MANUAL,
-               "version",    \$VERSION,
-             );
+    GetOptions( "help", \$HELP, "manual", \$MANUAL, "version", \$VERSION, );
 
     pod2usage(1) if $HELP;
-    pod2usage(-verbose => 2 ) if $MANUAL;
+    pod2usage( -verbose => 2 ) if $MANUAL;
 
-    if ( $VERSION )
+    if ($VERSION)
     {
-        my $REVISION      = '$Revision: 1.6 $';
+        my $REVISION = '$Revision: 1.6 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -118,3 +153,46 @@ sub parseCommandLineArguments
     }
 }
 
+
+sub hashFile
+{
+    my ($file) = (@_);
+
+    my $hash = undef;
+
+    foreach my $module (qw! Digest::SHA Digest::SHA1 !)
+    {
+
+        # If we succeeded in calculating the hash we're done.
+        next if ( defined($hash) );
+
+        # Attempt to load the module
+        my $eval = "use $module;";
+
+        ## no critic (Eval)
+        eval($eval);
+        ## use critic
+
+        #
+        #  Loaded module, with no errors.
+        #
+        if ( !$@ )
+        {
+            my $object = $module->new;
+
+            open my $handle, "<", $file or
+              die "Failed to read $file to hash contents with $module - $!";
+            $object->addfile($handle);
+            close($handle);
+
+            $hash = $object->hexdigest();
+        }
+    }
+
+    unless ( defined $hash )
+    {
+        die "Failed to calculate hash of $file - internal error.";
+    }
+
+    return ($hash);
+}
