@@ -48,7 +48,7 @@
 	</div>
 
 	<div class="links">
-            [<!-- tmpl_if name='edit' -->Read <!-- tmpl_var name='read' --> times | <!-- /tmpl_if --> <!-- tmpl_if name="comment_count" --><a href="#comments"><!-- tmpl_var name="comment_count" --> Comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>  <!-- tmpl_else -->0 Comments <!-- /tmpl_if -->
+            [<!-- tmpl_if name="comment_count" --><a href="#comments"><!-- tmpl_var name="comment_count" --> Comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>  <!-- tmpl_else -->0 Comments <!-- /tmpl_if -->
 
 <!-- tmpl_if name='reportable' -->
     | <a href="/report/weblog/<!-- tmpl_var name='gid' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to flag this weblog entry for review?') );" >Report Entry</a>

@@ -5540,14 +5540,6 @@ sub view_single_weblog
     my $gid = $weblog->getGID( username => $viewusername,
                                id       => $id );
 
-    #
-    #  If viewed by non-owner, so increase read count.
-    #
-    if ( !$edit )
-    {
-        $weblog->increaseReadCount( gid => $gid );
-    }
-
 
     my $entries;
 

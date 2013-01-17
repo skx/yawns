@@ -773,66 +773,7 @@ sub getSingleWeblogEntry
     }
     $sql->finish();
 
-    #
-    #  Make sure the entry read count is correct
-    #
-    @$entry[0]->{ 'read' } = $class->getReadCount( gid => $gid );
-
     return ($entry);
-}
-
-
-
-=head2 getReadCount
-
-  Return the number of times a particular weblog entry has been read.
-
-=cut
-
-sub getReadCount
-{
-    my ( $class, %params ) = (@_);
-
-    #
-    #  Make sure we have either a GID, or we can find one.
-    my $gid = $params{ 'gid' };
-
-    #
-    #  Get the count
-    #
-    my $db = Singleton::DBI->instance();
-    my $sql = $db->prepare("SELECT readcount FROM weblogs WHERE gid=?");
-    $sql->execute($gid) or die "Failed to get read count " . $db->errstr();
-    my $count = $sql->fetchrow_array();
-    $sql->finish();
-
-    return ($count);
-}
-
-
-
-=head2 increaseReadCount
-
-  Increase the number of times a particular weblog has been read.
-
-=cut
-
-sub increaseReadCount
-{
-    my ( $class, %params ) = (@_);
-
-    #
-    #  Make sure we have either a GID, or we can find one.
-    my $gid = $params{ 'gid' };
-
-    #
-    #  Get the count
-    #
-    my $db = Singleton::DBI->instance();
-    my $sql =
-      $db->prepare("UPDATE weblogs SET readcount = readcount+1 WHERE gid=?");
-    $sql->execute($gid) or die "Failed to set the read count " . $db->errstr();
-    $sql->finish();
 }
 
 
