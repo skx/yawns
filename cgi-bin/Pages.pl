@@ -1603,7 +1603,7 @@ sub submit_comment
               my $weblog = Yawns::Weblog->new( gid => $onweblog );
               my $owner  = $weblog->getOwner();
               my $id     = $weblog->getID();
-              $llink .= "/users/$owner/weblog/$id";
+              $llink .= "/users/$owner/weblog/$id"  . "#comment_" . $num;;
           }
 
           send_alert( "New comment posted <a href=\"$llink\">$submit_title</a>." );
