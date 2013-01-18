@@ -2898,7 +2898,7 @@ sub new_user
                     $user->create();
 
                     my $event = Yawns::Event->new();
-                    $event->send( "New user, $new_user_name, created from $ip" );
+                    $event->send( "New user, <a href=\"http://www.debian-administration.org/users/$new_user_name\">$new_user_name</a>, created from IP $ip." );
 
                     $new_user_sent = 1;
                 }
@@ -3042,6 +3042,9 @@ sub send_reset_password
               die "Cannot open $sendmail: $!";
             print( SENDMAIL $template->output() );
             close(SENDMAIL);
+
+            my $event = Yawns::Event->new();
+            $event->send( "Forgotten password reissued to <tt>$mail</tt> for <a href=\"http://www.debian-administration.org/users/$username\">$username</a>." );
 
             $submit = 1;
         }
@@ -3482,6 +3485,12 @@ Steve
 http://www.steve.org.uk/
 EOF
         }
+
+      {
+          my $new_url =  "$home_url/articles/$article_id";
+          my $event = Yawns::Event->new();
+          $event->send( "Article edited - <a href=\"$new_url\">$edit_title</a>." );
+      }
 
         #
         #  perform the actual edit.
