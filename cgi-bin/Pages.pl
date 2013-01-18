@@ -55,6 +55,34 @@ use Yawns::User;
 
 =begin doc
 
+Send an alert message
+
+=end doc
+
+=cut
+
+sub send_alert
+{
+    my( $text ) = ( @_ );
+
+    #
+    #  Abort if we're disabled, or have empty text.
+    #
+    my $enabled = conf::SiteConfig::get_conf('alerts') || 0;
+    return unless ($enabled );
+    return unless ( $text && length($text) );
+
+    #
+    #  Send it.
+    #
+    my $event = Yawns::Event->new();
+    $event->send( $text );
+}
+
+
+
+=begin doc
+
   A filter to allow dynamic page inclusions.
 
 =end doc
@@ -904,10 +932,9 @@ sub submit_article
         $submit_title = HTML::Entities::encode_entities($submit_title);
 
       {
-          my $event = Yawns::Event->new();
-          my $home_url   = get_conf('home_url');
-          my $home = $home_url . "/users/$username";
-          $event->send( "Article submitted by <a href=\"$home\">$username</a> - $submit_title" );
+          my $home_url = get_conf('home_url');
+          my $home     = $home_url . "/users/$username";
+          send_alert(  "Article submitted by <a href=\"$home\">$username</a> - $submit_title" );
       }
 
         #
@@ -1561,6 +1588,26 @@ sub submit_comment
                                );
 
 
+
+      {
+          my $llink = get_conf('home_url');
+          if ( $onarticle ) {
+              $llink .= "/articles/" . $onarticle . "#comment_" . $num;
+          }
+          if ( $onpoll )
+          {
+              $llink .= "/polls/" . $onpoll . "#comment_" . $num;
+          }
+          if ( $onweblog )
+          {
+              my $weblog = Yawns::Weblog->new( gid => $onweblog );
+              my $owner  = $weblog->getOwner();
+              my $id     = $weblog->getID();
+              $llink .= "/users/$owner/weblog/$id";
+          }
+
+          send_alert( "New comment posted <a href=\"$llink\">$submit_title</a>." );
+      }
 
 
         #
@@ -2904,8 +2951,7 @@ sub new_user
                                       );
                     $user->create();
 
-                    my $event = Yawns::Event->new();
-                    $event->send( "New user, <a href=\"http://www.debian-administration.org/users/$new_user_name\">$new_user_name</a>, created from IP $ip." );
+                    send_alert( "New user, <a href=\"http://www.debian-administration.org/users/$new_user_name\">$new_user_name</a>, created from IP $ip." );
 
                     $new_user_sent = 1;
                 }
@@ -3050,8 +3096,7 @@ sub send_reset_password
             print( SENDMAIL $template->output() );
             close(SENDMAIL);
 
-            my $event = Yawns::Event->new();
-            $event->send( "Forgotten password reissued to <tt>$mail</tt> for <a href=\"http://www.debian-administration.org/users/$username\">$username</a>." );
+            send_alert( "Forgotten password reissued to <tt>$mail</tt> for <a href=\"http://www.debian-administration.org/users/$username\">$username</a>." );
 
             $submit = 1;
         }
@@ -3496,8 +3541,7 @@ EOF
       {
           my $home_url   = get_conf('home_url');
           my $new_url =  "$home_url/articles/$article_id";
-          my $event = Yawns::Event->new();
-          $event->send( "Article edited - <a href=\"$new_url\">$edit_title</a>." );
+          send_alert( "Article edited - <a href=\"$new_url\">$edit_title</a>." );
       }
 
         #
