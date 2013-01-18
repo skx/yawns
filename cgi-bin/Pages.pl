@@ -905,7 +905,8 @@ sub submit_article
 
       {
           my $event = Yawns::Event->new();
-          my $home = "http://www.debian-administration.org/users/$username";
+          my $home_url   = get_conf('home_url');
+          my $home = $home_url . "/users/$username";
           $event->send( "Article submitted by <a href=\"$home\">$username</a> - $submit_title" );
       }
 
@@ -3493,6 +3494,7 @@ EOF
         }
 
       {
+          my $home_url   = get_conf('home_url');
           my $new_url =  "$home_url/articles/$article_id";
           my $event = Yawns::Event->new();
           $event->send( "Article edited - <a href=\"$new_url\">$edit_title</a>." );
