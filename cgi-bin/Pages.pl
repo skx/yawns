@@ -903,6 +903,12 @@ sub submit_article
         # HTML Encode the title.
         $submit_title = HTML::Entities::encode_entities($submit_title);
 
+      {
+          my $event = Yawns::Event->new();
+          my $home = "http://www.debian-administration.org/users/$username";
+          $event->send( "Article submitted by <a href=\"$home\">$username</a> - $submit_title" );
+      }
+
         #
         #  Create the correct formatter object.
         #
