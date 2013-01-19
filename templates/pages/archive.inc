@@ -15,5 +15,17 @@
   <!-- /tmpl_if -->
 </blockquote>
 
+<!-- tmpl_if name='show_archive_years' -->
+<h2>Past Years</h2>
+<blockquote>
+<p>&nbsp;</p>
+<ul>
+<!-- tmpl_loop name='show_archive_year' -->
+<li><a href="/archive/<!-- tmpl_var name='year' -->"><!-- tmpl_var name='year' --></a></li>
+<!-- /tmpl_loop -->
+</ul>
+</blockquote>
+<!-- /tmpl_if name='show_archive_year' -->
+
 <p>&nbsp;</p>
 
