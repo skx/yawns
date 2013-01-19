@@ -7119,7 +7119,7 @@ sub show_archive
     my $the_articles = $articles->getArchivedArticles( $year );
 
     my $years;
-    foreach my $y ( sort keys %years )
+    foreach my $y ( reverse sort keys %years )
     {
         push( @$years, { year => $y } );
     }
