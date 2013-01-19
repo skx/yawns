@@ -15,7 +15,7 @@
   <!-- /tmpl_if -->
 </blockquote>
 
-<!-- tmpl_if name='show_archive_years' -->
+<!-- tmpl_if name='show_archive_year' -->
 <h2>Past Years</h2>
 <blockquote>
 <p>&nbsp;</p>
