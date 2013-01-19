@@ -43,20 +43,24 @@
 <!-- /tmpl_if -->
 
 
-<p>&nbsp;</p>
-<div id="contribute">
-<h3>Contribute</h3>
-<ul>
-<li><a href="/create/article">Submit Article</a></li>
-<li><a href="/create/poll">Submit Poll</a></li>
-</ul>
-</div>
-
  <p>&nbsp;</p>
  <div id="flattr">
  <h3>Flattr</h3>
  <div style="text-align:center;"><a class="FlattrButton" style="display:none;" href="http://debian-administration.org"></a></div>
  </div>
+
+<!-- tmpl_if name='show_archive_years' -->
+<p>&nbsp;</p>
+<div id="archive">
+<h3>Other Years</h3>
+<ul>
+<!-- tmpl_loop name='show_archive_year' -->
+<li><a href="/archive/<!-- tmpl_var name='year' -->"><!-- tmpl_var name='year' --></a></li>
+<!-- /tmpl_loop -->
+</ul>
+</div>
+<!-- /tmpl_if name='show_archive_year' -->
+
 
 <!-- tmpl_if name='show_pollbooth' -->
 <p>&nbsp;</p>

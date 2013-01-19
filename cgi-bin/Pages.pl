@@ -7118,6 +7118,12 @@ sub show_archive
     my %years        = $articles->getArticleYears();
     my $the_articles = $articles->getArchivedArticles( $year );
 
+    my $years;
+    foreach my $y ( sort keys %years )
+    {
+        push( @$years, { year => $y } );
+    }
+
     #
     # Load the display template.
     #
@@ -7127,7 +7133,7 @@ sub show_archive
     #  Articles.
     #
     $template->param( articles => $the_articles ) if $the_articles;
-
+    $template->param( show_archive_year => $years ) if  ( $years );
 
     my $title = "Archive for $year";
 
