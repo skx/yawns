@@ -94,10 +94,19 @@ sub new
 {
 
     #
-    # Gain access to the CGI instance too.
+    # The memcached host is the same as the DBI host.
     #
-    my $mem  = Cache::Memcached->new({ servers => [  '212.110.179.76:11211' ],
+    my $dbserv = conf::SiteConfig::get_conf('dbserv');
+    $dbserv .= ":11211";
+
+    #
+    # Get the memcached handle.
+    #
+    my $mem  = Cache::Memcached->new({ servers => [ $dbserv ],
                                       debug => 0 } );
+
+
+    # The CGI-form.
     my $form = Singleton::CGI->instance();
 
     my $t = new CGI::Session( "driver:memcached",
