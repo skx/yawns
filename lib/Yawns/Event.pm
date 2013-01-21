@@ -82,7 +82,7 @@ sub send
 
     my $sock = IO::Socket::INET->new( Proto    => 'udp',
                                       PeerPort => 4433,
-                                      PeerAddr => "da-misc.debian-administration.org",
+                                      PeerAddr => "misc.debian-administration.org",
                                     ) or
                                       return;
 
