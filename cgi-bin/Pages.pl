@@ -7302,64 +7302,6 @@ sub view_bookmarks
 }
 
 
-# ===========================================================================
-# Ban an IP.
-# ===========================================================================
-sub ban_ip
-{
-    return unless ( -e "/etc/blacklist.d/" );
-    print "Content-type: text/html\n\n";
-
-    #
-    # Gain acess to the objects we use.
-    #
-    my $form = Singleton::CGI->instance();
-
-    #
-    #  Comment id we're going to be editing.
-    #
-    my $ip = $form->param('ip');
-
-    #
-    #  Strip prefix if prsent.
-    #
-    if ( $ip =~ /^::ffff:(.*)/ )
-    {
-        $ip = $1;
-    }
-
-    die "Invalid IP: $ip" unless ( $ip =~ /^([0-9\.]+)$/ );
-
-    #
-    #  1.  Update blacklist.
-    #
-    system("touch /etc/blacklist.d/$ip");
-
-    #
-    #  2.  Re-score old comments.
-    #
-    my $db = Singleton::DBI->instance();
-    my $sql = $db->prepare("UPDATE comments SET score=-1 WHERE ip=?") or
-      die "Failed to prepare " . $db->errstr();
-
-    #
-    #  Do for the IP + re-prefixed IP.
-    #
-    $sql->execute($ip) or
-      die "Failed to execute " . $db->errstr();
-    $sql->execute("::ffff:$ip") or
-      die "Failed to execute " . $db->errstr();
-
-    $sql->finish();
-
-    print "OK: $ip banned.\n";
-
-
-    #
-    #  Touch the dirty flag.
-    #
-    system("touch /etc/blacklist.d/dirty");
-}
 
 
 # ===========================================================================

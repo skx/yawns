@@ -63,7 +63,6 @@
  <!-- tmpl_if name="is_poll" -->
   <!-- tmpl_if name="comment_admin" -->
    | <a href="/edit/comment/onpoll/<!-- tmpl_var name='poll'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to edit this comment?') );">Edit this comment</a>
-   | <!-- tmpl_if name='ip' --><a href="/ban/<!-- tmpl_var name="ip" escape='html' -->">ban ip</a><!-- /tmpl_if -->
   <!-- /tmpl_if -->
   <!-- tmpl_if name='report' -->
    | <a href="/report/comment/onpoll/<!-- tmpl_var name='poll'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to report this comment as abusive or spam?') );">Report this comment</a>
@@ -73,7 +72,6 @@
  <!-- tmpl_if name="article_id" -->
   <!-- tmpl_if name="comment_admin" -->
    | <a href="/edit/comment/onarticle/<!-- tmpl_var name='article_id'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to edit this comment?') );">Edit this comment</a>
-   | <!-- tmpl_if name='ip' --><a href="/ban/<!-- tmpl_var name="ip" escape='html' -->">ban ip</a><!-- /tmpl_if -->
   <!-- /tmpl_if -->
   <!-- tmpl_if name='report' -->
    | <a href="/report/comment/onarticle/<!-- tmpl_var name='article_id'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to report this comment as abusive or spam?') );">Report this comment</a>
@@ -83,7 +81,6 @@
  <!-- tmpl_if name="weblog_id" -->
   <!-- tmpl_if name="comment_admin" -->
    | <a href="/edit/comment/onweblog/<!-- tmpl_var name='weblog_id'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to edit this comment?') );">Edit this comment</a>
-   | <!-- tmpl_if name='ip' --><a href="/ban/<!-- tmpl_var name="ip" escape='html' -->">ban ip</a><!-- /tmpl_if -->
   <!-- /tmpl_if -->
   <!-- tmpl_if name='report' -->
    | <a href="/report/comment/onweblog/<!-- tmpl_var name='weblog_id'>/<!-- tmpl_var name='comment_id' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to report this comment as abusive or spam?') );">Report this comment</a>

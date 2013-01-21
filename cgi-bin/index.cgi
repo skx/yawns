@@ -528,13 +528,6 @@ my %dispatch = (
         type => "Content-Type: text/html\n\n",
       },
 
-    "ban_ip" =>                 # Ban an IP address
-      { sub  => \&ban_ip,
-        type => "Content-Type: text/html\n\n",
-        priv => "ban_ip",
-        cache => 1,
-      },
-
     "bookmarks" =>              # View a users bookmark list.
       { sub  => \&view_bookmarks,
         type => "Content-Type: text/html\n\n",
