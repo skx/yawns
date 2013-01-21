@@ -931,11 +931,6 @@ sub postArticle
     my $holder = Yawns::Tags->new();
     my $tags = $holder->promoteSubmissionTags( $id, $new_id );
 
-    #
-    # generate new RDF feeds
-    #
-    my $feeds = Yawns::RSS->new();
-    $feeds->output();
 
     #
     # Delete the article from queue after it has been pushed out.

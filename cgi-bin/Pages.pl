@@ -3553,11 +3553,6 @@ EOF
                        );
 
 
-        #
-        # generate new RDF feeds
-        #
-        my $feeds = Yawns::RSS->new();
-        $feeds->output();
     }
 
     # open the html template
