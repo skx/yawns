@@ -1,7 +1,7 @@
 backend web1 { .host = "212.110.179.73";
                .port = "8080";
                .probe = {
-                   .url       = "/";
+                   .url       = "/cache.txt";
                    .interval  = 15s;
                    .timeout   = 5s;
                    .window    = 5;
@@ -11,7 +11,7 @@ backend web1 { .host = "212.110.179.73";
 backend web2 { .host = "212.110.179.74";
                .port = "8080";
                .probe = {
-                   .url       = "/";
+                   .url       = "/cache.txt";
                    .interval  = 15s;
                    .timeout   = 5s;
                    .window    = 5;
@@ -21,7 +21,7 @@ backend web2 { .host = "212.110.179.74";
 backend web3 { .host = "212.110.179.75";
                .port = "8080";
                .probe = {
-                   .url       = "/";
+                   .url       = "/cache.txt";
                    .interval  = 15s;
                    .timeout   = 5s;
                    .window    = 5;
@@ -31,7 +31,7 @@ backend web3 { .host = "212.110.179.75";
 backend web4 { .host = "212.110.179.70";
                .port = "8080";
                .probe = {
-                   .url       = "/";
+                   .url       = "/cache.txt";
                    .interval  = 15s;
                    .timeout   = 5s;
                    .window    = 5;
@@ -96,7 +96,7 @@ sub vcl_recv
     }
 
     # Always cache the following file types for all users.
-    if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
+    if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|txt|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
          unset req.http.Cookie;
     }
 
@@ -139,7 +139,7 @@ sub vcl_fetch
          unset req.http.Cookie;
     }
 
-    if (req.url ~ "\.(css|js|png|gif|jpg)$") {
+    if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|txt|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
        unset beresp.http.set-cookie;
        set beresp.ttl = 72000s;
     }
