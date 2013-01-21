@@ -7,8 +7,7 @@ YAWNS is a simple CMS which was originally writen by Danny.
 It was forked from that code by Steve Kemp, and updated considerably
 such that it could be used for [his Debian-Administration website](http://www.debian-administration.org/).
 
-The code is now undergoing more work such that it can be redeployed upon
-multiple hosts, as part of a cluster.
+The code has undergone further work, and is now deployed as a cluster.
 
 This re-development means that there are slightly more assumptions made
 about the operating environment than in the past.  That said it is still
