@@ -56,10 +56,14 @@ sub vcl_recv
     # the round-robin behaviour
     set req.backend = default_director;
 
-    # Tell Varnish to use X-Forwarded-For, to set "real"
-    # IP addresses on all requests
-    remove req.http.X-Forwarded-For;
-    set req.http.X-Forwarded-For = req.http.rlnclientipaddr;
+    #
+    # Pound will add this for HTTPS.
+    #
+    if (req.http.x-forwarded-for) {
+         # nop
+    } else {
+        set req.http.X-Forwarded-For = client.ip;
+    }
 
     # Allow the backend to serve up stale content if it is responding slowly.
     if (! req.backend.healthy) {
