@@ -947,8 +947,11 @@ foreach my $key ( $form->param() )
         }
 
         my $flush = $match->{ 'cache' } || 0;
-        if ( $flush )
+        if ( ( $flush ) && ( $ENV{'REQUEST_METHOD'} =~ /post/i ) )
         {
+            my $event = Yawns::Event->new();
+            $event->send( "Flushing cache due to CGI-key: $key" );
+
             my $cmd = "/root/current/bin/expire-varnish";
             system("$cmd >/dev/null 2>&1 &");
         }
