@@ -51,8 +51,17 @@ acl admin {
     "212.110.179.65"/28;
 }
 
+
+include "blacklist.vcl";
+
+
 sub vcl_recv
 {
+
+    if (client.ip ~ blacklist ) {
+           error 504 "You're blacklisted";
+    }
+
     # the round-robin behaviour
     set req.backend = default_director;
 
