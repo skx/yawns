@@ -59,7 +59,7 @@ sub vcl_recv
 {
 
     if (client.ip ~ blacklist ) {
-           error 504 "You're blacklisted";
+           error 403 "You're blacklisted";
     }
 
     # the round-robin behaviour
