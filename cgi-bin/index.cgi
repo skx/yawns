@@ -197,7 +197,8 @@ if ( $form->param('login') )
 
         my $event = Yawns::Event->new();
         my $link  = $protocol . $ENV{ "SERVER_NAME" } . "/users/$logged_in";
-        $event->send( "Successful login for <a href=\"$link\">$logged_in</a>" );
+        $event->send( "Successful login for <a href=\"$link\">$logged_in</a> from " .
+                      . $ENV{ 'REMOTE_ADDR' } );
 
         #
         #  Setup the session variables.
