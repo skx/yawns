@@ -81,7 +81,7 @@ use Yawns::Weblogs;
 #  Look for a blcklist
 #
 my $remote_ip = $ENV{ 'REMOTE_ADDR' };
-if ( $remote_ip =~ /^::ffff:(.*)/)
+if ( $remote_ip =~ /^::ffff:(.*)/ )
 {
     $remote_ip = $1;
 }
@@ -197,8 +197,9 @@ if ( $form->param('login') )
 
         my $event = Yawns::Event->new();
         my $link  = $protocol . $ENV{ "SERVER_NAME" } . "/users/$logged_in";
-        $event->send( "Successful login for <a href=\"$link\">$logged_in</a> from " 
-                      . $ENV{ 'REMOTE_ADDR' } );
+        $event->send(
+                 "Successful login for <a href=\"$link\">$logged_in</a> from " .
+                   $ENV{ 'REMOTE_ADDR' } );
 
         #
         #  Setup the session variables.
@@ -255,9 +256,9 @@ if ( $form->param('login') )
             $session->close();
             $db->disconnect();
             print $form->header(
-                     -type     => 'text/html',
-                     -cookie   => $sessionCookie,
-                     -location => $protocol . $ENV{ "SERVER_NAME" } . $target
+                        -type     => 'text/html',
+                        -cookie   => $sessionCookie,
+                        -location => $protocol . $ENV{ "SERVER_NAME" } . $target
             );
             exit;
         }
@@ -266,7 +267,7 @@ if ( $form->param('login') )
     {
 
         my $event = Yawns::Event->new();
-        $lname = "_unknown_" if ( ! defined( $lname ) );
+        $lname = "_unknown_" if ( !defined($lname) );
         $event->send( "Failed login for $lname from " . $ENV{ 'REMOTE_ADDR' } );
 
         #
@@ -303,10 +304,10 @@ if ( defined $form->param('logout') )
     }
 
     {
-        my $cur   = $session->param( "logged_in" ) ||  "Anonymous" ;
+        my $cur   = $session->param("logged_in") || "Anonymous";
         my $link  = $protocol . $ENV{ "SERVER_NAME" } . "/users/$cur";
         my $event = Yawns::Event->new();
-        $event->send( "Logout for <a href=\"$link\">$cur</a>" );
+        $event->send("Logout for <a href=\"$link\">$cur</a>");
     }
 
 
@@ -320,15 +321,17 @@ if ( defined $form->param('logout') )
     my $logoutCookie = $form->cookie( -name    => 'CGISESSID',
                                       -value   => $session->id,
                                       -expires => '-1d'
-                                 );
+                                    );
 
     #
     # Redirect to the server /, whilst making sure we don't setup the cookie.
     #
-    print $form->redirect( -type => 'text/html',
-                           -cookie   => $logoutCookie,
+    print $form->redirect(
+        -type   => 'text/html',
+        -cookie => $logoutCookie,
 
-                           -location =>  "/" );
+        -location => "/"
+                         );
     $session->close();
     $db->disconnect();
     exit;
@@ -405,7 +408,7 @@ my $perms = Yawns::Permissions->new( username => $username );
 #  Before we output any headers, etc, we should make sure that the
 # cookie is sent to the clients browser/user-agent.
 #
-print "Set-Cookie: $sessionCookie; HttpOnly\n" unless( $anonymous );
+print "Set-Cookie: $sessionCookie; HttpOnly\n" unless ($anonymous);
 
 
 
@@ -454,12 +457,12 @@ my %dispatch = (
     # routines come first.
     #
     "comment" =>    # Submit a comment
-      { sub  => \&submit_comment,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&submit_comment,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
-    "dump" =>    # Dump details of a request.
+    "dump" =>       # Dump details of a request.
       { sub  => \&dump_details,
         type => "Content-Type: text/plain\n\n",
       },
@@ -484,17 +487,17 @@ my %dispatch = (
         cache => 1,
       },
 
-    "add_related" =>     # Add a related link to an article
-      { sub  => \&add_related,
-        type => "Content-Type: text/html\n\n",
-        priv => "related_admin",
+    "add_related" =>    # Add a related link to an article
+      { sub   => \&add_related,
+        type  => "Content-Type: text/html\n\n",
+        priv  => "related_admin",
         cache => 1,
       },
 
     "add_submission_note" =>    # Add a note to a pending article
-      { sub  => \&add_submission_note,
-        priv => "article_admin",
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&add_submission_note,
+        priv  => "article_admin",
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
     "adverts_byuser" =>         # View all adverts by a given user.
@@ -535,9 +538,9 @@ my %dispatch = (
       },
 
     "delete_advert" =>          # Remove an existing advert
-      { sub  => \&delete_advert,
-        priv => "advert_admin",
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&delete_advert,
+        priv  => "advert_admin",
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
@@ -545,19 +548,19 @@ my %dispatch = (
       { sub      => \&bookmark_delete,
         login    => 1,
         redirect => "/users/$username/bookmarks",
-        cache => 1,
+        cache    => 1,
       },
 
     "delete_message" =>         # Remove a site-message
       { sub      => \&delete_message,
         login    => 1,
         redirect => "/view/messages",
-        cache => 1,
+        cache    => 1,
       },
 
     "delete_related" =>         # Remove a related link from an article
-      { sub  => \&delete_related,
-        priv => "related_admin",
+      { sub   => \&delete_related,
+        priv  => "related_admin",
         cache => 1,
       },
 
@@ -569,60 +572,60 @@ my %dispatch = (
       },
 
     "disable_advert" =>         # Disable an advert
-      { sub  => \&disable_advert,
-        priv => "advert_admin",
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&disable_advert,
+        priv  => "advert_admin",
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
     "edit_about" =>             # Edit a static page
-      { sub  => \&edit_about,
-        type => "Content-Type: text/html\n\n",
-        priv => "edit_about",
+      { sub   => \&edit_about,
+        type  => "Content-Type: text/html\n\n",
+        priv  => "edit_about",
         cache => 1,
       },
 
     "edit_adverts" =>           # Edit a site advert
-      { sub  => \&edit_adverts,
-        type => "Content-Type: text/html\n\n",
-        priv => "advert_admin",
+      { sub   => \&edit_adverts,
+        type  => "Content-Type: text/html\n\n",
+        priv  => "advert_admin",
         cache => 1,
       },
 
     "edit_article" =>           # Edit an existing, live, advert.
-      { sub  => \&edit_article,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&edit_article,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
     "edit_comment" =>           # Edit a comment
-      { sub  => \&edit_comment,
-        type => "Content-Type: text/html\n\n",
-        priv => "edit_comments",
+      { sub   => \&edit_comment,
+        type  => "Content-Type: text/html\n\n",
+        priv  => "edit_comments",
         cache => 1,
       },
 
     "edit_user" =>              # Edit a user.
-      { sub  => \&edit_user,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&edit_user,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
     "edit_permissions" =>       # Edit the permissions associated with a user.
-      { sub  => \&edit_permissions,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&edit_permissions,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
     "edit_prefs" =>             # Edit a users preferences
-      { sub  => \&edit_prefs,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&edit_prefs,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
     "edit_scratchpad" =>        # Edit a users scratchpad
-      { sub  => \&edit_scratchpad,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&edit_scratchpad,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
@@ -634,10 +637,15 @@ my %dispatch = (
       },
 
     "enable_advert" =>          # Enable an advert
-      { sub  => \&enable_advert,
-        priv => "advert_admin",
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&enable_advert,
+        priv  => "advert_admin",
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
+      },
+
+    "front_page" =>             # view the front-page
+      { sub  => \&front_page,
+        type => "Content-Type: text/html\n\n",
       },
 
     "follow_advert" =>          # Click on a user-advert
@@ -652,7 +660,7 @@ my %dispatch = (
       { sub      => \&message_reply,
         login    => 1,
         redirect => "/view/messages",
-        cache => 1,
+        cache    => 1,
       },
 
     "new_user" =>               # Create a new user account
@@ -671,8 +679,8 @@ my %dispatch = (
       },
 
     "pollvote" =>               # Vote in a poll.
-      { sub  => \&pollvote,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&pollvote,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
@@ -682,9 +690,9 @@ my %dispatch = (
       },
 
     "poll_edit" =>              # Edit a pending poll submissions
-      { sub  => \&poll_edit,
-        priv => "poll_admin",
-        type => "Content-type: text/html\n\n",
+      { sub   => \&poll_edit,
+        priv  => "poll_admin",
+        type  => "Content-type: text/html\n\n",
         cache => 1,
       },
 
@@ -697,20 +705,20 @@ my %dispatch = (
       { sub      => \&poll_post,
         priv     => "poll_admin",
         redirect => "/submissions/polls",
-        cache => 1,
+        cache    => 1,
       },
 
     "poll_reject" =>            # Reject pending poll submissions
       { sub      => \&poll_reject,
         priv     => "poll_admin",
         redirect => "/submissions/polls",
-        cache => 1,
+        cache    => 1,
       },
 
     "poll_submissions" =>       # View pending poll submissions
-      { sub  => \&poll_submissions,
-        type => "Content-Type: text/html\n\n",
-        priv => "poll_admin",
+      { sub   => \&poll_submissions,
+        type  => "Content-Type: text/html\n\n",
+        priv  => "poll_admin",
         cache => 1,
       },
 
@@ -721,17 +729,17 @@ my %dispatch = (
       { sub  => \&recent_users,
         type => "Content-Type: text/html\n\n",
         priv => "recent_users",
-       },
+      },
 
     "report" =>                 # Report an abusive comment.
-      { sub  => \&report_comment,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&report_comment,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
     "report_weblog" =>          # Report a weblog entry.
-      { sub  => \&report_weblog,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&report_weblog,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
@@ -741,8 +749,8 @@ my %dispatch = (
       },
 
     "send_message" =>           # Send a site message
-      { sub  => \&send_message,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&send_message,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
@@ -757,8 +765,8 @@ my %dispatch = (
       },
 
     "submission_edit" =>        # Edit a pending article
-      { sub  => \&edit_submission,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&edit_submission,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
@@ -774,28 +782,28 @@ my %dispatch = (
       },
 
     "submission_post" =>        # Post a pending article to the site.
-      { sub  => \&submission_post,
-        type => "Content-Type: text/html\n\n",
-        priv => "article_admin",
+      { sub   => \&submission_post,
+        type  => "Content-Type: text/html\n\n",
+        priv  => "article_admin",
         cache => 1,
       },
 
     "submission_reject" =>      # Reject a pending article submissions
-      { sub  => \&submission_reject,
-        type => "Content-Type: text/html\n\n",
-        priv => "article_admin",
+      { sub   => \&submission_reject,
+        type  => "Content-Type: text/html\n\n",
+        priv  => "article_admin",
         cache => 1,
       },
 
     "submit" =>                 # Submit an article
-      { sub  => \&submit_article,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&submit_article,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
     "submit_poll" =>            # Submit a new poll
-      { sub  => \&submit_poll,
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&submit_poll,
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
@@ -820,9 +828,9 @@ my %dispatch = (
       },
 
     "user_admin" =>             # User administration.
-      { sub  => \&user_administration,
-        priv => "user_admin",
-        type => "Content-Type: text/html\n\n",
+      { sub   => \&user_administration,
+        priv  => "user_admin",
+        type  => "Content-Type: text/html\n\n",
         cache => 1,
       },
 
@@ -852,144 +860,122 @@ my %dispatch = (
 #  Dispatch control to the appropriate handler.  Test authentication and
 # permissions if we're supposed to.
 # ===========================================================================
+my $match = undef;
 
 foreach my $key ( $form->param() )
 {
 
+    # we use the first match.
+    next if ($match);
+
     #
     #  See if the parameter is in our dispatch table.
     #
-    my $match = $dispatch{ $key };
+    $match = $dispatch{ $key };
+}
+
+
+#
+#  If we didn't get a match then we use "frontpage";
+#
+$match = $dispatch{ 'frontpage' } if ( !$match );
+
+
+#
+#  Print the appropriate content type.
+#
+print $match->{ 'type' } if ( $match->{ 'type' } );
+
+#
+#  Do we need to be logged in?
+#
+if ( defined( $match->{ 'login' } ) )
+{
 
     #
-    #  If it is we can use it.
+    #  If we requre a privilege then we also require
+    # a login.
     #
-    if ($match)
+    if ($anonymous)
     {
 
+        #  If the handler didn't print a content type we should
+        # send one before attempting to return the error message.
         #
-        #  Print the appropriate content type.
-        #
-        print $match->{ 'type' } if ( $match->{ 'type' } );
-
-        #
-        #  Do we need to be logged in?
-        #
-        if ( defined( $match->{ 'login' } ) )
+        if ( !$match->{ 'type' } )
         {
-
-            #
-            #  If we requre a privilege then we also require
-            # a login.
-            #
-            if ($anonymous)
-            {
-
-                #  If the handler didn't print a content type we should
-                # send one before attempting to return the error message.
-                #
-                if ( !$match->{ 'type' } )
-                {
-                    print "Content-type: text/html\n\n";
-                }
-
-                #
-                #  Not currently logged in so show an error.
-                #
-                permission_denied( login_required => 1 );
-                $session->close();
-                $db->disconnect();
-                exit;
-            }
+            print "Content-type: text/html\n\n";
         }
 
         #
-        #  Now we're logged in - but do we have the privilege?
+        #  Not currently logged in so show an error.
         #
-        my $required_priv = $match->{ 'priv' };
-
-        if ( $required_priv && ( !$perms->check( priv => $required_priv ) ) )
-        {
-
-            #
-            #  If the handler didn't print a content type we should
-            # send one before attempting to return the error message.
-            #
-            if ( !$match->{ 'type' } )
-            {
-                print "Content-type: text/html\n\n";
-            }
-
-            #
-            #  We required a given permission, which isn't present.
-            # Show error message.
-            #
-            #
-            permission_denied( admin_only => 1 );
-            $session->close();
-            $db->disconnect();
-            exit;
-        }
-
-        #
-        #  Now we can call the appropriate handler.
-        #
-        $match->{ 'sub' }->();
-
-        #
-        #  Should we redirect afterwards?  If so do it.
-        #
-        if ( $match->{ 'redirect' } )
-        {
-            print $form->redirect(
-                   $protocol . $ENV{ "SERVER_NAME" } . $match->{ 'redirect' } );
-        }
-
-        my $flush = $match->{ 'cache' } || 0;
-        if ( ( $flush ) && ( $ENV{'REQUEST_METHOD'} =~ /post/i ) )
-        {
-            my $event = Yawns::Event->new();
-            $event->send( "Flushing cache due to CGI-key: $key" );
-
-            my $cmd = "/root/current/bin/expire-varnish";
-            system("$cmd >/dev/null 2>&1 &");
-        }
-
-
-
-        #
-        #  Now cleanup and exit since each incoming request will only
-        # do one thing.
-        #
+        permission_denied( login_required => 1 );
         $session->close();
         $db->disconnect();
         exit;
     }
 }
 
+#
+#  Now we're logged in - but do we have the privilege?
+#
+my $required_priv = $match->{ 'priv' };
+
+if ( $required_priv && ( !$perms->check( priv => $required_priv ) ) )
+{
+
+    #
+    #  If the handler didn't print a content type we should
+    # send one before attempting to return the error message.
+    #
+    if ( !$match->{ 'type' } )
+    {
+        print "Content-type: text/html\n\n";
+    }
+
+    #
+    #  We required a given permission, which isn't present.
+    # Show error message.
+    #
+    #
+    permission_denied( admin_only => 1 );
+    $session->close();
+    $db->disconnect();
+    exit;
+}
 
 #
-#  If we finished the previous loop then we didn't have any submitted
-# parameters managed to dispatch control to a particular handler routine.
+#  Now we can call the appropriate handler.
 #
-#  So we'll default to just showing the site index.
-#
+$match->{ 'sub' }->();
 
 #
-#  Content type.
+#  Should we redirect afterwards?  If so do it.
 #
-print "Content-type: text/html\n\n";
+if ( $match->{ 'redirect' } )
+{
+    print $form->redirect(
+                   $protocol . $ENV{ "SERVER_NAME" } . $match->{ 'redirect' } );
+}
+
+my $flush = $match->{ 'cache' } || 0;
+if ( ($flush) && ( $ENV{ 'REQUEST_METHOD' } =~ /post/i ) )
+{
+    my $event = Yawns::Event->new();
+    $event->send("Flushing cache due to CGI-key: $key");
+
+    my $cmd = "/root/current/bin/expire-varnish";
+    system("$cmd >/dev/null 2>&1 &");
+}
+
+
 
 #
-#  Show the front-page.
-#
-front_page();
-
-#
-#  Cleanup and exit.
+#  Now cleanup and exit since each incoming request will only
+# do one thing.
 #
 $session->close();
 $db->disconnect();
 exit;
 
-# ===== ( EOF ) =====
