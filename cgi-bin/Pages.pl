@@ -2881,7 +2881,7 @@ sub new_user
     my $blank_username   = 0;
     my $invalid_username = 0;
     my $invalid_hash     = 0;
-
+    my $mail_error = "";
 
 
     if ( $form->param('new_user') eq 'Create User' )
@@ -2917,13 +2917,25 @@ sub new_user
             #
             # Now test to see if the email address is valid
             #
-            #$invalid_email = Mail::Verify::CheckAddress( $new_user_email );
+            $invalid_email = Mail::Verify::CheckAddress( $new_user_email );
 
+            if ( $invalid_email == 1 ) {
+                $mail_error = "No email address was supplied.";
+            }
+            elsif ( $invalid_email == 2 ) {
+                $mail_error = "There is a syntaxical error in the email address.";
+            }
+            elsif ( $invalid_email == 3 ) {
+                $mail_error = "There are no DNS entries for the host in question (no MX records or A records).";
+            }
+            elsif ( $invalid_email == 4 ) {
+                $mail_error = "There are no live SMTP servers accepting connections for this email address.";
+            }
 
             #
             # Test to see if the username already exists.
             #
-            if ( ( $invalid_username + $blank_email ) < 1 )
+            if ( ( $invalid_email + $invalid_username + $blank_email ) < 1 )
             {
                 my $users = Yawns::Users->new();
                 my $exists = $users->exists( username => $new_user_name );
@@ -2979,6 +2991,7 @@ sub new_user
                       new_user_email   => $new_user_email,
                       already_exists   => $already_exists,
                       invalid_email    => $invalid_email,
+                      mail_error       => $mail_error,
                       invalid_username => $invalid_username,
                       blank_email      => $blank_email,
                       blank_username   => $blank_username,

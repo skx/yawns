@@ -32,7 +32,7 @@
 		    <p>Sorry, you must enter an email address.</p>
 		  <!-- /tmpl_if -->
 		  <!-- tmpl_if name='invalid_email' -->
-		    <p>Sorry, your email address was not valid.</p>
+		    <p>Sorry, your email address contained errors: <!-- tmpl_var name='mail_error' -->.</p>
 		  <!-- /tmpl_if -->
  </td></tr>
 
