@@ -658,7 +658,6 @@ my %dispatch = (
     "new_user" =>               # Create a new user account
       { sub  => \&new_user,
         type => "Content-Type: text/html\n\n",
-        cache => 1,
       },
 
     "send_reset_password" =>    # Mail the user a link to reset their password.
