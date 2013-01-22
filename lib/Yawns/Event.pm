@@ -78,19 +78,20 @@ Send an event message.
 
 sub send
 {
-    my ($class, $msg ) = (@_);
+    my ( $class, $msg ) = (@_);
 
-    my $sock = IO::Socket::INET->new( Proto    => 'udp',
-                                      PeerPort => 4433,
-                                      PeerAddr => "misc.debian-administration.org",
-                                    ) or
-                                      return;
+    my $sock = IO::Socket::INET->new(
+                                   Proto    => 'udp',
+                                   PeerPort => 4433,
+                                   PeerAddr => "misc.debian-administration.org",
+      ) or
+      return;
 
 
     #
     #  Send the computed values
     #
-    $sock->send( $msg );
+    $sock->send($msg);
 
 }
 
