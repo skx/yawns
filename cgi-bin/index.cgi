@@ -963,7 +963,7 @@ my $flush = $match->{ 'cache' } || 0;
 if ( ($flush) && ( $ENV{ 'REQUEST_METHOD' } =~ /post/i ) )
 {
     my $event = Yawns::Event->new();
-    $event->send("Flushing cache due to CGI-key: $key");
+    $event->send("Flushing cache due to POST to" . $ENV{'QUERY_STRING'} );
 
     my $cmd = "/root/current/bin/expire-varnish";
     system("$cmd >/dev/null 2>&1 &");
