@@ -14,13 +14,13 @@
 <div class="comment">
   <div class="link">
    <!-- tmpl_if name='is_poll' -->
-    <a href="/polls/<!-- tmpl_var name='poll' -->#comment_<!-- tmpl_var name='comment_id' -->">#<!-- tmpl_var name='comment_id' --></a>
+    <a href="/polls/<!-- tmpl_var name='poll' -->#comment_<!-- tmpl_var name='comment_id' -->">#</a>
    <!-- /tmpl_if -->
    <!-- tmpl_if name="article_id" -->
-    <a href="/articles/<!-- tmpl_var name='article_id' -->#comment_<!-- tmpl_var name='comment_id' -->">#<!-- tmpl_var name='comment_id' --></a>
+    <a href="/articles/<!-- tmpl_var name='article_id' -->#comment_<!-- tmpl_var name='comment_id' -->">#</a>
    <!-- /tmpl_if -->
    <!-- tmpl_if name="weblog_id" -->
-    <a href="<!-- tmpl_var name="weblog_link" -->#comment_<!-- tmpl_var name='comment_id' -->">#<!-- tmpl_var name="comment_id" --></a>
+    <a href="<!-- tmpl_var name="weblog_link" -->#comment_<!-- tmpl_var name='comment_id' -->">#</a>
    <!-- /tmpl_if -->
   </div>
 
