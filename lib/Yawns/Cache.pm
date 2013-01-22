@@ -50,6 +50,7 @@ use strict;
 use warnings;
 
 
+use Yawns::Event;
 
 
 =head2 new
