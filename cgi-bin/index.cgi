@@ -878,7 +878,7 @@ foreach my $key ( $form->param() )
 #
 #  If we didn't get a match then we use "frontpage";
 #
-$match = $dispatch{ 'frontpage' } if ( !$match );
+$match = $dispatch{ 'front_page' } if ( !$match );
 
 
 #
