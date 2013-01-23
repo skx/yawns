@@ -22,5 +22,5 @@
 
    # Logfiles
    ErrorLog  "|/usr/bin/cronolog /var/log/apache2/error.%Y.%m.log"
-   CustomLog "|/usr/bin/cronolog /var/log/apache2/yawns.%Y.%m.%d.log" combined
+   CustomLog "|/usr/bin/cronolog --symlink=/var/log/apache2/current.log  /var/log/apache2/yawns.%Y.%m.%d.log" combined
 </VirtualHost>
