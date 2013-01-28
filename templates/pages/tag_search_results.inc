@@ -44,7 +44,7 @@ $(document).ready(function(){ loadRecent(); } );
 
 
 <!-- tmpl_if name='polls' -->
-<dt class="toggle">Matching Polls</dt>
+<dt>Matching Polls</dt>
 <dd>
  <ul>
  <!-- tmpl_loop name='polls' -->
@@ -55,7 +55,7 @@ $(document).ready(function(){ loadRecent(); } );
 <!-- /tmpl_if -->
 
 <!-- tmpl_if name='submissions' -->
-<dt class="toggle">Matching Submissions</dt>
+<dt>Matching Submissions</dt>
 <dd>
  <ul>
  <!-- tmpl_loop name='submissions' -->
@@ -67,7 +67,7 @@ $(document).ready(function(){ loadRecent(); } );
 
 
 <!-- tmpl_if name='weblogs' -->
-<dt class="toggle">Matching Weblog Entries</dt>
+<dt>Matching Weblog Entries</dt>
 <dd>
  <ul>
  <!-- tmpl_loop name='weblogs' -->
@@ -93,4 +93,3 @@ $(document).ready(function(){ loadRecent(); } );
 
 <!-- /tmpl_if -->
 </div>
-<script src="/js/dl-toggles.js" type="text/javascript"></script>
