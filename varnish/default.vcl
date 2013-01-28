@@ -141,6 +141,8 @@ sub vcl_fetch
 
     if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|txt|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
        unset beresp.http.set-cookie;
+       unset beresp.http.expires;
+       set beresp.http.cache-control = "max-age = 604800";
        set beresp.ttl = 72000s;
     }
 
