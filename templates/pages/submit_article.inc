@@ -1,4 +1,3 @@
-    <script src="/js/form_autosave.js" type="text/javascript"></script>
 
             <!-- tmpl_if name='preview' -->
             <h1>Article Preview</h1>
