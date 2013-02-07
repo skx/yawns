@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I. -I..
+#!/usr/bin/perl -w -I../lib/ -I./lib/
 
 =head1 NAME
 
@@ -137,12 +137,6 @@ if ( $CONFIG{ 'delete-comments' } )
     $CONFIG{ 'verbose' } && print "Hidden comments\n";
 }
 
-
-#
-#  Flush our caches
-#
-system(" sudo find /tmp -type f -delete" );
-system( "sudo /etc/init.d/memcached restart" );
 
 #
 #  All done
