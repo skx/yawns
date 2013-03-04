@@ -16,7 +16,7 @@
 <hr />
 <p>This article can be found online at the <b><!-- tmpl_var name='sitename' --> </b> website at the following bookmarkable URL (along with associated comments):</p>
 <ul>
-<li><a href="/article/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='home_url' -->/article/<!-- tmpl_var name='slug' --></a></li>
+<li><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='home_url' -->/article/<!-- tmpl_var name='slug' --></a></li>
 </ul>
 <p>This article is copyright <!-- tmpl_var name='year' --> <a href="<!-- tmpl_var name='home_url' -->/users/<!-- tmpl_var name='article_byuser' -->"><!-- tmpl_var name='article_byuser' --></a> - please ask for permission to republish or translate.</p>
 <!-- /tmpl_if -->
