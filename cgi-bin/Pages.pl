@@ -815,6 +815,7 @@ sub printable
     $template1->param( sitename       => get_conf('sitename'),
                        separator      => get_conf('separator'),
                        article_title  => $title,
+                       id             => $article_id,
                        slug           => $slug,
                        article_byuser => $article->{ 'article_byuser' },
                        article_ondate => $article->{ 'article_ondate' },
