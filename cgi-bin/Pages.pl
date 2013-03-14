@@ -1808,8 +1808,7 @@ sub search_articles
     #
     #  Get the search term(s)
     #
-    my $terms = $form->param( "q" ) || undef;
-
+    my $terms    = $form->param( "q" ) || undef;
     my $template = load_layout( "search_articles.inc",
                               );
 
@@ -1818,18 +1817,18 @@ sub search_articles
         use Lucy::Simple;
 
         my $lucy =  Lucy::Simple->new( path  => "/tmp/index" ,
-                                       language => 'en', );
+                                       language => 'en' );
 
 
-        my $obj = $lucy->search(
-                                query      => $terms,
-                                offset     => 0,
-                                num_wanted => 50,
-                               );
+        my $hits = $lucy->search(
+                                 query      => $terms,
+                                 offset     => 0,
+                                 num_wanted => 50,
+                                );
 
         my $results;
 
-        while ( my $hit = $obj->next ) {
+        while ( my $hit = $lucy->next ) {
             push( @$results, { id => $hit->{id}, title => $hit->{title} } );
         }
         $template->param( terms => $terms,

@@ -13,7 +13,7 @@
 <blockquote>
  <form method="post" action="/cgi-bin/index.cgi">
   <input type="hidden" name="search" "value="1">
-  <input type="text" name="terms" value="">
+  <input type="text" name="q" value="">
   <input type="submit" name="submit" value="search">
  </form>
 </blockquote>
