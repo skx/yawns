@@ -11,10 +11,10 @@
 <!-- tmpl_else -->
 <h1>Site Search</h1>
 <blockquote>
- <form method="post" action="/cgi-bin/index.cgi">
-  <input type="hidden" name="search" "value="1">
+ <form method="post" action="/">
+  <input type="hidden" name="search" value="1">
   <input type="text" name="q" value="">
-  <input type="submit" name="submit" value="search">
+  <input type="submit" name="sbt" value="search">
  </form>
 </blockquote>
 <!-- /tmpl_if name='may_edit'-->
