@@ -1,4 +1,4 @@
-<!_- tmpl_if name='submit' -->
+<!-- tmpl_if name='submit' -->
 
 <h1>Search results: <!-- tmpl_var name='terms' escape='html' --></h1>
 <blockquote>
