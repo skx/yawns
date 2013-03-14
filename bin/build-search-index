@@ -1,0 +1,59 @@
+#!/usr/bin/perl -w
+#
+# Index our articles to /tmp/index
+#
+# Steve
+# --
+
+use strict;
+use warnings;
+
+use DBI;
+use Lucy::Simple;
+
+
+# Ensure the index directory is both available and empty.
+#
+my $index = "/tmp/index";
+
+if ( -d $index )
+{
+    system( "rm", "-rf", $index );
+}
+system( "mkdir", "-p", $index );
+
+
+
+#
+#  Create the helper.
+#
+my $lucy = Lucy::Simple->new( path => $index, language => 'en', );
+
+
+#
+# Connect to the database
+#
+my $dbi = DBI->connect( "dbi:mysql:yawns\;host=db1.debian-administration.org",
+                        "yawns", "yawns" );
+die "Unable to connect to database" unless ($dbi);
+
+#
+# Select the data
+#
+my $sql =
+  $dbi->prepare("select title,bodytext,id FROM articles ORDER by id ASC");
+$sql->execute();
+
+#
+# Bind & Fetch results
+#
+my ( $title, $content, $id );
+$sql->bind_columns( undef, \$title, \$content, \$id );
+while ( $sql->fetch() )
+{
+    my %data = ( title => $title, body => $content, id => $id );
+    print "$id - $title\n";
+    $lucy->add_doc( \%data );
+}
+$sql->finish();
+$dbi->disconnect();
