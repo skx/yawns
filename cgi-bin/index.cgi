@@ -748,7 +748,7 @@ my %dispatch = (
         type => "Content-Type: text/html\n\n",
       },
 
-    "search" =>                 # Search articles
+    "search_articles" =>                 # Search articles
       { sub   => \&search_articles,
         type  => "Content-Type: text/html\n\n",
       },
