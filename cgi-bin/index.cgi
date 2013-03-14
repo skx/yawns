@@ -748,6 +748,11 @@ my %dispatch = (
         type => "Content-Type: text/html\n\n",
       },
 
+    "search" =>                 # Search articles
+      { sub   => \&search_articles,
+        type  => "Content-Type: text/html\n\n",
+      },
+
     "send_message" =>           # Send a site message
       { sub   => \&send_message,
         type  => "Content-Type: text/html\n\n",
@@ -816,6 +821,7 @@ my %dispatch = (
       { sub  => \&tag_search,
         type => "Content-Type: text/html\n\n",
       },
+
 
     "title" => { sub  => \&article_by_title,
                  type => "Content-Type: text/html\n\n",

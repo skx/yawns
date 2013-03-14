@@ -1795,6 +1795,53 @@ sub delete_message
 
 
 # ===========================================================================
+# Search past articles
+# ===========================================================================
+sub search_articles
+{
+
+    #
+    #  Gain access to the things we require.
+    #
+    my $form    = Singleton::CGI->instance();
+
+    #
+    #  Get the search term(s)
+    #
+    my $terms = $form->param( "q" ) || undef;
+
+    my $template = load_layout( "search_articles.inc",
+                              );
+
+    if ( $terms )
+    {
+        use Lucy::Simple;
+
+        my $lucy =  Lucy::Simple->new( path  => "/tmp/index" ,
+                                       language => 'en', );
+
+
+        my $obj = $lucy->search(
+                                query      => $terms,
+                                offset     => 0,
+                                num_wanted => 50,
+                               );
+
+        my $results;
+
+        while ( my $hit = $obj->next ) {
+            push( @$results, { id => $hit->{id}, title => $hit->{title} } );
+        }
+        $template->param( terms => $terms,
+                          results => $results );
+    }
+    my $output = $template->output();
+    print $output;
+
+}
+
+
+# ===========================================================================
 # Send a message to a registered user.
 # ===========================================================================
 sub send_message
