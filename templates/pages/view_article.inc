@@ -30,7 +30,6 @@ $(function() {
 
 <!-- tmpl_if name='article_id' -->
 <div style="text-align: right;">
- <div class="share"></div>
 </div>
 <!-- /tmpl_if -->
 
@@ -64,6 +63,9 @@ $(function() {
 	</div>
 </div>
 
+<p>&nbsp;</p>
+ <div class="share"></div>
+<p>&nbsp;</p>
 
 <!-- tmpl_if  name="show_adverts" -->
 
