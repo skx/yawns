@@ -17,7 +17,9 @@
    </style>
   <![endif]-->
   <!--[if !lt IE 6]><!-->
-
+<style>
+  @import(/css/jquery.socialshareprivacy.min.css);
+</style>
 <!-- jQuery: remotely, then locally -->
     <link rel="stylesheet" type="text/css" href="/css/jquery.autocomplete.css" />
     <script src="/js/jquery-1.9.0.min.js" type="text/javascript"></script>
