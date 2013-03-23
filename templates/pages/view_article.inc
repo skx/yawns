@@ -6,9 +6,12 @@
 <script type="text/javascript" src="/js/jquery.socialshareprivacy.min.js"></script>
 <script type="text/javascript">
   <!--//--><![CDATA[//><!--
-  $(function() {
+$.fn.socialSharePrivacy.settings.order = ['facebook', 'twitter', 'gplus', 'linkedin', 'stumbleupon'];
+$.fn.socialSharePrivacy.settings.path_prefix = '/';
+
+$(function() {
      $('.share').socialSharePrivacy();
-  });
+});
   //--><!]]>
 </script>
 
