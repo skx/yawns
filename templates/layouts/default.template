@@ -47,6 +47,16 @@ $(function() {
    </script>
 <!--<![endif]-->
 
+<!-- tmpl_if name='view_article' -->
+<script type="text/javascript" src="jquery.socialshareprivacy.min.js"></script>
+<script type="text/javascript">
+  <!--//--><![CDATA[//><!--
+  $(function() {
+     $('.share').socialSharePrivacy();
+  });
+  //--><!]]>
+</script>
+<!-- /tmpl_if name='view_article' -->
 
 <script type="text/javascript">
 

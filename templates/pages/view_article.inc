@@ -18,7 +18,7 @@
 
 <!-- tmpl_if name='article_id' -->
 <div style="text-align: right;">
-<a name="a2a_dd" onmouseover="a2a_show_dropdown(this)" onmouseout="a2a_onMouseOut_delay()" href="http://www.addtoany.com/bookmark?linkname=<!-- tmpl_var name='article_title' escape='html' -->&amp;linkurl=http%3A//www.debian-administration.org/article/<!-- tmpl_var name='slug' -->"><img src="http://static.addtoany.com/buttons/share_save_171_16.gif" width="171" height="16" border="0" alt="Share/Save/Bookmark"/></a><script type="text/javascript">a2a_linkname="<!-- tmpl_var name='article_title' escape='html' -->";a2a_linkurl="http://www.debian-administration.org/article/<!-- tmpl_var name='slug' -->";</script><script type="text/javascript" src="http://www.addtoany.com/menu/page.js"></script>
+ <div class="share"></div>
 </div>
 <!-- /tmpl_if -->
 
