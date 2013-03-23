@@ -3,6 +3,16 @@
 	<p>The article you've specified doesn't exist.</p>
       <!-- tmpl_else -->
 
+<script type="text/javascript" src="/js/jquery.socialshareprivacy.min.js"></script>
+<script type="text/javascript">
+  <!--//--><![CDATA[//><!--
+  $(function() {
+     $('.share').socialSharePrivacy();
+  });
+  //--><!]]>
+</script>
+
+
        <div class="article">
        <!-- headline + section name -->
        <h2 class="title"><!-- tmpl_var name='article_title' --></h2>
