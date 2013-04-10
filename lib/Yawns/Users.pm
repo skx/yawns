@@ -330,7 +330,7 @@ sub getRecent
     my $db = Singleton::DBI->instance();
 
     my $sql = $db->prepare(
-        "SELECT username,url,joined FROM users WHERE to_days(now()) - to_days(joined) <= ? ORDER BY joined"
+        "SELECT username,url,joined FROM users WHERE to_days(now()) - to_days(joined) <= ? AND suspended=0 ORDER BY joined"
     );
 
     # get required data
