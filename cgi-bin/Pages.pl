@@ -1831,8 +1831,8 @@ sub search_articles
         while ( my $hit = $lucy->next ) {
             push( @$results, { id => $hit->{id}, title => $hit->{title} } );
         }
-        $template->param( terms => $terms,
-                          results => $results );
+        $template->param( terms => $terms );
+        $template->param( results => $results ) if ( $results );
     }
     my $output = $template->output();
     print $output;
