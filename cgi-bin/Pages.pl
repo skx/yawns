@@ -2965,6 +2965,7 @@ sub new_user
             #
             #  See if this user comes from an IP address with a previous suspension.
             #
+            my $db  = Singleton::DBI->instance();
             my $sql = $db->prepare(
                                    "SELECT COUNT(username) FROM users WHERE ip=? AND suspended=1" );
             $sql->execute( $ENV{'REMOTE_ADDR'} );
