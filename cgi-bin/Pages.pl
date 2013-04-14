@@ -2970,6 +2970,11 @@ sub new_user
                                    "SELECT COUNT(username) FROM users WHERE ip=? AND suspended=1" );
             $sql->execute( $ENV{'REMOTE_ADDR'} );
             $prev_banned =  $sql->fetchrow_array();
+
+            if ( $prev_banned )
+            {
+                send_alert("Denied registration for '$new_user_name' from " . $ENV{'REMOTE_ADDR'} );
+            }
             $sql->finish();
 
             #
