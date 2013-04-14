@@ -2927,6 +2927,7 @@ sub new_user
 
     my $blank_username   = 0;
     my $invalid_username = 0;
+    my $prev_banned      = 0;
     my $invalid_hash     = 0;
     my $mail_error = "";
 
@@ -2962,6 +2963,15 @@ sub new_user
 
 
             #
+            #  See if this user comes from an IP address with a previous suspension.
+            #
+            my $sql = $db->prepare(
+                                   "SELECT COUNT(username) FROM users WHERE ip=? AND suspended=1" );
+            $sql->execute( $ENV{'REMOTE_ADDR'} );
+            $prev_banned =  $sql->fetchrow_array();
+            $sql->finish();
+
+            #
             # Now test to see if the email address is valid
             #
             $invalid_email = Mail::Verify::CheckAddress( $new_user_email );
@@ -2982,7 +2992,7 @@ sub new_user
             #
             # Test to see if the username already exists.
             #
-            if ( ( $invalid_email + $invalid_username + $blank_email ) < 1 )
+            if ( ( $invalid_email + $prev_banned + $invalid_username + $blank_email ) < 1 )
             {
                 my $users = Yawns::Users->new();
                 my $exists = $users->exists( username => $new_user_name );
@@ -3042,6 +3052,7 @@ sub new_user
                       invalid_username => $invalid_username,
                       blank_email      => $blank_email,
                       blank_username   => $blank_username,
+                      prev_banned      => $prev_banned,
                       new_user_name    => $new_user_name,
                       new_user_email   => $new_user_email,
                       title            => "Register Account",
