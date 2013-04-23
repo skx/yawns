@@ -969,7 +969,9 @@ my $flush = $match->{ 'cache' } || 0;
 if ( ($flush) && ( $ENV{ 'REQUEST_METHOD' } =~ /post/i ) )
 {
     my $event = Yawns::Event->new();
-    $event->send("Flushing cache due to POST to" . $ENV{'QUERY_STRING'} );
+
+    my $u = "<a href=\"http://www.debian-administration.org/users/$username\">$username</a>";
+    $event->send("Flushing cache due to POST to " . $ENV{'QUERY_STRING'} . " by $u" );
 
     my $cmd = "/root/current/bin/expire-varnish";
     system("$cmd >/dev/null 2>&1 &");
