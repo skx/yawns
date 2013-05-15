@@ -37,6 +37,8 @@ use strict;
 use warnings;
 
 
+$CGI::PARAM_UTF8=1;
+
 use CGI (-utf8);
 use CGI::Carp qw/ fatalsToBrowser /;
 
