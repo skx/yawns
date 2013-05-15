@@ -290,7 +290,7 @@ if ( defined $form->param('logout') )
 
     if ( $token ne $wanted )
     {
-        print "Content-type: text/html\n\n";
+        print "Content-type: text/html; charset=UTF-8\n\n";
         permission_denied( invalid_session => 1,
                            title           => "Invalid session" );
 
@@ -353,7 +353,7 @@ if ( !$session->param("logged_in") )
 # ===========================================================================
 if ( defined( $session->param('suspended') ) )
 {
-    print "Content-type: text/html\n\n";
+    print "Content-type: text/html; charset=UTF-8\n\n";
     view_user();
     $session->close();
     $db->disconnect();
@@ -366,7 +366,7 @@ if ( defined( $session->param('suspended') ) )
 my $ip = $session->param("session_ip");
 if ( defined($ip) && ( length($ip) ) && ( $ip ne $ENV{ 'REMOTE_ADDR' } ) )
 {
-    print "Content-type: text/html\n\n";
+    print "Content-type: text/html; charset=UTF-8\n\n";
     permission_denied( session_ip_changed => 1,
                        session_ip         => $ENV{ 'REMOTE_ADDR' } );
     $session->param( "logged_in",    undef );
@@ -458,7 +458,7 @@ my %dispatch = (
     #
     "comment" =>    # Submit a comment
       { sub   => \&submit_comment,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
@@ -470,26 +470,26 @@ my %dispatch = (
     "add_weblog" =>    # Add a new weblog entry
       { sub   => \&add_weblog,
         login => 1,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     # end explicit ordering.
     "about" =>         # View a static page
       { sub  => \&view_about_section,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "add_advert" =>    # Add an advert
       { sub   => \&add_new_advert,
         login => 1,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "add_related" =>    # Add a related link to an article
       { sub   => \&add_related,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "related_admin",
         cache => 1,
       },
@@ -497,50 +497,50 @@ my %dispatch = (
     "add_submission_note" =>    # Add a note to a pending article
       { sub   => \&add_submission_note,
         priv  => "article_admin",
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
     "adverts_byuser" =>         # View all adverts by a given user.
       { sub   => \&adverts_byuser,
         login => 1,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "advert_stats" =>           # View the statistics of an advert
       { sub   => \&advert_stats,
         login => 1,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "all_adverts" =>            # View all adverts
       { sub  => \&view_all_adverts,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "archive" =>                # View previous submissions.
       { sub  => \&show_archive,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "article" =>                # Read an article.
       { sub  => \&read_article,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "author_search" =>          # Search for articles by the given user.
       { sub  => \&search_results,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "bookmarks" =>              # View a users bookmark list.
       { sub  => \&view_bookmarks,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "delete_advert" =>          # Remove an existing advert
       { sub   => \&delete_advert,
         priv  => "advert_admin",
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
@@ -567,85 +567,85 @@ my %dispatch = (
     "delete_weblog" =>          # Delete a weblog entry
       { sub   => \&delete_weblog,
         login => 1,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "disable_advert" =>         # Disable an advert
       { sub   => \&disable_advert,
         priv  => "advert_admin",
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "edit_about" =>             # Edit a static page
       { sub   => \&edit_about,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "edit_about",
         cache => 1,
       },
 
     "edit_adverts" =>           # Edit a site advert
       { sub   => \&edit_adverts,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "advert_admin",
         cache => 1,
       },
 
     "edit_article" =>           # Edit an existing, live, advert.
       { sub   => \&edit_article,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "edit_comment" =>           # Edit a comment
       { sub   => \&edit_comment,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "edit_comments",
         cache => 1,
       },
 
     "edit_user" =>              # Edit a user.
       { sub   => \&edit_user,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "edit_permissions" =>       # Edit the permissions associated with a user.
       { sub   => \&edit_permissions,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "edit_prefs" =>             # Edit a users preferences
       { sub   => \&edit_prefs,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "edit_scratchpad" =>        # Edit a users scratchpad
       { sub   => \&edit_scratchpad,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "edit_weblog" =>            # Edit a weblog entry
       { sub   => \&edit_weblog,
         login => 1,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "enable_advert" =>          # Enable an advert
       { sub   => \&enable_advert,
         priv  => "advert_admin",
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "front_page" =>             # view the front-page
       { sub  => \&front_page,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "follow_advert" =>          # Click on a user-advert
@@ -653,7 +653,7 @@ my %dispatch = (
 
     "loginform" =>              # Login options
       { sub  => \&login_form,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "message_reply" =>          # Reply to a site-message.
@@ -665,40 +665,40 @@ my %dispatch = (
 
     "new_user" =>               # Create a new user account
       { sub  => \&new_user,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "send_reset_password" =>    # Mail the user a link to reset their password.
       { sub  => \&send_reset_password,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "change_password" =>        # Allow a user to change their password.
       { sub  => \&change_password,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "pollvote" =>               # Vote in a poll.
       { sub   => \&pollvote,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "poll" =>                   # View a poll.
       { sub  => sub {poll_results( 0, 0, 0 );},
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "poll_edit" =>              # Edit a pending poll submissions
       { sub   => \&poll_edit,
         priv  => "poll_admin",
-        type  => "Content-type: text/html\n\n",
+        type  => "Content-type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "poll_list" =>              # View archive of old polls
       { sub  => \&poll_list,
-        type => "Content-type: text/html\n\n",
+        type => "Content-type: text/html; charset=UTF-8\n\n",
       },
 
     "poll_post" =>              # Post a pending poll submissions
@@ -717,7 +717,7 @@ my %dispatch = (
 
     "poll_submissions" =>       # View pending poll submissions
       { sub   => \&poll_submissions,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "poll_admin",
         cache => 1,
       },
@@ -727,135 +727,135 @@ my %dispatch = (
 
     "recent_users" =>           # See recently joined users.
       { sub  => \&recent_users,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
         priv => "recent_users",
       },
 
     "report" =>                 # Report an abusive comment.
       { sub   => \&report_comment,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "report_weblog" =>          # Report a weblog entry.
       { sub   => \&report_weblog,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "scratchpad" =>             # View a users scratchpad area.
       { sub  => \&view_scratchpad,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "search_articles" =>                 # Search articles
       { sub   => \&search_articles,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "send_message" =>           # Send a site message
       { sub   => \&send_message,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "single_weblog" =>          # View a single weblog entry.
       { sub  => \&view_single_weblog,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "stats" =>                  # View our hall of fame page.
       { sub  => \&stats_page,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "submission_edit" =>        # Edit a pending article
       { sub   => \&edit_submission,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "submission_view" =>        # View a pending article
       { sub  => \&submission_view,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "submission_list" =>        # View pending article submissions
       { sub  => \&submission_list,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
         priv => "article_admin",
       },
 
     "submission_post" =>        # Post a pending article to the site.
       { sub   => \&submission_post,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "article_admin",
         cache => 1,
       },
 
     "submission_reject" =>      # Reject a pending article submissions
       { sub   => \&submission_reject,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "article_admin",
         cache => 1,
       },
 
     "submit" =>                 # Submit an article
       { sub   => \&submit_article,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "submit_poll" =>            # Submit a new poll
       { sub   => \&submit_poll,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "tag_browse" =>             # See the tag field
       { sub  => \&tag_browse,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "tag_search" =>             # Perform a search by tag
       { sub  => \&tag_search,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
 
     "title" => { sub  => \&article_by_title,
-                 type => "Content-Type: text/html\n\n",
+                 type => "Content-Type: text/html; charset=UTF-8\n\n",
                },
     "title_print" => { sub => \&article_by_title_print, },
 
     "user" =>                   # View a users profile page.
       { sub  => \&view_user,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "user_admin" =>             # User administration.
       { sub   => \&user_administration,
         priv  => "user_admin",
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
     "view_messages" =>          # View site-message.
       { sub   => \&view_messages,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         login => 1,
         cache => 1,
       },
 
     "view_message" =>           # View a specific message.
       { sub   => \&view_message,
-        type  => "Content-Type: text/html\n\n",
+        type  => "Content-Type: text/html; charset=UTF-8\n\n",
         login => 1
       },
 
     "weblog" =>                 # View a users weblog.
       { sub  => \&view_user_weblog,
-        type => "Content-Type: text/html\n\n",
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       }
 
 
@@ -910,7 +910,7 @@ if ( defined( $match->{ 'login' } ) )
         #
         if ( !$match->{ 'type' } )
         {
-            print "Content-type: text/html\n\n";
+            print "Content-type: text/html; charset=UTF-8\n\n";
         }
 
         #
@@ -937,7 +937,7 @@ if ( $required_priv && ( !$perms->check( priv => $required_priv ) ) )
     #
     if ( !$match->{ 'type' } )
     {
-        print "Content-type: text/html\n\n";
+        print "Content-type: text/html; charset=UTF-8\n\n";
     }
 
     #
