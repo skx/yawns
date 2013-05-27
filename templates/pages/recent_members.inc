@@ -8,6 +8,7 @@
 
 <tr><td><b>Username</b></td><td></td>
     <td><b>Joined</b></td>
+    <td><b>IP</b></td>
     <td><b>URL</b></td></tr>
 
 <!-- tmpl_loop name="users" -->
@@ -15,6 +16,7 @@
 <tr>
  <td><a href="/users/<!-- tmpl_var name="username" -->"><!-- tmpl_var name="username" --></a></td><td><!-- tmpl_if name='commentcount' -->[<!-- tmpl_var name='commentcount' -->]<!-- /tmpl_if --></td>
 <td><!-- tmpl_var name="joined" --></td>
+<td><!-- tmpl_var name="ip" --></td>
 <td>
   <!-- tmpl_if name="homepage" -->
 	 <a href="<!-- tmpl_var name="homepage" -->"><!-- tmpl_var name="homepage" --></a>

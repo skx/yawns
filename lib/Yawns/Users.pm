@@ -330,15 +330,15 @@ sub getRecent
     my $db = Singleton::DBI->instance();
 
     my $sql = $db->prepare(
-        "SELECT username,url,joined FROM users WHERE to_days(now()) - to_days(joined) <= ? AND suspended=0 ORDER BY joined"
+        "SELECT username,url,ip,joined FROM users WHERE to_days(now()) - to_days(joined) <= ? AND suspended=0 ORDER BY joined"
     );
 
     # get required data
     $sql->execute($count) or die "Failed to run query: " . $db->errstr();
 
     # Bind comments for our results.
-    my ( $username, $homepage, $joined );
-    $sql->bind_columns( undef, \$username, \$homepage, \$joined );
+    my ( $username, $homepage, $ip, $joined );
+    $sql->bind_columns( undef, \$username, \$homepage, \$ip, \$joined );
 
     # The results we'll return to our users.
     my $users = [];
@@ -356,7 +356,9 @@ sub getRecent
               {  commentcount => $c,
                  username     => $username,
                  homepage     => $homepage,
-                 joined       => $joined
+                 ip           => $ip,
+                 joined       => $joined,
+
               } );
     }
 
