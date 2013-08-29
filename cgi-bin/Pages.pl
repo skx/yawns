@@ -3070,6 +3070,7 @@ sub new_user
                       blank_email      => $blank_email,
                       blank_username   => $blank_username,
                       prev_banned      => $prev_banned,
+                      prev_email       => $prev_email,
                       new_user_name    => $new_user_name,
                       new_user_email   => $new_user_email,
                       title            => "Register Account",

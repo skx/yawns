@@ -18,6 +18,9 @@
 		  <!-- tmpl_if name='prev_banned' -->
 		  <p>The IP address you are using is associated with a previously banned account - you may not re-register.</p>
 		  <!-- /tmpl_if -->
+		  <!-- tmpl_if name='prev_email' -->
+		  <p>The email address you are using is already associated with an account.</p>
+		  <!-- /tmpl_if -->
 		  <!-- tmpl_if name='invalid_username' -->
 		    <p>Sorry, the username you entered is not valid - please use only letters, numbers and '-' or '_'.  Usernames should be no longer than 25 characters in length.</p>
 		  <!-- /tmpl_if -->
