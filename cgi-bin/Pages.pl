@@ -2928,6 +2928,7 @@ sub new_user
     my $blank_username   = 0;
     my $invalid_username = 0;
     my $prev_banned      = 0;
+    my $prev_email       = 0;
     my $invalid_hash     = 0;
     my $mail_error = "";
 
@@ -2970,12 +2971,22 @@ sub new_user
                                    "SELECT COUNT(username) FROM users WHERE ip=? AND suspended=1" );
             $sql->execute( $ENV{'REMOTE_ADDR'} );
             $prev_banned =  $sql->fetchrow_array();
+            $sql->finish();
+
+
+            $sql = $db->prepare( "SELECT COUNT(username) FROM users WHERE realemail=?" );
+            $sql->execute( $new_user_email );
+            $prev_email =  $sql->fetchrow_array();
+            $sql->finish();
 
             if ( $prev_banned )
             {
                 send_alert("Denied registration for '$new_user_name' from " . $ENV{'REMOTE_ADDR'} );
             }
-            $sql->finish();
+            if ( $prev_banned )
+            {
+                send_alert("Denied registration for in-use email " . $new_user_email . " " . $ENV{'REMOTE_ADDR'} );
+            }
 
             #
             # Now test to see if the email address is valid
@@ -2998,7 +3009,7 @@ sub new_user
             #
             # Test to see if the username already exists.
             #
-            if ( ( $invalid_email + $prev_banned + $invalid_username + $blank_email ) < 1 )
+            if ( ( $invalid_email + $prev_email + $prev_banned + $invalid_username + $blank_email ) < 1 )
             {
                 my $users = Yawns::Users->new();
                 my $exists = $users->exists( username => $new_user_name );
