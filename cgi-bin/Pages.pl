@@ -674,6 +674,9 @@ sub article_by_title
          length($id) &&
          ( $id =~ /^([0-9]+)$/ ) )
     {
+        #
+        #  TODO: Should redirect here to real url.
+        #
         $form->param( article => $id );
         return ( read_article() );
     }

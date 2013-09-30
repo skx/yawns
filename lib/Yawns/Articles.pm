@@ -54,6 +54,7 @@ use DBI qw/ :sql_types /;    # Database interface
 use HTML::Entities;
 use Date::Format;
 use Date::Parse;
+use String::Approx 'amatch';
 
 #
 #  Yawns modules which we use.
@@ -163,18 +164,17 @@ sub searchByAuthor
 
         if ($has_tags)
         {
-            push(
-                @$resultsloop,
-                { id       => $id,
-                   title    => $title,
-                   slug     => $slug,
-                   author   => $author,
-                   ondate   => $str_date,
-                   teaser   => $teaser,
-                   score    => $score,
-                   has_tags => $has_tags,
-                   tags     => $tags,
-                } );
+            push( @$resultsloop,
+                  {  id       => $id,
+                     title    => $title,
+                     slug     => $slug,
+                     author   => $author,
+                     ondate   => $str_date,
+                     teaser   => $teaser,
+                     score    => $score,
+                     has_tags => $has_tags,
+                     tags     => $tags,
+                  } );
         }
         else
         {
@@ -324,22 +324,20 @@ sub getHeadlines
 
         if ($dates)
         {
-            push(
-                @$headlines,
-                {  id      => $headline[0],
-                   title   => $title,
-                   slug    => $slug,
-                   pubdate => $pubDate,
-                } );
+            push( @$headlines,
+                  {  id      => $headline[0],
+                     title   => $title,
+                     slug    => $slug,
+                     pubdate => $pubDate,
+                  } );
         }
         else
         {
-            push(
-                @$headlines,
-                {  id    => $headline[0],
-                   title => $title,
-                   slug  => $slug,
-                } );
+            push( @$headlines,
+                  {  id    => $headline[0],
+                     title => $title,
+                     slug  => $slug,
+                  } );
         }
     }
 
@@ -438,21 +436,20 @@ sub getArticles
 
         if ($has_tags)
         {
-            push(
-                @$articles,
-                {  id       => $article[0],
-                   title    => $title,
-                   slug     => $slug,
-                   byuser   => $article[2],
-                   ondate   => $postdate,
-                   attime   => $posttime,
-                   comment  => $comment,
-                   comments => $comments,
-                   words    => $article[6],
-                   body     => $article[4],
-                   tags     => $tags,
-                   has_tags => $has_tags
-                } );
+            push( @$articles,
+                  {  id       => $article[0],
+                     title    => $title,
+                     slug     => $slug,
+                     byuser   => $article[2],
+                     ondate   => $postdate,
+                     attime   => $posttime,
+                     comment  => $comment,
+                     comments => $comments,
+                     words    => $article[6],
+                     body     => $article[4],
+                     tags     => $tags,
+                     has_tags => $has_tags
+                  } );
         }
         else
         {
@@ -562,12 +559,12 @@ sub getArchivedArticles
 
         push(
             @$articles,
-            {
-             id         => $id,
-             title      => $title,
-             slug       => $slug,
-             teaser     => $teaser,
-             # year       => $year,
+            {  id     => $id,
+               title  => $title,
+               slug   => $slug,
+               teaser => $teaser,
+
+               # year       => $year,
             } );
 
     }
@@ -615,38 +612,43 @@ sub findBySlug
     my $slug = $params{ 'slug' } || $self->{ 'slug' } || undef;
     die "No slug given" unless defined($slug);
 
-    my $id = undef;
-
-    #
-    #  Get the database handle
-    #
     my $db = Singleton::DBI->instance();
 
     #
-    # Fetch articles.
+    #  Get all ID + Title combos.
     #
-    my $query = "SELECT id FROM articles WHERE ( ";
+    my $sql = $db->prepare("SELECT id,title  FROM articles");
+    $sql->execute() or die $db->errstr();
 
-    my @terms = split( /_/, $slug );
+    # Bind columns for fetching.
+    my ( $id, $title );
+    $sql->bind_columns( undef, \$id, \$title );
 
-    my $c = 0;
-    foreach my $t (@terms)
+    # The results we return
+    my %data;
+    my @titles;
+
+    # Keep track of all of them.
+    while ( $sql->fetch() )
     {
-        my $st = $db->quote( '%' . $t . '%' );
-        $query .= " title LIKE $st ";
-        $query .= " AND ";
+        $data{ $title } = $id;
+        push( @titles, $title );
     }
-
-    $query =~ s/ AND $//g;
-    $query .= ")";
-
-    my $sql = $db->prepare($query) or die "Failed to prepare";
-    $sql->execute() or die "Failed to execute";
-    my @ret = $sql->fetchrow_array();
-    $id = $ret[0];
     $sql->finish();
 
-    return ($id);
+    #
+    #  See if we got an approximate match.
+    #
+    $slug =~ s/_/ /g if ($slug);
+    my @foo = amatch( $slug, ['30%'], @titles );
+    if (@foo)
+    {
+        return ( $data{ $foo[0] } );
+    }
+    else
+    {
+        return undef;
+    }
 }
 
 
