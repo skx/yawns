@@ -681,7 +681,8 @@ sub article_by_title
     #
     #  Failed to find match
     #
-    die "Failed to find article by title: '$title'";
+    my $uri = $ENV{'REQUEST_URI'};
+    die "Failed to find article by title: '$title': $uri";
 
 }
 
