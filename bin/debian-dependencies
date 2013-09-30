@@ -45,6 +45,7 @@ install libcache-memcached-perl
 install libtext-markdown-perl
 install libdbd-mysql-perl
 install libapache2-mod-rpaf
+install libstring-approx-perl
 
 # for test-suite
 install libtest-file-perl
