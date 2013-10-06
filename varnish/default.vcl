@@ -69,7 +69,7 @@ sub vcl_recv
     # Pound will add this for HTTPS.
     #
     if (req.http.x-forwarded-for) {
-         # nop
+        set req.http.X-Forwarded-For = req.http.X-Forwarded-For + ", " + client.ip;
     } else {
         set req.http.X-Forwarded-For = client.ip;
     }
