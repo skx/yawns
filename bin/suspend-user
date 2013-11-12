@@ -107,6 +107,14 @@ if ( !$CONFIG{ 'user' } )
 
 
 #
+#  We don't suspend ourself
+#
+if ( $CONFIG{'user'} =~ /^(root|steve)$/i )
+{
+    die "Don't suspend ourself, again.";
+}
+
+#
 # Suspend the user.
 #
 my $u = Yawns::User->new( username => $CONFIG{ 'user' } );
