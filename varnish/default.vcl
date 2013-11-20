@@ -57,6 +57,10 @@ include "blacklist.vcl";
 
 sub vcl_recv
 {
+    if ( (req.http.host == "bidmehappy.info" ) ||
+          (req.http.host == "www.bidmehappy.info" ) ) {
+        error 403 "Illegal copy of this site.  Please visit http://debian-administration.org/ directly.";
+    }
 
     if (client.ip ~ blacklist ) {
            error 403 "You're blacklisted";
