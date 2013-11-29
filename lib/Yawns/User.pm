@@ -594,6 +594,9 @@ sub create
     my $email    = $class->{ 'email' };
     my $password = $class->{ 'password' };
     my $ip       = $class->{ 'ip' };
+    my $suspended = 0;
+
+    $suspended = 1 if ( $email && ( $email =~ /goood-mail.org/i ) );
 
     if ( ( !defined($username) ) ||
          ( !length($username) ) ||
@@ -619,9 +622,9 @@ sub create
     # Insert the user.
     #
     my $sql = $db->prepare(
-        'INSERT INTO users (username,password,realemail,joined,viewadverts,headlines,suspended,ip) VALUES( ?, MD5(?), ?, NOW(), 1, 1,0,?)'
+        'INSERT INTO users (username,password,realemail,joined,viewadverts,headlines,suspended,ip) VALUES( ?, MD5(?), ?, NOW(), 1, 1,?,?)'
     );
-    $sql->execute( $username, $password, $email,$ip ) or
+    $sql->execute( $username, $password, $email, $suspended, $ip ) or
       die " Failed to create user - " . $db->errstr();
     $sql->finish();
 
