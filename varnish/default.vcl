@@ -82,7 +82,7 @@ sub vcl_recv
     if (! req.backend.healthy) {
        set req.grace = 60m;
     } else {
-       set req.grace = 15s;
+       set req.grace = 60s;
     }
 
     # Ignore all "POST" requests - nothing cacheable there
@@ -91,12 +91,12 @@ sub vcl_recv
     }
 
     if (req.http.Cookie == "") {
-      remove req.http.Cookie;
+         remove req.http.Cookie;
     }
 
     if ( req.url ~ "(articles.rdf|atom.xml|headlines.rdf)$" ) {
          unset req.http.Cookie;
-        return( lookup );
+         return( lookup );
     }
 
     # Always cache the following file types for all users.
@@ -127,9 +127,10 @@ sub vcl_recv
     if (req.request == "PURGE") {
         if (!client.ip ~ admin) {
             error 405 "Not allowed.";
-    return (lookup);
         }
+
     }
+    return (lookup);
 }
 
 
