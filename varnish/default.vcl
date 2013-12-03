@@ -130,7 +130,6 @@ sub vcl_recv
         }
 
     }
-    return (lookup);
 }
 
 
@@ -176,7 +175,6 @@ sub vcl_fetch
 		set beresp.ttl = 60 s;
 		return (hit_for_pass);
      }
-     return (deliver);
 }
 
 sub vcl_hit {
