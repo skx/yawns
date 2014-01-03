@@ -23,7 +23,7 @@
  <item rdf:about="<!-- tmpl_var name="home_url" -->/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name="slug" -->">
   <title><!-- tmpl_var name="title" --></title>
   <pubDate><!-- tmpl_var name='pubdate' --></pubDate>
-  <link><!-- tmpl_var name="home_url" -->/article/<!-- tmpl_var name="slug" --></link>
+  <link><!-- tmpl_var name="home_url" -->/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name="slug" --></link>
   <description><!-- tmpl_var name="leadtext" --></description>
  </item>
  <!-- /tmpl_loop -->
