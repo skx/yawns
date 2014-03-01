@@ -6466,7 +6466,7 @@ sub recent_users
     #
     my $u     = Yawns::Users->new();
     my $users = $u->getRecent($count);
-
+    my $uc    = scalar( @$users );
 
     #
     #  Load template
@@ -6477,7 +6477,7 @@ sub recent_users
                       count => $count,
                       title => "Recent Site Members",
                     );
-
+    $template->param( user_count => $uc ) if ( $uc &&  ( $uc > 0 ) );
 
     print $template->output;
 }

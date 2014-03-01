@@ -3,6 +3,9 @@
 <p>This page lists the users who have joined the site in the past <!-- tmpl_var name="count" --> days.</p>
 <p>View users joining in the past <a href="/recent/users/1">1</a>, <a href="/recent/users/2">2</a>, or <a href="/recent/users/7">7</a> days.</p>
 
+<!-- tmpl_if name='user_count' -->
+<p>There are <!-- tmpl_var name='user_count' --> users listed.</p>
+<!-- /tmpl_if -->
 
 <table>
 
