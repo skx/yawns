@@ -3232,7 +3232,7 @@ sub change_password
 
 
     # open the html template
-    my $template = load_layout( "update_password.inc", session => 1 );
+    my $template = load_layout( "update_password.inc", session => 0 );
 
     $template->param( user  => $user,
                       magic => $magic );
