@@ -824,7 +824,6 @@ my %dispatch = (
 
 
     "title" => { sub  => \&article_by_title,
-                 type => "Content-Type: text/html; charset=UTF-8\n\n",
                },
     "title_print" => { sub => \&article_by_title_print, },
 

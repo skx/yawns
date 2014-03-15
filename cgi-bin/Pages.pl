@@ -710,38 +710,55 @@ sub article_by_title
 #
 sub article_by_title_print
 {
-
     # Get singleton references we care about
     my $form = Singleton::CGI->instance();
 
-    # Get the title
+    # We will redirect so we want to know what schema the user used.
+    my $protocol = "http://";
+    if ( defined( $ENV{ 'HTTPS' } ) && ( $ENV{ 'HTTPS' } =~ /on/i ) )
+    {
+        $protocol = "https://";
+    }
+
+    # get the title
     my $title = $form->param("title_print");
 
     # no title == show index
     if ( !defined($title) || !length($title) )
     {
-        return front_page();
+        print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/" );
     }
-
-
-    #
-    #  Find the article by the title
-    #
-    my $articles = Yawns::Articles->new();
-    my $id = $articles->findBySlug( slug => $title );
-
-    if ( defined($id) &&
-         length($id) &&
-         ( $id =~ /^([0-9]+)$/ ) )
+    else
     {
-        $form->param( printable => $id );
-        return ( printable() );
+        #
+        #  Find the article by the title
+        #
+        my $articles = Yawns::Articles->new();
+        my $id = $articles->findBySlug( slug => $title );
+
+        if ( defined($id) &&
+             length($id) &&
+             ( $id =~ /^([0-9]+)$/ ) )
+        {
+
+            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/articles/" .
+                                  $id . "/" . $title . "/print" );
+
+        }
+        else
+        {
+            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/" );
+        }
     }
 
     #
-    #  Failed to find match
+    #  Terminate cleanly.
     #
-    die "Failed to find article by title: '$title'";
+    my $session = Singleton::Session->instance();
+    my $db      = Singleton::DBI->instance();
+    $session->close();
+    $db->disconnect();
+    exit;
 
 }
 
