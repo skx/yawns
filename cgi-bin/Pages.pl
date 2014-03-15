@@ -681,7 +681,7 @@ sub article_by_title
              ( $id =~ /^([0-9]+)$/ ) )
         {
 
-            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/articles/" .
+            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/article/" .
                                   $id . "/" . $title );
 
         }
@@ -741,7 +741,7 @@ sub article_by_title_print
              ( $id =~ /^([0-9]+)$/ ) )
         {
 
-            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/articles/" .
+            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/article/" .
                                   $id . "/" . $title . "/print" );
 
         }
