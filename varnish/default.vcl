@@ -136,14 +136,14 @@ sub vcl_recv
 sub vcl_fetch
 {
     # allow cached content to live on, even when stale.
-    set beresp.grace = 80m;
+    set beresp.grace = 120s;
 
     # Use anonymous, cached pages if all backends are down.
     if (!req.backend.healthy) {
          unset req.http.Cookie;
     }
 
-    if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|txt|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
+    if (req.url ~ "\.(png|gif|jpeg|jpg|txt|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
        unset beresp.http.set-cookie;
        unset beresp.http.expires;
        set beresp.http.cache-control = "max-age = 604800";
@@ -173,7 +173,6 @@ sub vcl_fetch
 		 * Mark as "Hit-For-Pass" for the next minute.
 		 */
 		set beresp.ttl = 60 s;
-		return (hit_for_pass);
      }
 }
 
