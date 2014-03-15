@@ -650,9 +650,15 @@ sub read_article
 #
 sub article_by_title
 {
-
     # Get singleton references we care about
     my $form = Singleton::CGI->instance();
+
+    # We will redirect so we want to know what schema the user used.
+    my $protocol = "http://";
+    if ( defined( $ENV{ 'HTTPS' } ) && ( $ENV{ 'HTTPS' } =~ /on/i ) )
+    {
+        $protocol = "https://";
+    }
 
     # Get the title
     my $title = $form->param("title");
@@ -660,32 +666,39 @@ sub article_by_title
     # no title == show index
     if ( !defined($title) || !length($title) )
     {
-        return front_page();
+        print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/" );
     }
-
-
-    #
-    #  Find the article by the title
-    #
-    my $articles = Yawns::Articles->new();
-    my $id = $articles->findBySlug( slug => $title );
-
-    if ( defined($id) &&
-         length($id) &&
-         ( $id =~ /^([0-9]+)$/ ) )
+    else
     {
         #
-        #  TODO: Should redirect here to real url.
+        #  Find the article by the title
         #
-        $form->param( article => $id );
-        return ( read_article() );
+        my $articles = Yawns::Articles->new();
+        my $id = $articles->findBySlug( slug => $title );
+
+        if ( defined($id) &&
+             length($id) &&
+             ( $id =~ /^([0-9]+)$/ ) )
+        {
+
+            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/articles/" .
+                                  $id . "/" . $title );
+
+        }
+        else
+        {
+            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/" );
+        }
     }
 
     #
-    #  Failed to find match
+    #  Terminate cleanly.
     #
-    my $uri = $ENV{'REQUEST_URI'};
-    die "Failed to find article by title: '$title': $uri";
+    my $session = Singleton::Session->instance();
+    my $db      = Singleton::DBI->instance();
+    $session->close();
+    $db->disconnect();
+    exit;
 
 }
 
