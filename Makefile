@@ -41,6 +41,12 @@ test:
 test-verbose:
 	prove --shuffle --verbose tests/
 
+test-html:
+	mkdir -p htdocs/tests || true
+	prove -m -Q -P HTML=outfile:htdocs/tests/index.html,force_inline_css:1,force_inline_js:1 tests/*.t
+	perl -pi -e 's!file:/usr/share/perl5/TAP/Formatter/HTML/!!g' htdocs/tests/index.html
+	perl -pi -e 's!</title>!</title><script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>!g' htdocs/tests/index.html
+	cp /usr/share/perl5/TAP/Formatter/HTML/* htdocs/tests/
 
 #
 #  Run our main script(s) through perltidy
