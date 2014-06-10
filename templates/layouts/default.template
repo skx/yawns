@@ -74,7 +74,6 @@ $(function() {
        <li><a href="/tag/">Tags</a></li>
      </ul>
    </div>
-   <div style="text-align:center; border 1px solid grey;"><p><a style="font-weight: bold" href="http://debian-administration.org/users/Steve/weblog/237">Please consider hiring Steve</a> - A GNU/Linux System Administrator, based in Edinburgh, Scotland.</p></div>
     <div id="wrapper">
       <div id="content">
         <div id="container">
