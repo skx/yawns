@@ -248,14 +248,6 @@ sub getModifier
 
     $magic = "";
 
-    #
-    #  Can we send messages?
-    #
-    if ( get_conf("user_messaging") )
-    {
-        $magic = "[ " if ( !length($magic) );
-        $magic .= "<a href=\"/create/message/$username\">Send Message</a> | ";
-    }
 
     #
     # If so link it in.
