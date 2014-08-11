@@ -59,7 +59,6 @@ use Singleton::Session;
 
 use Yawns::Adverts;
 use Yawns::Articles;
-use Yawns::Messages;
 use Yawns::Permissions;
 use Yawns::Poll;
 use Yawns::Polls;
@@ -414,21 +413,6 @@ sub getLoginBox
         if ( defined($ads) )
         {
             $login->param( show_adverts => 1 );
-        }
-
-
-        #
-        #  Finally see if the user has any pending messages.
-        #
-        my $msg = Yawns::Messages->new( username => $username );
-        my ( $unreadMessages, $totalMessages ) = $msg->messageCounts();
-
-        if ( $totalMessages > 0 )
-        {
-            $login->param( show_messages  => 1,
-                           new_messages   => $unreadMessages,
-                           total_messages => $totalMessages
-                         );
         }
 
     }
