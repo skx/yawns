@@ -3,9 +3,6 @@
 <h4><a style="color:black;" href="/users/<!-- tmpl_var name='username' -->"><b><!-- tmpl_var name='username' --></b></a></h4>
 <ul>
 <li><a href="/edit/prefs">options</a></li>
-<!-- tmpl_if name='show_messages' -->
-<li><a href="/view/messages"><!-- tmpl_var name='new_messages' --> / <!-- tmpl_var name='total_messages' --> messages </a></li>
-<!-- /tmpl_if -->
 <!-- tmpl_if name='show_adverts' -->
 <li><a href="/users/<!-- tmpl_var name='username' -->/adverts">adverts</a></li>
 <!-- /tmpl_if -->
@@ -24,7 +21,7 @@
 	</ul>
 	<!-- /tmpl_if -->
 -->
- 
+
 
 <!-- tmpl_else -->
 
