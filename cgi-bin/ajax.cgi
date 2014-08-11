@@ -56,7 +56,6 @@ use HTML::Template;
 #
 use HTML::AddNoFollow;
 use Yawns::Formatters;
-use Yawns::Messages;
 use Yawns::Permissions;
 use Yawns::Preferences;
 use Yawns::Submissions;
@@ -151,10 +150,6 @@ my %dispatch = (
                            sub  => \&tag_complete,
                            type => "Content-Type: text/html; charset=UTF-8\n\n",
                  },
-                 "get_message" => { sub   => \&get_message,
-                                    login => 1,
-                                    type  => "Content-type: text/plain\n\n",
-                                  },
                  "get_recent_tags" => {
                            sub  => \&get_recent_tags,
                            type => "Content-Type: text/html; charset=UTF-8\n\n",
@@ -501,30 +496,6 @@ sub get_tags
 }
 
 
-
-=head2 get_message
-
-  Get and return a user-message
-
-=cut
-
-sub get_message
-{
-
-    #
-    #  Get the ID of the message.
-    #
-    my $id = $form->param("get_message");
-
-    #
-    #  Fetch the message, and mark it as read.
-    #
-    my $msgs = Yawns::Messages->new( username => $username );
-    my $text = $msgs->getMessage($id);
-    $msgs->markRead($id);
-
-    print @$text[0]->{ 'text' } . "\n";
-}
 
 
 
