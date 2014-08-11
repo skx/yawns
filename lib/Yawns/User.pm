@@ -827,12 +827,6 @@ sub delete
     my $weblogs = Yawns::Weblogs->new( username => $username );
     $weblogs->deleteByUser();
 
-    #
-    #  Delete all messages
-    #
-    my $messages = Yawns::Messages->new( username => $username );
-    $messages->deleteByUser();
-
 
     #
     # Delete all adverts

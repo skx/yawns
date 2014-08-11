@@ -54,7 +54,6 @@ use Singleton::DBI;
 
 use Yawns::Article;
 use Yawns::Mailer;
-use Yawns::Messages;
 use Yawns::User;
 
 
@@ -342,26 +341,6 @@ sub articleReply
     return if ( $method =~ /^none$/i );
 
     #
-    #  Do we want to get a notification by site-message?
-    #
-    if ( $method =~ /^message$/ )
-    {
-        my $text = <<EOM;
-
-<a href="/users/$sender">$sender</a> has <a href="/articles/$self->{'onarticle'}#comment_$id">posted a new comment</a> in reply to your article <a href="/articles/$self->{'onarticle'}">$title</a>.
-
-EOM
-
-        #
-        #  Send the message
-        #
-        my $msg = Yawns::Messages->new( username => "Messages" );
-        $msg->send( to   => $author,
-                    body => $text );
-
-    }
-
-    #
     #  OK notification by email it is.
     #
     if ( $method =~ /^email$/i )
@@ -425,53 +404,6 @@ sub commentReply
     return if ( $method =~ /^none$/i );
 
     #
-    #  Do we want to get a notification by site-message?
-    #
-    if ( $method =~ /^message$/ )
-    {
-
-        #
-        #  Build up the link to the comment.
-        #
-        my $link = '';
-
-        if ($onpoll)
-        {
-            $link = "/polls/$onpoll";
-        }
-        elsif ($onarticle)
-        {
-            $link = "/articles/$onarticle";
-        }
-        elsif ($onweblog)
-        {
-            my $w            = Yawns::Weblog->new( gid => $onweblog );
-            my $weblog_owner = $w->getOwner();
-            my $weblog_id    = $w->getID();
-            $link = "/users/$weblog_owner/weblog/$weblog_id";
-        }
-        else
-        {
-            die "Uknown type in the comment notification code.";
-        }
-        $link .= "#comment_" . $id;
-
-        my $text = <<EOM;
-
-<a href="/users/$sender">$sender</a> has <a href="$link">posted a new comment</a> in reply a comment you left.
-
-EOM
-
-        #
-        #  Send the message
-        #
-        my $msg = Yawns::Messages->new( username => "Messages" );
-        $msg->send( to   => $parent_author,
-                    body => $text );
-
-    }
-
-    #
     #  OK notification by email it is.
     #
     if ( $method =~ /^email$/i )
@@ -523,29 +455,6 @@ sub weblogReply
     #  No notification?
     #
     return if ( $method =~ /^none$/i );
-
-    #
-    #  Do we want to get a notification by site-message?
-    #
-    if ( $method =~ /^message$/ )
-    {
-        my $weblog_id   = $weblog->getID();
-        my $weblog_link = "/users/$owner/weblog/$weblog_id";
-
-        my $text = <<EOM;
-
-<a href="/users/$sender">$sender</a> has <a href="$weblog_link#comment_$id">posted a new comment</a> in reply to your weblog entry <a href="$weblog_link">$title</a>.
-
-EOM
-
-        #
-        #  Send the message
-        #
-        my $msg = Yawns::Messages->new( username => "Messages" );
-        $msg->send( to   => $owner,
-                    body => $text );
-
-    }
 
     #
     #  OK notification by email it is.

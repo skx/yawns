@@ -1860,14 +1860,12 @@ sub view_user
     #
     #  Permissions checks
     #
-    my $send_message     = 0;
     my $edit_user        = 0;
     my $edit_permissions = 0;
 
     if ( $username !~ /^anonymous$/i )
     {
         my $perms = Yawns::Permissions->new( username => $username );
-        $send_message     = $perms->check( priv => "send_message" );
         $edit_user        = $perms->check( priv => "edit_user" );
         $edit_permissions = $perms->check( priv => "edit_permissions" );
     }
@@ -2032,9 +2030,8 @@ sub view_user
         #
         #  Should we show the edit link?  Or the message link?
         #
-        my $extra_options = $send_message + $edit_user + $edit_permissions;
-        $template->param( send_message          => $send_message,
-                          edit_user             => $edit_user,
+        my $extra_options = $edit_user + $edit_permissions;
+        $template->param( edit_user             => $edit_user,
                           edit_user_permissions => $edit_permissions,
                           extra_options         => $extra_options
                         );
