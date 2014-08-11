@@ -83,7 +83,6 @@
             <td>
               <select name="article">
                 <option value="none" <!-- tmpl_if name='article_none' -->SELECTED<!-- /tmpl_if -->>No notification</option>
-                <option value="message" <!-- tmpl_if name='article_message' -->SELECTED<!-- /tmpl_if -->>Site Message</option>
                 <option value="email" <!-- tmpl_if name='article_email' -->SELECTED<!-- /tmpl_if -->>Email</option>
                 </select>
               <p>Notifications of replies to articles you have posted.</p>
@@ -93,7 +92,6 @@
             <td>
               <select name="comment">
                 <option value="none" <!-- tmpl_if name='comment_none' -->SELECTED<!-- /tmpl_if -->>No notification</option>
-                <option value="message" <!-- tmpl_if name='comment_message' -->SELECTED<!-- /tmpl_if -->>Site Message</option>
                 <option value="email" <!-- tmpl_if name='comment_email' -->SELECTED<!-- /tmpl_if -->>Email</option>
                 </select>
               <p>Notification of replies to comments you post.</p>
@@ -103,7 +101,6 @@
             <td>
               <select name="weblog">
                 <option value="none" <!-- tmpl_if name='weblog_none' -->SELECTED<!-- /tmpl_if -->>No notification</option>
-                <option value="message" <!-- tmpl_if name='weblog_message' -->SELECTED<!-- /tmpl_if -->>Site Message</option>
                 <option value="email" <!-- tmpl_if name='weblog_email' -->SELECTED<!-- /tmpl_if -->>Email</option>
                 </select>
               <p>Notification of replies to weblog entries you post.</p>
