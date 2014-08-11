@@ -62,7 +62,6 @@ use Yawns::Bookmarks;
 use Yawns::Comment;
 use Yawns::Comments;
 use Yawns::Event;
-use Yawns::Messages;
 use Yawns::Permissions;
 use Yawns::Poll;
 use Yawns::Polls;
@@ -551,13 +550,6 @@ my %dispatch = (
         cache    => 1,
       },
 
-    "delete_message" =>         # Remove a site-message
-      { sub      => \&delete_message,
-        login    => 1,
-        redirect => "/view/messages",
-        cache    => 1,
-      },
-
     "delete_related" =>         # Remove a related link from an article
       { sub   => \&delete_related,
         priv  => "related_admin",
@@ -656,13 +648,6 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "message_reply" =>          # Reply to a site-message.
-      { sub      => \&message_reply,
-        login    => 1,
-        redirect => "/view/messages",
-        cache    => 1,
-      },
-
     "new_user" =>               # Create a new user account
       { sub  => \&new_user,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
@@ -753,12 +738,6 @@ my %dispatch = (
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "send_message" =>           # Send a site message
-      { sub   => \&send_message,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
     "single_weblog" =>          # View a single weblog entry.
       { sub  => \&view_single_weblog,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
@@ -837,19 +816,6 @@ my %dispatch = (
         priv  => "user_admin",
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
-      },
-
-    "view_messages" =>          # View site-message.
-      { sub   => \&view_messages,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        login => 1,
-        cache => 1,
-      },
-
-    "view_message" =>           # View a specific message.
-      { sub   => \&view_message,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        login => 1
       },
 
     "weblog" =>                 # View a users weblog.
