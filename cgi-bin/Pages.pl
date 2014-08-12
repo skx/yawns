@@ -3541,8 +3541,7 @@ sub submission_view
         #
         if ( $perms->check( priv => "article_admin" ) )
         {
-            $template->param( view_notes    => 1,
-                              article_admin => 1 );
+            $template->param( article_admin => 1 );
 
         }
         else
