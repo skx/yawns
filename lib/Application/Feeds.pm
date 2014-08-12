@@ -362,8 +362,9 @@ sub tag_feed
 
     #
     # Gain access to the form.
+    #
     my $form = Singleton::CGI->instance();
-    my $tag  = $form->param("tag_feed");
+    my $tag  = $form->param("tag");
 
     #
     # Get the articles
