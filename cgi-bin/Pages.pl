@@ -5518,37 +5518,6 @@ sub view_user_weblog
 
 
 
-# ===========================================================================
-#  Find and return an XML feed of recently reported weblog entries.
-# ===========================================================================
-sub get_reported_weblogs_feed
-{
-
-    #
-    # Gain acess to form objects we use.
-    #
-    my $form = Singleton::CGI->instance();
-
-    #
-    #  Get a feed of the weblog entries.
-    #
-    my $weblog  = Yawns::Weblogs->new();
-    my $entries = $weblog->getReportedWeblogs();
-
-    # open the html template
-    my $template =
-      HTML::Template->new(
-                          filename => "../templates/xml/weblog_feed.template" );
-
-    $template->param( entries  => $entries,
-                      reported => 1, );
-
-    my $output = $template->output();
-
-    print($output );
-
-}
-
 
 
 # ===========================================================================
@@ -5792,42 +5761,6 @@ sub delete_weblog
 }
 
 
-
-# ===========================================================================
-#  View recently reported comments
-# ===========================================================================
-sub recent_reported
-{
-
-    #
-    # Load the XML template
-    #
-    my $template =
-      HTML::Template->new( filename => "../templates/xml/comments.template" );
-
-    #
-    #  Setup reported type.
-    #
-    $template->param( site_slogan     => get_conf('site_slogan') );
-    $template->param( home_url        => get_conf('home_url') );
-    $template->param( recent_reported => 1 );
-
-
-    my $form = Singleton::CGI->instance();
-    my $count = $form->param('recent_reported') || 10;
-    if ( $count =~ /([0-9]+)/ )
-    {
-        $count = $1;
-    }
-
-    my $c = Yawns::Comments->new();
-    my ( $teasers, $comments ) = $c->getReported($count);
-
-    $template->param( comments => $comments,
-                      teasers  => $teasers, );
-
-    print $template->output;
-}
 
 
 

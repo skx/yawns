@@ -16,6 +16,11 @@
 #
 #    /tag/feeds/$tag        Show things matching the given tag.
 #
+#
+#    /recent/reported/weblogs  Show the reported weblogs
+#    /recent/reported/N        Show the N most recently reported comments.
+#    /recent/reported          Show the 10 most recent reported comments.
+#
 
 
 use strict;
@@ -41,7 +46,7 @@ use URI::Find;
 use conf::SiteConfig;
 use Yawns::Comments;
 use Yawns::Submissions;
-
+use Yawns::Weblogs;
 
 
 
@@ -126,6 +131,12 @@ sub setup
 
         # Pending submissions
         'pending_submissions' => 'pending_submissions',
+
+        # Recently reported comments.
+        'recent_reported' => 'recent_reported',
+
+        # Reported weblog posts
+        'reported_weblogs' => 'reported_weblogs',
 
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
@@ -432,5 +443,74 @@ sub pending_submissions
     return ( $template->output() );
 }
 
+
+
+
+# ===========================================================================
+#  View recently reported comments
+# ===========================================================================
+sub recent_reported
+{
+    my( $self ) = ( @_ );
+
+    my $form = $self->query();
+    my $count = $form->param('count') || 10;
+    if ( $count =~ /([0-9]+)/ )
+    {
+        $count = $1;
+    }
+
+    #
+    # Load the XML template
+    #
+    my $template =
+      HTML::Template->new( filename => "../templates/xml/comments.template" );
+
+    #
+    #  Setup reported type.
+    #
+    $template->param( site_slogan     => get_conf('site_slogan') );
+    $template->param( home_url        => get_conf('home_url') );
+    $template->param( recent_reported => 1 );
+
+
+    my $c = Yawns::Comments->new();
+    my ( $teasers, $comments ) = $c->getReported($count);
+
+    $template->param( comments => $comments,
+                      teasers  => $teasers, );
+
+    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    return ( $template->output() );
+}
+
+
+
+# ===========================================================================
+#  Find and return an XML feed of recently reported weblog entries.
+# ===========================================================================
+sub reported_weblogs
+{
+    my( $self ) = ( @_ );
+
+    #
+    #  Get a feed of the weblog entries.
+    #
+    my $weblog  = Yawns::Weblogs->new();
+    my $entries = $weblog->getReportedWeblogs();
+
+    # open the html template
+    my $template =
+      HTML::Template->new(
+                          filename => "../templates/xml/weblog_feed.template" );
+
+    $template->param( entries  => $entries,
+                      reported => 1, );
+
+    my $output = $template->output();
+
+    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    return ( $template->output() );
+}
 
 1;
