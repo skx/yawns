@@ -493,12 +493,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "add_submission_note" =>    # Add a note to a pending article
-      { sub   => \&add_submission_note,
-        priv  => "article_admin",
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
     "adverts_byuser" =>         # View all adverts by a given user.
       { sub   => \&adverts_byuser,
         login => 1,
