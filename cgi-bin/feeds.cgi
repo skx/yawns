@@ -124,10 +124,6 @@ if ( !$perms->check( priv => "raw_html" ) )
 # the different incoming request types.
 #
 my %dispatch = (
-                 "comment_feed" => {
-                                sub  => \&comment_feed,
-                                type => "Content-Type: application/rss+xml\n\n",
-                 },
                );
 
 

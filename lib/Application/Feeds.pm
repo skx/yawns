@@ -16,10 +16,13 @@
 #
 #    /tag/feeds/$tag        Show things matching the given tag.
 #
-#
 #    /recent/reported/weblogs  Show the reported weblogs
 #    /recent/reported/N        Show the N most recently reported comments.
 #    /recent/reported          Show the 10 most recent reported comments.
+#
+#    /comment/feed/onweblog/N   General feed.
+#    /comment/feed/onarticle/N  General feed.
+#    /comment/feed/onpoll/N     General feed.
 #
 
 
@@ -116,6 +119,9 @@ sub setup
     my $self = shift;
 
     $self->run_modes(
+
+        # General comment-feed
+        'comment_feed' => 'comment_feed',
 
         # Recent comments
         'recent_comments' => 'recent_comments',
@@ -508,6 +514,81 @@ sub reported_weblogs
                       reported => 1, );
 
     my $output = $template->output();
+
+    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    return ( $template->output() );
+}
+
+
+# ===========================================================================
+#  View comment feeds
+# ===========================================================================
+sub comment_feed
+{
+    my( $self ) = ( @_ );
+
+    #
+    # Load the XML template
+    #
+    my $template =
+      HTML::Template->new( filename => "../templates/xml/comments.template" );
+
+    #
+    #  Setup basics.
+    #
+    $template->param( site_slogan => get_conf('site_slogan') );
+    $template->param( home_url    => get_conf('home_url') );
+
+    #
+    # Get access to the form
+    #
+    my $form = $self->query();
+
+    #
+    # Types
+    #
+    my $article = $form->param("article_id");
+    my $poll    = $form->param("poll_id");
+    my $weblog  = $form->param("weblog_id");
+
+
+    my $c = Yawns::Comments->new();
+    my ( $teasers, $comments ) =
+      $c->getCommentFeed( article => $article,
+                          poll    => $poll,
+                          weblog  => $weblog,
+                        );
+
+    $template->param( comments => $comments,
+                      teasers  => $teasers, );
+
+    #
+    #  Titles
+    #
+    if ($article)
+    {
+        my $a = Yawns::Article->new( id => $article );
+        my $title = $a->getTitle();
+
+        $template->param( title     => "Comments on $title",
+                          onarticle => 1 );
+    }
+    if ($poll)
+    {
+        my $p = Yawns::Poll->new( id => $poll );
+        my $title = $p->getTitle();
+
+        $template->param( title  => "Comments on $title",
+                          onpoll => 1 );
+    }
+    if ($weblog)
+    {
+        my $w = Yawns::Weblog->new( gid => $weblog );
+        my $title = $w->getTitle();
+
+        $template->param( title    => "Comments on $title",
+                          onweblog => 1 );
+    }
 
     $self->header_add( 'Content-type' => 'application/rss+xml' );
     return ( $template->output() );
