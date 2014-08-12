@@ -670,7 +670,7 @@ my %dispatch = (
       },
 
     "poll" =>                   # View a poll.
-      { sub  => sub {poll_results( 0, 0, 0 );},
+      { sub => sub {poll_results( 0, 0, 0 );},
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
@@ -733,9 +733,9 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "search_articles" =>                 # Search articles
-      { sub   => \&search_articles,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
+    "search_articles" =>        # Search articles
+      { sub  => \&search_articles,
+        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "single_weblog" =>          # View a single weblog entry.
@@ -802,8 +802,7 @@ my %dispatch = (
       },
 
 
-    "title" => { sub  => \&article_by_title,
-               },
+    "title"       => { sub => \&article_by_title, },
     "title_print" => { sub => \&article_by_title_print, },
 
     "user" =>                   # View a users profile page.
@@ -935,8 +934,10 @@ if ( ($flush) && ( $ENV{ 'REQUEST_METHOD' } =~ /post/i ) )
 {
     my $event = Yawns::Event->new();
 
-    my $u = "<a href=\"http://www.debian-administration.org/users/$username\">$username</a>";
-    $event->send("Flushing cache due to POST to " . $ENV{'QUERY_STRING'} . " by $u" );
+    my $u =
+      "<a href=\"http://www.debian-administration.org/users/$username\">$username</a>";
+    $event->send(
+         "Flushing cache due to POST to " . $ENV{ 'QUERY_STRING' } . " by $u" );
 
     my $cmd = "/root/current/bin/expire-varnish";
     system("$cmd >/dev/null 2>&1 &");

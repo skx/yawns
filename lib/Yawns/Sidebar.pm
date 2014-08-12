@@ -117,8 +117,8 @@ sub getMenu
     #
     # Determine the default display options for the sidebar.
     #
-    my $show_polls         = conf::SiteConfig::get_conf('sidebar_polls');
-    my $show_blogs         = conf::SiteConfig::get_conf('sidebar_blogs');
+    my $show_polls = conf::SiteConfig::get_conf('sidebar_polls');
+    my $show_blogs = conf::SiteConfig::get_conf('sidebar_blogs');
 
 
     #
@@ -128,8 +128,8 @@ sub getMenu
     {
         my $user = Yawns::User->new( username => $username );
         my $userprefs = $user->get();
-        $show_polls         = $userprefs->{ 'polls' };
-        $show_blogs         = $userprefs->{ 'blogs' };
+        $show_polls = $userprefs->{ 'polls' };
+        $show_blogs = $userprefs->{ 'blogs' };
 
     }
 
@@ -185,15 +185,14 @@ sub getMenu
     # read in the template file
     #
     my $sidebar = HTML::Template->new(
-                              filename => "../templates/includes/sidebar.template",
-                              global_vars => 1 );
+                           filename => "../templates/includes/sidebar.template",
+                           global_vars => 1 );
 
     #
     # Setup the default parameters.
     #
-    $sidebar->param( show_pollbooth          => $show_polls,
-                     show_blogs              => $show_blogs,
-                   );
+    $sidebar->param( show_pollbooth => $show_polls,
+                     show_blogs     => $show_blogs, );
 
     if ($show_polls)
     {
@@ -361,8 +360,8 @@ sub getLoginBox
     # read in the template file
     #
     my $login = HTML::Template->new(
-                            filename => "../templates/includes/login-box.template",
-                            global_vars => 1 );
+                         filename => "../templates/includes/login-box.template",
+                         global_vars => 1 );
 
 
     #

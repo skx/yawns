@@ -514,7 +514,7 @@ sub getOwner
     #
     #  Attempt to fetch from the cache
     #
-    my $name  = "";
+    my $name = "";
 
     #
     # Find the user who posted this entry.
@@ -544,7 +544,7 @@ sub getLink
     my $gid = $parameters{ 'gid' } || $self->{ 'gid' };
     die "No gid specified" if ( !defined($gid) );
 
-    my $link  = '';
+    my $link = '';
 
     #
     #  Get the owner + ID.
@@ -581,7 +581,7 @@ sub getID
     #
     #  Attempt to fetch from the cache
     #
-    my $id    = "";
+    my $id = "";
 
     #
     # Get the database handle.

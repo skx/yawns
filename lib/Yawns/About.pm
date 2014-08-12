@@ -105,7 +105,7 @@ sub get
     #
     #  The text
     #
-    my $text  = "";
+    my $text = "";
 
     #
     #  Objects we use.

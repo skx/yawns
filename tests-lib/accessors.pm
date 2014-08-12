@@ -1,3 +1,4 @@
+
 =head1 NAME
 
 accessors - create accessor methods in caller's package.
@@ -26,8 +27,8 @@ use 5.006;
 use strict;
 use warnings::register;
 
-our $VERSION  = '1.02';
-our $REVISION = (split(/ /, ' $Revision: 1.22 $ '))[2];
+our $VERSION = '1.02';
+our $REVISION = ( split( / /, ' $Revision: 1.22 $ ' ) )[2];
 
 our $Debug        = 0;
 our $ExportLevel  = 0;
@@ -35,7 +36,8 @@ our @InvalidNames = qw( BEGIN CHECK INIT END DESTROY AUTOLOAD );
 
 use constant style => 'chained';
 
-sub import {
+sub import
+{
     my $class   = shift;
     my $callpkg = caller( $class->ExportLevel );
 
@@ -44,41 +46,47 @@ sub import {
     $class->create_accessors_for( $callpkg, @properties );
 }
 
-sub create_accessors_for {
+sub create_accessors_for
+{
     my $class   = shift;
     my $callpkg = shift;
 
     warn( 'creating ' . $class->style . ' accessors( ',
-	  join(' ',@_)," ) in pkg '$callpkg'" ) if $class->Debug;
+          join( ' ', @_ ),
+          " ) in pkg '$callpkg'" )
+      if $class->Debug;
 
-    foreach my $property (@_) {
-	my $accessor = "$callpkg\::$property";
-	die( "can't create $accessor - '$property' is not a valid name!" )
-	  unless $class->isa_valid_name( $property );
-	warn( "creating " . $class->style . " accessor: $accessor\n" ) if
-	  $class->Debug > 1;
-	$class->create_accessor( $accessor, $property );
+    foreach my $property (@_)
+    {
+        my $accessor = "$callpkg\::$property";
+        die("can't create $accessor - '$property' is not a valid name!")
+          unless $class->isa_valid_name($property);
+        warn( "creating " . $class->style . " accessor: $accessor\n" )
+          if $class->Debug > 1;
+        $class->create_accessor( $accessor, $property );
     }
 
     return $class;
 }
 
-sub create_accessor {
-    my ($class, $accessor, $property) = @_;
+sub create_accessor
+{
+    my ( $class, $accessor, $property ) = @_;
     $property = "-$property";
+
     # set/get is slightly faster if we eval instead of using a closure + anon
     # sub, but the difference is marginal (~5%), and this uses less memory...
     my $sub = sub {
-	(@_ > 1)
-	  ? ($_[0]->{$property} = $_[1], return $_[0])
-	  : $_[0]->{$property};
+        ( @_ > 1 ) ? ( $_[0]->{ $property } = $_[1], return $_[0] ) :
+                     $_[0]->{ $property };
     };
     no strict 'refs';
-    *{$accessor} = $sub;
+    *{ $accessor } = $sub;
 }
 
-sub isa_valid_name {
-    my ($class, $property) = @_;
+sub isa_valid_name
+{
+    my ( $class, $property ) = @_;
     return unless $property =~ /^(?!\d)\w+$/;
     return if grep {$property eq $_} $class->InvalidNames;
     return 1;
@@ -89,9 +97,9 @@ sub isa_valid_name {
 ##
 
 ## don't like studly caps for sub-names, but stick with Exporter-like style...
-sub Debug        { $Debug; }
-sub ExportLevel  { $ExportLevel }
-sub InvalidNames { @InvalidNames }
+sub Debug        {$Debug;}
+sub ExportLevel  {$ExportLevel}
+sub InvalidNames {@InvalidNames}
 
 1;
 

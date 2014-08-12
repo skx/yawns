@@ -102,19 +102,17 @@ sub new
     #
     # Get the memcached handle.
     #
-    my $mem  = Cache::Memcached->new({ servers => [ $dbserv ],
-                                      debug => 0 } );
+    my $mem = Cache::Memcached->new( { servers => [$dbserv],
+                                       debug   => 0
+                                     } );
 
 
     # The CGI-form.
     my $form = Singleton::CGI->instance();
 
-    my $t = new CGI::Session( "driver:memcached",
-                              $form,
-                            { Memcached => $mem } 
-                            )
-      or
-        die($CGI::Session::errstr);
+    my $t =
+      new CGI::Session( "driver:memcached", $form, { Memcached => $mem } ) or
+      die($CGI::Session::errstr);
 
     return ($t);
 }

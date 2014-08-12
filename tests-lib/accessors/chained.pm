@@ -1,3 +1,4 @@
+
 =head1 NAME
 
 accessors::chained - create method chaining accessors in caller's package.
@@ -24,8 +25,8 @@ use strict;
 use warnings::register;
 use base qw( accessors );
 
-our $VERSION  = '1.02';
-our $REVISION = (split(/ /, ' $Revision: 1.3 $ '))[2];
+our $VERSION = '1.02';
+our $REVISION = ( split( / /, ' $Revision: 1.3 $ ' ) )[2];
 
 # inherit everything for now.
 

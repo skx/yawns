@@ -911,7 +911,8 @@ sub postArticle
     #
     my $sql = $db->prepare(
         'SELECT a.title,b.username,a.bodytext FROM submissions AS a INNER JOIN users AS b WHERE a.user_id=b.id AND a.id=?'
-    ) or die $db->errstr();
+      ) or
+      die $db->errstr();
     $sql->execute($id) or die $db->errstr();
 
     my ( $title, $author, $bodytext ) = $sql->fetchrow_array();

@@ -127,15 +127,18 @@ sub output
     #
     #
     my $login = getlogin || getpwuid($<);
-    my (undef,undef,undef,undef, undef,undef,undef,$home,undef,undef) = getpwnam( $login );
+    my ( undef, undef, undef, undef, undef, undef, undef, $home, undef, undef )
+      = getpwnam($login);
 
     #
     #  Get the filenames we output, falling back to the defaults
     # if none are specified in the constructor.
     #
-    my $articles  = $class->{ 'articles' }  || $home . "/current/htdocs/articles.rdf";
-    my $headlines = $class->{ 'headlines' } || $home . "/current/htdocs/headlines.rdf";
-    my $atom      = $class->{ 'atom' }      || $home . "/current/htdocs/atom.xml";
+    my $articles = $class->{ 'articles' } ||
+      $home . "/current/htdocs/articles.rdf";
+    my $headlines = $class->{ 'headlines' } ||
+      $home . "/current/htdocs/headlines.rdf";
+    my $atom = $class->{ 'atom' } || $home . "/current/htdocs/atom.xml";
 
 
     #
@@ -208,7 +211,7 @@ sub _generate_headlines_rdf
 
         push( @$headline_data,
               {  slug     => $slug,
-                 id => $h->{'id'},
+                 id       => $h->{ 'id' },
                  title    => $title,
                  pubdate  => $h->{ 'pubdate' },
                  home_url => $home_url,
@@ -217,7 +220,7 @@ sub _generate_headlines_rdf
 
 
     my $tmp = "templates/xml/headlines.template";
-    if ( ! -e $tmp )
+    if ( !-e $tmp )
     {
         $tmp = "../$tmp";
     }
@@ -225,9 +228,8 @@ sub _generate_headlines_rdf
     #
     #  Load the template
     #
-    my $template = HTML::Template->new(
-                                 filename => $tmp,
-                                 die_on_bad_params => 0 );
+    my $template = HTML::Template->new( filename          => $tmp,
+                                        die_on_bad_params => 0 );
 
 
     $template->param( headlines   => $headline_data,
@@ -276,7 +278,7 @@ sub _generate_articles_rdf
 
 
     my $tmp = "templates/xml/articles.template";
-    if ( ! -e $tmp )
+    if ( !-e $tmp )
     {
         $tmp = "../$tmp";
     }
@@ -284,9 +286,8 @@ sub _generate_articles_rdf
     #
     #  Load the template
     #
-    my $template = HTML::Template->new(
-                                  filename => $tmp,
-                                  die_on_bad_params => 0 );
+    my $template = HTML::Template->new( filename          => $tmp,
+                                        die_on_bad_params => 0 );
 
 
     $template->param( teasers     => $teasers,
@@ -361,7 +362,7 @@ sub _generate_articles_atom
     my $now = "$year-$mon-$mday" . "T" . "$hour:$min:$sec" . "Z";
 
     my $tmp = "templates/xml/atom.template";
-    if ( ! -e $tmp )
+    if ( !-e $tmp )
     {
         $tmp = "../$tmp";
     }
@@ -369,9 +370,8 @@ sub _generate_articles_atom
     #
     #  Load the template
     #
-    my $template = HTML::Template->new(
-                                      filename => $tmp,
-                                      die_on_bad_params => 0 );
+    my $template = HTML::Template->new( filename          => $tmp,
+                                        die_on_bad_params => 0 );
 
 
     $template->param( teasers     => $teasers,

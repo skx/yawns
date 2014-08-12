@@ -324,7 +324,7 @@ sub add
     #
     #  Get the singletons we require
     #
-    my $db    = Singleton::DBI->instance();
+    my $db = Singleton::DBI->instance();
 
     #
     # The root and type of comment we will use to add to the database.

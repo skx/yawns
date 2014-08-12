@@ -820,7 +820,9 @@ sub _get_comments
         # Strip faux IPv6 prefix, introduced by nginx
         #
         my $ip = $comment[6];
-        die "IP not found for comments: type=$type root=$root parent=$parent depth=$depth" unless( $ip );
+        die
+          "IP not found for comments: type=$type root=$root parent=$parent depth=$depth"
+          unless ($ip);
 
 
         $ip =~ s/^::ffff://g;

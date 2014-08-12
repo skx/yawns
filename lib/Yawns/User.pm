@@ -296,7 +296,6 @@ sub getModifier
 
 
 
-
 =head2 getWeblogCount
 
   Return the number of weblog items the user has posted.
@@ -582,10 +581,10 @@ sub create
     #
     #  The username and email address we should work with.
     #
-    my $username = $class->{ 'username' };
-    my $email    = $class->{ 'email' };
-    my $password = $class->{ 'password' };
-    my $ip       = $class->{ 'ip' };
+    my $username  = $class->{ 'username' };
+    my $email     = $class->{ 'email' };
+    my $password  = $class->{ 'password' };
+    my $ip        = $class->{ 'ip' };
     my $suspended = 0;
 
     $suspended = 1 if ( $email && ( $email =~ /goood-mail.org/i ) );
@@ -694,7 +693,8 @@ sub sendMail
     }
 
     my $template =
-      HTML::Template->new( filename => "../templates/mail/new-account.template" );
+      HTML::Template->new(
+                         filename => "../templates/mail/new-account.template" );
 
     #
     # Setup the parameters.

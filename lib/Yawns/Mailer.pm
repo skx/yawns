@@ -125,7 +125,7 @@ sub newArticleSubmission
 
     my $template =
       HTML::Template->new(
-                         filename => "../templates/mail/new-submission.template" );
+                      filename => "../templates/mail/new-submission.template" );
 
     $template->param( to         => $recipient,
                       from       => $sender,
@@ -179,7 +179,7 @@ sub newArticleReply
     #
     my $template =
       HTML::Template->new(
-                      filename => "../templates/mail/new-article-reply.template" );
+                   filename => "../templates/mail/new-article-reply.template" );
 
     $template->param( sitename     => $sitename,
                       site_email   => $sender,
@@ -237,7 +237,7 @@ sub newWeblogReply
     #
     my $template =
       HTML::Template->new(
-                       filename => "../templates/mail/new-weblog-reply.template" );
+                    filename => "../templates/mail/new-weblog-reply.template" );
 
     $template->param( sitename     => $sitename,
                       site_email   => $sender,
@@ -309,7 +309,7 @@ sub newCommentReply
     #
     my $template =
       HTML::Template->new(
-                      filename => "../templates/mail/new-comment-reply.template" );
+                   filename => "../templates/mail/new-comment-reply.template" );
 
     $template->param( sitename     => $sitename,
                       site_email   => $sender,

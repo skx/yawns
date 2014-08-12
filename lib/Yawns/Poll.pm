@@ -214,6 +214,7 @@ sub vote
 
         if ($ip_voted)
         {
+
             # anon already voted - explain, suggest they create a user account
             return ( $ip_address, 0, 0 );
         }
@@ -293,7 +294,7 @@ sub getTitle
     my $query = "SELECT question FROM poll_questions WHERE id=?";
     my $sql   = $db->prepare($query);
     $sql->execute($id);
-    my @ret = $sql->fetchrow_array();
+    my @ret   = $sql->fetchrow_array();
     my $title = $ret[0];
     $sql->finish();
 

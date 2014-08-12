@@ -409,7 +409,7 @@ sub enableAdvert
 {
     my ( $class, $id ) = (@_);
 
-    my $db = Singleton::DBI->instance();
+    my $db  = Singleton::DBI->instance();
     my $sql = $db->prepare("UPDATE adverts SET active='y' WHERE id=?");
     $sql->execute($id);
     $sql->finish();
@@ -428,7 +428,7 @@ sub deleteAdvert
 {
     my ( $class, $id ) = (@_);
 
-    my $db = Singleton::DBI->instance();
+    my $db  = Singleton::DBI->instance();
     my $sql = $db->prepare("DELETE FROM adverts WHERE id=?");
     $sql->execute($id);
     $sql->finish();

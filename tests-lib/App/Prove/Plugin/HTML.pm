@@ -20,36 +20,44 @@ use TAP::Formatter::HTML;
 
 our $VERSION = '0.09';
 
-sub import {
-    my ($class, @args) = @_;
+sub import
+{
+    my ( $class, @args ) = @_;
+
     # deprecated, do nothing
     return $class;
 }
 
-sub load {
-    my ($class, $p) = @_;
-    my @args = @{ $p->{args} };
-    my $app  = $p->{app_prove};
+sub load
+{
+    my ( $class, $p ) = @_;
+    my @args = @{ $p->{ args } };
+    my $app  = $p->{ app_prove };
 
     # parse the args
     my %TFH_args;
-    foreach my $arg (@args) {
-	my ($key, $val) = split(/:/, $arg, 2);
-	if (grep {$key eq $_} qw(css_uri js_uri)) {
-	    push @{ $TFH_args{$key . 's'}}, $val;
-	} else {
-	    $TFH_args{$key} = $val;
-	}
+    foreach my $arg (@args)
+    {
+        my ( $key, $val ) = split( /:/, $arg, 2 );
+        if ( grep {$key eq $_} qw(css_uri js_uri) )
+        {
+            push @{ $TFH_args{ $key . 's' } }, $val;
+        }
+        else
+        {
+            $TFH_args{ $key } = $val;
+        }
     }
 
     # set the formatter to use
-    $app->formatter( 'TAP::Formatter::HTML' );
+    $app->formatter('TAP::Formatter::HTML');
 
     # set ENV vars in order to pass args to TAP::Formatter::HTML
     # horrible, but it's currently the only way :-/
-    while (my ($key, $val) = each %TFH_args) {
-	$val = join( ':', @$val ) if (ref($val) eq 'ARRAY');
-	$ENV{"TAP_FORMATTER_HTML_".uc($key)} = $val;
+    while ( my ( $key, $val ) = each %TFH_args )
+    {
+        $val = join( ':', @$val ) if ( ref($val) eq 'ARRAY' );
+        $ENV{ "TAP_FORMATTER_HTML_" . uc($key) } = $val;
     }
 
     # we're done

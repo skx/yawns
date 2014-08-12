@@ -147,7 +147,7 @@ sub get
     #
     #  Attempt to fetch from the Memcache first.
     #
-    my $text  = "";
+    my $text = "";
 
 
     #

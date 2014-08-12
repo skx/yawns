@@ -275,7 +275,7 @@ sub add_submission_note
     #
     my $template =
       HTML::Template->new(
-                   filename => "../templates/includes/submission-notes.template" );
+                filename => "../templates/includes/submission-notes.template" );
     $template->param( submission_notes => $new );
     print $template->output();
 }
@@ -350,8 +350,8 @@ sub add_tag
     # Load the tag template, to return the updated tags.
     #
     my $template = HTML::Template->new(
-                                 filename => "../templates/includes/tags.template",
-                                 loop_context_vars => 1 );
+                              filename => "../templates/includes/tags.template",
+                              loop_context_vars => 1 );
 
     $template->param( tags => $tags ) if defined($tags);
 
@@ -427,8 +427,8 @@ sub get_recent_tags
     # Show the tags.
     #
     my $template = HTML::Template->new(
-                          filename => "../templates/includes/recent_tags.template",
-                          loop_context_vars => 1 );
+                       filename => "../templates/includes/recent_tags.template",
+                       loop_context_vars => 1 );
 
     $template->param( recent_tags => $recent ) if defined($recent);
 
@@ -489,12 +489,12 @@ sub get_tags
     #  Load the template
     #
     my $template =
-      HTML::Template->new( filename => "../templates/includes/all_tags.template" );
+      HTML::Template->new(
+                        filename => "../templates/includes/all_tags.template" );
 
     $template->param( all_tags => $tags ) if ($tags);
     print $template->output();
 }
-
 
 
 

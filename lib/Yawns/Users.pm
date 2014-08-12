@@ -352,14 +352,15 @@ sub getRecent
         my $u = Yawns::User->new( username => $username );
         my $c = $u->getCommentCount();
 
-        push( @$users,
-              {  commentcount => $c,
-                 username     => $username,
-                 homepage     => $homepage,
-                 ip           => $ip,
-                 joined       => $joined,
+        push(
+            @$users,
+            {  commentcount => $c,
+               username     => $username,
+               homepage     => $homepage,
+               ip           => $ip,
+               joined       => $joined,
 
-              } );
+            } );
     }
 
     return ($users);

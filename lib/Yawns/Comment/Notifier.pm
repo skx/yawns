@@ -184,7 +184,7 @@ sub getNotificationMethod
                  "SELECT type FROM notifications WHERE username=? AND event=?");
     $sql->execute( $user, $type ) or die "Failed to execute " . $dbi->errstr();
 
-    my @ret = $sql->fetchrow_array();
+    my @ret    = $sql->fetchrow_array();
     my $result = $ret[0];
     $sql->finish();
 

@@ -1,3 +1,4 @@
+
 =head1 NAME
 
 accessors::classic - create 'classic' read/write accessor methods in caller's package.
@@ -22,20 +23,22 @@ use strict;
 use warnings::register;
 use base qw( accessors );
 
-our $VERSION  = '1.02';
-our $REVISION = (split(/ /, ' $Revision: 1.5 $ '))[2];
+our $VERSION = '1.02';
+our $REVISION = ( split( / /, ' $Revision: 1.5 $ ' ) )[2];
 
 use constant style => 'classic';
 
-sub create_accessor {
-    my ($class, $accessor, $property) = @_;
+sub create_accessor
+{
+    my ( $class, $accessor, $property ) = @_;
+
     # set/get is slightly faster if we eval instead of using a closure + anon
     # sub, but the difference is marginal (~5%), and this uses less memory...
     my $sub = sub {
-	(@_ > 1) ? $_[0]->{$property} = $_[1] : $_[0]->{$property};
+        ( @_ > 1 ) ? $_[0]->{ $property } = $_[1] : $_[0]->{ $property };
     };
     no strict 'refs';
-    *{$accessor} = $sub;
+    *{ $accessor } = $sub;
 }
 
 1;

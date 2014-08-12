@@ -185,7 +185,7 @@ sub setup
         'weblog_feed' => 'weblog_feed',
 
         # Articles matching the given tag
-        'tag_feed'    => 'tag_feed',
+        'tag_feed' => 'tag_feed',
 
         # Debug Handler
         'debug' => 'debug_handler',
@@ -349,7 +349,7 @@ sub weblog_feed
 
 
     $self->header_add( 'Content-type' => 'application/rss+xml' );
-    return( $template->output() );
+    return ( $template->output() );
 }
 
 
@@ -358,7 +358,7 @@ sub weblog_feed
 # ===========================================================================
 sub tag_feed
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     # Gain access to the form.
@@ -471,7 +471,7 @@ sub tag_feed
     #  Output the page
     #
     $self->header_add( 'Content-type' => 'application/rss+xml' );
-    return( $template->output() );
+    return ( $template->output() );
 }
 
 
