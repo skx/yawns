@@ -5869,42 +5869,6 @@ sub delete_weblog
 }
 
 
-# ===========================================================================
-#  View recent comments
-# ===========================================================================
-sub recent_comments
-{
-
-    #
-    # Load the XML template
-    #
-    my $template =
-      HTML::Template->new( filename => "../templates/xml/comments.template" );
-
-    #
-    #  Setup recent comment type.
-    #
-    $template->param( site_slogan     => get_conf('site_slogan') );
-    $template->param( home_url        => get_conf('home_url') );
-    $template->param( recent_comments => 1 );
-
-
-    my $form = Singleton::CGI->instance();
-    my $count = $form->param('recent_comments') || 10;
-    if ( $count =~ /([0-9]+)/ )
-    {
-        $count = $1;
-    }
-
-    my $c = Yawns::Comments->new();
-    my ( $teasers, $comments ) = $c->getRecent($count);
-
-    $template->param( comments => $comments,
-                      teasers  => $teasers, );
-
-    print $template->output;
-}
-
 
 # ===========================================================================
 #  View recently reported comments
