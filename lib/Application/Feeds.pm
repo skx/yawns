@@ -457,7 +457,7 @@ sub pending_submissions
 # ===========================================================================
 sub recent_reported
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     my $form = $self->query();
     my $count = $form->param('count') || 10;
@@ -497,7 +497,7 @@ sub recent_reported
 # ===========================================================================
 sub reported_weblogs
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Get a feed of the weblog entries.
@@ -525,7 +525,7 @@ sub reported_weblogs
 # ===========================================================================
 sub comment_feed
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     # Load the XML template
