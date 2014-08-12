@@ -58,7 +58,6 @@ use HTML::AddNoFollow;
 use Yawns::Formatters;
 use Yawns::Permissions;
 use Yawns::Preferences;
-use Yawns::Submissions;
 use Yawns::Tags;
 
 
@@ -136,11 +135,6 @@ if ( !$perms->check( priv => "raw_html" ) )
 #
 # ===========================================================================
 my %dispatch = (
-                 "add_submission_note" => {
-                           sub   => \&add_submission_note,
-                           login => 1,
-                           type => "Content-Type: text/html; charset=UTF-8\n\n",
-                 },
                  "add_tag" => {
                            sub   => \&add_tag,
                            login => 1,
@@ -228,45 +222,6 @@ $db->disconnect();
 exit;
 
 
-
-=head2 add_submission_note
-
-  Add a new note upon a submission
-
-=cut
-
-sub add_submission_note
-{
-    my $id   = $form->param("id");
-    my $note = $form->param("note");
-
-    die "No ID"   unless defined($id);
-    die "No note" unless defined($note);
-
-
-    #
-    #  Add the note
-    #
-    my $queue = Yawns::Submissions->new();
-    $queue->addSubmissionNote( submission => $id,
-                               note       => $note,
-                               username   => $username
-                             );
-
-    #
-    #  Show the current notes.
-    #
-    my $new = $queue->getSubmissionNotes($id);
-
-    #
-    #  Load the template and output it.
-    #
-    my $template =
-      HTML::Template->new(
-                filename => "../templates/includes/submission-notes.template" );
-    $template->param( submission_notes => $new );
-    print $template->output();
-}
 
 
 

@@ -65,7 +65,6 @@ use Singleton::DBI;
 use Yawns::Article;
 use Yawns::Date;
 use Yawns::RSS;
-use Yawns::Submission::Notes;
 use Yawns::Polls;
 use Yawns::Tags;
 
@@ -648,51 +647,6 @@ sub getSubmission
 
 
 
-=head2 getSubmissionNotes
-
-  Get the notes associated with the given submission.
-
-=cut
-
-sub getSubmissionNotes
-{
-    my ( $self, $id ) = (@_);
-
-    my $holder = Yawns::Submission::Notes->new();
-    return ( $holder->getSubmissionNotes($id) );
-}
-
-
-
-=head2 addSubmissionNote
-
-  Add a note to a submission
-
-=cut
-
-sub addSubmissionNote
-{
-    my ( $self, %params ) = (@_);
-
-    # Get the data.
-    my $submission = $params{ 'submission' } || $self->{ 'submission' };
-    my $note       = $params{ 'note' }       || $self->{ 'note' };
-    my $username   = $params{ 'username' }   || $self->{ 'username' };
-
-    die "No username"   unless ( defined $username );
-    die "No note"       unless ( defined $note );
-    die "No submission" unless ( defined $submission );
-
-
-    my $holder = Yawns::Submission::Notes->new();
-    $holder->addSubmissionNote( submission => $submission,
-                                note       => $note,
-                                username   => $username
-                              );
-}
-
-
-
 =head2 updateSubmission
 
   Update an article in the submissions queue.  This means that we'll
@@ -879,13 +833,6 @@ sub rejectArticle
     #
     my $holder = Yawns::Tags->new();
     $holder->deleteTags( submission => $id );
-
-    #
-    # Delete any notes
-    #
-    my $notes = Yawns::Submission::Notes->new();
-    $notes->deleteSubmissionNotes($id);
-
 
 }
 

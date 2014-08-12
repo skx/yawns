@@ -3544,14 +3544,6 @@ sub submission_view
             $template->param( view_notes    => 1,
                               article_admin => 1 );
 
-            #
-            # Get the submission notes.
-            #
-            my $submission_notes = $submissions->getSubmissionNotes($id);
-            $template->param( submission_notes => $submission_notes )
-              if ($submission_notes);
-
-
         }
         else
         {
@@ -3587,60 +3579,6 @@ sub submission_view
 
     print $template->output;
 
-}
-
-
-#
-#  Add a note to a pending submission.
-#
-sub add_submission_note
-{
-
-    #
-    #  Gain access to the objects we use.
-    #
-    my $form     = Singleton::CGI->instance();
-    my $session  = Singleton::Session->instance();
-    my $username = $session->param("logged_in");
-
-    #
-    #  Load the template.
-    #
-    my $template = load_layout( "add_note.inc", session => 1 );
-
-    #
-    #  Form variables
-    #
-    my $note    = $form->param("note");
-    my $id      = $form->param("id");
-    my $confirm = $form->param("add_note");
-
-    #
-    #  Are we adding?
-    #
-    if ( defined($confirm) )
-    {
-        $template->param( confirm => 1,
-                          id      => $id,
-                          title   => "Note added!"
-                        );
-
-        #
-        #  Actually add the note
-        #
-        my $submissions = Yawns::Submissions->new();
-        $submissions->addSubmissionNote( username   => $username,
-                                         note       => $note,
-                                         submission => $id
-                                       );
-    }
-    else
-    {
-        $template->param( id    => $id,
-                          title => "Add note to submission" );
-    }
-
-    print $template->output();
 }
 
 
