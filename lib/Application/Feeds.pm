@@ -305,11 +305,6 @@ sub user_feed
     $template->param( home_url    => get_conf('home_url') );
 
     #
-    # Get access to the form
-    #
-    my $form = Singleton::CGI->instance();
-
-    #
     # Get the comments.
     #
     my $c = Yawns::Comments->new();
