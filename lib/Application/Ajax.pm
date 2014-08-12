@@ -26,7 +26,7 @@ use Cache::Memcached;
 # Our code
 #
 use conf::SiteConfig;
-
+use Yawns::Tags;
 
 
 
@@ -136,6 +136,12 @@ sub setup
         # debug
         'debug' => 'debug',
 
+        # Get tags of a particular type
+        'get_tags' => 'get_tags',
+
+        # Recent additions
+        'recent_tags' => 'recent_tags',
+
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
     );
@@ -167,6 +173,96 @@ sub debug
     return ("OK - $username");
 }
 
+
+
+=head2 get_recent_tags
+
+Fetch the most recently added tags.
+
+=cut
+
+sub recent_tags
+{
+
+    #
+    # Get the tag object, and add the tag
+    #
+    my $holder = Yawns::Tags->new();
+    my $recent = $holder->getRecent();
+
+    #
+    # Show the tags.
+    #
+    my $template = HTML::Template->new(
+                       filename => "../templates/includes/recent_tags.template",
+                       loop_context_vars => 1 );
+
+    $template->param( recent_tags => $recent ) if defined($recent);
+
+    #
+    #  Show the template.
+    #
+    return( $template->output() );
+}
+
+
+
+=head2 get_tags
+
+Return all the tags upon our site of a particular kind.
+
+=cut
+
+sub get_tags
+{
+    my( $self ) = ( @_ );
+
+    #
+    #  Get the type of tags.
+    #
+    my $form = $self->query();
+    my $type = $form->param("type");
+
+
+    #
+    #  Get the tag holder
+    #
+    my $holder = Yawns::Tags->new();
+
+    #
+    #  If there is a type then it must be valid.
+    #
+    if ( defined($type) )
+    {
+        my $found = 0;
+
+        foreach my $t ( $holder->getTagTypes() )
+        {
+            $found += 1 if ( $t eq $type );
+        }
+
+        #
+        #  Unknown?
+        #
+        if ( !$found )
+        {
+            $type = HTML::Entities::encode_entities($type);
+            return( "Unknown tag type '$type'." );
+        }
+    }
+
+    my $tags = $holder->getAllTagsByType($type);
+
+    #
+    #  Load the template
+    #
+    my $template =
+      HTML::Template->new(
+                        filename => "../templates/includes/all_tags.template" );
+
+    $template->param( all_tags => $tags ) if ($tags);
+    return($template->output());
+}
 
 
 1;

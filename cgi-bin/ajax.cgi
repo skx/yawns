@@ -150,14 +150,6 @@ my %dispatch = (
                            sub  => \&tag_complete,
                            type => "Content-Type: text/html; charset=UTF-8\n\n",
                  },
-                 "get_recent_tags" => {
-                           sub  => \&get_recent_tags,
-                           type => "Content-Type: text/html; charset=UTF-8\n\n",
-                 },
-                 "get_tags" => {
-                           sub  => \&get_tags,
-                           type => "Content-Type: text/html; charset=UTF-8\n\n",
-                 },
                  "set_format" => { sub   => \&set_posting_format,
                                    login => 1,
                                    type  => "Content-type: text/plain\n\n",
@@ -408,93 +400,8 @@ sub tag_complete
 }
 
 
-=head2 get_recent_tags
-
-  Fetch the most recently added tags.
-
-=cut
-
-sub get_recent_tags
-{
-
-    #
-    # Get the tag object, and add the tag
-    #
-    my $holder = Yawns::Tags->new();
-    my $recent = $holder->getRecent();
-
-    #
-    # Show the tags.
-    #
-    my $template = HTML::Template->new(
-                       filename => "../templates/includes/recent_tags.template",
-                       loop_context_vars => 1 );
-
-    $template->param( recent_tags => $recent ) if defined($recent);
-
-    #
-    #  Show the template.
-    #
-    print $template->output();
-}
 
 
-
-=head2 get_tags
-
-  Return all the tags upon our site of a particular kind.
-
-=cut
-
-sub get_tags
-{
-
-    #
-    #  Get the type of tags.
-    #
-    my $type = $form->param("type");
-
-
-    #
-    #  Get the tag holder
-    #
-    my $holder = Yawns::Tags->new();
-
-    #
-    #  If there is a type then it must be valid.
-    #
-    if ( defined($type) )
-    {
-        my $found = 0;
-
-        foreach my $t ( $holder->getTagTypes() )
-        {
-            $found += 1 if ( $t eq $type );
-        }
-
-        #
-        #  Unknown?
-        #
-        if ( !$found )
-        {
-            $type = HTML::Entities::encode_entities($type);
-            print "Unknown tag type '$type'.";
-            return;
-        }
-    }
-
-    my $tags = $holder->getAllTagsByType($type);
-
-    #
-    #  Load the template
-    #
-    my $template =
-      HTML::Template->new(
-                        filename => "../templates/includes/all_tags.template" );
-
-    $template->param( all_tags => $tags ) if ($tags);
-    print $template->output();
-}
 
 
 
