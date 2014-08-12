@@ -128,9 +128,6 @@ my %dispatch = (
                                 sub  => \&comment_feed,
                                 type => "Content-Type: application/rss+xml\n\n",
                  },
-                 "tag_feed" => {sub  => \&tag_feed,
-                                type => "Content-Type: application/rss+xml\n\n",
-                               },
                  "pending_submissions_feed" => {
                                 sub  => \&pending_submissions_feed,
                                 type => "Content-Type: application/rss+xml\n\n",
