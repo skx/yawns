@@ -69,22 +69,6 @@ sub cgiapp_init
 
 
 
-=begin doc
-
-NOP.
-
-=end doc
-
-=cut
-
-sub teardown
-{
-    my ($self) = shift;
-
-}
-
-
-
 
 =begin doc
 
@@ -118,7 +102,11 @@ sub setup
 {
     my $self = shift;
 
+    $self->error_mode('my_error_rm');
     $self->run_modes(
+
+        # debug
+        'debug' => 'debug',
 
         # General comment-feed
         'comment_feed' => 'comment_feed',
@@ -161,7 +149,10 @@ sub setup
 #
 #  Handlers
 #
-
+sub debug
+{
+    return( "OK" );
+}
 
 
 # ===========================================================================
@@ -198,7 +189,7 @@ sub recent_comments
     $template->param( comments => $comments,
                       teasers  => $teasers, );
 
-    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    $self->header_add( '-type' => 'application/rss+xml' );
 
     return ( $template->output() );
 }
@@ -240,7 +231,7 @@ sub user_feed
                     );
 
 
-    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    $self->header_add( '-type' => 'application/rss+xml' );
     return ( $template->output() );
 }
 
@@ -282,7 +273,7 @@ sub weblog_feed
     $template->param( entries => $entries ) if ( defined($entries) );
 
 
-    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    $self->header_add( '-type' => 'application/rss+xml' );
     return ( $template->output() );
 }
 
@@ -404,7 +395,7 @@ sub tag_feed
     #
     #  Output the page
     #
-    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    $self->header_add( '-type' => 'application/rss+xml' );
     return ( $template->output() );
 }
 
@@ -445,7 +436,7 @@ sub pending_submissions
 
     $template->param( submissions => $new, ) if ($new);
 
-    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    $self->header_add( '-type' => 'application/rss+xml' );
     return ( $template->output() );
 }
 
@@ -486,7 +477,7 @@ sub recent_reported
     $template->param( comments => $comments,
                       teasers  => $teasers, );
 
-    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    $self->header_add( '-type' => 'application/rss+xml' );
     return ( $template->output() );
 }
 
@@ -515,7 +506,7 @@ sub reported_weblogs
 
     my $output = $template->output();
 
-    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    $self->header_add( '-type' => 'application/rss+xml' );
     return ( $template->output() );
 }
 
@@ -590,8 +581,17 @@ sub comment_feed
                           onweblog => 1 );
     }
 
-    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    $self->header_add( '-type' => 'application/rss+xml' );
     return ( $template->output() );
 }
+
+
+sub my_error_rm
+{
+    my( $self , $error ) = ( @_ );
+
+    return Dumper( \$error );
+}
+
 
 1;
