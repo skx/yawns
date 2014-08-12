@@ -1,10 +1,22 @@
 #
 # This is a CGI::Application class which is designed to handle
-# our feed-needs
+# our RSS-feeds.
 #
-# It is a proof of concept at the moment, because the code isn't
-# complete.
 #
+# Links
+# -----
+#
+#    /recent/comments/$user Show the comments by user $user
+#    /recent/comments/N     Show the N most recent comments
+#    /recent/comments       Show the 10 most recent comments
+#
+#    /submission/feed       Show the submitted/pending articles
+#
+#    /weblog/feeds/$user    Show the blog posts by user $user
+#
+#    /tag/feeds/$tag        Show things matching the given tag.
+#
+
 
 use strict;
 use warnings;
@@ -29,6 +41,7 @@ use URI::Find;
 #
 use conf::SiteConfig;
 use Yawns::Comments;
+use Yawns::Submissions;
 
 
 
@@ -186,6 +199,9 @@ sub setup
 
         # Articles matching the given tag
         'tag_feed' => 'tag_feed',
+
+        # Pending submissions
+        'pending_submissions' => 'pending_submissions',
 
         # Debug Handler
         'debug' => 'debug_handler',
@@ -470,6 +486,47 @@ sub tag_feed
     #
     #  Output the page
     #
+    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    return ( $template->output() );
+}
+
+
+
+
+# ===========================================================================
+# Return an RSS feed of pending submissions
+# ===========================================================================
+sub pending_submissions
+{
+    my( $self ) = ( @_ );
+
+    #
+    #  Find all the pending submissions.
+    #
+    my $queue = Yawns::Submissions->new();
+    my $new   = $queue->getArticleFeed();
+
+    #
+    #  Load the template
+    #
+    my $template = HTML::Template->new(
+                            filename => "../templates/xml/submissions.template",
+                            global_vars       => 1,
+                            die_on_bad_params => 0
+    );
+
+    #
+    #  Setup basic things.
+    #
+    $template->param( site_slogan => get_conf('site_slogan') );
+    $template->param( home_url    => get_conf('home_url') );
+
+    #
+    #
+    #
+
+    $template->param( submissions => $new, ) if ($new);
+
     $self->header_add( 'Content-type' => 'application/rss+xml' );
     return ( $template->output() );
 }

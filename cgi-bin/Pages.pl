@@ -3344,43 +3344,6 @@ sub submission_list
 }
 
 
-# ===========================================================================
-# Return an RSS feed of pending submissions
-# ===========================================================================
-sub pending_submissions_feed
-{
-
-    #
-    #  Find all the pending submissions.
-    #
-    my $queue = Yawns::Submissions->new();
-    my $new   = $queue->getArticleFeed();
-
-    #
-    #  Load the template
-    #
-    my $template = HTML::Template->new(
-                            filename => "../templates/xml/submissions.template",
-                            global_vars       => 1,
-                            die_on_bad_params => 0
-    );
-
-    #
-    #  Setup basic things.
-    #
-    $template->param( site_slogan => get_conf('site_slogan') );
-    $template->param( home_url    => get_conf('home_url') );
-
-    #
-    #
-    #
-
-    $template->param( submissions => $new, ) if ($new);
-
-    print $template->output;
-
-}
-
 
 # ===========================================================================
 # reject a pending article from the queue.
