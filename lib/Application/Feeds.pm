@@ -181,6 +181,9 @@ sub setup
         # Feed of the given user.
         'user_feed' => 'user_feed',
 
+        # Weblog feed for a given user.
+        'weblog_feed' => 'weblog_feed',
+
         # Debug Handler
         'debug' => 'debug_handler',
 
@@ -303,5 +306,48 @@ sub user_feed
     $self->header_add( 'Content-type' => 'application/rss+xml' );
     return ( $template->output() );
 }
+
+
+
+# ===========================================================================
+#  Find and return an XML feed of the given user's weblog.
+# ===========================================================================
+sub weblog_feed
+{
+    my ($self) = (@_);
+
+    #
+    # Gain acess to form objects we use.
+    #
+    my $form = Singleton::CGI->instance();
+
+    #
+    # Find out who and how many - then get the weblog data.
+    #
+    my $wanted = $form->param('user');
+
+    #
+    #  Get a feed of the weblog entries.
+    #
+    my $weblog = Yawns::Weblog->new( username => $wanted );
+    my $entries = $weblog->getWeblogFeed();
+
+    # open the html template
+    my $template = HTML::Template->new(
+                            filename => "../templates/xml/weblog_feed.template",
+                            die_on_bad_params => 0 );
+
+    $template->param( user => $wanted );
+
+    #
+    #  Only show the entries if present.
+    #
+    $template->param( entries => $entries ) if ( defined($entries) );
+
+
+    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    return( $template->output() );
+}
+
 
 1;
