@@ -1,4 +1,4 @@
-#!/usr/bin/perl -I../lib -I../../lib
+#!/usr/bin/perl -I../lib -I../../lib -I../../../lib/
 #
 #  Wrapper for our Ajax application - CGI version.
 #
