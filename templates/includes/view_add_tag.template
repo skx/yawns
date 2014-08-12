@@ -10,7 +10,7 @@ function addTag(url)
 }
 
  $(document).ready(function(){
-    $("#new_tag").autocomplete("/cgi-bin/ajax.cgi?tag_complete=1;");
+    $("#new_tag").autocomplete("/ajax/complete");
     $('a#toggle').click(function() {
        $('#add_tag').toggle(400);
      })

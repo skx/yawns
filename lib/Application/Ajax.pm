@@ -142,6 +142,9 @@ sub setup
         # Recent additions
         'recent_tags' => 'recent_tags',
 
+        # Complete a tag
+        'tag_complete' => 'tag_complete',
+
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
     );
@@ -263,6 +266,63 @@ sub get_tags
     $template->param( all_tags => $tags ) if ($tags);
     return($template->output());
 }
+
+
+=head2 tag_complete
+
+  Complete against all the tags ever used.
+
+=cut
+
+
+sub tag_complete
+{
+
+    my( $self ) = ( @_ );
+
+    #
+    #  Get the type of tags.
+    #
+    my $form = $self->query();
+
+    #
+    #  Get the completion version and ensure it is present.
+    #
+    my $q = $form->param("q");
+    if ( !defined($q) || !length($q) )
+    {
+        return "";
+    }
+
+    #
+    #  Get all tags
+    #
+    my $holder = Yawns::Tags->new();
+    my $all    = $holder->getAllTags();
+
+    my %valid;
+
+    #
+    #  Build a hash of their names.
+    #
+    foreach my $t (@$all)
+    {
+        my $name = $t->{ 'tag' };
+        $valid{ $name } = 1 if ( $name =~ /\Q$q\E/i );
+    }
+
+    #
+    #  Print matching ones.
+    #
+    my $str = "";
+    foreach my $key ( keys(%valid) )
+    {
+        $str .= "$key|$key\n";
+    }
+
+    return( $str );
+}
+
 
 
 1;

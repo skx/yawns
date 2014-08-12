@@ -146,10 +146,6 @@ my %dispatch = (
                            login => 1,
                            type => "Content-Type: text/html; charset=UTF-8\n\n",
                  },
-                 "tag_complete" => {
-                           sub  => \&tag_complete,
-                           type => "Content-Type: text/html; charset=UTF-8\n\n",
-                 },
                  "set_format" => { sub   => \&set_posting_format,
                                    login => 1,
                                    type  => "Content-type: text/plain\n\n",
@@ -351,52 +347,6 @@ sub add_tag
     #  Show the template.
     #
     print $template->output();
-}
-
-
-=head2 tag_complete
-
-  Complete against all the tags ever used.
-
-=cut
-
-sub tag_complete
-{
-
-    #
-    #  Get the completion version and ensure it is present.
-    #
-    my $q = $form->param("q");
-    if ( !defined($q) || !length($q) )
-    {
-        return;
-    }
-
-    #
-    #  Get all tags
-    #
-    my $holder = Yawns::Tags->new();
-    my $all    = $holder->getAllTags();
-
-    my %valid;
-
-    #
-    #  Build a hash of their names.
-    #
-    foreach my $t (@$all)
-    {
-        my $name = $t->{ 'tag' };
-        $valid{ $name } = 1 if ( $name =~ /\Q$q\E/i );
-    }
-
-    #
-    #  Print matching ones.
-    #
-    foreach my $key ( keys(%valid) )
-    {
-        print "$key|$key\n";
-    }
-
 }
 
 
