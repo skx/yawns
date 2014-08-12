@@ -178,6 +178,9 @@ sub setup
         # Recent comments
         'recent_comments' => 'recent_comments',
 
+        # Feed of the given user.
+        'user_feed' => 'user_feed',
+
         # Debug Handler
         'debug' => 'debug_handler',
 
@@ -221,6 +224,7 @@ sub debug_handler
 # ===========================================================================
 sub recent_comments
 {
+    my ($self) = (@_);
 
     #
     # Load the XML template
@@ -249,8 +253,55 @@ sub recent_comments
     $template->param( comments => $comments,
                       teasers  => $teasers, );
 
+    $self->header_add( 'Content-type' => 'application/rss+xml' );
+
     return ( $template->output() );
 }
 
+
+
+# ===========================================================================
+#  Feed of comments by a given user.
+# ===========================================================================
+sub user_feed
+{
+    my ($self) = (@_);
+
+    my $form = Singleton::CGI->instance();
+    my $user = $form->param('user');
+
+    #
+    # Load the XML template
+    #
+    my $template =
+      HTML::Template->new( filename => "../templates/xml/comments.template" );
+
+    #
+    #  Setup basics.
+    #
+    $template->param( site_slogan => get_conf('site_slogan') );
+    $template->param( home_url    => get_conf('home_url') );
+
+    #
+    # Get access to the form
+    #
+    my $form = Singleton::CGI->instance();
+
+    #
+    # Get the comments.
+    #
+    my $c = Yawns::Comments->new();
+    my ( $teasers, $comments ) = $c->getRecentByUser($user);
+
+    $template->param( comments => $comments,
+                      teasers  => $teasers,
+                      username => $user,
+                      byuser   => 1,
+                    );
+
+
+    $self->header_add( 'Content-type' => 'application/rss+xml' );
+    return ( $template->output() );
+}
 
 1;

@@ -128,10 +128,6 @@ my %dispatch = (
                                 sub  => \&comment_feed,
                                 type => "Content-Type: application/rss+xml\n\n",
                  },
-                 "user_comment_feed" => {
-                                sub  => \&user_comment_feed,
-                                type => "Content-Type: application/rss+xml\n\n",
-                 },
                  "feed" => { sub  => \&get_weblog_feed,
                              type => "Content-Type: application/rss+xml\n\n",
                            },

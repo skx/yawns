@@ -5982,50 +5982,6 @@ sub comment_feed
 
 
 
-# ===========================================================================
-#  Feed of comments by a given user.
-# ===========================================================================
-sub user_comment_feed
-{
-
-    #
-    # Load the XML template
-    #
-    my $template =
-      HTML::Template->new( filename => "../templates/xml/comments.template" );
-
-    #
-    #  Setup basics.
-    #
-    $template->param( site_slogan => get_conf('site_slogan') );
-    $template->param( home_url    => get_conf('home_url') );
-
-    #
-    # Get access to the form
-    #
-    my $form = Singleton::CGI->instance();
-
-    #
-    # Types
-    #
-    my $article  = $form->param("article_id");
-    my $poll     = $form->param("poll_id");
-    my $weblog   = $form->param("weblog_id");
-    my $username = $form->param("user_comment_feed");
-
-
-    my $c = Yawns::Comments->new();
-    my ( $teasers, $comments ) = $c->getRecentByUser($username);
-
-    $template->param( comments => $comments,
-                      teasers  => $teasers,
-                      username => $username,
-                      byuser   => 1,
-                    );
-
-    print $template->output;
-}
-
 
 # ===========================================================================
 #  View recently joined usernames
