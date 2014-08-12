@@ -32,7 +32,6 @@ use base 'CGI::Application';
 #
 # Standard module(s)
 #
-use CGI::Session;
 use HTML::Template;
 use URI::Find;
 
@@ -48,7 +47,7 @@ use Yawns::Submissions;
 
 =begin doc
 
-Create our session, and connect to redis.
+Setup - Just setup UTF.
 
 =end doc
 
@@ -56,40 +55,15 @@ Create our session, and connect to redis.
 
 sub cgiapp_init
 {
-    my $self = shift;
-    my $form = $self->query();
-
-    #
-    #  Create a new session.
-    #
-    my $session = Singleton::Session->instance();
-    $session->expires("+7d");
-
-    #
-    #  Get the cookie to send.
-    #
-    my $sessionCookie = $form->cookie( -name    => 'CGISESSID',
-                                       -value   => $session->id,
-                                       -expires => '+1d'
-                                     );
-
-
-    #
-    # assign the session object to a param
-    #
-    $self->param( session => $session );
-
-    # send a cookie if needed
-    $self->header_props( -cookie => $sessionCookie );
-
     binmode STDIN,  ":encoding(utf8)";
     binmode STDOUT, ":encoding(utf8)";
-
 }
+
+
 
 =begin doc
 
-Cleanup our session and close our redis connection.
+NOP.
 
 =end doc
 
@@ -99,59 +73,9 @@ sub teardown
 {
     my ($self) = shift;
 
-    #
-    #  Flush the sesions
-    #
-    my $session = $self->param('session');
-    $session->flush() if ( defined($session) );
-
 }
 
 
-
-=begin doc
-
-Redirect to the given URL.
-
-=end doc
-
-=cut
-
-sub redirectURL
-{
-    my ( $self, $url ) = (@_);
-
-    #
-    #  Cookie name & expiry
-    #
-    my $cookie_name   = 'CGISESSID';
-    my $cookie_expiry = '+7d';
-
-    #
-    #  Get the session identifier
-    #
-    my $query   = $self->query();
-    my $session = $self->param('session');
-
-    my $id = "";
-    $id = $session->id() if ($session);
-
-    #
-    #  Create/Get the cookie
-    #
-    my $cookie = $query->cookie( -name    => $cookie_name,
-                                 -value   => $id,
-                                 -expires => $cookie_expiry,
-                               );
-
-    $self->header_add( -location => $url,
-                       -status   => "302",
-                       -cookie   => $cookie
-                     );
-    $self->header_type('redirect');
-    return "";
-
-}
 
 
 =begin doc
@@ -203,9 +127,6 @@ sub setup
         # Pending submissions
         'pending_submissions' => 'pending_submissions',
 
-        # Debug Handler
-        'debug' => 'debug_handler',
-
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
     );
@@ -224,21 +145,6 @@ sub setup
 #  Handlers
 #
 
-sub debug_handler
-{
-    my ($self) = (@_);
-
-    my $session = $self->param('session');
-
-    if ( $session->param("logged_in") )
-    {
-        return "User: " . $session->param("logged_in");
-    }
-    else
-    {
-        return "Anonymous";
-    }
-}
 
 
 # ===========================================================================
@@ -262,7 +168,7 @@ sub recent_comments
     $template->param( recent_comments => 1 );
 
 
-    my $form = Singleton::CGI->instance();
+    my $form = $self->query();
     my $count = $form->param('count') || 10;
     if ( $count =~ /([0-9]+)/ )
     {
@@ -289,7 +195,7 @@ sub user_feed
 {
     my ($self) = (@_);
 
-    my $form = Singleton::CGI->instance();
+    my $form = $self->query();
     my $user = $form->param('user');
 
     #
@@ -333,7 +239,7 @@ sub weblog_feed
     #
     # Gain acess to form objects we use.
     #
-    my $form = Singleton::CGI->instance();
+    my $form = $self->query();
 
     #
     # Find out who and how many - then get the weblog data.
@@ -374,7 +280,7 @@ sub tag_feed
     #
     # Gain access to the form.
     #
-    my $form = Singleton::CGI->instance();
+    my $form = $self->query();
     my $tag  = $form->param("tag");
 
     #
@@ -493,7 +399,7 @@ sub tag_feed
 # ===========================================================================
 sub pending_submissions
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Find all the pending submissions.
