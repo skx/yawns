@@ -493,156 +493,156 @@ my %dispatch = (
         cache => 1,
       },
 
-    "adverts_byuser" =>         # View all adverts by a given user.
+    "adverts_byuser" =>    # View all adverts by a given user.
       { sub   => \&adverts_byuser,
         login => 1,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "advert_stats" =>           # View the statistics of an advert
+    "advert_stats" =>      # View the statistics of an advert
       { sub   => \&advert_stats,
         login => 1,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "all_adverts" =>            # View all adverts
+    "all_adverts" =>       # View all adverts
       { sub  => \&view_all_adverts,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "archive" =>                # View previous submissions.
+    "archive" =>           # View previous submissions.
       { sub  => \&show_archive,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "article" =>                # Read an article.
+    "article" =>           # Read an article.
       { sub  => \&read_article,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "author_search" =>          # Search for articles by the given user.
+    "author_search" =>     # Search for articles by the given user.
       { sub  => \&search_results,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "bookmarks" =>              # View a users bookmark list.
+    "bookmarks" =>         # View a users bookmark list.
       { sub  => \&view_bookmarks,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "delete_advert" =>          # Remove an existing advert
+    "delete_advert" =>     # Remove an existing advert
       { sub   => \&delete_advert,
         priv  => "advert_admin",
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "delete_bookmark" =>        # Remove an existing bookmark.
+    "delete_bookmark" =>    # Remove an existing bookmark.
       { sub      => \&bookmark_delete,
         login    => 1,
         redirect => "/users/$username/bookmarks",
         cache    => 1,
       },
 
-    "delete_related" =>         # Remove a related link from an article
+    "delete_related" =>     # Remove a related link from an article
       { sub   => \&delete_related,
         priv  => "related_admin",
         cache => 1,
       },
 
-    "delete_weblog" =>          # Delete a weblog entry
+    "delete_weblog" =>      # Delete a weblog entry
       { sub   => \&delete_weblog,
         login => 1,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "disable_advert" =>         # Disable an advert
+    "disable_advert" =>     # Disable an advert
       { sub   => \&disable_advert,
         priv  => "advert_admin",
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "edit_about" =>             # Edit a static page
+    "edit_about" =>         # Edit a static page
       { sub   => \&edit_about,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "edit_about",
         cache => 1,
       },
 
-    "edit_adverts" =>           # Edit a site advert
+    "edit_adverts" =>       # Edit a site advert
       { sub   => \&edit_adverts,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "advert_admin",
         cache => 1,
       },
 
-    "edit_article" =>           # Edit an existing, live, advert.
+    "edit_article" =>       # Edit an existing, live, advert.
       { sub   => \&edit_article,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "edit_comment" =>           # Edit a comment
+    "edit_comment" =>       # Edit a comment
       { sub   => \&edit_comment,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "edit_comments",
         cache => 1,
       },
 
-    "edit_user" =>              # Edit a user.
+    "edit_user" =>          # Edit a user.
       { sub   => \&edit_user,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "edit_permissions" =>       # Edit the permissions associated with a user.
+    "edit_permissions" =>    # Edit the permissions associated with a user.
       { sub   => \&edit_permissions,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "edit_prefs" =>             # Edit a users preferences
+    "edit_prefs" =>          # Edit a users preferences
       { sub   => \&edit_prefs,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "edit_scratchpad" =>        # Edit a users scratchpad
+    "edit_scratchpad" =>     # Edit a users scratchpad
       { sub   => \&edit_scratchpad,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "edit_weblog" =>            # Edit a weblog entry
+    "edit_weblog" =>         # Edit a weblog entry
       { sub   => \&edit_weblog,
         login => 1,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "enable_advert" =>          # Enable an advert
+    "enable_advert" =>       # Enable an advert
       { sub   => \&enable_advert,
         priv  => "advert_admin",
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "front_page" =>             # view the front-page
+    "front_page" =>          # view the front-page
       { sub  => \&front_page,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "follow_advert" =>          # Click on a user-advert
+    "follow_advert" =>       # Click on a user-advert
       { sub => \&follow_advert, },
 
-    "loginform" =>              # Login options
+    "loginform" =>           # Login options
       { sub  => \&login_form,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "new_user" =>               # Create a new user account
+    "new_user" =>            # Create a new user account
       { sub  => \&new_user,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },

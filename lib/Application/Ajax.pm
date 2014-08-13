@@ -212,7 +212,7 @@ sub recent_tags
     #
     #  Show the template.
     #
-    return( $template->output() );
+    return ( $template->output() );
 }
 
 
@@ -225,7 +225,7 @@ Return all the tags upon our site of a particular kind.
 
 sub get_tags
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Get the type of tags.
@@ -257,7 +257,7 @@ sub get_tags
         if ( !$found )
         {
             $type = HTML::Entities::encode_entities($type);
-            return( "Unknown tag type '$type'." );
+            return ("Unknown tag type '$type'.");
         }
     }
 
@@ -271,7 +271,7 @@ sub get_tags
                         filename => "../templates/includes/all_tags.template" );
 
     $template->param( all_tags => $tags ) if ($tags);
-    return($template->output());
+    return ( $template->output() );
 }
 
 
@@ -285,7 +285,7 @@ sub get_tags
 sub tag_complete
 {
 
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Get the type of tags.
@@ -327,7 +327,7 @@ sub tag_complete
         $str .= "$key|$key\n";
     }
 
-    return( $str );
+    return ($str);
 }
 
 
@@ -341,17 +341,17 @@ sub tag_complete
 
 sub add_tag
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Ensure we have a logged-in-user
     #
-    my $session = $self->param('session');
+    my $session  = $self->param('session');
     my $username = undef;
     if ($session)
     {
         $username = $session->param("logged_in") || undef;
-        return( "Login Required" ) unless( $username );
+        return ("Login Required") unless ($username);
     }
 
 
@@ -415,19 +415,16 @@ sub add_tag
     # Load the tag template, to return the updated tags.
     #
     my $template = HTML::Template->new(
-                                       filename => "../templates/includes/tags.template",
-                                       loop_context_vars => 1
-                                      );
+                              filename => "../templates/includes/tags.template",
+                              loop_context_vars => 1 );
 
     $template->param( tags => $tags ) if defined($tags);
 
     #
     #  Show the template.
     #
-    return($template->output() );
+    return ( $template->output() );
 }
-
-
 
 
 
@@ -441,17 +438,17 @@ Save the users posting format.
 sub set_format
 {
 
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Ensure we have a logged-in-user
     #
-    my $session = $self->param('session');
+    my $session  = $self->param('session');
     my $username = undef;
     if ($session)
     {
         $username = $session->param("logged_in") || undef;
-        return( "Login Required" ) unless( $username );
+        return ("Login Required") unless ($username);
     }
 
 
@@ -491,14 +488,14 @@ sub set_format
         #       since it must have been one of our valid ones
         #       and they are exclusively ASCII.
         #
-        return( "$desc preference saved.\n" );
+        return ("$desc preference saved.\n");
     }
 
     #
     #  Naughty.
     #
     $format = HTML::Entities::encode_entities($format);
-    return( "Invalid posting format '$format'.\n" );
+    return ("Invalid posting format '$format'.\n");
 }
 
 1;

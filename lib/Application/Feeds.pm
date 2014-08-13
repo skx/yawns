@@ -151,7 +151,7 @@ sub setup
 #
 sub debug
 {
-    return( "OK" );
+    return ("OK");
 }
 
 
@@ -588,7 +588,7 @@ sub comment_feed
 
 sub my_error_rm
 {
-    my( $self , $error ) = ( @_ );
+    my ( $self, $error ) = (@_);
 
     return Dumper( \$error );
 }
