@@ -27,7 +27,7 @@ use Cache::Memcached;
 #
 use conf::SiteConfig;
 use Yawns::Tags;
-
+use Yawns::Formatters;
 
 
 =begin doc
@@ -42,6 +42,7 @@ sub my_error_rm
 {
     my ( $self, $error ) = (@_);
 
+    use Data::Dumper;
     return Dumper( \$error );
 }
 
@@ -144,6 +145,12 @@ sub setup
 
         # Complete a tag
         'tag_complete' => 'tag_complete',
+
+        # Add a tag
+        'add_tag' => 'add_tag',
+
+        # Set the posting format
+        'set_format' => 'set_format',
 
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
@@ -324,5 +331,174 @@ sub tag_complete
 }
 
 
+
+=head2 add_tag
+
+  Called to add a tag to either an article, a submission, a poll, or
+ a weblog.
+
+=cut
+
+sub add_tag
+{
+    my( $self ) = ( @_ );
+
+    #
+    #  Ensure we have a logged-in-user
+    #
+    my $session = $self->param('session');
+    my $username = undef;
+    if ($session)
+    {
+        $username = $session->param("logged_in") || undef;
+        return( "Login Required" ) unless( $username );
+    }
+
+
+    #
+    # Get the data from the submission.
+    #
+    my $form = $self->query();
+
+    my $tag        = $form->param("new_tag");
+    my $article    = $form->param("article") || undef;
+    my $poll       = $form->param("poll") || undef;
+    my $tip        = $form->param("tip") || undef;
+    my $submission = $form->param("submission") || undef;
+    my $weblog     = $form->param("weblog") || undef;
+
+    #
+    #  The tag holder
+    #
+    my $holder = Yawns::Tags->new();
+
+    #
+    #  Is the tag comma-separated?
+    #
+    foreach my $t ( split( /,/, $tag ) )
+    {
+
+        # ignore empty ones
+        next if ( ( !$t ) || ( !length($t) ) );
+
+        # strip space
+        $t =~ s/^\s+|\s+$//g;
+
+        # ignore empty ones
+        next if ( ( !$t ) || ( !length($t) ) );
+
+        #
+        # Get the tag object, and add the tag
+        #
+        $holder->addTag( username   => $username,
+                         article    => $article,
+                         poll       => $poll,
+                         tip        => $tip,
+                         submission => $submission,
+                         weblog     => $weblog,
+                         tag        => $t
+                       );
+    }
+
+    #
+    # Get the (updated) tags upon the article, poll, submission or weblog.
+    #
+    my $tags = $holder->getTags( article    => $article,
+                                 poll       => $poll,
+                                 submission => $submission,
+                                 tip        => $tip,
+                                 weblog     => $weblog
+                               );
+
+
+    #
+    # Load the tag template, to return the updated tags.
+    #
+    my $template = HTML::Template->new(
+                                       filename => "../templates/includes/tags.template",
+                                       loop_context_vars => 1
+                                      );
+
+    $template->param( tags => $tags ) if defined($tags);
+
+    #
+    #  Show the template.
+    #
+    return($template->output() );
+}
+
+
+
+
+
+
+=head2 set_format
+
+Save the users posting format.
+
+=cut
+
+sub set_format
+{
+
+    my( $self ) = ( @_ );
+
+    #
+    #  Ensure we have a logged-in-user
+    #
+    my $session = $self->param('session');
+    my $username = undef;
+    if ($session)
+    {
+        $username = $session->param("logged_in") || undef;
+        return( "Login Required" ) unless( $username );
+    }
+
+
+    #
+    # Get the data from the submission.
+    #
+    my $form = $self->query();
+
+    #
+    #  Get the format
+    #
+    my $format = $form->param("format");
+
+    #
+    #  Get all formats
+    #
+    my $accessor = Yawns::Formatters->new();
+    my %avail    = $accessor->getAvailable();
+
+    #
+    #  If the format is one that we know about save it
+    # away.
+    #
+    my $desc = $avail{ lc($format) };
+
+    if ( defined($desc) )
+    {
+
+        #
+        #  Set the preference.
+        #
+        my $prefs = Yawns::Preferences->new( username => $username );
+        $prefs->setPreference( "posting_format", $format );
+
+        #
+        # NOTE: We don't need to entity-encode the description,
+        #       since it must have been one of our valid ones
+        #       and they are exclusively ASCII.
+        #
+        return( "$desc preference saved.\n" );
+    }
+
+    #
+    #  Naughty.
+    #
+    $format = HTML::Entities::encode_entities($format);
+    return( "Invalid posting format '$format'.\n" );
+}
 
 1;
