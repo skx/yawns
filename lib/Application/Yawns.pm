@@ -637,8 +637,7 @@ sub application_logout
     #  Return to the homepage - no cookie
     #
     $self->header_add( -location => "/",
-                       -status   => "302",
-                     );
+                       -status   => "302", );
     $self->header_type('redirect');
     return "";
 }
@@ -783,6 +782,26 @@ sub article_search
 sub edit_about
 {
     my ($self) = (@_);
+
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in");
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Ensure the user has permissions
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    if ( !$perms->check( priv => "edit_about" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
 
     # Get access to the form and database
     my $form = $self->query();
