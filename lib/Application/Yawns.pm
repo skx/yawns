@@ -634,9 +634,13 @@ sub application_logout
     $session->close();
 
     #
-    #  Return to the homepage.
+    #  Return to the homepage - no cookie
     #
-    return ( $self->redirectURL("/") );
+    $self->header_add( -location => "/",
+                       -status   => "302",
+                     );
+    $self->header_type('redirect');
+    return "";
 }
 
 
