@@ -25,7 +25,9 @@ use HTML::Template;
 #
 # Our code
 #
+use Yawns::About;
 use Yawns::Event;
+use Yawns::Sidebar;
 use Yawns::User;
 use conf::SiteConfig;
 
@@ -139,6 +141,9 @@ sub setup
     $self->error_mode('my_error_rm');
     $self->run_modes(
 
+        # via a static page
+        'about' => 'about_page',
+
         # debug
         'debug' => 'debug',
 
@@ -218,6 +223,109 @@ sub redirectURL
     return "";
 
 }
+
+
+
+
+=begin doc
+
+  A filter to allow dynamic page inclusions.
+
+=end doc
+
+=cut
+
+sub mk_include_filter
+{
+    my $page = shift;
+    return sub {
+        my $text_ref = shift;
+        $$text_ref =~ s/###/$page/g;
+    };
+}
+
+
+
+=begin doc
+
+  Load a layout and a page snippet with it.
+
+=end doc
+
+=cut
+
+sub load_layout
+{
+    my ( $self, $page, %options ) = (@_);
+
+    #
+    #  Make sure the snippet exists.
+    #
+    if ( -e "../templates/pages/$page" )
+    {
+        $page = "../templates/pages/$page";
+    }
+    else
+    {
+        die "Page not found: $page";
+    }
+
+    #
+    #  Load our layout.
+    #
+    #
+    #  TODO: Parametize:
+    #
+    my $layout = "../templates/layouts/default.template";
+    my $l = HTML::Template->new( filename => $layout,
+                                 %options,
+                                 filter => mk_include_filter($page) );
+
+    #
+    #  IPv6 ?
+    #
+    if ( $ENV{ 'REMOTE_ADDR' } =~ /:/ )
+    {
+        $l->param( ipv6 => 1 ) unless ( $ENV{ 'REMOTE_ADDR' } =~ /^::ffff:/ );
+    }
+
+    #
+    #  If we're supposed to setup a session token for a FORM element
+    # then do so here.
+    #
+    my $session = $self->param("session");
+    if ( $options{ 'session' } )
+    {
+        delete $options{ 'session' };
+        $l->param( session => md5_hex( $session->id() ) );
+    }
+
+    #
+    # Make sure the sidebar text is setup.
+    #
+    my $sidebar = Yawns::Sidebar->new();
+    $l->param(
+            sidebar_text => $sidebar->getMenu( $session->param("logged_in") ) );
+    $l->param(
+         login_box_text => $sidebar->getLoginBox( $session->param("logged_in") )
+    );
+    $l->param( site_title => get_conf('site_title') );
+    $l->param( metadata   => get_conf('metadata') );
+
+    my $logged_in = 1;
+
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in");
+    if ( $username =~ /^anonymous$/i )
+    {
+        $logged_in = 0;
+    }
+    $l->param( logged_in => $logged_in );
+
+    return ($l);
+}
+
+
 
 
 #
@@ -400,6 +508,54 @@ sub application_logout
     #  Return to the homepage.
     #
     return ( $self->redirectURL("/") );
+}
+
+
+# ===========================================================================
+# about section
+# ===========================================================================
+sub about_page
+{
+    my ($self) = (@_);
+
+    my $q        = $self->query();
+    my $session  = $self->param('session');
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    # Is the viewer allowed to edit the page?
+    #
+    my $may_edit = 0;
+    if ( $username !~ /^anonymous$/ )
+    {
+
+        #
+        #  Check the permissions
+        #
+        my $perms = Yawns::Permissions->new( username => $username );
+        $may_edit = 1 if $perms->check( priv => "edit_about" );
+    }
+
+
+    #
+    # Get the page from the about section.
+    #
+    my $key   = $q->param('about');
+    my $pages = Yawns::About->new();
+    my $about = $pages->get( name => $key );
+
+
+    # set up the HTML template
+    my $template = $self->load_layout("about.inc");
+
+    # fill in the template parameters
+    $template->param( title        => $key,
+                      article_body => $about,
+                      may_edit     => $may_edit,
+                    );
+
+    # generate the output
+    return ( $template->output() );
 }
 
 
