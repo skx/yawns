@@ -6,6 +6,9 @@
   <meta http-equiv="Content-Language" content="en" />
   <!-- tmpl_var name='metadata' -->
   <!-- tmpl_var name='stylesheet' -->
+<!-- tmpl_if name='canon' -->
+  <link rel="canonincal" href="<!-- tmpl_var name='canon' escape='html' -->">
+<!-- /tmpl_if name='canon' -->
 <!-- tmpl_if name='title' -->
   <title><!-- tmpl_var name='title' --></title>
 <!-- tmpl_else -->

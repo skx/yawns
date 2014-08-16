@@ -328,10 +328,6 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "article" =>           # Read an article.
-      { sub  => \&read_article,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
 
     "author_search" =>     # Search for articles by the given user.
       { sub  => \&search_results,
@@ -588,7 +584,6 @@ my %dispatch = (
       },
 
 
-    "title"       => { sub => \&article_by_title, },
     "title_print" => { sub => \&article_by_title_print, },
 
     "user" =>                   # View a users profile page.

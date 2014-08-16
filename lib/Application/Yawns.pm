@@ -211,6 +211,10 @@ sub setup
         'tag_cloud'  => 'tag_cloud',
         'tag_search' => 'tag_search',
 
+        # View an article
+        'article'         => 'article',
+        'article_wrapper' => 'article_wrapper',
+
         # Searching
         'article_search' => 'article_search',
 
@@ -253,7 +257,9 @@ Redirect to the given URL.
 
 sub redirectURL
 {
-    my ( $self, $url ) = (@_);
+    my ( $self, $url, $status ) = (@_);
+
+    $status = 302 unless( $status && ( $status =~ /^([0-9]+)$/ ) );
 
     #
     #  Cookie name & expiry
@@ -279,7 +285,7 @@ sub redirectURL
                                );
 
     $self->header_add( -location => $url,
-                       -status   => "302",
+                       -status   => $status,
                        -cookie   => $cookie
                      );
     $self->header_type('redirect');
@@ -377,7 +383,6 @@ sub load_layout
 
     my $logged_in = 1;
 
-    my $session  = $self->param("session");
     my $username = $session->param("logged_in");
     if ( $username =~ /^anonymous$/i )
     {
@@ -1162,6 +1167,329 @@ sub index
 
     # generate the output
     return ( $template->output() );
+}
+
+
+# ===========================================================================
+# Articles should have consistent URLs.
+# ===========================================================================
+sub article_wrapper
+{
+    my( $self ) = ( @_ );
+
+    my $form = $self->query();
+    my $id   = $form->param( "id" );
+    my $tit  = $form->param( "title" );
+
+    if ( ( $id ) && ( $id =~ /^([0-9]+)$/ ) )
+    {
+        #
+        #
+        #
+        my $art = Yawns::Article->new( id => $id );
+        my $title = $art->getTitle();
+
+        my $articles = Yawns::Articles->new();
+        my $slug     = $articles->makeSlug($title);
+
+
+        return( $self->redirectURL( "/article/$id/$slug" ) );
+
+    }
+    elsif ( $tit )
+    {
+
+        #
+        #  Find the article by the title
+        #
+        my $articles = Yawns::Articles->new();
+        my $id = $articles->findBySlug( slug => $tit );
+
+        if ( defined($id) &&
+             length($id) &&
+             ( $id =~ /^([0-9]+)$/ ) )
+        {
+
+            my $art = Yawns::Article->new( id => $id );
+            my $title = $art->getTitle();
+
+            my $articles = Yawns::Articles->new();
+            my $slug     = $articles->makeSlug($title);
+
+            return( $self->redirectURL( "/article/$id/$slug" ) );
+
+        }
+    }
+    return "Invalid ID/title - $id - $tit";
+}
+
+
+
+
+# ===========================================================================
+# Read an article
+# ===========================================================================
+sub article
+{
+    my( $self ) = ( @_);
+
+    #
+    # Get singleton objects we care about
+    #
+    my $form     = $self->query();
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    # Get article number from URL
+    #
+    my $article_id = $form->param('id') if defined $form->param('id');
+
+    #
+    # Ensure article only contains numerical digits.
+    #
+    if ( $article_id =~ /([0-9]+)/ )
+    {
+        $article_id = $1;
+    }
+
+
+    #
+    # If we're not logged in then undef this so that the templates
+    # don't show adverts.
+    #
+    my $logged_in = 1;
+    if ( $username =~ /^anonymous$/i )
+    {
+        $logged_in = 0;
+    }
+
+
+    #
+    # See if the user has altruisticly decided to show adverts
+    #
+    my $show_adverts   = 1;
+    my $google_adverts = 0;
+    my $user_adverts   = 0;
+
+    #
+    #  Anonymous users always get adverts.
+    #
+    if ( $username =~ /^anonymous$/i )
+    {
+        $show_adverts = 1;
+    }
+    else
+    {
+
+        #
+        #  Other users do not, unless they have set such an option
+        # manually.
+        #
+        my $user = Yawns::User->new( username => $username );
+        my $user_data = $user->get();
+        $show_adverts = $user_data->{ 'viewadverts' };
+    }
+
+
+    #
+    #  If we're showing adverts then choose the type randomly.
+    #
+    if ($show_adverts)
+    {
+        my $rnd = int( rand(100) );
+
+        if ( $rnd <= 10 )
+        {
+            $user_adverts = 1;
+        }
+        else
+        {
+            $google_adverts = 1;
+        }
+    }
+
+    my $template = $self->load_layout( "view_article.inc",
+                                       loop_context_vars => 1,
+                                       global_vars       => 1,
+                                       session           => 1
+                                     );
+
+    #
+    # Get the appropriate article from database
+    #
+    my $accessor = Yawns::Article->new( id => $article_id );
+    my $article = $accessor->get();
+
+    my $tagHolder = Yawns::Tags->new();
+    my $tags = $tagHolder->getTags( article => $article_id );
+    if ( defined($tags) )
+    {
+        $template->param( tags => $tags );
+    }
+
+
+    #
+    #  Does the article exist?
+    #
+    my $error = 0;
+    if ( !defined( $article->{ article_body } ) )
+    {
+        $error = 1;
+    }
+
+
+    #
+    # Cleanup article body if it is defined.
+    #
+    if ( !$error )
+    {
+        $article->{ 'article_body' } =~ s/&amp;#13;//g;
+        $article->{ 'article_body' } =~ s/&amp;quot;/"/g;
+        $article->{ 'article_body' } =~ s/&amp;amp;/&/g;
+        $article->{ 'article_body' } =~ s/&amp;lt;/&lt;/g;
+        $article->{ 'article_body' } =~ s/&amp;gt;/&gt;/g;
+    }
+
+
+    #
+    # Article author can see article read count, and have
+    # a link to edit the article.
+    #
+    my $article_author = undef;
+    my $author         = $article->{ 'article_byuser' };
+
+    if ( defined($username) &&
+         ( !( $username =~ /anonymous/i ) ) &&
+         defined($author) &&
+         ( lc($username) eq lc($author) ) )
+    {
+        $article_author = 1;
+    }
+
+    #
+    #  Show the admin linke?
+    #
+    my $show_admin_links = 0;
+    if ($logged_in)
+    {
+        my $perms = Yawns::Permissions->new( username => $username );
+        $show_admin_links = 1 if ( $perms->check( priv => "article_admin" ) );
+    }
+
+
+
+    #
+    #  Get related links.
+    #
+    my $related = $accessor->getRelated();
+
+    #
+    #  If we're supposed to be showing user-adverts then
+    # display one at random.
+    #
+    if ($user_adverts)
+    {
+        my $adverts = Yawns::Adverts->new();
+        if ( $adverts->countActive() )
+        {
+            my $data = $adverts->fetchRandomAdvert();
+
+            $template->param( advert_id        => $data->{ 'id' },
+                              advert_link_text => $data->{ 'linktext' },
+                              advert_link      => $data->{ 'link' },
+                              advert_text      => $data->{ 'text' } );
+        }
+        else
+        {
+
+            #
+            #  We're supposed to show a user advert, but there aren't
+            # any.
+            #
+            $google_adverts = 1;
+            $user_adverts   = 0;
+        }
+    }
+
+
+    #
+    #  Tag addition URL
+    #
+    $template->param( tag_url => "/ajax/addtag/$article_id/" );
+
+    my $a = Yawns::Articles->new();
+
+    my $slug = $a->makeSlug( $article->{ 'article_title' } || "" );
+
+    # fill in all the parameters you got from the database
+    $template->param(
+        article_id     => $article_id,
+        article_title  => $article->{ 'article_title' },
+        slug           => $slug,
+        title          => $article->{ 'article_title' },
+        suspended      => $article->{ 'suspended' },
+        article_byuser => $article->{ 'article_byuser' },
+        article_ondate => $article->{ 'article_ondate' },
+        article_attime => $article->{ 'article_attime' },
+        article_body   => $article->{ 'article_body' },
+        comments       => $article->{ 'comments' },
+        logged_in      => $logged_in,
+        show_adverts   => $show_adverts,
+        google_adverts => $google_adverts,
+        user_adverts   => $user_adverts,
+        error          => $error,
+        article_author => $article_author,
+        article_admin  => $show_admin_links,
+        related        => $related,
+
+        # Navigation to previous article
+        showprev        => $article->{ 'prev_show' },
+        prevarticleslug => $a->makeSlug( $article->{ 'prevarticle' } || "" ),
+        prevarticle     => $article->{ 'prevarticle' },
+        prev            => $article->{ 'prev' },
+
+        # Navigation to next article
+        shownext        => $article->{ 'next_show' },
+        nextarticleslug => $a->makeSlug( $article->{ 'nextarticle' } || "" ),
+        nextarticle     => $article->{ 'nextarticle' },
+        next            => $article->{ 'next' },
+                    );
+
+
+    $template->param(canon => get_conf( "home_url" ) . "/article/$article_id/$slug" );
+
+
+    # ----- now do the comments section -----
+    my $comments_exist = $article->{ 'comments' };
+    if ($comments_exist)
+    {
+        my $templateC =
+          HTML::Template->new(
+                          filename => "../templates/includes/comments.template",
+                          global_vars => 1 );
+
+        my $ses = Singleton::Session->instance();
+        $templateC->param( session => md5_hex( $ses->id() ) );
+
+
+        my $comments = Yawns::Comments->new( article => $article_id );
+
+        #
+        #  Only show comments if found.
+        #
+        my $found = $comments->get();
+        $templateC->param( comments => $found ) if ($found);
+
+        # generate the output
+        my $comment_text = $templateC->output();
+        $template->param( comment_text => $comment_text );
+    }
+
+    #
+    # generate the output
+    #
+    return( $template->output() );
 }
 
 1;
