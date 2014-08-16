@@ -297,12 +297,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    # end explicit ordering.
-    "about" =>         # View a static page
-      { sub  => \&view_about_section,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
     "add_advert" =>    # Add an advert
       { sub   => \&add_new_advert,
         login => 1,
@@ -607,11 +601,6 @@ my %dispatch = (
       { sub   => \&submit_poll,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
-      },
-
-    "tag_browse" =>             # See the tag field
-      { sub  => \&tag_browse,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "tag_search" =>             # Perform a search by tag

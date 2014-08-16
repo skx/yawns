@@ -6162,41 +6162,6 @@ sub user_administration
 }
 
 
-# ===========================================================================
-# Show tags.
-# ===========================================================================
-sub tag_browse
-{
-
-    #
-    # Get the tags.
-    #
-    my $tags   = Yawns::Tags->new();
-    my $all    = $tags->getAllTags();
-    my $recent = $tags->getRecent();
-
-
-    # read in the template file
-    my $template = load_layout("tag_view.inc");
-
-    #
-    #  Title
-    #
-    $template->param( title => "Tag Cloud" );
-
-    #
-    #  Actual Tags
-    #
-    $template->param( all_tags => $all ) if ($all);
-
-    #
-    #  Recent tags.
-    #
-    $template->param( recent_tags => $recent ) if ($recent);
-
-    # generate the output
-    print $template->output;
-}
 
 
 

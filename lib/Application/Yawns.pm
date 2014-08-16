@@ -151,6 +151,9 @@ sub setup
         'login'  => 'application_login',
         'logout' => 'application_logout',
 
+        # Tag operations
+        'tag_cloud' => 'tag_cloud',
+
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
     );
@@ -516,6 +519,7 @@ sub application_logout
     $session->param( 'logged_in', undef );
     $session->clear('logged_in');
     $self->param( 'session', undef );
+    $session->flush();
     $session->close();
 
     #
@@ -572,5 +576,43 @@ sub about_page
     return ( $template->output() );
 }
 
+
+
+# ===========================================================================
+# Show tags.
+# ===========================================================================
+sub tag_cloud
+{
+    my( $self ) = ( @_ );
+
+    #
+    # Get the tags.
+    #
+    my $tags   = Yawns::Tags->new();
+    my $all    = $tags->getAllTags();
+    my $recent = $tags->getRecent();
+
+
+    # read in the template file
+    my $template = $self->load_layout("tag_view.inc");
+
+    #
+    #  Title
+    #
+    $template->param( title => "Tag Cloud" );
+
+    #
+    #  Actual Tags
+    #
+    $template->param( all_tags => $all ) if ($all);
+
+    #
+    #  Recent tags.
+    #
+    $template->param( recent_tags => $recent ) if ($recent);
+
+    # generate the output
+    return($template->output() );
+}
 
 1;
