@@ -90,6 +90,52 @@ sub cgiapp_init
 
 
 #
+#  Prerun - Validate login requirements, if any
+#
+sub cgiapp_prerun
+{
+    my $self = shift;
+
+    my $session = $self->param( "session" );
+
+    if ( $session &&  $session->param( "ssl" ) )
+    {
+        #
+        #  If we're not over SSL then abort
+        #
+        if ( defined( $ENV{ 'HTTPS' } ) && ( $ENV{ 'HTTPS' } =~ /on/i ) )
+        {
+            # NOP
+        }
+        else
+        {
+            return( $self->redirectURL( "https://" . $ENV{ "SERVER_NAME" } . $ENV{ 'REQUEST_URI' } ) );
+        }
+    }
+
+    if ( $session && $session->param( "ip" ) )
+    {
+        #
+        #  Test IP
+        #
+        my $cur = $ENV{'REMOTE_ADDR'};
+        my $old = $session->param( "ip" );
+
+        if ( $cur ne $old )
+        {
+            print <<EOF;
+Content-type: text/html
+
+
+IP changed - session dropped.
+EOF
+        }
+    }
+}
+
+
+
+#
 #  Flush the sesions
 #
 sub teardown
@@ -119,10 +165,6 @@ sub unknown_mode
 }
 
 
-
-#
-#  TODO: PreRun IP check.
-#
 
 
 
