@@ -222,31 +222,6 @@ sub validateSession
 
 
 
-# ===========================================================================
-# login form
-# ===========================================================================
-sub login_form
-{
-
-    # open the html template
-    my $template = load_layout("login_form.inc");
-
-    if ( !defined( $ENV{ 'HTTPS' } ) or ( $ENV{ 'HTTPS' } !~ /on/i ) )
-    {
-
-        # Link to the HTTPS version of this form
-        $template->param( http => 1 );
-
-        # Secure link
-        $template->param( secure => "https://" . $ENV{ 'SERVER_NAME' } .
-                            $ENV{ 'REQUEST_URI' },
-                          title => "Advanced Login Options"
-                        );
-    }
-
-    print $template->output;
-}
-
 
 # ===========================================================================
 # front page
