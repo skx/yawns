@@ -27,6 +27,7 @@ use Digest::MD5 qw! md5_hex !;
 # Our code
 #
 use Yawns::About;
+use Yawns::Articles;
 use Yawns::Event;
 use Yawns::Sidebar;
 use Yawns::User;
@@ -189,6 +190,9 @@ sub setup
     $self->error_mode('my_error_rm');
     $self->run_modes(
 
+        # Front-page
+        'index' => 'index',
+
         # Past artciles
         'archive' => 'archive',
 
@@ -218,7 +222,7 @@ sub setup
     #  Start mode + mode name
     #
     $self->header_add( -charset => 'utf-8' );
-    $self->start_mode('debug');
+    $self->start_mode('index');
     $self->mode_param('mode');
 
 }
@@ -653,13 +657,13 @@ sub application_logout
 # ===========================================================================
 sub archive
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Gain access to the objects we use.
     #
     my $form    = $self->query();
-    my $session = $self->param( "session" );
+    my $session = $self->param("session");
 
     #
     #  Get the current month and year.
@@ -720,7 +724,7 @@ sub archive
 
 
     # generate the output
-    return( $template->output() );
+    return ( $template->output() );
 }
 
 
@@ -1033,5 +1037,131 @@ sub edit_about
     return ( $template->output() );
 }
 
+
+
+##
+#
+#  This function is a mess.
+#
+#  It must allow the user to step through the articles on the front-page
+# either by section, or just globally.
+#
+##
+sub index
+{
+    my ($self) = (@_);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+
+    #
+    # Gain access to the articles
+    #
+    my $articles = Yawns::Articles->new();
+
+    #
+    # Get the last article number.
+    #
+    my $last = $articles->count();
+    $last += 1;
+
+    #
+    # How many do we show on the front page?
+    #
+    my $count = get_conf('headlines');
+
+    #
+    # Get the starting (maximum) number of the articles to view.
+    #
+    my $start = $last;
+    $start = $form->param('start') if $form->param('start');
+    if ( $start =~ /([0-9]+)/ )
+    {
+        $start = $1;
+    }
+
+    $start = $last if ( $start > $last );
+
+    #
+    # get required articles from database
+    #
+    my ( $the_articles, $last_id ) = $articles->getArticles( $start, $count );
+
+    $last_id = 0 unless $last_id;
+
+
+    #
+    # Data for pagination
+    #
+    my $shownext  = 0;
+    my $nextfrom  = 0;
+    my $nextcount = 0;
+
+    my $showprev  = 0;
+    my $prevfrom  = 0;
+    my $prevcount = 0;
+
+
+    $nextfrom = $start + 10;
+    if ( $nextfrom > $last ) {$nextfrom = $last;}
+
+    $nextcount = 10;
+    if ( $nextfrom + 10 > $last ) {$nextcount = $last - $start;}
+    while ( $nextcount > 10 )
+    {
+        $nextcount -= 10;
+    }
+
+    $prevfrom = $last_id - 1;
+    if ( $prevfrom < 0 ) {$prevfrom = 0;}
+
+    $prevcount = 10;
+    if ( $prevfrom - 10 < 0 ) {$prevcount = $start - 11;}
+
+    if ( $start < $last )
+    {
+        $shownext = 1;
+    }
+    if ( $start > 10 )
+    {
+        $showprev = 1;
+    }
+
+    # read in the template file
+    my $template = $self->load_layout( "index.inc", loop_context_vars => 1 );
+
+
+    # fill in all the parameters we got from the database
+    if ($last_id)
+    {
+        $template->param( articles => $the_articles );
+    }
+
+
+    $template->param( shownext  => $shownext,
+                      nextfrom  => $nextfrom,
+                      nextcount => $nextcount,
+                      showprev  => $showprev,
+                      prevfrom  => $prevfrom,
+                      prevcount => $prevcount,
+                      content   => $last_id,
+                    );
+
+    #
+    #  Add in the tips
+    #
+    my $weblogs     = Yawns::Weblogs->new();
+    my $recent_tips = $weblogs->getTipEntries();
+    $template->param( recent_tips => $recent_tips ) if ($recent_tips);
+
+
+    # generate the output
+    return ( $template->output() );
+}
 
 1;

@@ -92,7 +92,7 @@ sub new
 
 sub getMenu
 {
-    my ($class, $u) = (@_);
+    my ( $class, $u ) = (@_);
 
     #
     #  Get objects we need to generate output.
@@ -103,8 +103,8 @@ sub getMenu
     #
     #  Get the current username, and see if we're anonymous.
     #
-    my $username     = $u ? $u : $session->param("logged_in");
-    $username = "Anonymous" if ( ! $username );
+    my $username = $u ? $u : $session->param("logged_in");
+    $username = "Anonymous" if ( !$username );
 
     my $anonymous = 0;
     $anonymous = 1 if ( $username =~ /^anonymous$/i );
@@ -337,7 +337,7 @@ sub getMenu
 
 sub getLoginBox
 {
-    my ($class,$u) = (@_);
+    my ( $class, $u ) = (@_);
 
     #
     #  Get objects we need to generate output.
@@ -348,7 +348,7 @@ sub getLoginBox
     #
     #  Settings which control what is displayed upon the sidebar
     #
-    my $username     = $u ? $u : $session->param("logged_in");
+    my $username = $u ? $u : $session->param("logged_in");
     my $failed_login = $session->param("failed_login");
 
 
