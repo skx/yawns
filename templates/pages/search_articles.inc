@@ -6,7 +6,7 @@
 
 <blockquote>
  <form method="post" action="/">
-  <input type="hidden" name="search_articles" value="1">
+  <input type="hidden" name="mode" value="article_search">
   <input type="text" name="q" value="<!-- tmpl_if name='terms' --><!-- tmpl_var name='terms' escape='html' --><!-- /tmpl_if -->">
   <input type="submit" name="sbt" value="search">
  </form>
