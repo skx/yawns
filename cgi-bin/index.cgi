@@ -328,11 +328,6 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "archive" =>           # View previous submissions.
-      { sub  => \&show_archive,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
     "article" =>           # Read an article.
       { sub  => \&read_article,
         type => "Content-Type: text/html; charset=UTF-8\n\n",

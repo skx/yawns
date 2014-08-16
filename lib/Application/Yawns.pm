@@ -189,6 +189,9 @@ sub setup
     $self->error_mode('my_error_rm');
     $self->run_modes(
 
+        # Past artciles
+        'archive' => 'archive',
+
         # static pages
         'about'      => 'about_page',
         'edit_about' => 'edit_about',
@@ -642,6 +645,85 @@ sub application_logout
     $self->header_type('redirect');
     return "";
 }
+
+
+
+# ===========================================================================
+# Show year-based archives of articles.
+# ===========================================================================
+sub archive
+{
+    my( $self ) = ( @_ );
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form    = $self->query();
+    my $session = $self->param( "session" );
+
+    #
+    #  Get the current month and year.
+    #
+    my $year = undef;
+    $year = $form->param('year') if $form->param('year');
+
+
+    #
+    #  Get the current year
+    #
+    my ( $sec, $min, $hour, $mday, $mon, $yr, $wday, $yday, $isdst );
+    ( $sec, $min, $hour, $mday, $mon, $yr, $wday, $yday, $isdst ) =
+      localtime(time);
+
+    my $current_year = $yr + 1900;
+
+
+    #
+    #  If there is no year then the year is this one.
+    #
+    if ( !defined($year) )
+    {
+        $year = $current_year;
+    }
+
+    #
+    # get required articles from database
+    #
+    my $articles     = Yawns::Articles->new();
+    my %years        = $articles->getArticleYears();
+    my $the_articles = $articles->getArchivedArticles($year);
+
+    my $years;
+    foreach my $y ( reverse sort keys %years )
+    {
+        push( @$years, { year => $y } );
+    }
+
+    #
+    # Load the display template.
+    #
+    my $template = $self->load_layout("archive.inc");
+
+    #
+    #  Articles.
+    #
+    $template->param( articles          => $the_articles ) if $the_articles;
+    $template->param( show_archive_year => $years )        if ($years);
+
+    my $title = "Archive for $year";
+
+    #
+    #  Show the month name, and the currently viewed year.
+    #
+    $template->param( year  => $year,
+                      title => $title );
+
+
+    # generate the output
+    return( $template->output() );
+}
+
+
 
 
 # ===========================================================================
