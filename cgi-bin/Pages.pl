@@ -6487,42 +6487,6 @@ sub bookmark_delete
 
 
 
-# ===========================================================================
-# Convert a month number to the month name.
-# ===========================================================================
-sub month_to_name
-{
-    my ($number) = (@_);
-
-    return "" if !defined($number);
-
-    # strip leading zeros, if present.
-    $number =~ s/^0+//g;
-
-    my %months;
-    $months{ 1 }  = 'January';
-    $months{ 2 }  = 'February';
-    $months{ 3 }  = 'March';
-    $months{ 4 }  = 'April';
-    $months{ 5 }  = 'May';
-    $months{ 6 }  = 'June';
-    $months{ 7 }  = 'July';
-    $months{ 8 }  = 'August';
-    $months{ 9 }  = 'September';
-    $months{ 10 } = 'October';
-    $months{ 11 } = 'November';
-    $months{ 12 } = 'December';
-
-    if ( $months{ $number } )
-    {
-        return ( $months{ $number } );
-    }
-    else
-    {
-        return "invalid month $number";
-    }
-}
-
 
 sub dump_details
 {
