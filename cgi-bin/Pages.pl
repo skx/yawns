@@ -6006,60 +6006,6 @@ sub user_administration
 
 
 
-# ===========================================================================
-#  Search for things by tag.
-# ===========================================================================
-sub tag_search
-{
-
-    #
-    # Gain access to the form.
-    #
-    my $form = Singleton::CGI->instance();
-    my $tag  = $form->param("tag_search");
-
-    #
-    #  Do the search
-    #
-    my $tags = Yawns::Tags->new();
-    my ( $articles, $polls, $submissions, $weblogs ) = $tags->findByTag($tag);
-    my $recent  = $tags->getRecent();
-    my $related = $tags->getRelatedTags($tag);
-
-
-    # set up the HTML template
-    my $template =
-      load_layout( "tag_search_results.inc", loop_context_vars => 1 );
-
-    #
-    # fill in the template parameters
-    #
-    $template->param( articles     => $articles )    if ($articles);
-    $template->param( polls        => $polls )       if ($polls);
-    $template->param( submissions  => $submissions ) if ($submissions);
-    $template->param( weblogs      => $weblogs )     if ($weblogs);
-    $template->param( tag          => $tag );
-    $template->param( related_tags => $related )     if ($related);
-
-    # Error?
-    if ( ( !$articles ) &&
-         ( !$polls ) &&
-         ( !$submissions ) &&
-         ( !$weblogs ) )
-    {
-        $template->param( empty => 1 );
-    }
-
-    #
-    #  Recent tags.
-    #
-    $template->param( recent_tags => $recent ) if ($recent);
-    $template->param( title => "Tag search results for: $tag" );
-
-    # generate the output
-    print $template->output;
-}
-
 
 
 

@@ -201,7 +201,8 @@ sub setup
         'logout' => 'application_logout',
 
         # Tag operations
-        'tag_cloud' => 'tag_cloud',
+        'tag_cloud'  => 'tag_cloud',
+        'tag_search' => 'tag_search',
 
         # Searching
         'article_search' => 'article_search',
@@ -729,6 +730,62 @@ sub tag_cloud
     return ( $template->output() );
 }
 
+
+
+# ===========================================================================
+#  Search for things by tag.
+# ===========================================================================
+sub tag_search
+{
+    my ($self) = (@_);
+
+    #
+    # Get the tag we're looking for
+    #
+    my $form = $self->query();
+    my $tag  = $form->param("tag");
+
+    #
+    #  Do the search
+    #
+    my $tags = Yawns::Tags->new();
+    my ( $articles, $polls, $submissions, $weblogs ) = $tags->findByTag($tag);
+    my $recent  = $tags->getRecent();
+    my $related = $tags->getRelatedTags($tag);
+
+
+    # set up the HTML template
+    my $template =
+      $self->load_layout( "tag_search_results.inc", loop_context_vars => 1 );
+
+    #
+    # fill in the template parameters
+    #
+    $template->param( articles     => $articles )    if ($articles);
+    $template->param( polls        => $polls )       if ($polls);
+    $template->param( submissions  => $submissions ) if ($submissions);
+    $template->param( weblogs      => $weblogs )     if ($weblogs);
+    $template->param( tag          => $tag );
+    $template->param( related_tags => $related )     if ($related);
+
+    # Error?
+    if ( ( !$articles ) &&
+         ( !$polls ) &&
+         ( !$submissions ) &&
+         ( !$weblogs ) )
+    {
+        $template->param( empty => 1 );
+    }
+
+    #
+    #  Recent tags.
+    #
+    $template->param( recent_tags => $recent ) if ($recent);
+    $template->param( title => "Tag search results for: $tag" );
+
+    # generate the output
+    return ( $template->output() );
+}
 
 
 

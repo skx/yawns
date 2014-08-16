@@ -592,11 +592,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "tag_search" =>             # Perform a search by tag
-      { sub  => \&tag_search,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
 
     "title"       => { sub => \&article_by_title, },
     "title_print" => { sub => \&article_by_title_print, },
