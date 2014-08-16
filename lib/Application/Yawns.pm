@@ -169,6 +169,7 @@ sub my_error_rm
 {
     my ( $self, $error ) = (@_);
 
+    use Data::Dumper;
     return Dumper( \$error );
 }
 
@@ -231,7 +232,7 @@ sub debug
 {
     my ($self) = (@_);
 
-    my $session = $self->session();
+    my $session = $self->param('session');
     my $username = $session->param("logged_in") || "Anonymous";
 
     return ("OK - $username");
@@ -250,7 +251,11 @@ sub application_login
     my $session = $self->param('session');
 
     # if already logged in redirect
-    return $self->redirectURL("/") unless ( $session->param("username") );
+    my $username = $session->param("username") || undef;
+    if ( $username && ( $username ne "Anonymous" ) )
+    {
+        return $self->redirectURL("/");
+    }
 
     #
     # If the user isn't submitting a form then show it
@@ -270,6 +275,13 @@ sub application_login
     my $secure = $q->param('secure');
     my $ssl    = $q->param('ssl');
 
+
+    my $protocol = "http://";
+
+    if ( defined( $ENV{ 'HTTPS' } ) && ( $ENV{ 'HTTPS' } =~ /on/i ) )
+    {
+        $protocol = "https://";
+    }
 
     #
     # Login results.
@@ -322,16 +334,6 @@ sub application_login
         if ( defined($ssl) && ($ssl) )
         {
             $session->param( "ssl", 1 );
-
-            #
-            # and reset the cookie to only use ssl:
-            #
-            $sessionCookie =
-              $form->cookie( -name    => 'CGISESSID',
-                             -value   => $session->id,
-                             -expires => '+1d',
-                             -secure  => 1
-                           );
         }
         else
         {
@@ -345,16 +347,10 @@ sub application_login
         # 2:  Redirect + Set-Cookie
         # 3:  Exit.
         #
-        my $target = $form->param("target");
+        my $target = $q->param("target");
         if ( defined($target) && ( $target =~ /^\// ) )
         {
-            $session->close();
-            print $form->header(
-                        -type     => 'text/html',
-                        -cookie   => $sessionCookie,
-                        -location => $protocol . $ENV{ "SERVER_NAME" } . $target
-            );
-            exit;
+            return ( $self->redirectURL($target) );
         }
         else
         {
@@ -391,9 +387,6 @@ sub application_logout
 
     my $q       = $self->query();
     my $session = $self->param('session');
-
-    # if already logged in redirect
-    return $self->redirectURL("/") unless ( $session->param("username") );
 
     #
     #  Clear the session
