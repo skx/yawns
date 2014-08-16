@@ -2895,55 +2895,6 @@ sub change_password
 
 
 
-# ===========================================================================
-# about section
-# ===========================================================================
-sub view_about_section
-{
-
-    #
-    # Get access to pointers we need.
-    #
-    my $form     = Singleton::CGI->instance();
-    my $session  = Singleton::Session->instance();
-    my $username = $session->param("logged_in");
-
-    #
-    # Is the viewer allowed to edit the page?
-    #
-    my $may_edit = 0;
-    if ( $username !~ /^anonymous$/ )
-    {
-
-        #
-        #  Check the permissions
-        #
-        my $perms = Yawns::Permissions->new( username => $username );
-        $may_edit = 1 if $perms->check( priv => "edit_about" );
-    }
-
-
-    #
-    # Get the page from the about section.
-    #
-    my $key   = $form->param('about');
-    my $pages = Yawns::About->new();
-    my $about = $pages->get( name => $key );
-
-
-    # set up the HTML template
-    my $template = load_layout("about.inc");
-
-    # fill in the template parameters
-    $template->param( title        => $key,
-                      article_body => $about,
-                      may_edit     => $may_edit,
-                    );
-
-    # generate the output
-    print $template->output;
-}
-
 
 # ===========================================================================
 # View search results:  Tag search, author search, etc.

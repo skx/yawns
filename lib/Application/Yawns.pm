@@ -368,13 +368,27 @@ sub application_login
     #
     # If the user isn't submitting a form then show it
     #
-    if ( $q->param("login") )
+    if ( ! $q->param("submit") )
     {
 
-        #
-        # Show the form.
-        #
-        return ("Show login form here.");
+
+        # open the html template
+        my $template = $self->load_layout("login_form.inc");
+
+        if ( !defined( $ENV{ 'HTTPS' } ) or ( $ENV{ 'HTTPS' } !~ /on/i ) )
+        {
+
+            # Link to the HTTPS version of this form
+            $template->param( http => 1 );
+
+            # Secure link
+            $template->param( secure => "https://" . $ENV{ 'SERVER_NAME' } .
+                              $ENV{ 'REQUEST_URI' },
+                              title => "Advanced Login Options"
+                            );
+        }
+
+        return( $template->output() );
     }
 
 
