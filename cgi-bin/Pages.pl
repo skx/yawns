@@ -1772,52 +1772,6 @@ sub submit_comment
 
 
 
-# ===========================================================================
-# Search past articles
-# ===========================================================================
-sub search_articles
-{
-
-    #
-    #  Gain access to the things we require.
-    #
-    my $form    = Singleton::CGI->instance();
-
-    #
-    #  Get the search term(s)
-    #
-    my $terms    = $form->param( "q" ) || undef;
-    my $template = load_layout( "search_articles.inc",
-                              );
-
-    if ( $terms )
-    {
-        use Lucy::Simple;
-
-        my $lucy =  Lucy::Simple->new( path  => "/tmp/index" ,
-                                       language => 'en' );
-
-
-        my $hits = $lucy->search(
-                                 query      => $terms,
-                                 offset     => 0,
-                                 num_wanted => 50,
-                                );
-
-        my $results;
-
-        while ( my $hit = $lucy->next ) {
-            push( @$results, { id => $hit->{id}, title => $hit->{title} } );
-        }
-        $template->param( terms => $terms );
-        $template->param( results => $results ) if ( $results );
-    }
-    my $output = $template->output();
-    print $output;
-
-}
-
-
 
 # ===========================================================================
 # view a users profile page.

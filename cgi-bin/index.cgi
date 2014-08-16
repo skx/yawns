@@ -545,11 +545,6 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "search_articles" =>        # Search articles
-      { sub  => \&search_articles,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
     "single_weblog" =>          # View a single weblog entry.
       { sub  => \&view_single_weblog,
         type => "Content-Type: text/html; charset=UTF-8\n\n",

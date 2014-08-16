@@ -154,6 +154,9 @@ sub setup
         # Tag operations
         'tag_cloud' => 'tag_cloud',
 
+        # Searching
+        'article_search' => 'article_search',
+
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
     );
@@ -613,6 +616,53 @@ sub tag_cloud
 
     # generate the output
     return($template->output() );
+}
+
+
+
+
+
+# ===========================================================================
+# Search past articles
+# ===========================================================================
+sub article_search
+{
+    my( $self ) = ( @_ );
+
+    #
+    #  Gain access to the things we require.
+    #
+    my $form  = $self->query();
+
+    #
+    #  Get the search term(s)
+    #
+    my $terms    = $form->param( "q" ) || undef;
+    my $template = $self->load_layout( "search_articles.inc" );
+
+    if ( $terms )
+    {
+        use Lucy::Simple;
+
+        my $lucy =  Lucy::Simple->new( path  => "/tmp/index" ,
+                                       language => 'en' );
+
+
+        my $hits = $lucy->search(
+                                 query      => $terms,
+                                 offset     => 0,
+                                 num_wanted => 50,
+                                );
+
+        my $results;
+
+        while ( my $hit = $lucy->next ) {
+            push( @$results, { id => $hit->{id}, title => $hit->{title} } );
+        }
+        $template->param( terms => $terms );
+        $template->param( results => $results ) if ( $results );
+    }
+    return( $template->output() );
 }
 
 1;
