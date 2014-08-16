@@ -382,12 +382,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "edit_about" =>         # Edit a static page
-      { sub   => \&edit_about,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        priv  => "edit_about",
-        cache => 1,
-      },
 
     "edit_adverts" =>       # Edit a site advert
       { sub   => \&edit_adverts,

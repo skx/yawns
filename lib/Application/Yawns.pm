@@ -21,6 +21,7 @@ use base 'CGI::Application';
 #
 use Cache::Memcached;
 use HTML::Template;
+use Digest::MD5 qw! md5_hex !;
 
 #
 # Our code
@@ -96,30 +97,36 @@ sub cgiapp_prerun
 {
     my $self = shift;
 
-    my $session = $self->param( "session" );
+    my $session = $self->param("session");
 
-    if ( $session &&  $session->param( "ssl" ) )
+    if ( $session && $session->param("ssl") )
     {
+
         #
         #  If we're not over SSL then abort
         #
         if ( defined( $ENV{ 'HTTPS' } ) && ( $ENV{ 'HTTPS' } =~ /on/i ) )
         {
+
             # NOP
         }
         else
         {
-            return( $self->redirectURL( "https://" . $ENV{ "SERVER_NAME" } . $ENV{ 'REQUEST_URI' } ) );
+            return (
+                  $self->redirectURL(
+                      "https://" . $ENV{ "SERVER_NAME" } . $ENV{ 'REQUEST_URI' }
+                  ) );
         }
     }
 
-    if ( $session && $session->param( "ip" ) )
+    if ( $session && $session->param("ip") )
     {
+
         #
         #  Test IP
         #
-        my $cur = $ENV{'REMOTE_ADDR'};
-        my $old = $session->param( "ip" );
+        my $cur = $ENV{ 'REMOTE_ADDR' };
+        my $old = $session->param("ip");
 
         if ( $cur ne $old )
         {
@@ -167,7 +174,6 @@ sub unknown_mode
 
 
 
-
 =begin doc
 
 Setup our run-mode mappings, and the defaults for the application.
@@ -183,8 +189,9 @@ sub setup
     $self->error_mode('my_error_rm');
     $self->run_modes(
 
-        # via a static page
-        'about' => 'about_page',
+        # static pages
+        'about'      => 'about_page',
+        'edit_about' => 'edit_about',
 
         # debug
         'debug' => 'debug',
@@ -375,6 +382,65 @@ sub load_layout
 
 
 
+# ===========================================================================
+# CSRF protection.
+# ===========================================================================
+sub validateSession
+{
+    my ($self) = (@_);
+
+    my $session = $self->param("session");
+
+    #
+    #  We cannot validate a session if we have no cookie.
+    #
+    my $username = $session->param("logged_in") || "Anonymous";
+    return 0 if ( !defined($username) || ( $username =~ /^anonymous$/i ) );
+
+    my $form = $self->query();
+
+    # This is the session token we're expecting.
+    my $wanted = md5_hex( $session->id() );
+
+    # The session token we recieved.
+    my $got = $form->param("session");
+
+    if ( ( !defined($got) ) || ( $got ne $wanted ) )
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
+
+# ===========================================================================
+# Permission Denied - or other status message
+# ===========================================================================
+sub permission_denied
+{
+    my ( $self, %parameters ) = (@_);
+
+    # set up the HTML template
+    my $template = $self->load_layout("permission_denied.inc");
+
+    # title
+    my $title = $parameters{ 'title' } || "Permission Denied";
+    $template->param( title => $title );
+
+    #
+    # If we got a custom option then set that up.
+    #
+    if ( scalar( keys(%parameters) ) )
+    {
+        $template->param(%parameters);
+        $template->param( custom_error => 1 );
+    }
+
+    # generate the output
+    return ( $template->output() );
+}
+
 
 #
 #  Real handlers
@@ -416,7 +482,7 @@ sub application_login
     #
     # If the user isn't submitting a form then show it
     #
-    if ( ! $q->param("submit") )
+    if ( !$q->param("submit") )
     {
 
 
@@ -431,12 +497,12 @@ sub application_login
 
             # Secure link
             $template->param( secure => "https://" . $ENV{ 'SERVER_NAME' } .
-                              $ENV{ 'REQUEST_URI' },
+                                $ENV{ 'REQUEST_URI' },
                               title => "Advanced Login Options"
                             );
         }
 
-        return( $template->output() );
+        return ( $template->output() );
     }
 
 
@@ -628,7 +694,7 @@ sub about_page
 # ===========================================================================
 sub tag_cloud
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     # Get the tags.
@@ -657,9 +723,8 @@ sub tag_cloud
     $template->param( recent_tags => $recent ) if ($recent);
 
     # generate the output
-    return($template->output() );
+    return ( $template->output() );
 }
-
 
 
 
@@ -669,42 +734,142 @@ sub tag_cloud
 # ===========================================================================
 sub article_search
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Gain access to the things we require.
     #
-    my $form  = $self->query();
+    my $form = $self->query();
 
     #
     #  Get the search term(s)
     #
-    my $terms    = $form->param( "q" ) || undef;
-    my $template = $self->load_layout( "search_articles.inc" );
+    my $terms = $form->param("q") || undef;
+    my $template = $self->load_layout("search_articles.inc");
 
-    if ( $terms )
+    if ($terms)
     {
         use Lucy::Simple;
 
-        my $lucy =  Lucy::Simple->new( path  => "/tmp/index" ,
-                                       language => 'en' );
+        my $lucy = Lucy::Simple->new( path     => "/tmp/index",
+                                      language => 'en' );
 
 
-        my $hits = $lucy->search(
-                                 query      => $terms,
-                                 offset     => 0,
-                                 num_wanted => 50,
+        my $hits = $lucy->search( query      => $terms,
+                                  offset     => 0,
+                                  num_wanted => 50,
                                 );
 
         my $results;
 
-        while ( my $hit = $lucy->next ) {
-            push( @$results, { id => $hit->{id}, title => $hit->{title} } );
+        while ( my $hit = $lucy->next )
+        {
+            push( @$results, { id => $hit->{ id }, title => $hit->{ title } } );
         }
         $template->param( terms => $terms );
-        $template->param( results => $results ) if ( $results );
+        $template->param( results => $results ) if ($results);
     }
-    return( $template->output() );
+    return ( $template->output() );
 }
+
+
+# ===========================================================================
+# Edit About pages
+# ===========================================================================
+sub edit_about
+{
+    my ($self) = (@_);
+
+    # Get access to the form and database
+    my $form = $self->query();
+
+    # load the template
+    my $template = $self->load_layout( "edit_about.inc", session => 1 );
+
+    #
+    # Are we viewing a page, or the picker?
+    #
+    my $action = $form->param('page') || "";
+
+    if ( $action eq 'pick' )
+    {
+
+        # Get the page options.
+        my $aboutPages = Yawns::About->new();
+
+        # build the select list of possible pages
+        $template->param( about_pages => $aboutPages->get() );
+        return ( $template->output() );
+    }
+
+
+    #
+    #  Are we saving?
+    #
+    if ( $form->param("submit") )
+    {
+
+        # validate session.
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        my $old_page = $form->param('pagename');
+        my $new_page = $form->param('pageid');
+        my $body     = $form->param('bodytext');
+
+        #
+        # Update the page
+        #
+        my $aboutPages = Yawns::About->new();
+
+        #
+        # Delete the old page.
+        #
+        # (Note this might be the same as the 'new' page.
+        #
+        $aboutPages->delete( name => $old_page );
+
+        #
+        # Now set the new text.
+        #
+        $aboutPages->set( name => $new_page,
+                          text => $body );
+
+        # build the select list of possible pages and set confirmation
+        $template->param( about_pages => $aboutPages->get(),
+                          confirm     => 1,
+                          page        => $new_page,
+                          title       => "Page Saved: $new_page",
+                        );
+    }
+    else
+    {
+        my $about = Yawns::About->new();
+        my $page = $form->param('page') || '';
+
+        #
+        #  Get the page.
+        #
+        my $body = $about->get( name => $page ) if defined($page);
+
+
+        #
+        #  Ensure entities are escaped.
+        #
+        $body = HTML::Entities::encode_entities($body);
+
+        #
+        #  Setup display.
+        #
+        $template->param( id         => $page,
+                          about_body => $body,
+                          title      => "Edit About: $page",
+                        );
+    }
+
+    # generate the output
+    return ( $template->output() );
+}
+
 
 1;
