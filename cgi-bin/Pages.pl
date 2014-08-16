@@ -63,20 +63,20 @@ Send an alert message
 
 sub send_alert
 {
-    my( $text ) = ( @_ );
+    my ($text) = (@_);
 
     #
     #  Abort if we're disabled, or have empty text.
     #
     my $enabled = conf::SiteConfig::get_conf('alerts') || 0;
-    return unless ($enabled );
+    return unless ($enabled);
     return unless ( $text && length($text) );
 
     #
     #  Send it.
     #
     my $event = Yawns::Event->new();
-    $event->send( $text );
+    $event->send($text);
 }
 
 
@@ -194,9 +194,9 @@ sub validateSession
     #  We cannot validate a session if we have no cookie.
     #
     my $username = $session->param("logged_in") || "Anonymous";
-    return if ( !defined( $username ) || ( $username =~ /^anonymous$/i) );
+    return if ( !defined($username) || ( $username =~ /^anonymous$/i ) );
 
-    my $form    = Singleton::CGI->instance();
+    my $form = Singleton::CGI->instance();
 
     # This is the session token we're expecting.
     my $wanted = md5_hex( $session->id() );
@@ -218,7 +218,6 @@ sub validateSession
 
     }
 }
-
 
 
 
@@ -625,6 +624,7 @@ sub read_article
 #
 sub article_by_title
 {
+
     # Get singleton references we care about
     my $form = Singleton::CGI->instance();
 
@@ -641,10 +641,11 @@ sub article_by_title
     # no title == show index
     if ( !defined($title) || !length($title) )
     {
-        print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/" );
+        print $form->redirect( $protocol . $ENV{ "SERVER_NAME" } . "/" );
     }
     else
     {
+
         #
         #  Find the article by the title
         #
@@ -656,13 +657,14 @@ sub article_by_title
              ( $id =~ /^([0-9]+)$/ ) )
         {
 
-            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/article/" .
-                                  $id . "/" . $title );
+            print $form->redirect(
+                   $protocol . $ENV{ "SERVER_NAME" } . "/article/" . $id . "/" .
+                     $title );
 
         }
         else
         {
-            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/" );
+            print $form->redirect( $protocol . $ENV{ "SERVER_NAME" } . "/" );
         }
     }
 
@@ -685,6 +687,7 @@ sub article_by_title
 #
 sub article_by_title_print
 {
+
     # Get singleton references we care about
     my $form = Singleton::CGI->instance();
 
@@ -701,10 +704,11 @@ sub article_by_title_print
     # no title == show index
     if ( !defined($title) || !length($title) )
     {
-        print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/" );
+        print $form->redirect( $protocol . $ENV{ "SERVER_NAME" } . "/" );
     }
     else
     {
+
         #
         #  Find the article by the title
         #
@@ -716,13 +720,14 @@ sub article_by_title_print
              ( $id =~ /^([0-9]+)$/ ) )
         {
 
-            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/article/" .
-                                  $id . "/" . $title . "/print" );
+            print $form->redirect(
+                   $protocol . $ENV{ "SERVER_NAME" } . "/article/" . $id . "/" .
+                     $title . "/print" );
 
         }
         else
         {
-            print $form->redirect($protocol . $ENV{ "SERVER_NAME" } . "/" );
+            print $form->redirect( $protocol . $ENV{ "SERVER_NAME" } . "/" );
         }
     }
 
@@ -941,11 +946,13 @@ sub submit_article
         # HTML Encode the title.
         $submit_title = HTML::Entities::encode_entities($submit_title);
 
-      {
-          my $home_url = get_conf('home_url');
-          my $home     = $home_url . "/users/$username";
-          send_alert(  "Article submitted by <a href=\"$home\">$username</a> - $submit_title" );
-      }
+        {
+            my $home_url = get_conf('home_url');
+            my $home     = $home_url . "/users/$username";
+            send_alert(
+                "Article submitted by <a href=\"$home\">$username</a> - $submit_title"
+            );
+        }
 
         #
         #  Create the correct formatter object.
@@ -1599,25 +1606,27 @@ sub submit_comment
 
 
 
-      {
-          my $llink = get_conf('home_url');
-          if ( $onarticle ) {
-              $llink .= "/articles/" . $onarticle . "#comment_" . $num;
-          }
-          if ( $onpoll )
-          {
-              $llink .= "/polls/" . $onpoll . "#comment_" . $num;
-          }
-          if ( $onweblog )
-          {
-              my $weblog = Yawns::Weblog->new( gid => $onweblog );
-              my $owner  = $weblog->getOwner();
-              my $id     = $weblog->getID();
-              $llink .= "/users/$owner/weblog/$id"  . "#comment_" . $num;;
-          }
+        {
+            my $llink = get_conf('home_url');
+            if ($onarticle)
+            {
+                $llink .= "/articles/" . $onarticle . "#comment_" . $num;
+            }
+            if ($onpoll)
+            {
+                $llink .= "/polls/" . $onpoll . "#comment_" . $num;
+            }
+            if ($onweblog)
+            {
+                my $weblog = Yawns::Weblog->new( gid => $onweblog );
+                my $owner  = $weblog->getOwner();
+                my $id     = $weblog->getID();
+                $llink .= "/users/$owner/weblog/$id" . "#comment_" . $num;
+            }
 
-          send_alert( "New comment posted <a href=\"$llink\">$submit_title</a>." );
-      }
+            send_alert(
+                    "New comment posted <a href=\"$llink\">$submit_title</a>.");
+        }
 
 
         #
@@ -1772,7 +1781,6 @@ sub submit_comment
 
 
 
-
 # ===========================================================================
 # view a users profile page.
 # ===========================================================================
@@ -1914,7 +1922,7 @@ sub view_user
     my $is_owner = 0;
     if ( lc($username) eq lc($viewusername) )
     {
-        $is_owner = 1 unless( $anon );
+        $is_owner = 1 unless ($anon);
     }
 
 
@@ -2172,9 +2180,9 @@ sub edit_prefs
             # Save the preferences.
             #
             my $user = Yawns::User->new( username => $edituser );
-            $user->savePreferences( view_polls     => $polls,
-                                    view_adverts   => $adverts,
-                                    view_blogs     => $blogs
+            $user->savePreferences( view_polls   => $polls,
+                                    view_adverts => $adverts,
+                                    view_blogs   => $blogs
                                   );
 
             #
@@ -2270,16 +2278,15 @@ sub edit_prefs
     #
     my $article =
       $notifications->getNotificationMethod( $edituser, "article" ) ||
-        "none";
+      "none";
     my $comment =
       $notifications->getNotificationMethod( $edituser, "comment" ) ||
-        "none";
-    my $weblog =
-      $notifications->getNotificationMethod( $edituser, "weblog" ) ||
-        "none";
+      "none";
+    my $weblog = $notifications->getNotificationMethod( $edituser, "weblog" ) ||
+      "none";
     my $submissions =
       $notifications->getNotificationMethod( $edituser, "submissions" ) ||
-        "none";
+      "none";
 
 
 
@@ -2483,7 +2490,7 @@ sub new_user
     my $prev_banned      = 0;
     my $prev_email       = 0;
     my $invalid_hash     = 0;
-    my $mail_error = "";
+    my $mail_error       = "";
 
 
     if ( $form->param('new_user') eq 'Create User' )
@@ -2519,50 +2526,67 @@ sub new_user
             #
             #  See if this user comes from an IP address with a previous suspension.
             #
-            my $db  = Singleton::DBI->instance();
+            my $db = Singleton::DBI->instance();
             my $sql = $db->prepare(
-                                   "SELECT COUNT(username) FROM users WHERE ip=? AND suspended=1" );
-            $sql->execute( $ENV{'REMOTE_ADDR'} );
-            $prev_banned =  $sql->fetchrow_array();
+                "SELECT COUNT(username) FROM users WHERE ip=? AND suspended=1");
+            $sql->execute( $ENV{ 'REMOTE_ADDR' } );
+            $prev_banned = $sql->fetchrow_array();
             $sql->finish();
 
 
-            $sql = $db->prepare( "SELECT COUNT(username) FROM users WHERE realemail=?" );
-            $sql->execute( $new_user_email );
-            $prev_email =  $sql->fetchrow_array();
+            $sql = $db->prepare(
+                         "SELECT COUNT(username) FROM users WHERE realemail=?");
+            $sql->execute($new_user_email);
+            $prev_email = $sql->fetchrow_array();
             $sql->finish();
 
-            if ( $prev_banned )
+            if ($prev_banned)
             {
-                send_alert("Denied registration for '$new_user_name' from " . $ENV{'REMOTE_ADDR'} );
+                send_alert( "Denied registration for '$new_user_name' from " .
+                            $ENV{ 'REMOTE_ADDR' } );
             }
-            if ( $prev_banned )
+            if ($prev_banned)
             {
-                send_alert("Denied registration for in-use email " . $new_user_email . " " . $ENV{'REMOTE_ADDR'} );
+                send_alert(
+                     "Denied registration for in-use email " . $new_user_email .
+                       " " . $ENV{ 'REMOTE_ADDR' } );
             }
 
             #
             # Now test to see if the email address is valid
             #
-            $invalid_email = Mail::Verify::CheckAddress( $new_user_email );
+            $invalid_email = Mail::Verify::CheckAddress($new_user_email);
 
-            if ( $invalid_email == 1 ) {
+            if ( $invalid_email == 1 )
+            {
                 $mail_error = "No email address was supplied.";
             }
-            elsif ( $invalid_email == 2 ) {
-                $mail_error = "There is a syntaxical error in the email address.";
+            elsif ( $invalid_email == 2 )
+            {
+                $mail_error =
+                  "There is a syntaxical error in the email address.";
             }
-            elsif ( $invalid_email == 3 ) {
-                $mail_error = "There are no DNS entries for the host in question (no MX records or A records).";
+            elsif ( $invalid_email == 3 )
+            {
+                $mail_error =
+                  "There are no DNS entries for the host in question (no MX records or A records).";
             }
-            elsif ( $invalid_email == 4 ) {
-                $mail_error = "There are no live SMTP servers accepting connections for this email address.";
+            elsif ( $invalid_email == 4 )
+            {
+                $mail_error =
+                  "There are no live SMTP servers accepting connections for this email address.";
             }
 
             #
             # Test to see if the username already exists.
             #
-            if ( ( $invalid_email + $prev_email + $prev_banned + $invalid_username + $blank_email ) < 1 )
+            if ( ( $invalid_email +
+                   $prev_email +
+                   $prev_banned +
+                   $invalid_username +
+                   $blank_email
+                 ) < 1
+               )
             {
                 my $users = Yawns::Users->new();
                 my $exists = $users->exists( username => $new_user_name );
@@ -2573,7 +2597,8 @@ sub new_user
                 else
                 {
                     my $password = '';
-                    $password = join( '', map {( 'a' .. 'z' )[rand 26]} 0 .. 7 );
+                    $password =
+                      join( '', map {( 'a' .. 'z' )[rand 26]} 0 .. 7 );
 
                     my $ip = $ENV{ 'REMOTE_ADDR' };
                     if ( $ip =~ /^::ffff:(.*)/ )
@@ -2590,7 +2615,9 @@ sub new_user
                                       );
                     $user->create();
 
-                    send_alert( "New user, <a href=\"http://www.debian-administration.org/users/$new_user_name\">$new_user_name</a>, created from IP $ip." );
+                    send_alert(
+                        "New user, <a href=\"http://www.debian-administration.org/users/$new_user_name\">$new_user_name</a>, created from IP $ip."
+                    );
 
                     $new_user_sent = 1;
                 }
@@ -2641,11 +2668,12 @@ sub new_user
 # ===========================================================================
 sub send_reset_password
 {
+
     #
     # Deny access if the user is already logged in.
     #
-    my $session  = Singleton::Session->instance();
-    my $uname = $session->param("logged_in");
+    my $session = Singleton::Session->instance();
+    my $uname   = $session->param("logged_in");
     if ( $uname !~ /^anonymous$/i )
     {
         return ( permission_denied( already_logged_in => 1 ) );
@@ -2717,7 +2745,7 @@ sub send_reset_password
 
             my $template =
               HTML::Template->new(
-                         filename => "../templates/mail/reset-password.template" );
+                      filename => "../templates/mail/reset-password.template" );
 
             #
             #  Constants.
@@ -2738,7 +2766,9 @@ sub send_reset_password
             print( SENDMAIL $template->output() );
             close(SENDMAIL);
 
-            send_alert( "Forgotten password reissued to <tt>$mail</tt> for <a href=\"http://www.debian-administration.org/users/$username\">$username</a>." );
+            send_alert(
+                "Forgotten password reissued to <tt>$mail</tt> for <a href=\"http://www.debian-administration.org/users/$username\">$username</a>."
+            );
 
             $submit = 1;
         }
@@ -3131,11 +3161,12 @@ http://www.steve.org.uk/
 EOF
         }
 
-      {
-          my $home_url   = get_conf('home_url');
-          my $new_url =  "$home_url/articles/$article_id";
-          send_alert( "Article edited - <a href=\"$new_url\">$edit_title</a>." );
-      }
+        {
+            my $home_url = get_conf('home_url');
+            my $new_url  = "$home_url/articles/$article_id";
+            send_alert(
+                      "Article edited - <a href=\"$new_url\">$edit_title</a>.");
+        }
 
         #
         #  perform the actual edit.
@@ -5187,7 +5218,7 @@ sub view_user_weblog
 
     if ( lc($username) eq lc($viewusername) )
     {
-        $is_owner = 1 unless( $anon );
+        $is_owner = 1 unless ($anon);
     }
 
     #
@@ -5241,10 +5272,6 @@ sub view_user_weblog
     # generate the output
     print $template->output;
 }
-
-
-
-
 
 
 
@@ -5492,11 +5519,6 @@ sub delete_weblog
 
 
 
-
-
-
-
-
 # ===========================================================================
 #  View recently joined usernames
 # ===========================================================================
@@ -5520,7 +5542,7 @@ sub recent_users
     #
     my $u     = Yawns::Users->new();
     my $users = $u->getRecent($count);
-    my $uc    = scalar( @$users );
+    my $uc    = scalar(@$users);
 
     #
     #  Load template
@@ -5531,7 +5553,7 @@ sub recent_users
                       count => $count,
                       title => "Recent Site Members",
                     );
-    $template->param( user_count => $uc ) if ( $uc &&  ( $uc > 0 ) );
+    $template->param( user_count => $uc ) if ( $uc && ( $uc > 0 ) );
 
     print $template->output;
 }
@@ -6005,10 +6027,6 @@ sub user_administration
 
 
 
-
-
-
-
 # ===========================================================================
 # Show year-based archives of articles.
 # ===========================================================================
@@ -6025,7 +6043,7 @@ sub show_archive
     #  Get the current month and year.
     #
     my $year = undef;
-    $year    = $form->param('year')  if $form->param('year');
+    $year = $form->param('year') if $form->param('year');
 
 
     #
@@ -6035,7 +6053,7 @@ sub show_archive
     ( $sec, $min, $hour, $mday, $mon, $yr, $wday, $yday, $isdst ) =
       localtime(time);
 
-    my $current_year  = $yr + 1900;
+    my $current_year = $yr + 1900;
 
 
     #
@@ -6043,7 +6061,7 @@ sub show_archive
     #
     if ( !defined($year) )
     {
-        $year  = $current_year;
+        $year = $current_year;
     }
 
     #
@@ -6051,7 +6069,7 @@ sub show_archive
     #
     my $articles     = Yawns::Articles->new();
     my %years        = $articles->getArticleYears();
-    my $the_articles = $articles->getArchivedArticles( $year );
+    my $the_articles = $articles->getArchivedArticles($year);
 
     my $years;
     foreach my $y ( reverse sort keys %years )
@@ -6067,17 +6085,16 @@ sub show_archive
     #
     #  Articles.
     #
-    $template->param( articles => $the_articles ) if $the_articles;
-    $template->param( show_archive_year => $years ) if  ( $years );
+    $template->param( articles          => $the_articles ) if $the_articles;
+    $template->param( show_archive_year => $years )        if ($years);
 
     my $title = "Archive for $year";
 
     #
     #  Show the month name, and the currently viewed year.
     #
-    $template->param( year       => $year,
-                      title      => $title
-                    );
+    $template->param( year  => $year,
+                      title => $title );
 
 
     # generate the output
@@ -6120,7 +6137,7 @@ sub view_bookmarks
     if ( lc($username) eq lc($view_username) )
     {
         $is_owner = 1;
-        $delete = 1;
+        $delete   = 1;
     }
 
     #
@@ -6221,7 +6238,8 @@ sub view_bookmarks
 
     $template->param( has_bookmarks => $has_bookmarks,
                       viewusername  => $view_username,
-                      is_owner  => $is_owner );
+                      is_owner      => $is_owner
+                    );
 
     if ($has_bookmarks)
     {
@@ -6278,9 +6296,9 @@ sub bookmark_delete
 sub dump_details
 {
     my $date = `date`;
-    chomp( $date );
+    chomp($date);
     my $host = `hostname`;
-    chomp( $host );
+    chomp($host);
 
     print "This request was received at $date on $host.\n\n";
 
@@ -6296,11 +6314,11 @@ sub dump_details
 
     print "\n\n";
     print "Submissions\n";
-    my $form    = Singleton::CGI->instance();
+    my $form = Singleton::CGI->instance();
 
     foreach my $key ( $form->param() )
     {
-        print $key . "\t\t\t" . $form->param( $key );
+        print $key . "\t\t\t" . $form->param($key);
         print "\n";
     }
 }
