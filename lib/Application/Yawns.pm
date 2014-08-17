@@ -100,12 +100,21 @@ sub cgiapp_prerun
 
     my $session = $self->param("session");
 
-    if ( $session && $session->param("suspended" ) )
+    if ( $session && $session->param("suspended") )
     {
-        my $query = $self->query();
-        $query->param( "about", "suspended" );
-        $self->prerun_mode('about');
-        return;
+
+        #
+        #  Get the current run-mode, we want to allow
+        # access to /logout/
+        #
+        my $cur = $self->get_current_runmode();
+        if ( $cur !~ /logout$/i )
+        {
+            my $query = $self->query();
+            $query->param( "about", "suspended" );
+            $self->prerun_mode('about');
+            return;
+        }
     }
 
     if ( $session && $session->param("ssl") )
@@ -662,6 +671,10 @@ sub application_logout
     #
     $session->param( 'logged_in', undef );
     $session->clear('logged_in');
+
+    $session->param( 'suspended', undef );
+    $session->clear('suspended');
+
     $self->param( 'session', undef );
     $session->flush();
     $session->close();
@@ -1913,13 +1926,13 @@ sub hof
 # ===========================================================================
 sub scratchpad
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     # Gain acess to the objects we use.
     #
     my $form     = $self->query();
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     my $admin = 0;
@@ -1973,9 +1986,8 @@ sub scratchpad
                     );
 
     # generate the output
-    return( $template->output() );
+    return ( $template->output() );
 }
-
 
 
 
@@ -1985,13 +1997,13 @@ sub scratchpad
 # ===========================================================================
 sub edit_scratchpad
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     # Gain acess to the objects we use.
     #
     my $form     = $self->query();
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -2093,7 +2105,7 @@ sub edit_scratchpad
                     );
 
     # generate the output
-    return( $template->output() );
+    return ( $template->output() );
 }
 
 
