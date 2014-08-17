@@ -590,6 +590,7 @@ sub my_error_rm
 {
     my ( $self, $error ) = (@_);
 
+    use Data::Dumper;
     return Dumper( \$error );
 }
 
