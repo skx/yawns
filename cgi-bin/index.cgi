@@ -501,12 +501,6 @@ my %dispatch = (
     "printable" =>              # Display the printable version of an article
       { sub => \&printable, },
 
-    "recent_users" =>           # See recently joined users.
-      { sub  => \&recent_users,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-        priv => "recent_users",
-      },
-
     "report" =>                 # Report an abusive comment.
       { sub   => \&report_comment,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",

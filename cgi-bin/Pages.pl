@@ -4377,8 +4377,6 @@ sub add_weblog
 
 
 
-
-
 # ===========================================================================
 # Edit a weblog entry.
 # ===========================================================================
@@ -4619,47 +4617,6 @@ sub delete_weblog
 
 }
 
-
-
-
-# ===========================================================================
-#  View recently joined usernames
-# ===========================================================================
-sub recent_users
-{
-
-    #
-    # Get the number of days to display.
-    #
-    my $form = Singleton::CGI->instance();
-
-    my $count = $form->param('recent_users');
-    if ( $count =~ /([0-9]+)/ )
-    {
-        $count = $1;
-    }
-
-
-    #
-    #  Get details.
-    #
-    my $u     = Yawns::Users->new();
-    my $users = $u->getRecent($count);
-    my $uc    = scalar(@$users);
-
-    #
-    #  Load template
-    #
-    my $template = load_layout("recent_members.inc");
-
-    $template->param( users => $users,
-                      count => $count,
-                      title => "Recent Site Members",
-                    );
-    $template->param( user_count => $uc ) if ( $uc && ( $uc > 0 ) );
-
-    print $template->output;
-}
 
 
 
@@ -5126,8 +5083,6 @@ sub user_administration
     print $template->output;
 
 }
-
-
 
 
 

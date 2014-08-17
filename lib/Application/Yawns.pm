@@ -224,6 +224,9 @@ sub setup
         # debug
         'debug' => 'debug',
 
+        # Administrivia
+        'recent_users' => 'recent_users',
+
         # Login/Logout
         'login'  => 'application_login',
         'logout' => 'application_logout',
@@ -2107,6 +2110,68 @@ sub edit_scratchpad
     # generate the output
     return ( $template->output() );
 }
+
+
+
+# ===========================================================================
+#  View recently joined usernames
+# ===========================================================================
+sub recent_users
+{
+    my ($self) = (@_);
+
+    #
+    #  This requires a login
+    #
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in");
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Ensure the user has permissions
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    if ( !$perms->check( priv => "recent_users" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+
+    my $form = $self->query();
+    my $count = $form->param('recent_users') || 10;
+    if ( $count =~ /([0-9]+)/ )
+    {
+        $count = $1;
+    }
+
+
+    #
+    #  Get details.
+    #
+    my $u     = Yawns::Users->new();
+    my $users = $u->getRecent($count);
+    my $uc    = scalar(@$users);
+
+    #
+    #  Load template
+    #
+    my $template = $self->load_layout("recent_members.inc");
+
+    $template->param( users => $users,
+                      count => $count,
+                      title => "Recent Site Members",
+                    );
+    $template->param( user_count => $uc ) if ( $uc && ( $uc > 0 ) );
+
+    return ( $template->output() );
+}
+
 
 
 1;
