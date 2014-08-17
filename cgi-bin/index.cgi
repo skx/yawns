@@ -531,11 +531,6 @@ my %dispatch = (
       },
 
 
-    "stats" =>                  # View our hall of fame page.
-      { sub  => \&stats_page,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
     "submission_edit" =>        # Edit a pending article
       { sub   => \&edit_submission,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
