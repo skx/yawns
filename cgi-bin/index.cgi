@@ -412,12 +412,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "edit_scratchpad" =>     # Edit a users scratchpad
-      { sub   => \&edit_scratchpad,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
     "edit_weblog" =>         # Edit a weblog entry
       { sub   => \&edit_weblog,
         login => 1,
@@ -523,11 +517,6 @@ my %dispatch = (
       { sub   => \&report_weblog,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
-      },
-
-    "scratchpad" =>             # View a users scratchpad area.
-      { sub  => \&view_scratchpad,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
 

@@ -200,6 +200,10 @@ sub setup
         'about'      => 'about_page',
         'edit_about' => 'edit_about',
 
+        # scratch-pad support
+        'scratchpad'      => 'scratchpad',
+        'edit_scratchpad' => 'edit_scratchpad',
+
         # debug
         'debug' => 'debug',
 
@@ -1893,6 +1897,195 @@ sub hof
 
     # generate the output
     return ( $template->output() );
+}
+
+
+# ===========================================================================
+# View the scratchpad area of a user.
+# ===========================================================================
+sub scratchpad
+{
+    my( $self ) = ( @_ );
+
+    #
+    # Gain acess to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    my $admin = 0;
+    if ( $username !~ /^anonymous$/i )
+    {
+        my $privs = Yawns::Permissions->new( username => $username );
+        $admin = 1 if ( $privs->check( priv => "edit_user_pad" ) );
+    }
+
+
+    my $view = $form->param('user');
+
+    # get the data
+    my $scratchpad = Yawns::Scratchpad->new( username => $view );
+    my $private    = $scratchpad->isPrivate();
+    my $userdata   = $scratchpad->get();
+
+    #
+    # Empty data?
+    #
+    my $empty = 0;
+    if ( !defined($userdata) || length($userdata) == 0 )
+    {
+        $empty = 1;
+    }
+
+
+    # open the html template
+    my $template = $self->load_layout("view_scratchpad.inc");
+
+    #
+    # Show the edit link?
+    #
+    my $edit = 0;
+    if ( ( ( lc($view) eq lc($username) ) || ($admin) ) &&
+         ( $username !~ /^anonymous$/i ) )
+    {
+
+        $edit    = 1;
+        $private = 0;
+    }
+
+
+    # set parameters
+    $template->param( view       => $view,
+                      scratchpad => $userdata,
+                      edit       => $edit,
+                      empty      => $empty,
+                      private    => $private,
+                      title      => "Viewing Scratchpad for $view",
+                    );
+
+    # generate the output
+    return( $template->output() );
+}
+
+
+
+
+
+# ===========================================================================
+#  Edit the scratchpad of a user.
+# ===========================================================================
+sub edit_scratchpad
+{
+    my( $self ) = ( @_ );
+
+    #
+    # Gain acess to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Can we edit this scratchpad?
+    #
+    my $admin = 0;
+    if ( $username !~ /^anonymous$/i )
+    {
+        my $privs = Yawns::Permissions->new( username => $username );
+        $admin = 1 if ( $privs->check( priv => "edit_user_pad" ) );
+    }
+
+    #
+    #  The user that we're working with.
+    #
+    my $edituser = $form->param("user");
+
+    #
+    # If no username was specified then use the current logged in user.
+    #
+    if ( ( !defined($edituser) ) || ( $edituser eq 1 ) )
+    {
+        $edituser = $username;
+    }
+
+    #
+    #  Anonymous users can't edit.
+    #
+    if ( $username =~ /^anonymous$/i )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Editting a different user?
+    #
+    if ( lc($edituser) ne lc($username) )
+    {
+        if ( !$admin )
+        {
+            return ( $self->permission_denied( admin_only => 1 ) );
+        }
+    }
+
+
+    my $saved = 0;
+
+    #
+    # Non-administrators can only edit their own scratchpads.
+    #
+    if ( !$admin )
+    {
+        $edituser = $username;
+    }
+
+    if ( defined $form->param('save') )
+    {
+
+        # validate session
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+
+        my $text     = $form->param('text');
+        my $security = $form->param('security');
+
+        #
+        # Save it.
+        #
+        my $scratchpad = Yawns::Scratchpad->new( username => $edituser );
+        $scratchpad->set( $text, $security );
+
+        $saved = 1;
+    }
+
+
+    # open the html template
+    my $template = $self->load_layout( "edit_scratchpad.inc", session => 1 );
+
+    # get the data
+    my $scratchpad = Yawns::Scratchpad->new( username => $edituser );
+    my $private    = $scratchpad->isPrivate();
+    my $userdata   = $scratchpad->get();
+
+    if ($saved)
+    {
+        $template->param( title => "Scratchpad Updated" );
+    }
+    else
+    {
+        $template->param( title => "Edit your scratchpad" );
+    }
+
+    # set parameters
+    $template->param( username => $edituser,
+                      text     => $userdata,
+                      saved    => $saved,
+                      private  => $private
+                    );
+
+    # generate the output
+    return( $template->output() );
 }
 
 

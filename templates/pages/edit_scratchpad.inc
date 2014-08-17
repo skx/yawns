@@ -12,7 +12,7 @@
        <!-- Change scratchpad form. -->
        <form action="/edit/scratchpad/<!-- tmpl_var name='username' -->" method="post">
        <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
-       <input type="hidden" name="edit_scratchpad" value="<!-- tmpl_var name='username' -->">
+       <input type="hidden" name="mode" value="edit_scratchpad">
 
         <textarea name="text" cols="80" rows="20"><!-- tmpl_var name='text' --></textarea>
 	<p>
