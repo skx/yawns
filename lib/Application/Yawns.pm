@@ -100,6 +100,14 @@ sub cgiapp_prerun
 
     my $session = $self->param("session");
 
+    if ( $session && $session->param("suspended" ) )
+    {
+        my $query = $self->query();
+        $query->param( "about", "suspended" );
+        $self->prerun_mode('about');
+        return;
+    }
+
     if ( $session && $session->param("ssl") )
     {
 
