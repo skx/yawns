@@ -530,10 +530,6 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "single_weblog" =>          # View a single weblog entry.
-      { sub  => \&view_single_weblog,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
 
     "stats" =>                  # View our hall of fame page.
       { sub  => \&stats_page,
@@ -597,12 +593,6 @@ my %dispatch = (
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
-
-    "weblog" =>                 # View a users weblog.
-      { sub  => \&view_user_weblog,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      }
-
 
 );
 

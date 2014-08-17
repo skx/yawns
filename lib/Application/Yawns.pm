@@ -215,6 +215,11 @@ sub setup
         'article'         => 'article',
         'article_wrapper' => 'article_wrapper',
 
+        # Weblogs
+        'weblog'        => 'weblog',
+        'single_weblog' => 'single_weblog',
+
+
         # Searching
         'article_search' => 'article_search',
 
@@ -259,7 +264,7 @@ sub redirectURL
 {
     my ( $self, $url, $status ) = (@_);
 
-    $status = 302 unless( $status && ( $status =~ /^([0-9]+)$/ ) );
+    $status = 302 unless ( $status && ( $status =~ /^([0-9]+)$/ ) );
 
     #
     #  Cookie name & expiry
@@ -1175,14 +1180,15 @@ sub index
 # ===========================================================================
 sub article_wrapper
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     my $form = $self->query();
-    my $id   = $form->param( "id" );
-    my $tit  = $form->param( "title" );
+    my $id   = $form->param("id");
+    my $tit  = $form->param("title");
 
-    if ( ( $id ) && ( $id =~ /^([0-9]+)$/ ) )
+    if ( ($id) && ( $id =~ /^([0-9]+)$/ ) )
     {
+
         #
         #
         #
@@ -1193,10 +1199,10 @@ sub article_wrapper
         my $slug     = $articles->makeSlug($title);
 
 
-        return( $self->redirectURL( "/article/$id/$slug" ) );
+        return ( $self->redirectURL("/article/$id/$slug") );
 
     }
-    elsif ( $tit )
+    elsif ($tit)
     {
 
         #
@@ -1216,7 +1222,7 @@ sub article_wrapper
             my $articles = Yawns::Articles->new();
             my $slug     = $articles->makeSlug($title);
 
-            return( $self->redirectURL( "/article/$id/$slug" ) );
+            return ( $self->redirectURL("/article/$id/$slug") );
 
         }
     }
@@ -1231,13 +1237,13 @@ sub article_wrapper
 # ===========================================================================
 sub article
 {
-    my( $self ) = ( @_);
+    my ($self) = (@_);
 
     #
     # Get singleton objects we care about
     #
     my $form     = $self->query();
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -1457,7 +1463,8 @@ sub article
                     );
 
 
-    $template->param(canon => get_conf( "home_url" ) . "/article/$article_id/$slug" );
+    $template->param(
+                 canon => get_conf("home_url") . "/article/$article_id/$slug" );
 
 
     # ----- now do the comments section -----
@@ -1489,7 +1496,303 @@ sub article
     #
     # generate the output
     #
-    return( $template->output() );
+    return ( $template->output() );
+}
+
+
+
+
+# ===========================================================================
+# View a single weblog entry.
+# ===========================================================================
+sub single_weblog
+{
+    my ($self) = (@_);
+
+    #
+    # Gain acess to the objects we use.
+    #
+    my $form      = $self->query();
+    my $session   = $self->param("session");
+    my $username  = $session->param("logged_in") || "Anonymous";
+    my $logged_in = 1;
+
+    my $comment_count;
+    if ( $username =~ /^anonymous$/i )
+    {
+        $logged_in = 0;
+    }
+
+    # get username from URL and the id of the entry we're viewing.
+    my $viewusername = $form->param('show');
+    my $id           = $form->param('item');
+    my $error        = 0;
+
+
+    # in the case an entry has been deleted we want to
+    # link to next/prev
+    my $error_prev;
+    my $error_next;
+
+    #
+    #  Users can edit their own entries, and see the read count.
+    #
+    my $edit = 0;
+    my $read = 0;
+    if ( lc($viewusername) eq lc($username) )
+    {
+        $edit = 1;
+    }
+
+
+    #
+    #  Get weblog entries, or entry.
+    # (If item is defined that's the specific one we want to view).
+    #
+    #
+    my $weblog = Yawns::Weblog->new( username => $viewusername );
+    my $gid = $weblog->getGID( username => $viewusername,
+                               id       => $id );
+
+
+    my $entries;
+
+    if ($gid)
+    {
+        $entries =
+          $weblog->getSingleWeblogEntry( gid      => $gid,
+                                         editable => $edit );
+    }
+    else
+    {
+
+        # GID not found - most likely an invalid weblog entry.
+        $error = 1;
+
+        my $max = $weblog->count();
+
+        if ( $id > 0 )
+        {
+            $error_prev = $id - 1;
+        }
+        if ( $id <= $max )
+        {
+            $error_next = $id + 1;
+        }
+    }
+
+    #
+    # Open the html template
+    #
+    my $template = $self->load_layout( "single_weblog.inc",
+                                       loop_context_vars => 1,
+                                       global_vars       => 1,
+                                       session           => 1
+                                     );
+
+    #
+    #  Can this entry be reported?
+    #
+    if ( ($logged_in) && ( !$edit ) )
+    {
+
+        #
+        #  It is pointless to be reportable if it has been hidden completely.
+        #
+        #  Or if it doesnt' exist.
+        #
+        if ( ( !$error ) &&
+             ( $weblog->getScore( gid => $gid ) > 0 ) &&
+             ( !$session->param( "reported_" . $gid ) ) )
+
+        {
+            $template->param( reportable => 1 );
+        }
+    }
+    if ( not defined(@$entries) )
+    {
+        $error = 1;
+
+    }
+
+    if ( $error == 0 )
+    {
+        my $enabled = @$entries[0]->{ 'comments_enabled' };
+        $comment_count = $weblog->getCommentCount( gid => $gid );
+
+        if ($comment_count)
+        {
+            my $templateC =
+              HTML::Template->new(
+                          filename => "../templates/includes/comments.template",
+                          global_vars => 1 );
+
+            my $sess = Singleton::Session->instance();
+            $templateC->param( session => md5_hex( $sess->id() ) );
+
+            my $comments =
+              Yawns::Comments->new( weblog  => $gid,
+                                    enabled => $enabled );
+
+            #
+            my $com = $comments->get();
+            $templateC->param( comments => $com ) if ($com);
+
+            # generate the output
+            my $comment_text = $templateC->output();
+            $template->param( comment_text => $comment_text )
+              if ($comment_text);
+        }
+    }
+
+    #
+    #  Some items are used for the title.
+    #
+    my $title = '';
+
+    my $body = undef;
+    if ( defined( @$entries[0] ) )
+    {
+        my $weblog_owner = @$entries[0]->{ 'user' };
+        my $weblog_title = @$entries[0]->{ 'title' };
+        $body = @$entries[0]->{ 'bodytext' };
+
+        if ( defined($weblog_owner) &&
+             length($weblog_owner) &&
+             defined($weblog_title) &&
+             length($weblog_title) )
+        {
+            $title = "Weblog for " . $weblog_owner . " - " . $weblog_title;
+        }
+    }
+    else
+    {
+        $error = 1;
+    }
+
+    #
+    #  Per-article adverts?
+    #
+    my $show_adverts = 1;
+    if ( $username =~ /^anonymous$/i )
+    {
+        $show_adverts = 1;
+    }
+    else
+    {
+
+        #
+        #  Other users do not, unless they have set such an option
+        # manually.
+        #
+        my $user = Yawns::User->new( username => $username );
+        my $user_data = $user->get();
+        $show_adverts = $user_data->{ 'viewadverts' };
+    }
+
+
+    #
+    #  Tag addition URL
+    #
+    $template->param( tag_url => "/ajax/addtag/weblog/$gid/" );
+
+    # set parameters
+    $template->param( entries       => $entries,
+                      error         => $error,
+                      error_next    => $error_next,
+                      error_prev    => $error_prev,
+                      user          => $viewusername,
+                      title         => $title,
+                      comment_count => $comment_count,
+                      item          => $id,
+                    );
+
+    # generate the output
+    return ( $template->output() );
+}
+
+
+
+# ===========================================================================
+# View weblog entries by a user.
+# ===========================================================================
+sub weblog
+{
+    my ($self) = (@_);
+
+    #
+    # Gain acess to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+
+    # get username from URL and the starting entry to show, if any.
+    my $viewusername = $form->param('show');
+    my $start = $form->param('start') || undef;
+
+    #
+    # If the user is viewing their own weblog they can edit it.
+    #
+    my $is_owner = 0;
+    my $anon = 1 if ( $username =~ /^anonymous$/i );
+
+    if ( lc($username) eq lc($viewusername) )
+    {
+        $is_owner = 1 unless ($anon);
+    }
+
+    #
+    # Open the html template
+    #
+    my $template = $self->load_layout("user_weblog.inc");
+
+    #
+    # Get the weblog entries, and insert them into the output.
+    #
+    my $weblog = Yawns::Weblog->new( username => $viewusername );
+    my $entries = $weblog->getEntries( start => $start );
+    my $count = $weblog->count();
+
+
+    $start = $count if ( !defined($start) );
+    my $show_prev = undef;
+    my $show_next = undef;
+    if ( $start - 10 > 0 )       {$show_prev = $start - 10;}
+    if ( $start + 10 <= $count ) {$show_next = $start + 10;}
+
+    my $title = "Weblogs for " . $viewusername;
+
+    $template->param( title        => $title,
+                      viewusername => $viewusername,
+                      error        => ( $count == 0 ),
+                      show_next    => $show_next,
+                      show_prev    => $show_prev,
+                      is_owner     => $is_owner,
+                    );
+
+
+    #
+    #  Only show the entries if we found them.
+    #
+    my $c = 0;
+    if ( ( $count > 0 ) && defined($entries) && $entries && (@$entries) )
+    {
+        $c = scalar(@$entries);
+    }
+
+    if ( ( defined $entries ) && ( $count > 0 ) && ( $c > 0 ) )
+    {
+        $template->param( entries => $entries );
+    }
+    else
+    {
+        $template->param( error => 1 );
+    }
+
+    # generate the output
+    return ( $template->output() );
 }
 
 1;
