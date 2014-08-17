@@ -334,23 +334,11 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "bookmarks" =>         # View a users bookmark list.
-      { sub  => \&view_bookmarks,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
     "delete_advert" =>     # Remove an existing advert
       { sub   => \&delete_advert,
         priv  => "advert_admin",
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
-      },
-
-    "delete_bookmark" =>    # Remove an existing bookmark.
-      { sub      => \&bookmark_delete,
-        login    => 1,
-        redirect => "/users/$username/bookmarks",
-        cache    => 1,
       },
 
     "delete_related" =>     # Remove a related link from an article
