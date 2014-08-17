@@ -28,6 +28,7 @@ use Digest::MD5 qw! md5_hex !;
 #
 use Yawns::About;
 use Yawns::Articles;
+use Yawns::Cache;
 use Yawns::Event;
 use Yawns::Sidebar;
 use Yawns::User;
@@ -2080,6 +2081,12 @@ sub edit_scratchpad
         $scratchpad->set( $text, $security );
 
         $saved = 1;
+
+        #
+        #  Flush the cache.
+        #
+        my $c = Yawns::Cache->new();
+        $c->flush( "Edit scratchpad for user $edituser" );
     }
 
 
