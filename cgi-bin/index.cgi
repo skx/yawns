@@ -442,13 +442,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "user_admin" =>             # User administration.
-      { sub   => \&user_administration,
-        priv  => "user_admin",
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
 );
 
 

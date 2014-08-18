@@ -253,6 +253,7 @@ sub setup
 
         # Administrivia
         'recent_users' => 'recent_users',
+        'user_admin'   => 'user_admin',
 
         # Login/Logout
         'login'  => 'application_login',
@@ -3750,5 +3751,106 @@ sub submission_list
 
 
 
+
+# ===========================================================================
+# User administration.
+# ===========================================================================
+sub user_admin
+{
+    my( $self ) = ( @_ );
+
+    # set up the HTML template
+    my $template = $self->load_layout( "user_administration.inc", session => 1 );
+
+    #
+    #  Get the current user.
+    #
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+
+    #
+    #  Ensure the user has "user_admin" permissions.
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    if ( !$perms->check( priv => "user_admin" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+
+    #
+    #  Load the permission set we know about.
+    #
+    my @all_perms = $perms->getKnownAttributes();
+
+    #
+    #  Push into a form suitable for our template use.
+    #
+    my $perms_loop;
+    foreach my $key (@all_perms)
+    {
+        push( @$perms_loop, { perm => $key } );
+    }
+
+    #
+    #  See what we're doing.
+    #
+    my $form  = $self->query();
+    my $users = Yawns::Users->new();
+
+
+    my $results;
+    my $search = 0;
+
+    if ( defined( $form->param("username") ) )
+    {
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        $search = 1;
+        $results = $users->search( username => $form->param("username") );
+    }
+    elsif ( defined( $form->param("email") ) )
+    {
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        $search = 1;
+        $results = $users->search( email => $form->param("email") );
+    }
+    elsif ( defined( $form->param("homepage") ) )
+    {
+
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        $search = 1;
+        $results = $users->search( homepage => $form->param("homepage") );
+    }
+    elsif ( defined( $form->param("permission") ) )
+    {
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        $search = 1;
+        $results = $users->search( permission => $form->param("permission") );
+    }
+    if ($results)
+    {
+        $template->param( "results" => $results );
+    }
+
+    #
+    #  Always set these.
+    #
+    $template->param( "search"           => $search );
+    $template->param( "count"            => $users->count() );
+    $template->param( "permissions_loop" => $perms_loop );
+    $template->param( title              => "User Administration" );
+
+    # generate the output
+    return($template->output());
+
+}
 
 1;

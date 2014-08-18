@@ -61,7 +61,7 @@ Send an alert message
 
 =cut
 
-sub send_alert
+sub send_alert #
 {
     my ($text) = (@_);
 
@@ -89,7 +89,7 @@ sub send_alert
 
 =cut
 
-sub mk_include_filter
+sub mk_include_filter #
 {
     my $page = shift;
     return sub {
@@ -107,7 +107,7 @@ sub mk_include_filter
 
 =cut
 
-sub load_layout
+sub load_layout #
 {
     my ( $page, %options ) = (@_);
 
@@ -186,7 +186,7 @@ sub load_layout
 # ===========================================================================
 # CSRF protection.
 # ===========================================================================
-sub validateSession
+sub validateSession #
 {
     my $session = Singleton::Session->instance();
 
@@ -236,7 +236,7 @@ sub validateSession
 #
 ##
 #
-sub front_page
+sub front_page #
 {
 
     #
@@ -3589,7 +3589,7 @@ sub edit_comment
 # ===========================================================================
 # Permission Denied - or other status message
 # ===========================================================================
-sub permission_denied
+sub permission_denied #
 {
     my (%parameters) = (@_);
 
@@ -3614,105 +3614,7 @@ sub permission_denied
 }
 
 
-# ===========================================================================
-# User administration.
-# ===========================================================================
-sub user_administration
-{
-
-    # set up the HTML template
-    my $template = load_layout( "user_administration.inc", session => 1 );
-
-    #
-    #  Get the current user.
-    #
-    my $session  = Singleton::Session->instance();
-    my $username = $session->param("logged_in");
-
-    #
-    #  Load the permissions.
-    #  Gain access to our permissions object.
-    #
-    my $perms = Yawns::Permissions->new( username => $username );
-    my @all_perms = $perms->getKnownAttributes();
-
-    #
-    #  Push into a form suitable for our template use.
-    #
-    my $perms_loop;
-    foreach my $key (@all_perms)
-    {
-        push( @$perms_loop, { perm => $key } );
-    }
-
-    #
-    #  See what we're doing.
-    #
-    my $form  = Singleton::CGI->instance();
-    my $users = Yawns::Users->new();
-
-
-    my $results;
-    my $search = 0;
-
-    if ( defined( $form->param("username") ) )
-    {
-
-        # validate session
-        validateSession();
-
-        $search = 1;
-        $results = $users->search( username => $form->param("username") );
-    }
-    elsif ( defined( $form->param("email") ) )
-    {
-
-        # validate session
-        validateSession();
-
-        $search = 1;
-        $results = $users->search( email => $form->param("email") );
-    }
-    elsif ( defined( $form->param("homepage") ) )
-    {
-
-        # validate session
-        validateSession();
-
-        $search = 1;
-        $results = $users->search( homepage => $form->param("homepage") );
-    }
-    elsif ( defined( $form->param("permission") ) )
-    {
-
-        # validate session
-        validateSession();
-
-        $search = 1;
-        $results = $users->search( permission => $form->param("permission") );
-    }
-    if ($results)
-    {
-        $template->param( "results" => $results );
-    }
-
-    #
-    #  Always set these.
-    #
-    $template->param( "search"           => $search );
-    $template->param( "count"            => $users->count() );
-    $template->param( "permissions_loop" => $perms_loop );
-    $template->param( title              => "User Administration" );
-
-    # generate the output
-    print $template->output;
-
-}
-
-
-
-
-sub dump_details
+sub dump_details #
 {
     my $date = `date`;
     chomp($date);

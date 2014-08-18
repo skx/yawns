@@ -5,23 +5,26 @@
 <dl>
 <dt>Username</dt>
 <dd>
-	<form action="/" method="post">
+	<form action="/user/admin" method="post">
         <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
+        <input type="hidden" name="mode" value="user_admin">
 	<input type="text" name="username">
 	<input type="hidden" name="user_admin">
 	</form>
 </dd>
 <dt>Email</dt>
 <dd>
-	<form action="/" method="post">
+	<form action="/user/admin" method="post">
         <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
+        <input type="hidden" name="mode" value="user_admin">
 	<input type="text" name="email">
 	<input type="hidden" name="user_admin">
 	</form>
 </dd>
 <dt>Homepage</dt>
 <dd>
-	<form action="/" method="post">
+	<form action="/user/admin" method="post">
+        <input type="hidden" name="mode" value="user_admin">
         <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
 	<input type="text" name="homepage">
 	<input type="hidden" name="user_admin">
@@ -29,7 +32,8 @@
 </dd>
 <dt>Permissions</dt>
 <dd>
-	<form action="/" method="post">
+	<form action="/user/admin" method="post">
+        <input type="hidden" name="mode" value="user_admin">
         <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
         <select name="permission">
 <!-- tmpl_loop name='permissions_loop' -->
