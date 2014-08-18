@@ -246,10 +246,10 @@ sub setup
 
         # Submissions
         'submission_reject' => 'submission_reject',
-        'submission_edit' => 'submission_edit',
-        'submission_post' => 'submission_post',
-        'submission_view' => 'submission_view',
-        'submission_list' => 'submission_list',
+        'submission_edit'   => 'submission_edit',
+        'submission_post'   => 'submission_post',
+        'submission_view'   => 'submission_view',
+        'submission_list'   => 'submission_list',
 
         # Administrivia
         'recent_users' => 'recent_users',
@@ -3272,7 +3272,7 @@ sub edit_user
 # ===========================================================================
 sub submission_reject
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
 
     # validate session
@@ -3283,7 +3283,7 @@ sub submission_reject
     #  Gain access to the objects we use.
     #
     my $form     = $self->query();
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -3310,11 +3310,11 @@ sub submission_reject
         #  Flush the cache
         #
         my $c = Yawns::Cache->new();
-        $c->flush("Submission rejected." );
+        $c->flush("Submission rejected.");
 
         return (
                  $self->permission_denied( submission_rejected => 1,
-                                           title               => "Submission Rejected"
+                                           title => "Submission Rejected"
                                          ) );
     }
     else
@@ -3330,7 +3330,7 @@ sub submission_reject
 sub submission_post
 {
 
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
 
     # validate session
@@ -3341,7 +3341,7 @@ sub submission_post
     #  Gain access to the objects we use.
     #
     my $form     = $self->query();
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -3367,16 +3367,16 @@ sub submission_post
         #  Flush the cache
         #
         my $c = Yawns::Cache->new();
-        $c->flush("New article posted" );
+        $c->flush("New article posted");
 
         return (
                  $self->permission_denied( submission_posted => 1,
-                                           title             => "Submission Posted"
+                                           title => "Submission Posted"
                                          ) );
     }
     else
     {
-        return( $self->permission_denied( admin_only => 1 ) );
+        return ( $self->permission_denied( admin_only => 1 ) );
     }
 }
 
@@ -3386,7 +3386,7 @@ sub submission_post
 # ===========================================================================
 sub submission_edit
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
 
     # validate session
@@ -3397,7 +3397,7 @@ sub submission_edit
     #  Gain access to the objects we use.
     #
     my $form     = $self->query();
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -3457,6 +3457,7 @@ sub submission_edit
     #
     if ( defined($stage) )
     {
+
         # validate session
         my $ret = $self->validateSession();
         return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
@@ -3491,7 +3492,7 @@ sub submission_edit
         #  Flush the cache
         #
         my $c = Yawns::Cache->new();
-        $c->flush("Submission edited." );
+        $c->flush("Submission edited.");
     }
     else
     {
@@ -3528,7 +3529,7 @@ sub submission_edit
 
     }
 
-    return($template->output());
+    return ( $template->output() );
 }
 
 
@@ -3543,7 +3544,7 @@ sub submission_view
     #
     #  This requires a login
     #
-    my $session  = $self->param("session");
+    my $session = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -3559,7 +3560,7 @@ sub submission_view
     #  Gain access to the objects we use.
     #
     my $form      = $self->query();
-    my $session   = $self->param( "session" );
+    my $session   = $self->param("session");
     my $username  = $session->param("logged_in") || "Anonymous";
     my $perms     = Yawns::Permissions->new( username => $username );
     my $is_author = 0;
@@ -3678,7 +3679,7 @@ sub submission_view
                           title => "Error" );
     }
 
-    return( $template->output() );
+    return ( $template->output() );
 }
 
 # ===========================================================================
@@ -3691,7 +3692,7 @@ sub submission_list
     #
     #  This requires a login
     #
-    my $session  = $self->param("session");
+    my $session = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -3744,9 +3745,8 @@ sub submission_list
     #
     #  All done
     #
-    return($template->output() );
+    return ( $template->output() );
 }
-
 
 
 
