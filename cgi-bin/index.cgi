@@ -297,62 +297,50 @@ my %dispatch = (
         cache => 1,
       },
 
-
     "author_search" =>    # Search for articles by the given user.
       { sub  => \&search_results,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "delete_weblog" =>     # Delete a weblog entry
+    "delete_weblog" =>    # Delete a weblog entry
       { sub   => \&delete_weblog,
         login => 1,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "edit_article" =>      # Edit an existing, live, article
+    "edit_article" =>     # Edit an existing, live, article
       { sub   => \&edit_article,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "edit_comment" =>      # Edit a comment
+    "edit_comment" =>     # Edit a comment
       { sub   => \&edit_comment,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "edit_comments",
         cache => 1,
       },
 
-    "edit_weblog" =>       # Edit a weblog entry
+    "edit_weblog" =>      # Edit a weblog entry
       { sub   => \&edit_weblog,
         login => 1,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "front_page" =>        # view the front-page
+    "front_page" =>       # view the front-page
       { sub  => \&front_page,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "new_user" =>          # Create a new user account
+    "new_user" =>         # Create a new user account
       { sub  => \&new_user,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "report" =>            # Report an abusive comment.
-      { sub   => \&report_comment,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
 
-    "report_weblog" =>     # Report a weblog entry.
-      { sub   => \&report_weblog,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
-    "submit" =>            # Submit an article
+    "submit" =>           # Submit an article
       { sub   => \&submit_article,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,

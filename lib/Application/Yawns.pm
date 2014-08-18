@@ -28,6 +28,7 @@ use Digest::MD5 qw! md5_hex !;
 # Our code
 #
 use Yawns::About;
+use Yawns::Comment;
 use Yawns::Articles;
 use Yawns::Cache;
 use Yawns::Event;
@@ -267,6 +268,10 @@ sub setup
         'submission_post'   => 'submission_post',
         'submission_view'   => 'submission_view',
         'submission_list'   => 'submission_list',
+
+        # Reporting
+        'report_comment' => 'report_comment',
+        'report_weblog'  => 'report_weblog',
 
         # Administrivia
         'recent_users' => 'recent_users',
@@ -5362,5 +5367,145 @@ sub delete_related
 }
 
 
+
+# ===========================================================================
+# Report a comment on a poll, article, or weblog.
+# ===========================================================================
+sub report_comment
+{
+
+    my ($self) = (@_);
+
+    #
+    #  Get the current user.
+    #
+    my $session = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+
+    #
+    #  Validate the session.
+    #
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+    #
+    # Gain access to the form.
+    #
+    my $form = $self->query();
+
+    #
+    # Get the comment details.
+    #
+    my $article = $form->param("article_id");
+    my $poll    = $form->param("poll_id");
+    my $weblog  = $form->param("weblog_id");
+    my $id      = $form->param("comment_id");
+
+    #
+    # Report the comment
+    #
+    my $comment = Yawns::Comment->new();
+    $comment->report( poll    => $poll,
+                      article => $article,
+                      weblog  => $weblog,
+                      id      => $id
+                    );
+
+    #
+    #  Flush the cache.
+    #
+    my $c = Yawns::Cache->new();
+    $c->flush("Comment reported");
+
+    #
+    # Show a good result.
+    #
+    return (
+             $self->permission_denied( comment_reported => 1,
+                                       title            => "Comment Reported"
+                                     ) );
+}
+
+
+
+
+# ===========================================================================
+# Report a spammy/abusive/trolly weblog
+# ===========================================================================
+sub report_weblog
+{
+
+    my ($self) = (@_);
+
+    #
+    #  Get the current user.
+    #
+    my $session = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+
+    #
+    #  Validate the session.
+    #
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+    #
+    # Get the entry number.
+    #
+    my $form = $self->query();
+    my $id   = $form->param("id");
+
+    #
+    # If you've already reported this then don't do it again.
+    #
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in");
+
+    if ( !$session->param( "reported_" . $id ) )
+    {
+
+        #
+        # Report the comment
+        #
+        my $entry = Yawns::Weblog->new( gid => $id );
+        $entry->report();
+
+        $session->param( "reported_" . $id, 1 );
+    }
+
+
+    #
+    #  Flush the cache.
+    #
+    my $c = Yawns::Cache->new();
+    $c->flush("Blog reported");
+
+
+    #
+    # Show a good result.
+    #
+    return (
+             $self->permission_denied( weblog_reported => 1,
+                                       title           => "Weblog Reported"
+                                     ) );
+}
 
 1;
