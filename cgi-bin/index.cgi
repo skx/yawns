@@ -323,12 +323,6 @@ my %dispatch = (
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "all_adverts" =>       # View all adverts
-      { sub  => \&view_all_adverts,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
-
     "author_search" =>     # Search for articles by the given user.
       { sub  => \&search_results,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
@@ -418,9 +412,6 @@ my %dispatch = (
       { sub  => \&front_page,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
-
-    "follow_advert" =>       # Click on a user-advert
-      { sub => \&follow_advert, },
 
     "loginform" =>           # Login options
       { sub  => \&login_form,

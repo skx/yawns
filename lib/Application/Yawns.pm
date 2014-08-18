@@ -229,6 +229,15 @@ sub setup
         # debug
         'debug' => 'debug',
 
+        # Adverts
+        'follow_advert'    => 'follow_advert',
+        'advert_stats'     => 'advert_stats',
+        'edit_adverts'     => 'edit_adverts',
+        'view_all_adverts' => 'view_all_adverts',
+        'enable_advert'    => 'enable_advert',
+        'disable_advert'   => 'disable_advert',
+        'delete_advert'    => 'delete_advert',
+
         # Administrivia
         'recent_users' => 'recent_users',
 
@@ -2387,5 +2396,438 @@ sub delete_bookmark
     return( $self->redirectURL( "/users/$username/bookmarks" ) );
 }
 
+
+
+# ===========================================================================
+# Follow an advert, recording the click.
+# ===========================================================================
+sub follow_advert
+{
+    my( $self ) = ( @_ );
+
+    #
+    #  Gain access to the form parameters
+    #
+    my $form = $self->query();
+    my $id   = $form->param('id');
+
+    if ( defined($id) && ( $id =~ /^[0-9]+$/ ) )
+    {
+        my $adverts = Yawns::Adverts->new();
+
+        #
+        #  Record the click
+        #
+        $adverts->addClick($id);
+
+        #
+        #  Redirect to advert target.
+        #
+        my $details = $adverts->getAdvert($id);
+        return( $self->redirectURL( $details->{ 'link' } ) );
+
+    }
+    else
+    {
+        $id =~ s/<>//g;
+        return( "Invalid advert - $id" );
+    }
+}
+
+
+
+
+
+# ===========================================================================
+# Show all active adverts.
+# ===========================================================================
+sub view_all_adverts
+{
+    my( $self ) = ( @_ );
+
+    # Get access to the form, session and database handles
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in");
+
+    #
+    # Is the user an advert administrator?
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    my $admin = $perms->check( priv => "advert_admin" );
+
+
+    # set up the HTML template
+    my $template = $self->load_layout("all_adverts.inc");
+
+    #
+    #  Fetch all the adverts
+    #
+    my $ads     = Yawns::Adverts->new();
+    my $adverts = $ads->fetchAllActiveAdverts();
+
+    if ($adverts)
+    {
+
+        #
+        #  Add link to stats for adverts which the current user owns,
+        # or for side admins.
+        #
+        my $data;
+
+        foreach my $ad (@$adverts)
+        {
+            if ( ( lc( $ad->{ 'owner' } ) eq lc($username) ) ||
+                 ($admin) )
+            {
+                $ad->{ 'stats' } = 1;
+            }
+            push( @$data, $ad );
+        }
+
+        $adverts = $data;
+
+        $template->param( adverts => $adverts );
+    }
+    else
+    {
+        $template->param( error => 1 );
+    }
+
+    # fill in all the parameters
+    $template->param( title => "All Community Adverts" );
+
+    # generate the output
+    return( $template->output() );
+}
+
+
+
+# ===========================================================================
+# Show all adverts belonging to the given user
+# ===========================================================================
+sub adverts_byuser
+{
+
+    # Get access to the form, session and database handles
+    my $session  = Singleton::Session->instance();
+    my $username = $session->param("logged_in");
+
+    #
+    # Is the user an advert administrator?
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    my $admin = $perms->check( priv => "advert_admin" );
+
+
+    # The user we're working with.
+    my $form  = Singleton::CGI->instance();
+    my $owner = $form->param("adverts_byuser");
+
+
+    # set up the HTML template
+    my $template = load_layout("all_adverts.inc");
+
+    #
+    #  Fetch all the adverts
+    #
+    my $ads     = Yawns::Adverts->new();
+    my $adverts = $ads->advertsByUser($owner);
+
+    if ($adverts)
+    {
+
+        #
+        #  If we're the owner then add a "stats".
+        #
+        if ( lc($username) eq lc($owner) ||
+             ($admin) )
+        {
+            my $data;
+
+            foreach my $ad (@$adverts)
+            {
+                $ad->{ 'stats' } = 1;
+                push( @$data, $ad );
+            }
+
+            $adverts = $data;
+        }
+
+        $template->param( by_user => 1, user => $owner );
+        $template->param( adverts => $adverts );
+    }
+    else
+    {
+        $template->param( by_user => 1, user => $owner );
+        $template->param( error => 1 );
+    }
+
+    # fill in all the parameters
+    $template->param( title => "Adverts by $owner" );
+
+    # generate the output
+    print $template->output;
+}
+
+
+# ===========================================================================
+# Show all adverts pending or otherwise and allow admin to enable/disable.
+# ===========================================================================
+sub edit_adverts
+{
+    my( $self ) = ( @_ );
+
+    # set up the HTML template
+    my $template = $self->load_layout( "edit_adverts.inc",
+                                       session     => 1,
+                                       global_vars => 1
+                                     );
+
+    #
+    #  Fetch all adverts
+    #
+    my $ads = Yawns::Adverts->new();
+
+    #
+    #  This includes active and not.
+    #
+    my $adverts = $ads->fetchAllAdverts();
+
+    if ($adverts)
+    {
+        $template->param( adverts => $adverts );
+    }
+    else
+    {
+        $template->param( error => 1 );
+    }
+
+    # generate the output
+    return( $template->output() );
+
+}
+
+
+# ===========================================================================
+# Show the performance of the given advert
+# ===========================================================================
+sub advert_stats
+{
+    my( $self ) = ( @_ );
+
+
+    #
+    # Advert ID
+    #
+    my $form = $self->query();
+    my $id = $form->param("id");
+
+    #
+    # Get data.
+    #
+    my $adverts = Yawns::Adverts->new();
+    my $data    = $adverts->getAdvert($id);
+
+    #
+    # Load the template
+    #
+    my $template = $self->load_layout("view_campaign.inc");
+
+    my $clickthrough = 0;
+    my $status       = "Pending";
+
+    if ( defined( $data->{ 'owner' } ) )
+    {
+        if ( $data->{ 'shown' } )
+        {
+            $clickthrough = ( $data->{ 'clicked' } / $data->{ 'shown' } ) * 100;
+            $clickthrough = sprintf( "%.2f", $clickthrough );
+        }
+
+        if ( $data->{ 'active' } eq 'y' )
+        {
+            $status = "Active";
+            if ( $data->{ 'shown' } >= $data->{ 'display' } )
+            {
+                $status = "Finished";
+            }
+        }
+    }
+    else
+    {
+        $template->param( error => 1 );
+    }
+
+    # set parameters
+    $template->param( advert_id         => $id,
+                      advert_owner      => $data->{ 'owner' },
+                      advert_link       => $data->{ 'link' },
+                      advert_link_title => $data->{ 'linktext' },
+                      shown             => $data->{ 'shown' },
+                      max               => $data->{ 'display' },
+                      clicked           => $data->{ 'clicked' },
+                      clickthrough      => $clickthrough,
+                      status            => $status,
+                      title             => "View Campaign $id",
+                    );
+
+    # generate the output
+    return($template->output());
+
+}
+
+
+# ===========================================================================
+# Delete an advert
+# ===========================================================================
+sub delete_advert
+{
+
+    my( $self ) = ( @_ );
+
+    #
+    # validate the session.
+    #
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+    #
+    #  This requires a login
+    #
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in");
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Ensure the user has permissions
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    if ( !$perms->check( priv => "advert_admin" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+
+    #
+    #  Remove the advert.
+    #
+    my $adverts = Yawns::Adverts->new();
+    my $form    = $self->query();
+    $adverts->deleteAdvert( $form->param('id') );
+
+    #
+    #  Show a good message.
+    #
+    return ( $self->permission_denied( advert_deleted => 1 ) );
+
+}
+
+
+
+# ===========================================================================
+# Enable an advert.
+# ===========================================================================
+sub enable_advert
+{
+    my( $self ) = ( @_ );
+
+    #
+    # validate the session.
+    #
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+    #
+    #  This requires a login
+    #
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in");
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Ensure the user has permissions
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    if ( !$perms->check( priv => "advert_admin" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+
+    #
+    #  Remove the advert.
+    #
+    my $adverts = Yawns::Adverts->new();
+    my $form    = $self->query();
+    $adverts->enableAdvert( $form->param('id') );
+
+    #
+    #  Show a good message.
+    #
+    return ( $self->permission_denied( advert_enabled => 1 ) );
+}
+
+
+# ===========================================================================
+# Disable an advert.
+# ===========================================================================
+sub disable_advert
+{
+
+    my( $self ) = ( @_ );
+
+    #
+    # validate the session.
+    #
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+    #
+    #  This requires a login
+    #
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in");
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Ensure the user has permissions
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    if ( !$perms->check( priv => "advert_admin" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+
+    #
+    #  Remove the advert.
+    #
+    my $adverts = Yawns::Adverts->new();
+    my $form    = $self->query();
+    $adverts->disableAdvert( $form->param('id') );
+
+    #
+    #  Show a good message.
+    #
+    return ( $self->permission_denied( advert_disabled => 1 ) );
+}
 
 1;
