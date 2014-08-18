@@ -295,13 +295,6 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "delete_weblog" =>    # Delete a weblog entry
-      { sub   => \&delete_weblog,
-        login => 1,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
     "edit_article" =>     # Edit an existing, live, article
       { sub   => \&edit_article,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",

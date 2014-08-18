@@ -275,7 +275,8 @@ sub setup
         'report_weblog'  => 'report_weblog',
 
         # Weblogs
-        'add_weblog' => 'add_weblog',
+        'add_weblog'    => 'add_weblog',
+        'delete_weblog' => 'delete_weblog',
 
         # Administrivia
         'recent_users' => 'recent_users',
@@ -5734,6 +5735,94 @@ sub add_weblog
     return ( $template->output() );
 }
 
+
+
+# ===========================================================================
+# Delete a Weblog Entry
+# ===========================================================================
+sub delete_weblog
+{
+    my ($self) = (@_);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    my $id = $form->param('id') || 0;
+
+    my $removed = 0;
+    my $submit  = $form->param('submit');
+
+    if ( $submit eq 'Yes Really Delete' )
+    {
+
+        # validate session.
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        #
+        # Find the weblog GID.
+        #
+        my $weblog = Yawns::Weblog->new();
+        my $gid = $weblog->getGID( username => $username, id => $id );
+
+        #
+        #  TODO: delete the comments on the entry.
+        #
+        #        my $comments =
+        #         $db->prepare("DELETE FROM comments WHERE root=? AND type='w'");
+        #      $comments->execute($gid);
+        #     $comments->finish();
+
+        #
+        # Remove the actual entry.
+        #
+        $weblog->remove( gid      => $gid,
+                         username => $username );
+
+        #
+        #  All done.
+        #
+        $removed = 1;
+    }
+    elsif ( $submit eq 'No Keep It' )
+    {
+        return ( $self->redirectURL("/users/$username/weblog/$id") );
+    }
+
+    # open the html template
+    my $template = $self->load_layout( "delete_weblog.inc", session => 1 );
+
+    if ($removed)
+    {
+        $template->param( title => "Entry Removed" );
+    }
+    else
+    {
+        $template->param( title => "Delete Weblog Entry?" );
+    }
+
+    # fill in all the parameters you got from the database
+    $template->param( removed  => $removed,
+                      id       => $id,
+                      username => $username,
+                    );
+
+    # generate the output
+    return ( $template->output() );
+
+}
 
 
 1;
