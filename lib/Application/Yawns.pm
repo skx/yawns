@@ -237,6 +237,8 @@ sub setup
         'poll_list' => 'poll_list',
         'poll_view' => 'poll_view',
         'poll_vote' => 'poll_vote',
+        'poll_reject' => 'poll_reject',
+        'poll_post' => 'poll_post',
         'pending_polls' => 'pending_polls',
 
         # Adverts
@@ -4231,5 +4233,122 @@ sub pending_polls
     return($template->output());
 }
 
+
+# ===========================================================================
+#  Post the given poll to the site.
+# ===========================================================================
+sub poll_post
+{
+    my( $self ) = ( @_ );
+
+    #
+    #  Get the current user.
+    #
+    my $session = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Ensure the user has permissions.
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    if ( !$perms->check( priv => "poll_admin" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+
+    #
+    #  Validate the session.
+    #
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+
+    #
+    # Get the poll ID we are going to post.
+    #
+    my $form = $self->query();
+    my $id   = $form->param("id");
+
+    #
+    # Post it.
+    #
+    my $submisssions = Yawns::Submissions->new();
+    $submisssions->postPoll($id);
+
+
+    my $c = Yawns::Cache->new();
+    $c->flush("Pending poll promoted to live status.");
+
+    #
+    #  Redirect to the homepage
+    #
+    return( $self->redirectURL( "/" ) );
+}
+
+
+# ===========================================================================
+#  Reject/Delete the given poll
+# ===========================================================================
+sub poll_reject
+{
+    my( $self ) = ( @_ );
+
+    #
+    #  Get the current user.
+    #
+    my $session = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Ensure the user has permissions.
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    if ( !$perms->check( priv => "poll_admin" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+
+    #
+    #  Validate the session.
+    #
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+    #
+    #  Get the poll ID we are working with.
+    #
+    my $form = $self->query();
+    my $id   = $form->param("id");
+
+    #
+    #  Reject it.
+    #
+    my $submisssions = Yawns::Submissions->new();
+    $submisssions->rejectPoll($id);
+
+    my $c = Yawns::Cache->new();
+    $c->flush("Pending poll deleted.");
+
+    #
+    #  Redirect to the homepage
+    #
+    return( $self->redirectURL( "/submissions/polls" ) );
+}
 
 1;
