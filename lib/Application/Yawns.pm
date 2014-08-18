@@ -237,6 +237,7 @@ sub setup
         'enable_advert'    => 'enable_advert',
         'disable_advert'   => 'disable_advert',
         'delete_advert'    => 'delete_advert',
+        'adverts_byuser'   => 'adverts_byuser',
 
         # Administrivia
         'recent_users' => 'recent_users',
@@ -2507,9 +2508,11 @@ sub view_all_adverts
 # ===========================================================================
 sub adverts_byuser
 {
+    my( $self ) = ( @_ );
+
 
     # Get access to the form, session and database handles
-    my $session  = Singleton::Session->instance();
+    my $session  = $self->param( "session" );
     my $username = $session->param("logged_in");
 
     #
@@ -2520,12 +2523,12 @@ sub adverts_byuser
 
 
     # The user we're working with.
-    my $form  = Singleton::CGI->instance();
-    my $owner = $form->param("adverts_byuser");
+    my $form  = $self->query();
+    my $owner = $form->param("user");
 
 
     # set up the HTML template
-    my $template = load_layout("all_adverts.inc");
+    my $template = $self->load_layout("all_adverts.inc");
 
     #
     #  Fetch all the adverts
@@ -2535,7 +2538,6 @@ sub adverts_byuser
 
     if ($adverts)
     {
-
         #
         #  If we're the owner then add a "stats".
         #
@@ -2566,7 +2568,7 @@ sub adverts_byuser
     $template->param( title => "Adverts by $owner" );
 
     # generate the output
-    print $template->output;
+    return( $template->output() );
 }
 
 
