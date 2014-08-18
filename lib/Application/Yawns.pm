@@ -27,6 +27,7 @@ use Digest::MD5 qw! md5_hex !;
 #
 # Our code
 #
+use HTML::AddNoFollow;
 use Yawns::About;
 use Yawns::Comment;
 use Yawns::Articles;
@@ -5847,9 +5848,17 @@ sub edit_weblog
 
     my $submit_title    = $form->param('submit_title');
     my $submit_tags     = $form->param('submit_tags');
+
+
     my $submit_body     = $form->param('submit_body');
     my $submit_comments = $form->param('submit_comments');
     my $saved           = 0;
+
+    #
+    # Sanitize.
+    #
+    $submit_body  = HTML::AddNoFollow::sanitize_string($submit_body);
+    $submit_title = HTML::AddNoFollow::sanitize_string($submit_title);
 
     if ( $submit eq 'Save' )
     {
@@ -5917,8 +5926,10 @@ sub edit_weblog
         #  Get all tags
         #
         my $tag_helper = Yawns::Tags->new();
-        my $weblog     = Yawns::Weblog->new();
+        my $weblog     = Yawns::Weblog->new( username => $username );
         my $gid        = $weblog->getGID( username => $username, id => $id );
+        my $ent        = $weblog->getSingleWeblogEntry( gid => $gid );
+        my @ent        = @$ent;
         my $tags       = $tag_helper->getTags( weblog => $gid );
         my $tag_text   = "";
 
@@ -5928,15 +5939,12 @@ sub edit_weblog
             $tag_text .= $t->{ 'tag' };
         }
 
-        my $db = Singleton::DBI->instance();
-        my $sql = $db->prepare(
-            "SELECT title,bodytext,comments FROM weblogs WHERE username=? AND id=?"
-        );
-        $sql->execute( $username, $id );
-
-        ( $submit_title, $submit_body, $submit_comments ) =
-          $sql->fetchrow_array();
-        $sql->finish();
+        #
+        #  Get the existing blog post.
+        #
+        $submit_title    = $ent[0]->{'title'};
+        $submit_body     = $ent[0]->{'bodytext'};
+        $submit_comments = $ent[0]->{'comment_count'};
 
         #
         #  Ensure entities are escaped.
