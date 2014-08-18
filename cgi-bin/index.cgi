@@ -335,31 +335,19 @@ my %dispatch = (
         cache => 1,
       },
 
-    "edit_permissions" =>    # Edit the permissions associated with a user.
-      { sub   => \&edit_permissions,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
-    "edit_prefs" =>          # Edit a users preferences
-      { sub   => \&edit_prefs,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
-    "edit_weblog" =>         # Edit a weblog entry
+    "edit_weblog" =>       # Edit a weblog entry
       { sub   => \&edit_weblog,
         login => 1,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "front_page" =>          # view the front-page
+    "front_page" =>        # view the front-page
       { sub  => \&front_page,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "new_user" =>            # Create a new user account
+    "new_user" =>          # Create a new user account
       { sub  => \&new_user,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },

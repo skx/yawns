@@ -18,9 +18,10 @@
 	<p>This page allows you to customise the way you view this site, and how notifications are passed to you.</p>
 
        <!-- Change user preferences form. -->
-       <form action="/edit/prefs/<!-- tmpl_var name="username" -->" method="post">
+       <form action="/edit/prefs/<!-- tmpl_var name="user" -->" method="post">
        <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
-       <input type="hidden" name="edit_prefs" value="<!-- tmpl_var name='username' -->">
+       <input type="hidden" name="user" value="<!-- tmpl_var name='username' -->">
+       <input type="hidden" name="mode" value="edit_prefs" />
 
 
        <table>

@@ -7,9 +7,10 @@
  <h1>Edit User Permissions</h1>
 <p>Here you can edit the permissions available to <a href="/users/<!-- tmpl_var name='edit' escape='html' -->"><!-- tmpl_var name='edit' escape='html' --></a>.</p>
  <form method="POST" action="/">
-  <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />  
-  <input type="hidden" name="edit_permissions" value="<!-- tmpl_var name='edit' -->" />
- 
+  <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
+  <input type="hidden" name="user" value="<!-- tmpl_var name='edit' -->" />
+  <input type="hidden" name="mode" value="edit_permissions" />
+
  <ul>
  <!-- tmpl_loop name='permissions_loop' -->
     <li><input type="checkbox" name="edit_perm_<!-- tmpl_var name='perm' escape='html' -->" value="1" <!-- tmpl_if name='selected' -->checked<!-- /tmpl_if -->> <!-- tmpl_var name='perm' --></li>

@@ -216,8 +216,10 @@ sub setup
         'archive' => 'archive',
 
         # User-actions
-        'view_user' => 'view_user',
-        'edit_user' => 'edit_user',
+        'view_user'        => 'view_user',
+        'edit_user'        => 'edit_user',
+        'edit_prefs'       => 'edit_prefs',
+        'edit_permissions' => 'edit_permissions',
 
         # static pages
         'about'      => 'about_page',
@@ -4645,5 +4647,380 @@ sub submit_poll
 }
 
 
+
+
+# ===========================================================================
+# Edit the preferences of a user.
+# ===========================================================================
+sub edit_prefs
+{
+
+    my ($self) = (@_);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+
+    #
+    # Per-form variable
+    #
+    my $edituser = $form->param("user");
+
+    #
+    # If no username was specified then use the current logged in user.
+    #
+    if ( !defined($edituser) )
+    {
+        $edituser = $username;
+    }
+
+    #
+    #  Anonymous users can't edit.
+    #
+    if ( $username =~ /^anonymous$/i )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Does the current user have permissions to edit
+    # a user other than themselves?
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+
+    #
+    #  Editting a different user?
+    #
+    if ( lc($edituser) ne lc($username) )
+    {
+
+
+        if ( !$perms->check( priv => "edit_user_prefs" ) )
+        {
+            return ( $self->permission_denied( admin_only => 1 ) );
+        }
+    }
+
+
+    #
+    #  Get the preference object for working with preferences.
+    #
+    my $preferences = Yawns::Preferences->new( username => $edituser );
+
+    #
+    #  And helper for the notifications
+    #
+    my $notifications = Yawns::Comment::Notifier->new( username => $edituser );
+
+    #
+    #  Flags for displaying result of preference change.
+    #
+    my $saved             = 0;
+    my $password_saved    = 0;
+    my $password_mismatch = 0;
+    my $password_simple   = 0;
+
+
+    if ( defined $form->param('update') )
+    {
+
+        # validate session
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        if ( $form->param('update') eq 'Update' )
+        {
+            my $polls   = $form->param('viewpolls')   || 0;
+            my $adverts = $form->param('wantadverts') || 0;
+            my $blogs   = $form->param('viewblogs')   || 0;
+
+
+            #
+            # Save the preferences.
+            #
+            my $user = Yawns::User->new( username => $edituser );
+            $user->savePreferences( view_polls   => $polls,
+                                    view_adverts => $adverts,
+                                    view_blogs   => $blogs
+                                  );
+
+            #
+            #  Find notification options.
+            #
+            my $article = $form->param("article");
+            my $comment = $form->param("comment");
+            my $weblog  = $form->param("weblog");
+
+            if ( $perms->check( priv => "article_admin" ) )
+            {
+                my $submissions = $form->param("submissions");
+
+                # Update them.
+                $notifications->save( article     => $article,
+                                      comment     => $comment,
+                                      weblog      => $weblog,
+                                      submissions => $submissions
+                                    );
+
+            }
+            else
+            {
+
+                # Update them.
+                $notifications->save( article => $article,
+                                      comment => $comment,
+                                      weblog  => $weblog
+                                    );
+            }
+
+
+            #
+            #  Preferences have been changes, now we handle password
+            # change.  If required.
+            #
+            my $pwd1 = $form->param('pw1');
+            my $pwd2 = $form->param('pw2');
+
+            #
+            #  Only attempt to change password if both fields are non-empty
+            #
+            if ( ( defined($pwd1) && length($pwd1) ) &&
+                 ( defined($pwd2) && length($pwd2) ) )
+            {
+
+                #
+                # And they both contain the same text.
+                #
+                if ( $pwd1 ne $pwd2 )
+                {
+                    $password_mismatch = 1;
+                }
+                else
+                {
+
+                    #
+                    #  Password == Username == bad!
+                    #
+                    if ( lc($pwd1) eq lc($username) )
+                    {
+                        $password_simple = 1;
+                    }
+                    else
+                    {
+
+                        # set the new password.
+                        my $u = Yawns::User->new( username => $edituser );
+                        $u->setPassword( $form->param('pw1') );
+
+                        $password_saved = 1;
+                    }
+                }
+            }
+
+            my $c = Yawns::Cache->new();
+            $c->flush("Edited user preferences.");
+
+            $saved = 1;
+        }
+    }
+
+    #
+    # Get the data.
+    #
+    my $user        = Yawns::User->new( username => $edituser );
+    my $prefsdata   = $user->get();
+    my $viewpolls   = $prefsdata->{ 'polls' };
+    my $wantadverts = $prefsdata->{ 'viewadverts' };
+    my $wantblogs   = $prefsdata->{ 'blogs' };
+
+
+
+    #
+    #  Get the methods.
+    #
+    my $article =
+      $notifications->getNotificationMethod( $edituser, "article" ) ||
+      "none";
+    my $comment =
+      $notifications->getNotificationMethod( $edituser, "comment" ) ||
+      "none";
+    my $weblog = $notifications->getNotificationMethod( $edituser, "weblog" ) ||
+      "none";
+    my $submissions =
+      $notifications->getNotificationMethod( $edituser, "submissions" ) ||
+      "none";
+
+
+
+    # open the html template
+    my $template = $self->load_layout( "edit_preferences.inc", session => 1 );
+
+    #
+    #  Set notification options.
+    #
+    $template->param( "article_" . $article => 1 );
+    $template->param( "comment_" . $comment => 1 );
+    $template->param( "weblog_" . $weblog   => 1 );
+
+    #
+    #  NOTE:  perms2 == user being edited, not the user making the change.
+    #
+    if ( $perms->check( priv => "article_admin" ) )
+    {
+        $template->param( "submissions_" . $submissions => 1,
+                          article_admin                 => 1 );
+    }
+
+    # set parameters
+    $template->param( username          => $edituser,
+                      saved             => $saved,
+                      viewpolls         => $viewpolls,
+                      password_saved    => $password_saved,
+                      password_simple   => $password_simple,
+                      password_mismatch => $password_mismatch,
+                      wantadverts       => $wantadverts,
+                      wantblogs         => $wantblogs,
+                      title             => "Edit Preferences",
+                    );
+
+    # generate the output
+    return ( $template->output() );
+}
+
+
+
+# ===========================================================================
+# Edit user permissions
+# ===========================================================================
+sub edit_permissions
+{
+    my ($self) = (@_);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+    my $edit     = $form->param("user");
+
+    #
+    #  Anonymous users can't edit.
+    #
+    if ( $username =~ /^anonymous$/i )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+
+    #
+    #  Gain access to our permissions object.
+    #
+    my $perms = Yawns::Permissions->new( username => $edit );
+
+    #
+    #  Only a permissions-editor can edit permissions.
+    #
+    if ( !$perms->check( username => $username, priv => "edit_permissions" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+
+    #
+    #  Load the template
+    #
+    my $template = $self->load_layout( "edit_permissions.inc", session => 1 );
+
+
+    #
+    #  Are we submitting?
+    #
+    if ( $form->param("change_permissions") )
+    {
+
+        # validate session
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        my @all = $perms->getKnownAttributes();
+
+        #
+        #  Remove existing parameters.
+        #
+        $perms->removeAllPermissions($edit);
+
+        #
+        #  Now get the ones to set, these are parameters which have
+        # name starting with "edit_perm_".
+        #
+        foreach my $p ( $form->param() )
+        {
+            if ( $p =~ /edit_perm_(.*)/ )
+            {
+
+                #
+                #  Defined parameters
+                #
+                $p = $1;
+
+                #
+                #  Is it valid?
+                #
+                foreach my $q (@all)
+                {
+                    if ( lc($p) eq lc($q) )
+                    {
+                        $perms->givePermission( $edit, $p );
+                    }
+                }
+            }
+        }
+
+        $template->param( editted => 1,
+                          title   => "Permissions Updated",
+                          edit    => $edit
+                        );
+
+        my $c = Yawns::Cache->new();
+        $c->flush("Edited user permissions.");
+    }
+    else
+    {
+
+        #
+        #  Find all permissions - so we can tick the ones we know
+        # about.
+        #
+        my @all = $perms->getKnownAttributes();
+
+        #
+        #  The loop we'll use in the HTML
+        #
+        my $loop;
+
+        foreach my $key (@all)
+        {
+            if ( $perms->check( priv => $key ) )
+            {
+                push( @$loop, { perm => $key, selected => 1 } );
+            }
+            else
+            {
+                push( @$loop, { perm => $key, selected => 0 } );
+            }
+        }
+
+        $template->param( permissions_loop => $loop,
+                          edit             => $edit,
+                          title            => "Edit Permissions"
+                        );
+    }
+
+    return ( $template->output() );
+}
 
 1;
