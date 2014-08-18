@@ -237,6 +237,7 @@ sub setup
         'poll_list' => 'poll_list',
         'poll_view' => 'poll_view',
         'poll_vote' => 'poll_vote',
+        'pending_polls' => 'pending_polls',
 
         # Adverts
         'create_advert'    => 'create_advert',
@@ -3862,12 +3863,12 @@ sub user_admin
 
 sub poll_list
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     # Get access to pointers we need.
     #
-    my $session  = $self->param( "session" );
+    my $session = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -3884,7 +3885,7 @@ sub poll_list
                       title        => "Prior Poll Archive", );
 
     # generate the output
-    return($template->output());
+    return ( $template->output() );
 
 }
 
@@ -3895,10 +3896,10 @@ sub poll_list
 # ===========================================================================
 sub poll_view
 {
-    my( $self, $anon_voted, $prev_vote, $new_vote ) = ( @_ );
+    my ( $self, $anon_voted, $prev_vote, $new_vote ) = (@_);
 
     my $form     = $self->query();
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -3908,13 +3909,13 @@ sub poll_view
     $logged_in = 0 if ( $username =~ /anonymous/i );
 
 
-    my $error   = undef;
-    my $poll_id = $form->param( "id" ) || 1;;
+    my $error = undef;
+    my $poll_id = $form->param("id") || 1;
 
     # meh?
-    $anon_voted = 0 if ( ! defined( $anon_voted ) );
-    $prev_vote = 0 if ( ! defined( $prev_vote ) );
-    $new_vote = 0 if ( ! defined( $new_vote ) );
+    $anon_voted = 0 if ( !defined($anon_voted) );
+    $prev_vote  = 0 if ( !defined($prev_vote) );
+    $new_vote   = 0 if ( !defined($new_vote) );
 
     #
     # Get the poll data.
@@ -4126,7 +4127,7 @@ sub poll_view
     $template->param( tags => $tags ) if ($tags);
 
     # generate the output
-    return($template->output());
+    return ( $template->output() );
 
 }
 
@@ -4137,7 +4138,7 @@ sub poll_view
 # ===========================================================================
 sub poll_vote
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Get access to the form.
@@ -4172,16 +4173,63 @@ sub poll_vote
         #
         # Show the result.
         #
-        return( $self->poll_view( $anon_voted, $prev_vote, $new_vote ) );
+        return ( $self->poll_view( $anon_voted, $prev_vote, $new_vote ) );
     }
     else
     {
-        return( $self->poll_view(poll_results( 0, 0, 0 ) ) );
+        return ( $self->poll_view( poll_results( 0, 0, 0 ) ) );
     }
 }
 
 
+# ===========================================================================
+# Manage pending submissions; list all polls with links to post/delete
+# ===========================================================================
+sub pending_polls
+{
+    my( $self ) = ( @_ );
 
+    #
+    #  Get the current user.
+    #
+    my $session = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Ensure the user has permissions.
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    if ( !$perms->check( priv => "poll_admin" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+
+    # Fetch the pending polls from the database
+    my $queue = Yawns::Submissions->new();
+    my $subs  = $queue->getPolls();
+
+    # set up the HTML template
+    my $template = $self->load_layout( "pending_polls.inc",
+                                       global_vars => 1,
+                                       session     => 1
+                                     );
+
+    # fill in all the parameters
+    $template->param( polls => $subs ) if $subs;
+
+    $template->param( title => "Pending Polls" );
+
+    # generate the output
+    return($template->output());
+}
 
 
 1;

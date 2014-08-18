@@ -396,12 +396,6 @@ my %dispatch = (
         cache    => 1,
       },
 
-    "poll_submissions" =>       # View pending poll submissions
-      { sub   => \&poll_submissions,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        priv  => "poll_admin",
-        cache => 1,
-      },
 
     "report" =>                 # Report an abusive comment.
       { sub   => \&report_comment,

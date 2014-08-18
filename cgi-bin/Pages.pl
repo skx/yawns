@@ -2315,30 +2315,6 @@ EOF
 
 
 
-# ===========================================================================
-# Manage pending submissions; list all polls with links to post/delete
-# ===========================================================================
-sub poll_submissions
-{
-
-    # Fetch the pending polls from the database
-    my $queue = Yawns::Submissions->new();
-    my $subs  = $queue->getPolls();
-
-    # set up the HTML template
-    my $template = load_layout( "pending_polls.inc",
-                                global_vars => 1,
-                                session     => 1
-                              );
-
-    # fill in all the parameters
-    $template->param( polls => $subs ) if $subs;
-
-    $template->param( title => "Pending Polls" );
-
-    # generate the output
-    print $template->output;
-}
 
 
 # ===========================================================================
@@ -2470,7 +2446,6 @@ sub poll_post
     my $submisssions = Yawns::Submissions->new();
     $submisssions->postPoll($id);
 }
-
 
 
 
