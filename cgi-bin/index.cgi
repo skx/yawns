@@ -430,18 +430,6 @@ my %dispatch = (
         cache => 1,
       },
 
-
-    "submission_view" =>        # View a pending article
-      { sub  => \&submission_view,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
-    "submission_list" =>        # View pending article submissions
-      { sub  => \&submission_list,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-        priv => "article_admin",
-      },
-
     "submit" =>                 # Submit an article
       { sub   => \&submit_article,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",

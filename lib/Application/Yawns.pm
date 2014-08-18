@@ -248,6 +248,8 @@ sub setup
         'submission_reject' => 'submission_reject',
         'submission_edit' => 'submission_edit',
         'submission_post' => 'submission_post',
+        'submission_view' => 'submission_view',
+        'submission_list' => 'submission_list',
 
         # Administrivia
         'recent_users' => 'recent_users',
@@ -3528,6 +3530,225 @@ sub submission_edit
 
     return($template->output());
 }
+
+
+
+# ===========================================================================
+# view a submission.
+# ===========================================================================
+sub submission_view
+{
+    my ($self) = (@_);
+
+    #
+    #  This requires a login
+    #
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form      = $self->query();
+    my $session   = $self->param( "session" );
+    my $username  = $session->param("logged_in") || "Anonymous";
+    my $perms     = Yawns::Permissions->new( username => $username );
+    my $is_author = 0;
+
+
+    #
+    #  If the current user is the article author they may edit it.
+    #
+    #  The site administrator can edit everything :)
+    #
+    my $id = $form->param('id');
+    if ( defined($id) )
+    {
+        my $submissions = Yawns::Submissions->new( username => $username );
+        my $author = $submissions->getArticleAuthor($id);
+
+        #
+        #  If the currently logged in user is the author of the
+        # submission, or if we're an article administrator then
+        # we can edit.
+        #
+        if ( lc($author) eq lc($username) )
+        {
+            $is_author = 1;
+        }
+        else
+        {
+            if ( !$perms->check( priv => "article_admin" ) )
+            {
+                return ( $self->permission_denied( admin_only => 1 ) );
+            }
+        }
+    }
+
+
+    #
+    #  The template we'll be working with.
+    #
+    my $template = $self->load_layout( "view_submission.inc",
+                                       loop_context_vars => 1,
+                                       session           => 1
+                                     );
+
+    #
+    #  Get the data from the submission.
+    #
+    my $submissions = Yawns::Submissions->new();
+
+    #
+    #  Get the data from the submissions queue, and set it into the
+    # template
+    #
+    my %data = $submissions->getSubmission($id);
+
+    #
+    #  Does the submission exist?
+    #
+    my $error = 0;
+    $error = 1 if ( !$data{ 'title' } );
+
+    #
+    #  Only need to fetch the data if there is no error.
+    #
+    if ( !$error )
+    {
+
+        #
+        #  Get the data.
+        #
+        my $bodytext     = $data{ 'bodytext' };
+        my $title        = $data{ 'title' };
+        my $author       = $data{ 'author' };
+        my $ip           = $data{ 'ip' };
+        my $current_tags = $data{ 'current_tags' };
+        my $notes        = $data{ 'notes' };
+
+
+
+        #
+        #  Only the site-admin will see the notes.
+        #
+        if ( $perms->check( priv => "article_admin" ) )
+        {
+            $template->param( article_admin => 1 );
+
+        }
+        else
+        {
+            if ($is_author)
+            {
+                $template->param( is_author => 1 );
+            }
+        }
+
+        # Get the submission tags.
+        my $holder = Yawns::Tags->new();
+        my $tags = $holder->getTags( submission => $id );
+
+        if ( defined($tags) )
+        {
+            $template->param( tags     => $tags,
+                              has_tags => 1 );
+        }
+
+        # fill in all the parameters you got from the database
+        $template->param( submission_body => $bodytext,
+                          title           => $title,
+                          author          => $author,
+                          id              => $id,
+                          ip              => $ip,
+                        );
+    }
+    else
+    {
+        $template->param( error => 1,
+                          title => "Error" );
+    }
+
+    return( $template->output() );
+}
+
+# ===========================================================================
+# List pending articles
+# ===========================================================================
+sub submission_list
+{
+    my ($self) = (@_);
+
+    #
+    #  This requires a login
+    #
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Ensure the user has permissions
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    if ( !$perms->check( priv => "advert_admin" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+
+    #
+    #  Get the submissions.
+    #
+    my $queue = Yawns::Submissions->new();
+    my $count = $queue->articleCount();
+    my $list  = $queue->getArticleOverview();
+
+
+    #
+    #  Load the templaate
+    #
+    my $template = $self->load_layout( "pending_articles.inc",
+                                       global_vars => 1,
+                                       session     => 1
+                                     );
+
+    #
+    #  Add the pending list
+    #
+    if ( $count < 1 )
+    {
+        $template->param( empty => 1,
+                          title => "No Pending Articles" );
+    }
+    else
+    {
+        $template->param( pending_list => $list,
+                          title        => "Pending Articles" );
+    }
+
+    #
+    #  All done
+    #
+    return($template->output() );
+}
+
+
+
 
 
 1;
