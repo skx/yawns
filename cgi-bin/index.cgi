@@ -477,9 +477,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "printable" =>              # Display the printable version of an article
-      { sub => \&printable, },
-
     "report" =>                 # Report an abusive comment.
       { sub   => \&report_comment,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
@@ -536,8 +533,6 @@ my %dispatch = (
         cache => 1,
       },
 
-
-    "title_print" => { sub => \&article_by_title_print, },
 
     "user" =>                   # View a users profile page.
       { sub  => \&view_user,

@@ -1478,7 +1478,7 @@ sub article
     $template->param(
         article_id     => $article_id,
         article_title  => $article->{ 'article_title' },
-        slug           => $slug,
+#        slug           => $slug,
         title          => $article->{ 'article_title' },
         suspended      => $article->{ 'suspended' },
         article_byuser => $article->{ 'article_byuser' },
