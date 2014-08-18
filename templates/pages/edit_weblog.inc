@@ -15,7 +15,8 @@ $(document).ready (function() {
 
                   <form action="/edit/weblog/<!-- tmpl_var name="id" -->" method="post">
                   <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
-		  <input type="hidden" name="edit_weblog" value="<!-- tmpl_var name="id" -->">
+                  <input type="hidden" name="mode" value="edit_weblog" />
+		  <input type="hidden" name="id" value="<!-- tmpl_var name="id" -->">
                     <p><b>Title:</b> <input name="submit_title" type="text" value="<!-- tmpl_var name='submit_title' -->" size="50" maxlength="50" />
                     <p><b>Tags:</b> <input name="submit_tags" type="text" value="<!-- tmpl_var name='submit_tags' -->" size="50" maxlength="100" />
 
@@ -36,7 +37,7 @@ $(document).ready (function() {
                         </select>
 	<!-- /tmpl_if -->
 
-                    <p><input type="submit" name="save_weblog" value="Save" /></p>
+                    <p><input type="submit" name="submit" value="Save" /></p>
                   </form>
 	<p>If you wish you can <a href="/delete/weblog/<!-- tmpl_var name="id" -->">delete this entry</a>.</p>
 

@@ -308,13 +308,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "edit_weblog" =>      # Edit a weblog entry
-      { sub   => \&edit_weblog,
-        login => 1,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
     "front_page" =>       # view the front-page
       { sub  => \&front_page,
         type => "Content-Type: text/html; charset=UTF-8\n\n",

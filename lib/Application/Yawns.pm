@@ -277,6 +277,7 @@ sub setup
         # Weblogs
         'add_weblog'    => 'add_weblog',
         'delete_weblog' => 'delete_weblog',
+        'edit_weblog'   => 'edit_weblog',
 
         # Administrivia
         'recent_users' => 'recent_users',
@@ -5780,10 +5781,11 @@ sub delete_weblog
         #
         #  TODO: delete the comments on the entry.
         #
-        #        my $comments =
-        #         $db->prepare("DELETE FROM comments WHERE root=? AND type='w'");
-        #      $comments->execute($gid);
-        #     $comments->finish();
+        my $db = Singleton::DBI->instance();
+        my $comments =
+          $db->prepare("DELETE FROM comments WHERE root=? AND type='w'");
+        $comments->execute($gid);
+        $comments->finish();
 
         #
         # Remove the actual entry.
@@ -5823,6 +5825,161 @@ sub delete_weblog
     return ( $template->output() );
 
 }
+
+
+
+# ===========================================================================
+# Edit a weblog entry.
+# ===========================================================================
+sub edit_weblog
+{
+    my ($self) = (@_);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    my $id     = $form->param('id');
+    my $submit = $form->param('submit');
+
+    my $submit_title    = $form->param('submit_title');
+    my $submit_tags     = $form->param('submit_tags');
+    my $submit_body     = $form->param('submit_body');
+    my $submit_comments = $form->param('submit_comments');
+    my $saved           = 0;
+
+    if ( $submit eq 'Save' )
+    {
+
+        # validate session.
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        #
+        # Get the weblog.
+        #
+        my $weblog = Yawns::Weblog->new( username => $username, id => $id );
+
+        #
+        # Are we to disable comments?
+        #
+        my $comments_enabled = 0;
+        if ( $submit_comments =~ /enabled/i )
+        {
+            $comments_enabled = 1;
+        }
+
+        #
+        #
+        #
+        $weblog->edit( title            => $submit_title,
+                       body             => $submit_body,
+                       comments_enabled => $comments_enabled,
+                     );
+
+
+        #
+        #  Now handle tags.
+        #
+        my $tag_helper = Yawns::Tags->new();
+        $weblog = Yawns::Weblog->new();
+        my $gid = $weblog->getGID( username => $username, id => $id );
+
+        #
+        #  Remove existing tags.
+        #
+        my $tags = $tag_helper->deleteTags( weblog => $gid );
+
+        #
+        #  Add any new ones.
+        #
+        foreach my $tag ( split( /,/, $submit_tags ) )
+        {
+            next if ( !defined($tag) || !length($tag) );
+
+            # trim leading/trailing whitespace
+            $tag =~ s/^\s+|\s+$//g;
+
+            $tag_helper->addTag( weblog => $gid,
+                                 tag    => $tag );
+        }
+
+
+        $saved = 1;
+    }
+    else
+    {
+
+        #
+        #  Get all tags
+        #
+        my $tag_helper = Yawns::Tags->new();
+        my $weblog     = Yawns::Weblog->new();
+        my $gid        = $weblog->getGID( username => $username, id => $id );
+        my $tags       = $tag_helper->getTags( weblog => $gid );
+        my $tag_text   = "";
+
+        foreach my $t (@$tags)
+        {
+            $tag_text .= "," if ( length($tag_text) );
+            $tag_text .= $t->{ 'tag' };
+        }
+
+        my $db = Singleton::DBI->instance();
+        my $sql = $db->prepare(
+            "SELECT title,bodytext,comments FROM weblogs WHERE username=? AND id=?"
+        );
+        $sql->execute( $username, $id );
+
+        ( $submit_title, $submit_body, $submit_comments ) =
+          $sql->fetchrow_array();
+        $sql->finish();
+
+        #
+        #  Ensure entities are escaped.
+        #
+        $submit_title = HTML::Entities::encode_entities($submit_title);
+        $submit_body  = HTML::Entities::encode_entities($submit_body);
+        $submit_tags  = HTML::Entities::encode_entities($tag_text);
+
+        #
+        #  If submit_comments == -1 then comments are disabled.
+        #
+        if ( defined($submit_comments) &&
+             $submit_comments != -1 )
+        {
+            $submit_comments = 1;
+        }
+        else
+        {
+            $submit_comments = 0;
+        }
+    }
+
+
+    # open the html template
+    my $template = $self->load_layout( "edit_weblog.inc", session => 1 );
+
+
+    # fill in all the parameters you got from the database
+    $template->param( submit_title    => $submit_title,
+                      submit_tags     => $submit_tags,
+                      submit_body     => $submit_body,
+                      submit_comments => $submit_comments,
+                      saved           => $saved,
+                      id              => $id,
+                      username        => $username,
+                      title           => "Edit Weblog",
+                    );
+
+    # generate the output
+    return ( $template->output() );
+
+}
+
 
 
 1;
