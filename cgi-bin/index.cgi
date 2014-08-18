@@ -352,29 +352,19 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "send_reset_password" =>    # Mail the user a link to reset their password.
-      { sub  => \&send_reset_password,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
-    "change_password" =>        # Allow a user to change their password.
-      { sub  => \&change_password,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
-    "report" =>                 # Report an abusive comment.
+    "report" =>            # Report an abusive comment.
       { sub   => \&report_comment,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "report_weblog" =>          # Report a weblog entry.
+    "report_weblog" =>     # Report a weblog entry.
       { sub   => \&report_weblog,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "submit" =>                 # Submit an article
+    "submit" =>            # Submit an article
       { sub   => \&submit_article,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,

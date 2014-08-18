@@ -269,8 +269,10 @@ sub setup
         'user_admin'   => 'user_admin',
 
         # Login/Logout
-        'login'  => 'application_login',
-        'logout' => 'application_logout',
+        'login'           => 'application_login',
+        'logout'          => 'application_logout',
+        'change_password' => 'change_password',
+        'reset_password'  => 'reset_password',
 
         # Tag operations
         'tag_cloud'  => 'tag_cloud',
@@ -5022,5 +5024,197 @@ sub edit_permissions
 
     return ( $template->output() );
 }
+
+
+
+# ===========================================================================
+# Send the user a mail allowing them to reset their password.
+# ===========================================================================
+sub reset_password
+{
+    my ($self) = (@_);
+
+    #
+    # Deny access if the user is already logged in.
+    #
+    my $session = $self->param("session");
+    my $uname = $session->param("logged_in") || "Anonymous";
+    if ( $uname !~ /^anonymous$/i )
+    {
+        return ( $self->permission_denied( already_logged_in => 1 ) );
+    }
+
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form = $self->query();
+
+    my $new_user_name  = '';
+    my $new_user_email = '';
+    my $submit         = 0;
+    my $error          = 0;
+
+
+    #
+    #  If the user is submitting...
+    #
+    if ( $form->param('submit') eq 'Send' )
+    {
+
+        # validate session
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        # get the search details.
+        $new_user_name  = $form->param('the_user_name');
+        $new_user_email = $form->param('the_user_email');
+
+        #
+        # Find the user.
+        #
+        my $users = Yawns::Users->new();
+        my ( $username, $email ) =
+          $users->findUser( username => $new_user_name,
+                            email    => $new_user_email );
+
+        #
+        #  If that worked
+        #
+        if ( defined($username) &&
+             defined($email) &&
+             ( lc($username) ne lc("Anonymous") ) )
+        {
+
+            #  Get the email address.
+            #
+            my $user = Yawns::User->new( username => $username );
+            my $data = $user->get();
+            my $mail = $data->{ 'realemail' };
+
+            # get the hash - but don't leak it.
+            my $magic = $user->getPasswordHash();
+            $magic = substr( $magic, 0, 16 );
+
+            #
+            #  Load up the template for the email
+            #
+            my $sendmail = conf::SiteConfig::get_conf('sendmail_path');
+
+            #
+            # If we don't have sendmail setup then we'll not send out a notice.
+            #
+            if ( ( !defined($sendmail) ) or
+                 ( length($sendmail) < 1 ) )
+            {
+                return;
+            }
+
+            my $template =
+              HTML::Template->new(
+                      filename => "../templates/mail/reset-password.template" );
+
+            #
+            #  Constants.
+            #
+            my $sender   = get_conf('bounce_email');
+            my $sitename = get_conf('sitename');
+
+            $template->param( to         => $mail,
+                              from       => $sender,
+                              username   => $username,
+                              sitename   => $sitename,
+                              ip_address => $ENV{ "REMOTE_ADDR" },
+                              magic      => $magic,
+                            );
+
+            open( SENDMAIL, "|$sendmail -f $sender" ) or
+              die "Cannot open $sendmail: $!";
+            print( SENDMAIL $template->output() );
+            close(SENDMAIL);
+
+            $submit = 1;
+        }
+        else
+        {
+            $error = 1;
+        }
+    }
+
+    # open the html template
+    my $template = $self->load_layout( "forgot_password.inc", session => 1 );
+
+    # set the required values
+    $template->param( submit => $submit,
+                      error  => $error,
+                      title  => "Forgotten Password",
+                    );
+
+    # generate the output
+    return ( $template->output() );
+
+}
+
+# ===========================================================================
+# Allow the user to change their password - via the forgotten password
+# link - so not in general ..
+# ===========================================================================
+sub change_password
+{
+    my ($self) = (@_);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form   = $self->query();
+    my $user   = $form->param("user");
+    my $magic  = $form->param("magic");
+    my $pass   = $form->param("newpass");
+    my $submit = $form->param("changey");
+
+
+    # open the html template
+    my $template = $self->load_layout( "update_password.inc", session => 0 );
+
+    $template->param( user  => $user,
+                      magic => $magic );
+
+    if ($submit)
+    {
+
+        #
+        #  Get the stored hash of the user.
+        #
+        my $u = Yawns::User->new( username => $user );
+        my $m = $u->getPasswordHash();
+        $m = substr( $magic, 0, 16 );
+
+        #
+        #  If that matches what we expect then change it.
+        #
+        if ( $m eq $magic )
+        {
+
+            #
+            #  Change the password
+            #
+            $u->setPassword($pass);
+            $template->param( submit => 1,
+                              title  => "Password Changed" );
+        }
+    }
+    else
+    {
+        $template->param( title => "Change your password" );
+    }
+
+
+
+    # generate the output
+    return ( $template->output() );
+
+}
+
+
 
 1;

@@ -12,7 +12,7 @@
  you may now securely change your password.</p>
 
 <form action="/" method="post">
-  <input type="hidden" name="change_password" value="1" />
+  <input type="hidden" name="mode" value="change_password" />
   <input type="hidden" name="user" value="<!-- tmpl_var name='user' -->">
   <input type="hidden" name="magic" value="<!-- tmpl_var name='magic' -->">
 <table>
