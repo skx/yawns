@@ -365,11 +365,6 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "loginform" =>           # Login options
-      { sub  => \&login_form,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
     "new_user" =>            # Create a new user account
       { sub  => \&new_user,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
