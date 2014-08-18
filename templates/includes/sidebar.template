@@ -66,7 +66,9 @@
 	<!-- tmpl_loop name="poll_answers" -->
 	<label><input type="radio" name="pollanswer" value="<!-- tmpl_var name="id" -->" /><!-- tmpl_var name="response" --></label><br />
 	<!-- /tmpl_loop -->
-	<input type="submit" name="pollvote" value="Vote" /><br />
+        <input type="hidden" name="mode" value="poll_vote" />
+        <input type="hidden" name="id" value="<!-- tmpl_var name='poll_id' -->" />
+	<input type="submit"  value="Vote" /><br />
         <span class="votescast">
 	( <a href="/polls/<!-- tmpl_var name="poll_id" -->"><!-- tmpl_var name="poll_total_votes"> votes ~ <!-- tmpl_var name="poll_comment_count"> comments</a> )</span></p>
 	</form>

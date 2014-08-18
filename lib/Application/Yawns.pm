@@ -233,6 +233,11 @@ sub setup
         # debug
         'debug' => 'debug',
 
+        # Polls
+        'poll_list' => 'poll_list',
+        'poll_view' => 'poll_view',
+        'poll_vote' => 'poll_vote',
+
         # Adverts
         'create_advert'    => 'create_advert',
         'follow_advert'    => 'follow_advert',
@@ -3853,5 +3858,330 @@ sub user_admin
     return ( $template->output() );
 
 }
+
+
+sub poll_list
+{
+    my( $self ) = ( @_ );
+
+    #
+    # Get access to pointers we need.
+    #
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    # Get the page from the about section.
+    #
+    my $polls   = Yawns::Polls->new();
+    my $archive = $polls->getPollArchive();
+
+    # set up the HTML template
+    my $template = $self->load_layout("prior_polls.inc");
+
+    # fill in the template parameters
+    $template->param( poll_archive => $archive,
+                      title        => "Prior Poll Archive", );
+
+    # generate the output
+    return($template->output());
+
+}
+
+
+
+# ===========================================================================
+#  Show the poll results and comments.
+# ===========================================================================
+sub poll_view
+{
+    my( $self, $anon_voted, $prev_vote, $new_vote ) = ( @_ );
+
+    my $form     = $self->query();
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Logged in?
+    #
+    my $logged_in = 1;
+    $logged_in = 0 if ( $username =~ /anonymous/i );
+
+
+    my $error   = undef;
+    my $poll_id = $form->param( "id" ) || 1;;
+
+    # meh?
+    $anon_voted = 0 if ( ! defined( $anon_voted ) );
+    $prev_vote = 0 if ( ! defined( $prev_vote ) );
+    $new_vote = 0 if ( ! defined( $new_vote ) );
+
+    #
+    # Get the poll data.
+    #
+    my $p = Yawns::Poll->new( id => $poll_id );
+    my ( $question, $total, $answers, $author, $date ) = $p->get();
+
+    #
+    # Convert the time to a readable value.
+    #
+    my ( $ondate, $attime ) = Yawns::Date::convert_date_to_site($date);
+
+    if ( ( !defined($date) ) ||
+         ( !length($date) ) )
+    {
+        $date = 0;
+    }
+
+    if ( !defined($question) )
+    {
+        $error = 1;
+    }
+
+    $total = 1 if ( !defined($total) );
+    $total = 1 if $total < 0;
+
+    # build up answers loop
+    my @answers = @$answers;
+    my $results = ();
+    foreach (@answers)
+    {
+        my $tmp    = $_;
+        my @answer = @$tmp;
+        my ( $answer, $votes, $id ) = @answer;
+
+        if ( $prev_vote eq $id )
+        {
+            $prev_vote = $answer;
+        }
+        if ( $new_vote eq $id )
+        {
+            $new_vote = $answer;
+        }
+
+        #
+        #  Work out voting percentage - but only if there is at
+        # least one vote - got to avoid an illegal division by
+        # zero!
+        #
+        my $percent = 0;
+        if ( $total > 0 )
+        {
+            $percent = int( 100 / $total * $votes );
+        }
+
+        my $width  = 3 * $percent;
+        my $plural = 1;
+        $plural = 0 if $votes == 1;
+
+        push( @$results,
+              {  answer  => $answer,
+                 width   => $width,
+                 percent => $percent,
+                 votes   => $votes,
+                 plural  => $plural,
+              } );
+    }
+
+    #
+    # Do comments exist?
+    #
+    my $poll = Yawns::Poll->new( id => $poll_id );
+    my $comments_exist = $poll->commentCount();
+
+    #
+    #  Comment replies are only enabled for the current poll.
+    #
+    my $polls        = Yawns::Polls->new();
+    my $current_poll = $polls->getCurrentPoll();
+
+
+    my $enabled = 0;
+    if ( $current_poll eq $poll_id )
+    {
+        $enabled = 1;
+    }
+    else
+    {
+
+        #
+        #  Poll admin can always add poll tags.
+        #
+        my $perms = Yawns::Permissions->new( username => $username );
+        $enabled = 1 if ( $perms->check( priv => "poll_admin" ) );
+    }
+
+    #
+    #  Next and previous poll.
+    #
+    my $next     = '';
+    my $next_num = $poll_id + 1;
+    $next_num = 0 if ( $next_num > $current_poll );
+
+    my $prev     = '';
+    my $prev_num = $poll_id - 1;
+    $prev_num = 0 if ( $prev_num < 0 );
+
+    if ($next_num)
+    {
+
+        #
+        # get the title of the next poll.
+        #
+        my $poll = Yawns::Poll->new( id => $next_num );
+        $next = $poll->getTitle();
+    }
+    if ( $prev_num >= 0 )
+    {
+
+        #
+        # Ge the title of the previous poll.
+        #
+        my $poll = Yawns::Poll->new( id => $prev_num );
+        $prev = $poll->getTitle();
+    }
+
+    # open the html template
+    my $template = $self->load_layout( "poll_results.inc", );
+
+    #
+    #  Tag addition URL
+    #
+    $template->param( tag_url           => "/ajax/addtag/poll/$poll_id/" );
+    $template->param( show_poll_archive => 1 );
+
+    if ($error)
+    {
+
+        # fill in all the parameters you got from the database
+        $template->param( error => $error );
+    }
+    else
+    {
+
+        #
+        #  No need to alert if prev_vote == new_vote
+        #
+        if ( ($prev_vote) &&
+             ($new_vote) &&
+             ( $prev_vote eq $new_vote ) )
+        {
+            $prev_vote = undef;
+            $new_vote  = undef;
+        }
+
+        # fill in all the parameters you got from the database
+        $template->param( anon_voted => $anon_voted,
+                          prev_vote  => $prev_vote,
+                          new_vote   => $new_vote,
+                          question   => $question,
+                          results    => $results,
+                          poll       => $poll_id,
+                          comments   => $comments_exist,
+                          enabled    => $enabled,
+                          next       => $next,
+                          next_num   => $next_num,
+                          prev       => $prev,
+                          prev_num   => $prev_num,
+                          byuser     => $author,
+                          total      => $total,
+                          date       => $date,
+                          ondate     => $ondate,
+                          logged_in  => $logged_in,
+                        );
+    }
+
+
+    # ----- now do the comments section -----
+    if ( $comments_exist > 0 )
+    {
+        my $templateC =
+          HTML::Template->new(
+                          filename => "../templates/includes/comments.template",
+                          global_vars => 1 );
+
+        my $sess = Singleton::Session->instance();
+        $templateC->param( session => md5_hex( $sess->id() ) );
+
+
+        my $comments =
+          Yawns::Comments->new( poll    => $poll_id,
+                                enabled => $enabled );
+
+        $templateC->param( comments => $comments->get(), );
+
+        # generate the output
+        my $comment_text = $templateC->output();
+        $template->param( comment_text => $comment_text );
+    }
+
+    if ( defined($question) )
+    {
+        my $title = "Current Poll : " . $question;
+        $template->param( title => $title );
+    }
+
+    my $tagHolder = Yawns::Tags->new();
+    my $tags = $tagHolder->getTags( poll => $poll_id );
+    $template->param( tags => $tags ) if ($tags);
+
+    # generate the output
+    return($template->output());
+
+}
+
+
+
+# ===========================================================================
+# Vote in a poll
+# ===========================================================================
+sub poll_vote
+{
+    my( $self ) = ( @_ );
+
+    #
+    #  Get access to the form.
+    #
+    my $form = $self->query();
+
+    #
+    # The poll the user is voting upon.
+    #
+    my $poll_id = 0;
+    $poll_id = $form->param('poll_id') if $form->param('poll_id');
+
+
+    #
+    # The answer they selected.
+    #
+    my $poll_answer = undef;
+    $poll_answer = $form->param('pollanswer') if $form->param('pollanswer');
+
+    if ( defined $poll_answer )
+    {
+        my $p = Yawns::Poll->new( id => $poll_id );
+
+
+        my ( $anon_voted, $prev_vote, $new_vote ) =
+          $p->vote( ip_address => $ENV{ 'REMOTE_ADDR' },
+                    choice     => $poll_answer );
+
+        my $c = Yawns::Cache->new();
+        $c->flush("Poll voted upon.");
+
+        #
+        # Show the result.
+        #
+        return( $self->poll_view( $anon_voted, $prev_vote, $new_vote ) );
+    }
+    else
+    {
+        return( $self->poll_view(poll_results( 0, 0, 0 ) ) );
+    }
+}
+
+
+
+
 
 1;

@@ -374,17 +374,6 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "pollvote" =>               # Vote in a poll.
-      { sub   => \&pollvote,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
-    "poll" =>                   # View a poll.
-      { sub => sub {poll_results( 0, 0, 0 );},
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
     "poll_edit" =>              # Edit a pending poll submissions
       { sub   => \&poll_edit,
         priv  => "poll_admin",
@@ -392,10 +381,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "poll_list" =>              # View archive of old polls
-      { sub  => \&poll_list,
-        type => "Content-type: text/html; charset=UTF-8\n\n",
-      },
 
     "poll_post" =>              # Post a pending poll submissions
       { sub      => \&poll_post,
