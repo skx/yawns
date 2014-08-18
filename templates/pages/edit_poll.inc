@@ -9,7 +9,7 @@
        <h1>Edit Poll</h1>
 
 <form action="/" method="post">
-<input type="hidden" name="poll_edit" value="1" />
+<input type="hidden" name="mode" value="poll_edit" />
 <input type="hidden" name="id"        value="<!-- tmpl_var name='poll_id' -->" />
 <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
 <table>

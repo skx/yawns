@@ -234,11 +234,12 @@ sub setup
         'debug' => 'debug',
 
         # Polls
-        'poll_list' => 'poll_list',
-        'poll_view' => 'poll_view',
-        'poll_vote' => 'poll_vote',
-        'poll_reject' => 'poll_reject',
-        'poll_post' => 'poll_post',
+        'poll_list'     => 'poll_list',
+        'poll_view'     => 'poll_view',
+        'poll_vote'     => 'poll_vote',
+        'poll_reject'   => 'poll_reject',
+        'poll_post'     => 'poll_post',
+        'poll_edit'     => 'poll_edit',
         'pending_polls' => 'pending_polls',
 
         # Adverts
@@ -4189,7 +4190,7 @@ sub poll_vote
 # ===========================================================================
 sub pending_polls
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Get the current user.
@@ -4230,7 +4231,7 @@ sub pending_polls
     $template->param( title => "Pending Polls" );
 
     # generate the output
-    return($template->output());
+    return ( $template->output() );
 }
 
 
@@ -4239,7 +4240,7 @@ sub pending_polls
 # ===========================================================================
 sub poll_post
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Get the current user.
@@ -4290,7 +4291,7 @@ sub poll_post
     #
     #  Redirect to the homepage
     #
-    return( $self->redirectURL( "/" ) );
+    return ( $self->redirectURL("/") );
 }
 
 
@@ -4299,7 +4300,7 @@ sub poll_post
 # ===========================================================================
 sub poll_reject
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Get the current user.
@@ -4348,7 +4349,133 @@ sub poll_reject
     #
     #  Redirect to the homepage
     #
-    return( $self->redirectURL( "/submissions/polls" ) );
+    return ( $self->redirectURL("/submissions/polls") );
 }
+
+
+
+
+# ===========================================================================
+#  Reject/Delete the given poll
+# ===========================================================================
+sub poll_edit
+{
+    my ($self) = (@_);
+
+    #
+    #  Get the current user.
+    #
+    my $session = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Ensure the user has permissions.
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+    if ( !$perms->check( priv => "poll_admin" ) )
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+
+    #
+    #  Validate the session.
+    #
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+    #
+    #  Get the poll ID, and fill out the data.
+    #
+    my $form   = $self->query();
+    my $id     = $form->param("id");
+    my $submit = $form->param("submit");
+
+    #
+    #  Submission queue object.
+    #
+    my $submisssions = Yawns::Submissions->new();
+
+    # set up the HTML template
+    my $template = $self->load_layout( "edit_poll.inc", session => 1 );
+
+    if ( defined($submit) &&
+         $submit eq "Update Poll" )
+    {
+
+        my $ans;
+        my $count = 1;
+        while ( defined( $form->param("answer_$count") ) )
+        {
+            my $option = $form->param("answer_$count");
+            if ( length($option) && ( $option !~ /^[ \t]*$/ ) )
+            {
+                push( @$ans, $option );
+            }
+            $count += 1;
+        }
+
+
+        #
+        #  Update the submission
+        #
+        $submisssions->editPendingPoll( $id,
+                                        author   => $form->param('author'),
+                                        question => $form->param('question'),
+                                        answers  => $ans
+                                      );
+
+        $template->param( updated => 1,
+                          poll_id => $id,
+                          title   => "Poll Updated"
+                        );
+
+        my $c = Yawns::Cache->new();
+        $c->flush("Pending poll edited.");
+
+    }
+    else
+    {
+        my ( $author, $question, $answers ) =
+          $submisssions->getPendingPoll($id);
+
+        my $ans;
+        my $count = 1;
+        foreach my $a (@$answers)
+        {
+            push( @$ans,
+                  {  id     => $count,
+                     answer => $a
+                  } );
+            $count += 1;
+        }
+
+        # add on a new space.
+        push( @$ans,
+              {  id     => $count,
+                 answer => ""
+              } );
+
+        $template->param( author   => $author,
+                          question => $question,
+                          answers  => $ans,
+                          poll_id  => $id,
+                          title    => "Edit Poll: $question",
+                        );
+
+    }
+
+    return ( $template->output() );
+}
+
+
+
 
 1;

@@ -374,29 +374,6 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "poll_edit" =>              # Edit a pending poll submissions
-      { sub   => \&poll_edit,
-        priv  => "poll_admin",
-        type  => "Content-type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
-
-    "poll_post" =>              # Post a pending poll submissions
-      { sub      => \&poll_post,
-        priv     => "poll_admin",
-        redirect => "/submissions/polls",
-        cache    => 1,
-      },
-
-    "poll_reject" =>            # Reject pending poll submissions
-      { sub      => \&poll_reject,
-        priv     => "poll_admin",
-        redirect => "/submissions/polls",
-        cache    => 1,
-      },
-
-
     "report" =>                 # Report an abusive comment.
       { sub   => \&report_comment,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
