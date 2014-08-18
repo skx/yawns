@@ -244,6 +244,11 @@ sub setup
         'delete_advert'    => 'delete_advert',
         'adverts_byuser'   => 'adverts_byuser',
 
+        # Submissions
+        'submission_reject' => 'submission_reject',
+        'submission_edit' => 'submission_edit',
+        'submission_post' => 'submission_post',
+
         # Administrivia
         'recent_users' => 'recent_users',
 
@@ -3257,5 +3262,272 @@ sub edit_user
     # generate the output
     return ( $template->output() );
 }
+
+
+
+# ===========================================================================
+# reject a pending article from the queue.
+# ===========================================================================
+sub submission_reject
+{
+    my( $self ) = ( @_ );
+
+
+    # validate session
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Anonymous users can't view any submissions.
+    #
+    if ( $username =~ /^anonymous$/i )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Only an article administrator may do that.
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+
+    if ( $perms->check( priv => "article_admin" ) )
+    {
+        my $id    = $form->param('id');
+        my $queue = Yawns::Submissions->new();
+        $queue->rejectArticle($id);
+
+
+        #
+        #  Flush the cache
+        #
+        my $c = Yawns::Cache->new();
+        $c->flush("Submission rejected." );
+
+        return (
+                 $self->permission_denied( submission_rejected => 1,
+                                           title               => "Submission Rejected"
+                                         ) );
+    }
+    else
+    {
+        return ( $self->permission_denied( admin_only => 1 ) );
+    }
+}
+
+
+# ===========================================================================
+# post a pending article from the queue to the front-page.
+# ===========================================================================
+sub submission_post
+{
+
+    my( $self ) = ( @_ );
+
+
+    # validate session
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Anonymous users can't view any submissions.
+    #
+    if ( $username =~ /^anonymous$/i )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Only an article administrator may do that.
+    #
+    my $perms = Yawns::Permissions->new( username => $username );
+
+    if ( $perms->check( priv => "article_admin" ) )
+    {
+        my $id    = $form->param('id');
+        my $queue = Yawns::Submissions->new();
+        $queue->postArticle($id);
+
+        #
+        #  Flush the cache
+        #
+        my $c = Yawns::Cache->new();
+        $c->flush("New article posted" );
+
+        return (
+                 $self->permission_denied( submission_posted => 1,
+                                           title             => "Submission Posted"
+                                         ) );
+    }
+    else
+    {
+        return( $self->permission_denied( admin_only => 1 ) );
+    }
+}
+
+
+# ===========================================================================
+# Edit a pending submission
+# ===========================================================================
+sub submission_edit
+{
+    my( $self ) = ( @_ );
+
+
+    # validate session
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Anonymous users can't edit anything
+    #
+    if ( $username =~ /^anonymous$/i )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+
+    #
+    #  If the current user is the article author they may edit it.
+    #
+    #  The site administrator can edit everything :)
+    #
+    my $id = $form->param('id');
+
+    if ( defined($id) )
+    {
+        my $submissions = Yawns::Submissions->new( username => $username );
+        my $author = $submissions->getArticleAuthor($id);
+
+        #
+        #  If the currently logged in user is the author of the
+        # submission, or if we're an article administrator then
+        # we can edit.
+        #
+        if ( lc($author) ne lc($username) )
+        {
+            my $perms = Yawns::Permissions->new( username => $username );
+
+            if ( !$perms->check( priv => "article_admin" ) )
+            {
+                return ( $self->permission_denied( admin_only => 1 ) );
+            }
+        }
+    }
+
+    my $stage = $form->param("save_pending");
+
+    #
+    #  Submissions object.
+    #
+    my $submissions = Yawns::Submissions->new();
+
+    #
+    #  The template we'll be working with.
+    #
+    my $template = $self->load_layout( "edit_submission.inc",
+                                       global_vars => 1,
+                                       session     => 1
+                                     );
+
+    #
+    #  Are we updating?
+    #
+    if ( defined($stage) )
+    {
+        # validate session
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        #
+        #  Get the text from the form
+        #
+        my $title  = $form->param('atitle');
+        my $author = $form->param('author');
+        my $body   = $form->param('bodytext');
+        my $tags   = $form->param('tags');
+
+        #
+        #  Run the update.
+        #
+        $submissions->updateSubmission( id       => $id,
+                                        title    => $title,
+                                        bodytext => $body,
+                                        author   => $author,
+                                        tags     => $tags
+                                      );
+
+        #
+        #  We've updated
+        #
+        $template->param( saved => 1,
+                          id    => $id,
+                          title => "Submission Updated"
+                        );
+
+        #
+        #  Flush the cache
+        #
+        my $c = Yawns::Cache->new();
+        $c->flush("Submission edited." );
+    }
+    else
+    {
+
+        #
+        #  Get the data from the submissions queue, and set it into the
+        # template
+        #
+        my %data = $submissions->getSubmission($id);
+
+        #
+        #  Get the data.
+        #
+        my $bodytext     = $data{ 'bodytext' };
+        my $title        = $data{ 'title' };
+        my $author       = $data{ 'author' };
+        my $current_tags = $data{ 'current_tags' };
+
+
+        #
+        #  Make sure entities are encoded.
+        #
+        $bodytext = HTML::Entities::encode_entities($bodytext);
+        $title    = HTML::Entities::encode_entities($title);
+
+        # fill in all the parameters you got from the database
+        $template->param( submission_body => $bodytext,
+                          atitle          => $title,
+                          author          => $author,
+                          id              => $id,
+                          tags            => $current_tags,
+                          title           => "Edit Submission",
+                        );
+
+    }
+
+    return($template->output());
+}
+
 
 1;

@@ -174,8 +174,8 @@ sub getTags
     #
     # Sanity check
     #
-    die "Invalid tag fetch" if ( ( !defined($root) ) ||
-                                 ( !defined($type) ) );
+    die "Invalid tag fetch - root:$root type:$type" if ( ( !defined($root) ) ||
+                                                         ( !defined($type) ) );
 
 
     my $tags;
@@ -310,7 +310,7 @@ sub addTag
     #
     # Sanity check
     #
-    die "Invalid tag submission"
+    die "Invalid tag submission: $type / $root"
       if ( ( !defined($root) ) ||
            ( !defined($type) ) );
 

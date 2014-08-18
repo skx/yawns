@@ -430,11 +430,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "submission_edit" =>        # Edit a pending article
-      { sub   => \&edit_submission,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
 
     "submission_view" =>        # View a pending article
       { sub  => \&submission_view,
@@ -445,20 +440,6 @@ my %dispatch = (
       { sub  => \&submission_list,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
         priv => "article_admin",
-      },
-
-    "submission_post" =>        # Post a pending article to the site.
-      { sub   => \&submission_post,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        priv  => "article_admin",
-        cache => 1,
-      },
-
-    "submission_reject" =>      # Reject a pending article submissions
-      { sub   => \&submission_reject,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        priv  => "article_admin",
-        cache => 1,
       },
 
     "submit" =>                 # Submit an article

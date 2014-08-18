@@ -6,10 +6,11 @@
 	 <p>Here you can edit the pending submission prior to it being approved or rejected.</p>
          <p><a href="/about/Article%20Editing">Some brief help</a> is available.</p>
 
-		  <form action="/edit/submission/<!-- tmpl_var name="edit_submission" -->/<!-- tmpl_var name='session' -->" method="post">
-	          <input type="hidden" name="save_pending" value="1" />
+		  <form action="/edit/submission/<!-- tmpl_var name="id" -->/<!-- tmpl_var name='session' -->" method="post">
+                  <input type="hidden" name="id" value="<!-- tmpl_var name='id' -->" />
+                  <input type="hidden" name="mode" value="submission_edit" />
+                  <input type="hidden" name="save_pending" value="1" />
 	          <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
-	          <input type="hidden" name="submission_edit" value="<!-- tmpl_var name="edit_submission" -->" />
 
 	          <table>
                   <tr><td><b>Title</b></td><td><input type="text" name="atitle" value="<!-- tmpl_var name="atitle" -->" /> </td></tr>
