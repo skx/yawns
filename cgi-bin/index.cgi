@@ -297,22 +297,10 @@ my %dispatch = (
         cache => 1,
       },
 
-    "add_related" =>    # Add a related link to an article
-      { sub   => \&add_related,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        priv  => "related_admin",
-        cache => 1,
-      },
 
     "author_search" =>    # Search for articles by the given user.
       { sub  => \&search_results,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
-    "delete_related" =>    # Remove a related link from an article
-      { sub   => \&delete_related,
-        priv  => "related_admin",
-        cache => 1,
       },
 
     "delete_weblog" =>     # Delete a weblog entry
