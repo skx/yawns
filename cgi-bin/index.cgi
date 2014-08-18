@@ -304,7 +304,7 @@ my %dispatch = (
         cache => 1,
       },
 
-    "author_search" =>     # Search for articles by the given user.
+    "author_search" =>    # Search for articles by the given user.
       { sub  => \&search_results,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },

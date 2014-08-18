@@ -1477,9 +1477,10 @@ sub article
 
     # fill in all the parameters you got from the database
     $template->param(
-        article_id     => $article_id,
-        article_title  => $article->{ 'article_title' },
-#        slug           => $slug,
+        article_id    => $article_id,
+        article_title => $article->{ 'article_title' },
+
+        #        slug           => $slug,
         title          => $article->{ 'article_title' },
         suspended      => $article->{ 'suspended' },
         article_byuser => $article->{ 'article_byuser' },
@@ -2839,13 +2840,13 @@ sub disable_advert
 # ===========================================================================
 sub create_advert
 {
-    my( $self ) = (@_);
+    my ($self) = (@_);
 
     #
     # Gain acess to the objects we use.
     #
     my $form     = $self->query();
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in");
 
 
@@ -2927,7 +2928,7 @@ sub create_advert
                     );
 
     # generate the output
-    return( $template->output() );
+    return ( $template->output() );
 }
 
 1;
