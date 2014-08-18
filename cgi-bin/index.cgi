@@ -290,11 +290,6 @@ my %dispatch = (
         type => "Content-Type: text/plain\n\n",
       },
 
-    "edit_article" =>     # Edit an existing, live, article
-      { sub   => \&edit_article,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
 
     "edit_comment" =>     # Edit a comment
       { sub   => \&edit_comment,
