@@ -290,13 +290,6 @@ my %dispatch = (
         type => "Content-Type: text/plain\n\n",
       },
 
-    "add_weblog" =>    # Add a new weblog entry
-      { sub   => \&add_weblog,
-        login => 1,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
     "author_search" =>    # Search for articles by the given user.
       { sub  => \&search_results,
         type => "Content-Type: text/html; charset=UTF-8\n\n",

@@ -47,6 +47,7 @@ $(document).ready (function() {
                   <!-- tmpl_else -->
                   <!-- tmpl_if name='new' -->
                   <form action="/create/weblog" method="post">
+                    <input type="hidden" name="mode" value="add_weblog">
                     <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
                     <p>To add a new entry to your weblog here on the
 		    <!-- tmpl_var name='sitename' --> website, fill in all the boxes
@@ -55,6 +56,7 @@ $(document).ready (function() {
 		    <a href="/users/<!-- tmpl_var name='username' escape='url' -->/weblog">your weblog</a> will be updated to include the new entry.</p>
                   <!-- tmpl_else -->
                   <form action="/create/weblog" method="post">
+                  <input type="hidden" name="mode" value="add_weblog">
           <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
 <!-- tmpl_if name='blank_body' -->
 <b>Error</b>
@@ -101,7 +103,7 @@ $(document).ready (function() {
                         </td></tr>
 		    </table>
 
-                    <p><input type="submit" name="add_weblog" value="Preview" /></p>
+                    <p><input type="submit" name="submit" value="Preview" /></p>
                   <!-- tmpl_else -->
                     <table>
 		    <tr><td><b>Posting Options:</b></td><td>
@@ -122,7 +124,7 @@ $(document).ready (function() {
                         </select>
 <!-- /tmpl_if -->
                         </td></tr>
-                    <tr><td></td><td><input type="submit" name="add_weblog" value="Preview" /> &nbsp; <input type="submit" name="add_weblog" value="Confirm" /></td></tr>
+                    <tr><td></td><td><input type="submit" name="submit" value="Preview" /> &nbsp; <input type="submit" name="submit" value="Confirm" /></td></tr>
 		    </table>
 
 		    <!-- /tmpl_if -->
