@@ -3757,15 +3757,16 @@ sub submission_list
 # ===========================================================================
 sub user_admin
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     # set up the HTML template
-    my $template = $self->load_layout( "user_administration.inc", session => 1 );
+    my $template =
+      $self->load_layout( "user_administration.inc", session => 1 );
 
     #
     #  Get the current user.
     #
-    my $session  = $self->param( "session" );
+    my $session = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
 
@@ -3849,7 +3850,7 @@ sub user_admin
     $template->param( title              => "User Administration" );
 
     # generate the output
-    return($template->output());
+    return ( $template->output() );
 
 }
 

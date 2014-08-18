@@ -61,7 +61,7 @@ Send an alert message
 
 =cut
 
-sub send_alert #
+sub send_alert    #
 {
     my ($text) = (@_);
 
@@ -89,7 +89,7 @@ sub send_alert #
 
 =cut
 
-sub mk_include_filter #
+sub mk_include_filter    #
 {
     my $page = shift;
     return sub {
@@ -107,7 +107,7 @@ sub mk_include_filter #
 
 =cut
 
-sub load_layout #
+sub load_layout    #
 {
     my ( $page, %options ) = (@_);
 
@@ -186,7 +186,7 @@ sub load_layout #
 # ===========================================================================
 # CSRF protection.
 # ===========================================================================
-sub validateSession #
+sub validateSession    #
 {
     my $session = Singleton::Session->instance();
 
@@ -236,7 +236,7 @@ sub validateSession #
 #
 ##
 #
-sub front_page #
+sub front_page    #
 {
 
     #
@@ -3589,7 +3589,7 @@ sub edit_comment
 # ===========================================================================
 # Permission Denied - or other status message
 # ===========================================================================
-sub permission_denied #
+sub permission_denied    #
 {
     my (%parameters) = (@_);
 
@@ -3614,7 +3614,7 @@ sub permission_denied #
 }
 
 
-sub dump_details #
+sub dump_details    #
 {
     my $date = `date`;
     chomp($date);
