@@ -5679,6 +5679,13 @@ sub add_weblog
                           body             => $submit_body,
                           comments_allowed => $comments_enabled
                         );
+
+            #
+            #  Flush the cache.
+            #
+            my $c = Yawns::Cache->new();
+            $c->flush("Blog post added");
+
         }
     }
 
@@ -5795,6 +5802,13 @@ sub delete_weblog
         #
         $weblog->remove( gid      => $gid,
                          username => $username );
+
+
+        #
+        #  Flush the cache.
+        #
+        my $c = Yawns::Cache->new();
+        $c->flush("Blog post deleted");
 
         #
         #  All done.
@@ -5919,6 +5933,13 @@ sub edit_weblog
         }
 
 
+        #
+        #  Flush the cache.
+        #
+        my $c = Yawns::Cache->new();
+        $c->flush("Blog post updated");
+
+
         $saved = 1;
     }
     else
@@ -6007,7 +6028,7 @@ sub author_search
     my $found;
 
     my $articles = Yawns::Articles->new();
-    $found = $articles->searchByAuthor($author_search);
+    $found = $articles->searchByAuthor($auth);
 
     # set up the HTML template
     my $template = $self->load_layout( "search_results.inc", loop_context_vars => 1 );
