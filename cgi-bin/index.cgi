@@ -335,12 +335,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "edit_user" =>         # Edit a user.
-      { sub   => \&edit_user,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
     "edit_permissions" =>    # Edit the permissions associated with a user.
       { sub   => \&edit_permissions,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
@@ -477,11 +471,6 @@ my %dispatch = (
       { sub   => \&submit_poll,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
-      },
-
-    "user" =>                   # View a users profile page.
-      { sub  => \&view_user,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
     "user_admin" =>             # User administration.

@@ -214,6 +214,10 @@ sub setup
         # Past artciles
         'archive' => 'archive',
 
+        # User-actions
+        'view_user' => 'view_user',
+        'edit_user' => 'edit_user',
+
         # static pages
         'about'      => 'about_page',
         'edit_about' => 'edit_about',
@@ -2925,6 +2929,329 @@ sub create_advert
                       submit_link_text => $submit_link_text,
                       submit_copy      => $submit_copy,
                       title            => "Submit Advert",
+                    );
+
+    # generate the output
+    return ( $template->output() );
+}
+
+
+
+
+# ===========================================================================
+# view a users profile page.
+# ===========================================================================
+sub view_user
+{
+
+    my ($self) = (@_);
+
+    #
+    # Gain acess to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
+    #  Permissions checks
+    #
+    my $edit_user        = 0;
+    my $edit_permissions = 0;
+
+    if ( $username !~ /^anonymous$/i )
+    {
+        my $perms = Yawns::Permissions->new( username => $username );
+        $edit_user        = $perms->check( priv => "edit_user" );
+        $edit_permissions = $perms->check( priv => "edit_permissions" );
+    }
+
+
+    #
+    #  Which user are we to be viewing?
+    #
+    my $viewusername = $form->param('user');
+
+    #
+    #  If no username, then we're viewing ourself.
+    #
+    if ( ( !defined($viewusername) ) || ( !length($viewusername) ) )
+    {
+        $viewusername = $username;
+    }
+
+    # tidy up URL encoding
+    $viewusername =~ s/%20/ /g;
+
+    #
+    # Get the user date.
+    #
+    my $user = Yawns::User->new( username => $viewusername );
+    my $userdata = $user->get();
+
+    #
+    #  Cope with the user not being found
+    #
+    my $error = 0;
+    if ( !$userdata->{ 'username' } ) {$error = 1;}
+
+    my $fakeemail = $userdata->{ 'fakeemail' };
+    my $showemail = 1 if $fakeemail;
+    my $realname  = $userdata->{ 'realname' };
+    my $showname  = 1 if $realname;
+    my $url       = $userdata->{ 'url' };
+    my $showurl   = 1 if $url;
+    my $bio       = $userdata->{ 'bio' };
+    my $showbio   = 1 if $bio;
+    my $suspended = $userdata->{ 'suspended' };
+    my $articles;
+    my $comments;
+    my $comment_count;
+    my $article_count;
+
+    #
+    #  Are we viewing the anonymous user?
+    #
+    my $anon = 1 if ( $viewusername =~ /^anonymous$/i );
+
+
+    #
+    #  Get scratchpad data to know if we should show it or not.
+    #
+    my $pad = Yawns::Scratchpad->new( username => $viewusername );
+    my $pad_data = '';
+    if ( !$pad->isPrivate() )
+    {
+        $pad_data = $pad->get();
+    }
+
+    #
+    # Gain access to the user.
+    #
+    my $a_user = Yawns::User->new( username => $viewusername );
+    my $weblog_count = $a_user->getWeblogCount();
+
+    #
+    # Get the comments and articles the user has posted.
+    #
+    # Note: We don't care about anonymous users.
+    #
+    if ( !$anon )
+    {
+        $articles      = $a_user->getArticles();
+        $article_count = $a_user->getArticleCount();
+        $comments      = $a_user->getComments();
+        $comment_count = $a_user->getCommentCount();
+    }
+
+
+
+    #
+    # Display scratchpad link?
+    #
+    my $show_scratchpad = 0;
+    if ($pad_data)
+    {
+        $show_scratchpad = 1;
+    }
+
+    #
+    # Display weblog link?
+    my $weblog        = 0;
+    my $weblog_plural = 0;
+    if ( defined $weblog_count )
+    {
+        $weblog = $weblog_count;
+
+        if ( $weblog > 1 ) {$weblog_plural = 1;}
+    }
+
+    #
+    #  See if the user has any bookmarks
+    #
+    my $show_bookmarks = 0;
+    my $bookmarks = Yawns::Bookmarks->new( username => $viewusername );
+    $show_bookmarks = $bookmarks->count();
+
+    #
+    # open the html template
+    #
+    my $template = $self->load_layout("view_user.inc");
+
+    my $is_owner = 0;
+    if ( lc($username) eq lc($viewusername) )
+    {
+        $is_owner = 1 unless ($anon);
+    }
+
+
+    # set parameters
+    $template->param( viewusername    => $viewusername,
+                      is_owner        => $is_owner,
+                      showemail       => $showemail,
+                      fakeemail       => $fakeemail,
+                      showname        => $showname,
+                      realname        => $realname,
+                      showurl         => $showurl,
+                      url             => $url,
+                      showbio         => $showbio,
+                      bio             => $bio,
+                      anon            => $anon,
+                      error           => $error,
+                      show_scratchpad => $show_scratchpad,
+                      show_bookmarks  => $show_bookmarks,
+                      weblogs         => $weblog,
+                      weblog_plural   => $weblog_plural,
+                      suspended       => $suspended,
+                      title           => "Viewing $viewusername"
+                    );
+
+
+    #
+    #  Update counts if not anonymous user.
+    #
+    if ( !$anon )
+    {
+
+        #
+        #  Show the number and titles of recent articles,
+        # comments, etc.
+        #
+        $template->param( articles      => $articles,
+                          comments      => $comments,
+                          article_count => $article_count,
+                          comment_count => $comment_count,
+                        );
+
+        #
+        #  Should we show the edit link?  Or the message link?
+        #
+        my $extra_options = $edit_user + $edit_permissions;
+        $template->param( edit_user             => $edit_user,
+                          edit_user_permissions => $edit_permissions,
+                          extra_options         => $extra_options
+                        );
+
+    }
+
+
+
+    # generate the output
+    return ( $template->output() );
+}
+
+
+
+# ===========================================================================
+# edit user information.
+# ===========================================================================
+sub edit_user
+{
+    my ($self) = (@_);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in");
+
+
+    #
+    # Per-form variable
+    #
+    my $edituser = $form->param("user");
+
+    #
+    # If no username was specified then use the current logged in user.
+    #
+    if ( ( !defined($edituser) ) || ( $edituser eq 1 ) )
+    {
+        $edituser = $username;
+    }
+
+    #
+    #  Anonymous users can't edit.
+    #
+    if ( $username =~ /^anonymous$/i )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    #
+    #  Editting a different user?
+    #
+    if ( lc($edituser) ne lc($username) )
+    {
+
+        #
+        #  Does the current user have permissions to edit
+        # a user other than themselves?
+        #
+        my $perms = Yawns::Permissions->new( username => $username );
+
+        if ( !$perms->check( priv => "edit_user" ) )
+        {
+            return ( $self->permission_denied( admin_only => 1 ) );
+        }
+    }
+
+    # check for updates
+    my $saved = 0;
+
+    if ( defined $form->param('update') )
+    {
+
+        # validate session
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        if ( $form->param('update') eq 'Update' )
+        {
+            my $user = Yawns::User->new( username => $edituser );
+            $user->save( realname  => $form->param('realname'),
+                         realemail => $form->param('realemail'),
+                         fakemail  => $form->param('fakeemail'),
+                         url       => $form->param('url'),
+                         sig       => $form->param('sig'),
+                         bio       => $form->param('bio') );
+            $saved = 1;
+
+            #
+            #  Mark a cache flush
+            #
+            my $c = Yawns::Cache->new();
+            $c->flush("Edit user $edituser");
+
+        }
+
+
+    }
+
+    # get the data
+    my $user = Yawns::User->new( username => $edituser );
+    my $userdata = $user->get();
+
+    my $realemail = $userdata->{ 'realemail' };
+    my $fakeemail = $userdata->{ 'fakeemail' };
+    my $realname  = $userdata->{ 'realname' };
+    my $url       = $userdata->{ 'url' };
+    my $bio       = $userdata->{ 'bio' };
+    my $sig       = $userdata->{ 'sig' };
+
+    # open the html template
+    my $template = $self->load_layout( "edit_user.inc", session => 1 );
+
+    # set parameters
+    $template->param( username  => $edituser,
+                      realemail => $realemail,
+                      fakeemail => $fakeemail,
+                      realname  => $realname,
+                      url       => $url,
+                      bio       => $bio,
+                      sig       => $sig,
+                      saved     => $saved,
+                      title     => "Edit User Information",
                     );
 
     # generate the output

@@ -8,6 +8,7 @@
        <!-- Change user information form. -->
        <form action="/edit/user/<!-- tmpl_var name="username" -->" method="post">
        <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
+       <input type="hidden" name="mode" value="edit_user" />
        <input type="hidden" name="edit_user" value="<!-- tmpl_var name='username' -->">
        <table>
        <tr><td><b>Real name:</b></td>
@@ -37,7 +38,7 @@
 	<tr><td valign="top"><b>Sig:</b></td>
 	    <td valign="top"><textarea name="sig" cols="80" rows="5"><!-- tmpl_var name='sig' --></textarea>
 	<p>(Displayed at the bottom of any comments you make.)</p></td></tr>
-	<tr><td>&nbsp;</td><td></td></tr>	
+	<tr><td>&nbsp;</td><td></td></tr>
 
 	<tr><td></td><td><p><input type="submit" name="update" value="Update" /> &nbsp; <input type="reset"  name="reset"  value="Reset"  /></p></td></tr>
 </table>
