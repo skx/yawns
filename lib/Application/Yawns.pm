@@ -246,6 +246,10 @@ sub setup
         'pending_polls' => 'pending_polls',
         'submit_poll'   => 'submit_poll',
 
+        # Related-Links
+        'add_related'    => 'add_related',
+        'delete_related' => 'delete_related',
+
         # Adverts
         'create_advert'    => 'create_advert',
         'follow_advert'    => 'follow_advert',
@@ -1462,7 +1466,7 @@ sub article
     #
     #  Get related links.
     #
-    my $related = $accessor->getRelated();
+    my $related = $accessor->getRelated($username);
 
     #
     #  If we're supposed to be showing user-adverts then
@@ -5212,6 +5216,148 @@ sub change_password
 
     # generate the output
     return ( $template->output() );
+
+}
+
+
+
+
+# ===========================================================================
+#  Add a "related link" to the given article
+# ===========================================================================
+sub add_related
+{
+
+    my ($self) = (@_);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    if ( $username !~ /^anonymous$/i )
+    {
+
+        #
+        #  Test to see if we're an article admin.  That means
+        # that we'll see article read counts.
+        #
+        my $perms = Yawns::Permissions->new( username => $username );
+        if ( !$perms->check( priv => "related_admin" ) )
+        {
+            return ( $self->permission_denied( admin_only => 1 ) );
+        }
+    }
+
+
+    #
+    #  Article details
+    #
+    my $article_id    = $form->param("id");
+    my $art           = Yawns::Article->new( id => $article_id );
+    my $article_title = $art->getTitle();
+
+    #
+    # open the html template
+    #
+    my $template = $self->load_layout( "add_related.inc", session => 1 );
+
+    if ( $form->param("submit") )
+    {
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        #
+        #  Get details
+        #
+        my $link  = $form->param("link");
+        my $title = $form->param("title");
+
+        #
+        #  Add the link
+        #
+        my $article = Yawns::Article->new( id => $article_id );
+        $article->addRelated( $title, $link );
+
+
+        #
+        # So we're done
+        $template->param( title   => "Link added",
+                          confirm => 1 );
+
+        #
+        #  Flush the cache.
+        #
+        my $c = Yawns::Cache->new();
+        $c->flush("Related-Link added.");
+
+    }
+    else
+    {
+        $template->param( title => "Add related link to $article_title" );
+    }
+
+
+    $template->param( article_id    => $article_id,
+                      article_title => $article_title );
+
+
+    # generate the output
+    return ( $template->output() );
+
+}
+
+
+# ===========================================================================
+#  Delete a "related link" from the given article
+# ===========================================================================
+sub delete_related
+{
+    my ($self) = (@_);
+
+    # validate session.
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    if ( $username !~ /^anonymous$/i )
+    {
+
+        #
+        #  Test to see if we're an article admin.  That means
+        # that we'll see article read counts.
+        #
+        my $perms = Yawns::Permissions->new( username => $username );
+        if ( !$perms->check( priv => "related_admin" ) )
+        {
+            return ( $self->permission_denied( admin_only => 1 ) );
+        }
+    }
+
+    #
+    #  Get the parameters.
+    #
+    my $id      = $form->param('id');
+    my $article = $form->param('article_id');
+
+    my $articles = Yawns::Article->new();
+    $articles->deleteRelated( $article, $id );
+
+    #
+    #  Flush the cache.
+    #
+    my $c = Yawns::Cache->new();
+    $c->flush("Related-Link removed");
+
+    return ( $self->redirectURL("/articles/$article") );
 
 }
 

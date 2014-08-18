@@ -493,7 +493,7 @@ sub deleteRelated
 
 sub getRelated
 {
-    my ($class) = (@_);
+    my ($class, $username) = (@_);
 
     #
     # Get the article ID
@@ -503,8 +503,7 @@ sub getRelated
     #
     #  Get the current username so we can see if we're a "related admin".
     #
-    my $session = Singleton::Session->instance();
-    my $username = $session->param("logged_in") || "Anonymous";
+    $username = "Anonymous" if ( ! defined( $username ) );
 
     #
     #  Do we have permissions to modify related links?
