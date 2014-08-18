@@ -290,11 +290,6 @@ my %dispatch = (
         type => "Content-Type: text/plain\n\n",
       },
 
-    "author_search" =>    # Search for articles by the given user.
-      { sub  => \&search_results,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
     "edit_article" =>     # Edit an existing, live, article
       { sub   => \&edit_article,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",

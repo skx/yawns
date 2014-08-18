@@ -294,6 +294,7 @@ sub setup
         'tag_cloud'  => 'tag_cloud',
         'tag_search' => 'tag_search',
 
+
         # View an article
         'article'         => 'article',
         'article_wrapper' => 'article_wrapper',
@@ -305,6 +306,7 @@ sub setup
 
         # Searching
         'article_search' => 'article_search',
+        'author_search'  => 'author_search',
 
         # Hall of fame
         'hof' => 'hof',
@@ -5989,5 +5991,33 @@ sub edit_weblog
 }
 
 
+
+
+# ===========================================================================
+# View search results:  author search, etc.
+# ===========================================================================
+sub author_search
+{
+    my( $self ) = ( @_ );
+
+    my $form = $self->query();
+    my $auth = $form->param( "author" );
+
+    # get required info from database
+    my $found;
+
+    my $articles = Yawns::Articles->new();
+    $found = $articles->searchByAuthor($author_search);
+
+    # set up the HTML template
+    my $template = $self->load_layout( "search_results.inc", loop_context_vars => 1 );
+
+    # fill in the template parameters
+    $template->param( results => $found,
+                      title   => "Search Results", );
+
+    # generate the output
+    return( $template->output() );
+}
 
 1;

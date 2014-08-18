@@ -1347,38 +1347,6 @@ sub new_user
 
 
 
-# ===========================================================================
-# View search results:  Tag search, author search, etc.
-# ===========================================================================
-sub search_results
-{
-
-    #  Gain access to the objects we use.
-    #
-    my $form = Singleton::CGI->instance();
-
-    # Searching by article author
-    my $author_search = '';
-    $author_search = $form->param('author_search')
-      if $form->param('author_search');
-
-    # get required info from database
-    my $found;
-
-    my $articles = Yawns::Articles->new();
-
-    $found = $articles->searchByAuthor($author_search);
-
-    # set up the HTML template
-    my $template = load_layout( "search_results.inc", loop_context_vars => 1 );
-
-    # fill in the template parameters
-    $template->param( results => $found,
-                      title   => "Search Results", );
-
-    # generate the output
-    print $template->output;
-}
 
 
 
