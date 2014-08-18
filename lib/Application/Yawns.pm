@@ -21,6 +21,7 @@ use base 'CGI::Application';
 #
 use Cache::Memcached;
 use HTML::Template;
+use HTML::Entities qw! encode_entities !;
 use Digest::MD5 qw! md5_hex !;
 
 #
@@ -241,6 +242,7 @@ sub setup
         'poll_post'     => 'poll_post',
         'poll_edit'     => 'poll_edit',
         'pending_polls' => 'pending_polls',
+        'submit_poll'   => 'submit_poll',
 
         # Adverts
         'create_advert'    => 'create_advert',
@@ -3570,8 +3572,6 @@ sub submission_view
     #  Gain access to the objects we use.
     #
     my $form      = $self->query();
-    my $session   = $self->param("session");
-    my $username  = $session->param("logged_in") || "Anonymous";
     my $perms     = Yawns::Permissions->new( username => $username );
     my $is_author = 0;
 
@@ -4475,6 +4475,174 @@ sub poll_edit
     return ( $template->output() );
 }
 
+
+#
+# Allow a user to enter a poll into the poll submission queue.
+#
+#
+sub submit_poll
+{
+    my ($self) = (@_);
+
+    #
+    # Gain access to the singletons we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param("session");
+    my $username = $session->param("logged_in") || "Anonymous";
+
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+
+    # get new/preview status for article submissions
+    my $submit = '';
+    $submit = $form->param('submit')
+      if defined $form->param('submit');
+
+    my $preview = 0;
+    my $blank   = 0;
+    my $confirm = 0;
+    my $bogus   = 0;
+    $preview = 1 if $submit eq 'Preview';
+    $confirm = 1 if $submit eq 'Confirm';
+
+
+
+    my $question = '';
+    my $author   = '';
+    my $answer1  = '';
+    my $answer2  = '';
+    my $answer3  = '';
+    my $answer4  = '';
+    my $answer5  = '';
+    my $answer6  = '';
+    my $answer7  = '';
+    my $answer8  = '';
+
+    if ($preview)
+    {
+
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        # get the question + answers.
+        $question = $form->param('question') || '';
+        $answer1  = $form->param('answer1')  || '';
+        $answer2  = $form->param('answer2')  || '';
+        $answer3  = $form->param('answer3')  || '';
+        $answer4  = $form->param('answer4')  || '';
+        $answer5  = $form->param('answer5')  || '';
+        $answer6  = $form->param('answer6')  || '';
+        $answer7  = $form->param('answer7')  || '';
+        $answer8  = $form->param('answer8')  || '';
+        $author   = $username;
+
+        # escape entities.
+        $question = encode_entities($question);
+        $answer1  = encode_entities($answer1);
+        $answer2  = encode_entities($answer2);
+        $answer3  = encode_entities($answer3);
+        $answer4  = encode_entities($answer4);
+        $answer5  = encode_entities($answer5);
+        $answer6  = encode_entities($answer6);
+        $answer7  = encode_entities($answer7);
+        $answer8  = encode_entities($answer8);
+        $author   = encode_entities($author);
+
+        #
+        #  Error?
+        #
+        if ( !length($question) ||
+             !length($answer1) ||
+             !length($answer2) )
+        {
+            $blank = 1;
+        }
+    }
+
+    if ($confirm)
+    {
+
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+
+        # get the question.
+        $question = $form->param('question');
+        $question = encode_entities($question);
+
+        # Questions with http:// links in them are bogus.
+        $bogus += 1 if ( $question =~ /http:\/\//i );
+
+        # and the username + ip
+        $author = $username;
+        my $ip = $ENV{ 'REMOTE_ADDR' };
+
+        my $count = 1;
+        my @answers;
+
+        # now find all the potential answers.
+        while ( defined( $form->param("answer$count") ) )
+        {
+            my $ans = $form->param("answer$count");
+            $ans = encode_entities($ans);
+
+            # Answers with http:// links in them are bogus.
+            $bogus += 1 if ( $ans =~ /http:\/\//i );
+
+            push @answers, $ans;
+            $count++;
+        }
+
+        #
+        #  Add the new poll to the submissions queue if it
+        # wasn't bogus.
+        #
+        if ( $bogus == 0 )
+        {
+            my $submissions = Yawns::Submissions->new();
+            $submissions->addPoll( \@answers,
+                                   author   => $author,
+                                   ip       => $ip,
+                                   question => $question,
+                                 );
+
+            my $c = Yawns::Cache->new();
+            $c->flush("New poll submitted.");
+
+        }
+    }
+
+
+    # open the html template
+    my $template = $self->load_layout( "submit_poll.inc", session => 1 );
+
+    $template->param( preview  => $preview,
+                      confirm  => $confirm,
+                      question => $question,
+                      author   => $author,
+                      answer1  => $answer1,
+                      answer2  => $answer2,
+                      answer3  => $answer3,
+                      answer4  => $answer4,
+                      answer5  => $answer5,
+                      answer6  => $answer6,
+                      answer7  => $answer7,
+                      answer8  => $answer8,
+                      bogus    => $bogus,
+                      error    => $blank,
+                      title    => "Submit A Poll",
+                    );
+
+    return ( $template->output() );
+}
 
 
 

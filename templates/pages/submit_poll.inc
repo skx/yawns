@@ -14,14 +14,14 @@
       <!-- tmpl_if name="preview" -->
 
       <!-- tmpl_if name="error" -->
-       <h1>Poll Blank</h1> 
+       <h1>Poll Blank</h1>
        <p>The poll you submitted had no question, or was missing several
          answers.</p>
        <p>Please correct this mistake and submit again.</p>
 
       <!-- tmpl_else -->
 
-      <h1>Poll Preview</h1> 
+      <h1>Poll Preview</h1>
       <p>Here is what your poll looks like, if you are happy with it please confirm your submission.  Otherwise you may repeat your preview until you are happy with it.</p>
 
 	<h3>&nbsp;<!-- tmpl_var name='question' --></h3>
@@ -84,9 +84,10 @@
       <h1>Submit A Poll</h1>
       <p>Here you can submit a poll for inclusion upon this site.  Polls are typically posted every time there are more than 1000 votes upon the current poll, or after ten days.</p>
       <p>Please consider your audience before suggesting a poll to ensure it will be either relevant or interesting to them.</p>
- 
+
       <!-- /tmpl_if -->
   <form action="/create/poll" method="post">
+  <input type="hidden" name="mode" value="submit_poll" />
   <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
   <dl>
   <dt>Poll question:</dt>
@@ -108,11 +109,11 @@
   <dt>Choice 8:</dt>
   <dd><input type="text" name="answer8" value="<!-- tmpl_var name="answer8" -->"  size="40" /></dd>
   <dt></dt>
-  <dd><input type="submit" name="submit_poll" value="Preview">
+  <dd><input type="submit" name="submit" value="Preview">
   <!-- tmpl_if name='preview' -->
   <!-- tmpl_if name='error' -->
   <!-- tmpl_else -->
-   <input type="submit" name="submit_poll" value="Confirm">
+   <input type="submit" name="submit" value="Confirm">
   <!-- /tmpl_if -->
   <!-- /tmpl_if -->
  </dd>

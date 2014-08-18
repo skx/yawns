@@ -392,12 +392,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "submit_poll" =>            # Submit a new poll
-      { sub   => \&submit_poll,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
 );
 
 

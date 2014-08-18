@@ -610,7 +610,6 @@ sub getSubmission
     #
     my $holder       = Yawns::Tags->new();
     my $current      = $holder->getTags( submission => $id );
-    my $current;
     my $current_tags = '';
 
 
