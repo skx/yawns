@@ -230,6 +230,7 @@ sub setup
         'debug' => 'debug',
 
         # Adverts
+        'create_advert'    => 'create_advert',
         'follow_advert'    => 'follow_advert',
         'advert_stats'     => 'advert_stats',
         'edit_adverts'     => 'edit_adverts',
@@ -2828,6 +2829,105 @@ sub disable_advert
     #  Show a good message.
     #
     return ( $self->permission_denied( advert_disabled => 1 ) );
+}
+
+
+
+
+# ===========================================================================
+# Add a user-submitted advert.
+# ===========================================================================
+sub create_advert
+{
+    my( $self ) = (@_);
+
+    #
+    # Gain acess to the objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in");
+
+
+    #
+    #  Ensure the user is logged in
+    #
+    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+    # get new/preview status
+    my $submit = '';
+    $submit = $form->param('add_advert') if defined $form->param('add_advert');
+
+
+
+    # set some variables
+    my $new     = 0;
+    my $preview = 0;
+    my $confirm = 0;
+    $new     = 1 if $submit eq 'new';
+    $preview = 1 if $submit eq 'Preview';
+    $confirm = 1 if $submit eq 'Confirm';
+
+    my $submit_link      = '';
+    my $submit_link_text = '';
+    my $submit_copy      = '';
+
+    if ($preview)
+    {
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        #
+        # Details to preview.
+        #
+        $submit_link      = $form->param('submit_link');
+        $submit_link_text = $form->param('submit_link_text');
+        $submit_copy      = $form->param('submit_copy');
+    }
+    elsif ($confirm)
+    {
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        #
+        # Details we're confirming.
+        #
+        $submit_link      = $form->param('submit_link');
+        $submit_link_text = $form->param('submit_link_text');
+        $submit_copy      = $form->param('submit_copy');
+
+        my $advert = Yawns::Adverts->new();
+
+        $advert->addAdvert( link     => $submit_link,
+                            linktext => $submit_link_text,
+                            text     => $submit_copy,
+                            owner    => $username,
+                            display  => 5000,
+                          );
+
+        my $c = Yawns::Cache->new();
+        $c->flush("New advert submitted by user $username");
+
+    }
+
+    # open the html template
+    my $template = $self->load_layout( "submit_advert.inc", session => 1 );
+
+    # fill in all the parameters you got from the database
+    $template->param( new              => $new,
+                      preview          => $preview,
+                      confirm          => $confirm,
+                      submit_link      => $submit_link,
+                      submit_link_text => $submit_link_text,
+                      submit_copy      => $submit_copy,
+                      title            => "Submit Advert",
+                    );
+
+    # generate the output
+    return( $template->output() );
 }
 
 1;

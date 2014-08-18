@@ -18,6 +18,7 @@
                   <!-- tmpl_if name='new' -->
 	            <h1>Submit An Advert</h1>
                   <form action="/create/advert" method="post">
+                  <input type="hidden" name="mode" value="create_advert" />
        <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
 <p>To submit your advert to this site fill in all the fields below then click the 'Preview' button.</p>
 
@@ -27,6 +28,7 @@
 
                   <!-- tmpl_else -->
                   <form action="/create/advert" method="post">
+                  <input type="hidden" name="mode" value="create_advert" />
        <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
                     <p>If the preview above is correct and you would like it to be published on the site, then click on the 'Confirm' button below.</p>
 
@@ -48,7 +50,7 @@
 
                   <!-- tmpl_else -->
 	<p><input type="submit" name="add_advert" value="Preview" /> &nbsp; <input type="submit" name="add_advert" value="Confirm" /></p>
-		    
+
 		    <!-- /tmpl_if -->
                   <!-- /tmpl_if -->
                   </form>

@@ -297,13 +297,6 @@ my %dispatch = (
         cache => 1,
       },
 
-    "add_advert" =>    # Add an advert
-      { sub   => \&add_new_advert,
-        login => 1,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
     "add_related" =>    # Add a related link to an article
       { sub   => \&add_related,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
@@ -311,28 +304,9 @@ my %dispatch = (
         cache => 1,
       },
 
-    "adverts_byuser" =>    # View all adverts by a given user.
-      { sub   => \&adverts_byuser,
-        login => 1,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
-    "advert_stats" =>      # View the statistics of an advert
-      { sub   => \&advert_stats,
-        login => 1,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
     "author_search" =>     # Search for articles by the given user.
       { sub  => \&search_results,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
-    "delete_advert" =>     # Remove an existing advert
-      { sub   => \&delete_advert,
-        priv  => "advert_admin",
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
       },
 
     "delete_related" =>    # Remove a related link from an article
@@ -348,22 +322,7 @@ my %dispatch = (
         cache => 1,
       },
 
-    "disable_advert" =>    # Disable an advert
-      { sub   => \&disable_advert,
-        priv  => "advert_admin",
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
-
-    "edit_adverts" =>      # Edit a site advert
-      { sub   => \&edit_adverts,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        priv  => "advert_admin",
-        cache => 1,
-      },
-
-    "edit_article" =>      # Edit an existing, live, advert.
+    "edit_article" =>      # Edit an existing, live, article
       { sub   => \&edit_article,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
@@ -397,13 +356,6 @@ my %dispatch = (
     "edit_weblog" =>         # Edit a weblog entry
       { sub   => \&edit_weblog,
         login => 1,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
-
-    "enable_advert" =>       # Enable an advert
-      { sub   => \&enable_advert,
-        priv  => "advert_admin",
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
@@ -489,7 +441,6 @@ my %dispatch = (
         cache => 1,
       },
 
-
     "submission_edit" =>        # Edit a pending article
       { sub   => \&edit_submission,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
@@ -532,7 +483,6 @@ my %dispatch = (
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
-
 
     "user" =>                   # View a users profile page.
       { sub  => \&view_user,
