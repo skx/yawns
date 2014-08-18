@@ -335,20 +335,20 @@ my %dispatch = (
         cache => 1,
       },
 
-    "delete_related" =>     # Remove a related link from an article
+    "delete_related" =>    # Remove a related link from an article
       { sub   => \&delete_related,
         priv  => "related_admin",
         cache => 1,
       },
 
-    "delete_weblog" =>      # Delete a weblog entry
+    "delete_weblog" =>     # Delete a weblog entry
       { sub   => \&delete_weblog,
         login => 1,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "disable_advert" =>     # Disable an advert
+    "disable_advert" =>    # Disable an advert
       { sub   => \&disable_advert,
         priv  => "advert_admin",
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
@@ -356,27 +356,27 @@ my %dispatch = (
       },
 
 
-    "edit_adverts" =>       # Edit a site advert
+    "edit_adverts" =>      # Edit a site advert
       { sub   => \&edit_adverts,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "advert_admin",
         cache => 1,
       },
 
-    "edit_article" =>       # Edit an existing, live, advert.
+    "edit_article" =>      # Edit an existing, live, advert.
       { sub   => \&edit_article,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,
       },
 
-    "edit_comment" =>       # Edit a comment
+    "edit_comment" =>      # Edit a comment
       { sub   => \&edit_comment,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         priv  => "edit_comments",
         cache => 1,
       },
 
-    "edit_user" =>          # Edit a user.
+    "edit_user" =>         # Edit a user.
       { sub   => \&edit_user,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,

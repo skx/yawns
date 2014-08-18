@@ -223,7 +223,7 @@ sub setup
         'edit_scratchpad' => 'edit_scratchpad',
 
         # Bookmark support
-        'view_bookmarks' => 'view_bookmarks',
+        'view_bookmarks'  => 'view_bookmarks',
         'delete_bookmark' => 'delete_bookmark',
 
         # debug
@@ -2100,7 +2100,7 @@ sub edit_scratchpad
         #  Flush the cache.
         #
         my $c = Yawns::Cache->new();
-        $c->flush( "Edit scratchpad for user $edituser" );
+        $c->flush("Edit scratchpad for user $edituser");
     }
 
 
@@ -2196,14 +2196,12 @@ sub recent_users
 
 
 
-
-
 # ===========================================================================
 # View the bookmarks belonging to a user.
 # ===========================================================================
 sub view_bookmarks
 {
-    my( $self ) = (@_);
+    my ($self) = (@_);
 
     # read in the template file
     my $template = $self->load_layout( "view_bookmarks.inc",
@@ -2217,7 +2215,7 @@ sub view_bookmarks
     #
     #  Get the current logged in user.
     #
-    my $session  = Singleton::Session->instance();
+    my $session = Singleton::Session->instance();
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -2347,7 +2345,7 @@ sub view_bookmarks
     }
 
     # generate the output
-    return( $template->output() );
+    return ( $template->output() );
 }
 
 
@@ -2358,7 +2356,7 @@ sub view_bookmarks
 # ===========================================================================
 sub delete_bookmark
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
 
     # Validate session token
@@ -2373,7 +2371,7 @@ sub delete_bookmark
     #
     #  See what we're adding.
     #
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in");
 
 
@@ -2392,9 +2390,9 @@ sub delete_bookmark
     # Update the cache
     #
     my $c = Yawns::Cache->new();
-    $c->flush( "Bookmark deleted by user $username" );
+    $c->flush("Bookmark deleted by user $username");
 
-    return( $self->redirectURL( "/users/$username/bookmarks" ) );
+    return ( $self->redirectURL("/users/$username/bookmarks") );
 }
 
 
@@ -2404,7 +2402,7 @@ sub delete_bookmark
 # ===========================================================================
 sub follow_advert
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Gain access to the form parameters
@@ -2425,16 +2423,15 @@ sub follow_advert
         #  Redirect to advert target.
         #
         my $details = $adverts->getAdvert($id);
-        return( $self->redirectURL( $details->{ 'link' } ) );
+        return ( $self->redirectURL( $details->{ 'link' } ) );
 
     }
     else
     {
         $id =~ s/<>//g;
-        return( "Invalid advert - $id" );
+        return ("Invalid advert - $id");
     }
 }
-
 
 
 
@@ -2444,10 +2441,10 @@ sub follow_advert
 # ===========================================================================
 sub view_all_adverts
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     # Get access to the form, session and database handles
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in");
 
     #
@@ -2498,7 +2495,7 @@ sub view_all_adverts
     $template->param( title => "All Community Adverts" );
 
     # generate the output
-    return( $template->output() );
+    return ( $template->output() );
 }
 
 
@@ -2508,11 +2505,11 @@ sub view_all_adverts
 # ===========================================================================
 sub adverts_byuser
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
 
     # Get access to the form, session and database handles
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in");
 
     #
@@ -2538,6 +2535,7 @@ sub adverts_byuser
 
     if ($adverts)
     {
+
         #
         #  If we're the owner then add a "stats".
         #
@@ -2568,7 +2566,7 @@ sub adverts_byuser
     $template->param( title => "Adverts by $owner" );
 
     # generate the output
-    return( $template->output() );
+    return ( $template->output() );
 }
 
 
@@ -2577,7 +2575,7 @@ sub adverts_byuser
 # ===========================================================================
 sub edit_adverts
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     # set up the HTML template
     my $template = $self->load_layout( "edit_adverts.inc",
@@ -2605,7 +2603,7 @@ sub edit_adverts
     }
 
     # generate the output
-    return( $template->output() );
+    return ( $template->output() );
 
 }
 
@@ -2615,14 +2613,14 @@ sub edit_adverts
 # ===========================================================================
 sub advert_stats
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
 
     #
     # Advert ID
     #
     my $form = $self->query();
-    my $id = $form->param("id");
+    my $id   = $form->param("id");
 
     #
     # Get data.
@@ -2674,7 +2672,7 @@ sub advert_stats
                     );
 
     # generate the output
-    return($template->output());
+    return ( $template->output() );
 
 }
 
@@ -2685,7 +2683,7 @@ sub advert_stats
 sub delete_advert
 {
 
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     # validate the session.
@@ -2737,7 +2735,7 @@ sub delete_advert
 # ===========================================================================
 sub enable_advert
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     # validate the session.
@@ -2788,7 +2786,7 @@ sub enable_advert
 sub disable_advert
 {
 
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     # validate the session.
