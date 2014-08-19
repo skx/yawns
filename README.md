@@ -113,11 +113,3 @@ executable.  These are invoked via the pretty URLs which you can see listed in
 `apache/rewrite.rules.conf`.
 
 
-Installation
-------------
-
-The following are dependencies for a single-system installation
-
-     # apt-get install apache2 cgi-session-perl cronolog libapache2-mod-fastcgi libcache-memcached-perl libcgi-application-perl libcgi-fast-perl libcgi-session-driver-memcached-perl libhtml-template-perl liblucy-simple-perl libmail-verify-perl libstring-approx-perl libsys-cpuload-perl libtext-diff-perl libtext-markdown-perl libtext-textile-perl liburi-find-perl memcached mysql-server
-
-This has been verified on a fresh virtual-machine.
