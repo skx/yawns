@@ -148,24 +148,24 @@ sub cgiapp_prerun
         }
     }
 
-    if ( $session && $session->param("ip") )
+    if ( $session && $session->param("session_ip") )
     {
-
         #
         #  Test IP
         #
         my $cur = $ENV{ 'REMOTE_ADDR' };
-        my $old = $session->param("ip");
+        my $old = $session->param("session_ip");
 
         if ( $cur ne $old )
         {
-            my $str = <<EOF;
-Content-type: text/html
-
-
-IP changed - session dropped.
-EOF
-            return ($str);
+            my $cur = $self->get_current_runmode();
+            if ( $cur !~ /about/i )
+            {
+                return (
+                        $self->redirectURL(
+                                           "/about/secure"
+                                          ) );
+            }
         }
     }
 }
