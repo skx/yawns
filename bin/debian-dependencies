@@ -27,25 +27,38 @@ function modenable
 #
 install perl
 install perl-modules
+install apache2
+install cgi-session-perl
+install cronolog
+install libapache2-mod-fastcgi
+install libapache2-mod-rpaf
+install libauthen-captcha-perl
+install libcache-memcached-perl
+install libcgi-application-perl
+install libcgi-fast-perl
 install libcgi-pm-perl
+install libcgi-session-driver-memcached-perl
+install libcgi-session-perl
+install libdbd-mysql-perl
 install libdbi-perl libdbd-mysql-perl
 install libhtml-parser-perl
-install libhtml-tree-perl
-install libredis-perl
-install libcgi-session-perl
 install libhtml-template-perl
-install libauthen-captcha-perl
-install libtimedate-perl
+install libhtml-tree-perl
+install liblucy-simple-perl
 install libmail-verify-perl
-install libtext-diff-perl
-install libtext-textile-perl
-install liburi-find-perl
-install libsys-cpuload-perl
-install libcache-memcached-perl
-install libtext-markdown-perl
-install libdbd-mysql-perl
-install libapache2-mod-rpaf
+install libredis-perl
 install libstring-approx-perl
+install libsys-cpuload-perl
+install libtext-diff-perl
+install libtext-markdown-perl
+install libtext-textile-perl
+install libtimedate-perl
+install liburi-find-perl
+install memcached
+install mysql-server
+install libjson-perl
+install libwww-perl
+
 
 # for test-suite
 install libtest-file-perl
