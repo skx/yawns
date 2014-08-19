@@ -598,7 +598,35 @@ sub debug
     my $session = $self->param('session');
     my $username = $session->param("logged_in") || "Anonymous";
 
-    return ("OK - $username");
+    my $date = `date`;
+    chomp($date);
+    my $host = `hostname`;
+    chomp($host);
+
+    my $text ="This request was received at $date on $host, from the $username user\n\n";
+
+    #
+    #  Environment dump.
+    #
+    $text .= "\n\n";
+    $text .="Environment\n";
+    foreach my $key ( sort keys %ENV )
+    {
+        $text .= "$key\t\t\t$ENV{$key}\n";
+    }
+
+    $text .= "\n\n";
+    $text .= "Submissions\n";
+    my $form = $self->query();
+
+    foreach my $key ( $form->param() )
+    {
+        $text .= $key . "\t\t\t" . $form->param($key);
+        $text .= "\n";
+    }
+
+    $self->header_add( '-type' => 'text/plain' );
+    return ($text);
 }
 
 
