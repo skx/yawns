@@ -6076,8 +6076,7 @@ sub edit_article
     my $article_id = $form->param('id');
 
     # get new/preview status for article submissions
-    my $stage = 'new';
-    $stage = $form->param('stage') if defined $form->param('stage');
+    my $stage = $form->param('stage') || "new";
 
     # set some variables
     my $new     = 0;
@@ -6150,6 +6149,17 @@ sub edit_article
         $edit_username = $form->param('edit_username');
         $edit_title    = $form->param('edit_title');
         $edit_body     = $form->param('edit_body');
+
+
+        #
+        #  Sanitize unless the user has "raw_html" privileges.
+        #
+        my $perms = Yawns::Permissions->new( username => $username );
+        if ( !$perms->check( priv => "article_admin" ) )
+        {
+            $edit_body  = HTML::AddNoFollow::sanitize_string($edit_body);
+            $edit_title = HTML::AddNoFollow::sanitize_string($edit_title);
+        }
 
         #
         # get the original article from the database, and
