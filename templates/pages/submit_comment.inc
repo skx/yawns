@@ -38,7 +38,8 @@ name='onarticle' -->">return to the story you were reading</a>, your
                   <!-- tmpl_else -->
                   <!-- tmpl_if name='new' -->
       <h1>Add Comment</h1>
-                  <form action="/comment" method="post">
+                  <form action="/comment/add" method="post">
+                  <input type="hidden" name="mode" value="add_comment" />
                   <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
                     <!-- tmpl_if name='anon' -->
                     <p><b>You are not currently  logged in.</b>  If you do not
@@ -121,7 +122,7 @@ name='onarticle' -->">return to the story you were reading</a>, your
 <!-- tmpl_include name="../includes/formatting-types.template" -->
                       </td></tr>
                   <tr><td></td><td>
-		    <input type="submit" name="comment" value="Preview" /> &nbsp;
+		    <input type="submit" name="submit" value="Preview" /> &nbsp;
                     <input name="onarticle"    type="hidden" value="<!-- tmpl_var name='onarticle' -->" />
                     <input name="onweblog"    type="hidden" value="<!-- tmpl_var name='onweblog' -->" />
                     <input name="onpoll"    type="hidden" value="<!-- tmpl_var name='onpoll' -->" />
@@ -132,7 +133,8 @@ name='onarticle' -->">return to the story you were reading</a>, your
                   <!-- tmpl_else -->
 	            <p>If you wish to make a minor change please do so below, and preview again.  Once you're happy with it you can submit it with the "Confirm" button.</p>
 
-                    <form action="/comment" method="post">
+                    <form action="/comment/add" method="post">
+                    <input type="hidden" name="mode" value="add_comment" />
                     <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
 
 		  <table>
@@ -146,9 +148,9 @@ name='onarticle' -->">return to the story you were reading</a>, your
 <!-- tmpl_include name="../includes/formatting-types.template" -->
                       </td></tr>
                   <tr><td></td><td>
-                    <input type="submit" name="comment" value="Preview" /> &nbsp;
+                    <input type="submit" name="submit" value="Preview" /> &nbsp;
 
-		    <input type="submit" name="comment" value="Confirm" />
+		    <input type="submit" name="submit" value="Confirm" />
 
                     <input name="onarticle"    type="hidden" value="<!-- tmpl_var name='onarticle' -->" />
                     <input name="onweblog"    type="hidden" value="<!-- tmpl_var name='onweblog' -->" />

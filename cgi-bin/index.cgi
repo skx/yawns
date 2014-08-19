@@ -279,11 +279,6 @@ my %dispatch = (
     # are not filtered already - so we must make sure these
     # routines come first.
     #
-    "comment" =>    # Submit a comment
-      { sub   => \&submit_comment,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
 
     "dump" =>       # Dump details of a request.
       { sub  => \&dump_details,

@@ -278,6 +278,7 @@ sub setup
         'report_weblog'  => 'report_weblog',
 
         # Comment handling
+        'add_comment'  => 'add_comment',
         'edit_comment' => 'edit_comment',
 
         # Weblogs
@@ -6396,6 +6397,586 @@ sub edit_comment
     # generate the output
     return ( $template->output() );
 }
+
+
+
+
+# ===========================================================================
+# Add a comment - This could either be on a poll, an article, or a weblog entry.
+#
+# ===========================================================================
+sub add_comment
+{
+    my( $self ) = ( @_ );
+
+
+    #
+    #  Gain access to the objects we use.
+    #
+    my $db        = Singleton::DBI->instance();
+    my $form      = $self->query();
+    my $session   = $self->param( "session" );
+    my $username  = $session->param("logged_in") || "Anonymous";
+    my $anonymous = 0;
+
+    #  Anonymous user?
+    $anonymous = 1 if ( $username =~ /^anonymous$/i );
+
+    #
+    #  Is the user non-anonymous?
+    #
+    if ( !$anonymous )
+    {
+
+        #
+        #  Is the user suspended?
+        #
+        my $user = Yawns::User->new( username => $username );
+        my $userdata = $user->get();
+
+        if ( $userdata->{ 'suspended' } )
+        {
+            return ( $self->permission_denied( suspended => 1 ) );
+        }
+    }
+
+
+    # get new/preview status for comment submissions
+    my $comment   = '';
+    my $onarticle = undef;
+    my $onpoll    = undef;
+    my $onweblog  = undef;
+    my $oncomment = undef;
+
+    #
+    # The comment which is being replied to.
+    #
+    $comment = $form->param('submit') if defined $form->param('submit');
+
+    #
+    #  Article we're commenting on - could be blank for poll comments.
+    #
+    $onarticle = $form->param('onarticle') if defined $form->param('onarticle');
+
+    #
+    #  Poll ID we're commenting on - could be blank for article comments
+    #
+    $onpoll = $form->param('onpoll') if defined $form->param('onpoll');
+
+    #
+    #  Weblog ID we're commenting on.
+    #
+    $onweblog = $form->param('onweblog') if defined $form->param('onweblog');
+
+    #
+    #  Comment we're replying to.
+    #
+    $oncomment = $form->param('oncomment') if defined $form->param('oncomment');
+
+    # set some variables
+    my $new     = 0;
+    my $preview = 0;
+    my $confirm = 0;
+    $new     = 1 if $comment eq 'new';
+    $confirm = 1 if $comment eq 'Confirm';
+    $preview = 1 if $comment eq 'Preview';
+
+
+    #
+    #  If a user posts a comment we store the time in their
+    # session object.
+    #
+    #  Later comments use this time to test to see if they should
+    # slow down.
+    #
+    my $seconds = $session->param("last_comment_time");
+    if ( defined($seconds) &&
+         ( ( time() - $seconds ) < 60 ) )
+    {
+
+        #
+        #  If the comment poster is a privileged user then
+        # we'll be allowed to post two comments in sixty seconds,
+        # otherwise they'll receive an error.
+        #
+        my $perms = Yawns::Permissions->new( username => $username );
+        if ( !$perms->check( priv => "fast_comments" ) )
+        {
+
+            #
+            #  Denied.
+            #
+            return ( $self->permission_denied( too_fast => 1 ) );
+        }
+    }
+
+
+    #
+    # The data that the user is adding to the page.
+    #
+    my $submit_title = '';
+    my $submit_body  = '';
+    my $preview_body = '';
+
+
+    #
+    #  When replying to a comment:
+    #
+    my $parent_subject = '';
+    my $parent_body    = '';
+    my $parent_author  = '';
+    my $parent_ondate  = '';
+    my $parent_ontime  = '';
+    my $parent_ip      = '';
+
+
+    #
+    #  Weblog link to manage gid translation
+    #
+    my $weblog_link = '';
+
+    #
+    #  The comment title
+    #
+    my $title = '';
+    if ($onarticle)
+    {
+        my $art = Yawns::Article->new( id => $onarticle );
+        $title = $art->getTitle();
+    }
+    elsif ($onpoll)
+    {
+        my $poll = Yawns::Poll->new( id => $onpoll );
+        $title = $poll->getTitle();
+    }
+    elsif ($onweblog)
+    {
+        my $weblog = Yawns::Weblog->new( gid => $onweblog );
+        my $owner  = $weblog->getOwner();
+        my $id     = $weblog->getID();
+        $title       = $weblog->getTitle();
+        $weblog_link = "/users/$owner/weblog/$id";
+    }
+
+
+
+    #
+    #  If we're replying to a comment we want to show the parent
+    # comment - so we need to fetch that information.
+    #
+    if ($oncomment)
+    {
+
+        #
+        # TODO: Optimize!
+        #
+        my $comment =
+          Yawns::Comment->new( article => $onarticle,
+                               poll    => $onpoll,
+                               weblog  => $onweblog,
+                               id      => $oncomment
+                             );
+        my $commentStuff = $comment->get();
+
+
+        $parent_ip      = $commentStuff->{ 'ip' };
+        $parent_subject = $commentStuff->{ 'title' };
+        $parent_body    = $commentStuff->{ 'body' };
+        $parent_author  = $commentStuff->{ 'author' };
+        $parent_ontime  = $commentStuff->{ 'time' };
+        $parent_ondate  = $commentStuff->{ 'date' };
+    }
+
+    #
+    #  Get the date and time
+    #
+    my $submit_ondate = '';
+    my $submit_attime = '';
+
+    #
+    # Get the date and time
+    #
+    ( $submit_ondate, $submit_attime ) = Yawns::Date::get_str_date();
+
+    #
+    #  And IP address
+    #
+    my $ip = $ENV{ 'REMOTE_ADDR' };
+    if ( defined($ip) && length($ip) )
+    {
+        if ( $ip =~ /([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)/ )
+        {
+            $ip = $1 . "." . $2 . ".xx.xx";
+        }
+        if ( $ip =~ /^([^:]+):/ )
+        {
+            $ip = $1 . ":0xx:0xx:0xxx:0xxx:0xxx:xx";
+        }
+    }
+
+
+    #
+    # Previewing the comment
+    #
+    if ($preview)
+    {
+
+        # validate session
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        $submit_title = $form->param('submit_title') || "";
+        $submit_body  = $form->param('submit_body')  || "";
+
+        # HTML Encode the title.
+        $submit_title = HTML::Entities::encode_entities($submit_title);
+
+        #
+        #  Create the correct formatter object.
+        #
+        my $creator = Yawns::Formatters->new();
+        my $formatter = $creator->create( $form->param('type'), $submit_body );
+
+
+        #
+        #  Get the formatted and safe versions.
+        #
+        $preview_body = $formatter->getPreview();
+        $submit_body  = $formatter->getOriginal();
+
+        #
+        # Linkize the preview.
+        #
+        my $linker = HTML::Linkize->new();
+        $preview_body = $linker->linkize($preview_body);
+
+
+    }
+    elsif ($confirm)
+    {
+
+        # validate session
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        #
+        # We detect multiple identical comment posting via the
+        # session too.
+        #
+        $submit_body = $form->param('submit_body');
+        if ( defined($submit_body) && length($submit_body) )
+        {
+            my $hash = md5_hex( Encode::encode( "utf8", $submit_body ) );
+            my $used = $session->param($hash);
+
+
+            if ( defined($used) )
+            {
+                return ( $self->permission_denied( duplicate_comment => 1 ) );
+            }
+            else
+            {
+                $session->param( $hash, "used" );
+            }
+        }
+
+
+        #
+        #  Get the data.
+        #
+        $submit_title = $form->param('submit_title') || "";
+        $submit_body  = $form->param('submit_body')  || "";
+
+        # HTML Encode the title.
+        $submit_title = HTML::Entities::encode_entities($submit_title);
+
+        #
+        #  "Bad words" testing is *always* used.
+        #
+        my $stop = get_conf('stop_words');
+        if ( defined($stop) && length($stop) )
+        {
+
+            #
+            #  If the configuration file has a mentioned word
+            # then drop the we match.
+            #
+            foreach my $bad ( split( /,/, $stop ) )
+            {
+                if ( $submit_body =~ /$bad/i )
+                {
+                    return (
+                             $self->permission_denied( bad_words => 1,
+                                                       stop_word => $bad
+                                                     ) );
+                }
+            }
+        }
+
+        #
+        #  If anonymous we use Steve's RPC server to test comment
+        # validity.
+        #
+        if ( ($anonymous) &&
+             ( get_conf("rpc_comment_test") ) )
+        {
+
+            my %params;
+            $params{ 'comment' } = $submit_body;
+            $params{ 'ip' }      = $ENV{ 'REMOTE_ADDR' };
+            $params{ 'subject' } = $submit_title;
+
+            #
+            #  Build up a link to the website we're on.
+            #
+            my $protocol = "http://";
+            if ( defined( $ENV{ 'HTTPS' } ) && ( $ENV{ 'HTTPS' } =~ /on/i ) )
+            {
+                $protocol = "https://";
+            }
+            $params{ 'site' } = $protocol . $ENV{ "SERVER_NAME" };
+
+            #
+            #  If the module(s) aren't available, or talking to the
+            # server fails then we'll allow the comment.
+            #
+            #  That is clearly the correct thing to do.
+            #
+            my $drop = 0;
+            eval {
+                require RPC::XML;
+                require RPC::XML::Client;
+
+                #
+                #  Host:port to test against
+                #
+                my $host = get_conf("rpc_comment_host");
+                my $port = get_conf("rpc_comment_port");
+
+                #
+                #  Special options to use, if any.
+                #
+                my $opts = get_conf("rpc_test_options");
+                if ($opts)
+                {
+                    $params{ 'options' } = $opts;
+                }
+
+                my $client = RPC::XML::Client->new("http://$host:$port");
+                my $req    = RPC::XML::request->new( 'testComment', \%params );
+                my $res    = $client->send_request($req);
+                my $result = $res->value();
+
+                if ( $result =~ /^spam/i )
+                {
+                    $drop = 1;
+                }
+            };
+
+            if ($drop)
+            {
+                return ( $self->permission_denied( blogspam => 1 ) );
+            }
+        }
+
+
+        #
+        #  Create the correct formatter object.
+        #
+        my $creator = Yawns::Formatters->new();
+        my $formatter = $creator->create( $form->param('type'), $submit_body );
+
+        #
+        #  Get the submitted body.
+        #
+        $submit_body = $formatter->getPreview();
+
+        #
+        # Linkize the preview.
+        #
+        my $linker = HTML::Linkize->new();
+        $submit_body = $linker->linkize($submit_body);
+
+        #
+        #  If we're anonymous
+        #
+        if ($anonymous)
+        {
+            if ( $submit_body =~ /http:\/\// )
+            {
+
+                #
+                #  ANonymous users cannot post links
+                #
+                return ( $self->permission_denied( anonylink => 1 ) );
+            }
+        }
+
+        #
+        #  Actually add the comment.
+        #
+        my $comment = Yawns::Comment->new();
+        my $num = $comment->add( article   => $onarticle,
+                                 poll      => $onpoll,
+                                 weblog    => $onweblog,
+                                 oncomment => $oncomment,
+                                 title     => $submit_title,
+                                 username  => $username,
+                                 body      => $submit_body,
+                               );
+
+
+
+        #
+        #  Now handle the notification sending
+        #
+        my $notifier =
+          Yawns::Comment::Notifier->new( onarticle => $onarticle,
+                                         onpoll    => $onpoll,
+                                         onweblog  => $onweblog,
+                                         oncomment => $oncomment
+                                       );
+
+        #
+        #  This will not do anything if the notifications are disabled
+        # by the article author, comment poster, etc.
+        #
+        $notifier->sendNotification($num);
+
+        #
+        # Save the comment time.
+        #
+        $session->param( "last_comment_time", time() );
+
+        #
+        # Save the MD5 hash of the last comment posted.
+        #
+        $session->param( md5_hex( Encode::encode( "utf8", $submit_body ) ),
+                         1 );
+
+
+
+    }
+    elsif ($new)
+    {
+        if ($oncomment)
+        {
+            my $comment =
+              Yawns::Comment->new( article => $onarticle,
+                                   poll    => $onpoll,
+                                   weblog  => $onweblog,
+                                   id      => $oncomment
+                                 );
+            my $commentStuff = $comment->get();
+
+            $submit_title = $commentStuff->{ 'title' };
+
+
+            if ( $submit_title =~ /^Re:/ )
+            {
+
+                # Comment starts with 'Re:' already.
+            }
+            else
+            {
+                $submit_title = 'Re: ' . $submit_title;
+            }
+        }
+        else
+        {
+
+            #
+            # Get title of article being replied to
+            #
+            if ($onarticle)
+            {
+                my $art = Yawns::Article->new( id => $onarticle );
+                $submit_title = $art->getTitle();
+                $submit_title = 'Re: ' . $submit_title;
+            }
+
+            #
+            # Get poll question of poll being replied to.
+            #
+            if ($onpoll)
+            {
+                my $poll = Yawns::Poll->new( id => $onpoll );
+                $submit_title = 'Re: ' . $poll->getTitle();
+            }
+
+            #
+            # Get weblog title of entry
+            #
+            if ($onweblog)
+            {
+                my $weblog = Yawns::Weblog->new( gid => $onweblog );
+                $submit_title = 'Re: ' . $weblog->getTitle();
+            }
+        }
+
+        #
+        #  Get the users signature.
+        #
+        my $u = Yawns::User->new( username => $username );
+        my $userdata = $u->get();
+        $submit_body = $userdata->{ 'sig' };
+    }
+
+    # open the html template
+    my $template = $self->load_layout( "submit_comment.inc", session => 1 );
+
+    # fill in all the parameters you got from the database
+    $template->param( anon           => $anonymous,
+                      new            => $new,
+                      confirm        => $confirm,
+                      preview        => $preview,
+                      username       => $username,
+                      onarticle      => $onarticle,
+                      oncomment      => $oncomment,
+                      onpoll         => $onpoll,
+                      onweblog       => $onweblog,
+                      weblog_link    => $weblog_link,
+                      submit_title   => $submit_title,
+                      submit_body    => $submit_body,
+                      submit_attime  => $submit_attime,
+                      submit_ondate  => $submit_ondate,
+                      ip             => $ip,
+                      parent_body    => $parent_body,
+                      parent_subject => $parent_subject,
+                      parent_author  => $parent_author,
+                      parent_date    => $parent_ondate,
+                      parent_time    => $parent_ontime,
+                      parent_ip      => $parent_ip,
+                      title          => $title,
+                      preview_body   => $preview_body,
+                    );
+
+    #
+    #  Make sure the format is setup.
+    #
+    if ( $form->param('type') )
+    {
+        $template->param( $form->param('type') . "_selected" => 1 );
+    }
+    else
+    {
+
+        #
+        #  Choose the users format.
+        #
+        my $prefs = Yawns::Preferences->new( username => $username );
+        my $type = $prefs->getPreference("posting_format") || "text";
+
+        $template->param( $type . "_selected" => 1 );
+    }
+
+
+    # generate the output
+    return($template->output());
+
+}
+
+
 
 
 1;
