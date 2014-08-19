@@ -4297,7 +4297,7 @@ sub poll_vote
     }
     else
     {
-        return ( $self->poll_view( poll_results( 0, 0, 0 ) ) );
+        return ( $self->poll_view(  0, 0, 0 ) );
     }
 }
 
