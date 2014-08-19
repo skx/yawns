@@ -290,26 +290,18 @@ my %dispatch = (
         type => "Content-Type: text/plain\n\n",
       },
 
-
-    "edit_comment" =>     # Edit a comment
-      { sub   => \&edit_comment,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        priv  => "edit_comments",
-        cache => 1,
-      },
-
-    "front_page" =>       # view the front-page
+    "front_page" =>    # view the front-page
       { sub  => \&front_page,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "new_user" =>         # Create a new user account
+    "new_user" =>      # Create a new user account
       { sub  => \&new_user,
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
 
-    "submit" =>           # Submit an article
+    "submit" =>        # Submit an article
       { sub   => \&submit_article,
         type  => "Content-Type: text/html; charset=UTF-8\n\n",
         cache => 1,

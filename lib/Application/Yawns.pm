@@ -277,6 +277,9 @@ sub setup
         'report_comment' => 'report_comment',
         'report_weblog'  => 'report_weblog',
 
+        # Comment handling
+        'edit_comment' => 'edit_comment',
+
         # Weblogs
         'add_weblog'    => 'add_weblog',
         'delete_weblog' => 'delete_weblog',
@@ -5865,8 +5868,8 @@ sub edit_weblog
     my $id     = $form->param('id');
     my $submit = $form->param('submit');
 
-    my $submit_title    = $form->param('submit_title');
-    my $submit_tags     = $form->param('submit_tags');
+    my $submit_title = $form->param('submit_title');
+    my $submit_tags  = $form->param('submit_tags');
 
 
     my $submit_body     = $form->param('submit_body');
@@ -5968,9 +5971,9 @@ sub edit_weblog
         #
         #  Get the existing blog post.
         #
-        $submit_title    = $ent[0]->{'title'};
-        $submit_body     = $ent[0]->{'bodytext'};
-        $submit_comments = $ent[0]->{'comment_count'};
+        $submit_title    = $ent[0]->{ 'title' };
+        $submit_body     = $ent[0]->{ 'bodytext' };
+        $submit_comments = $ent[0]->{ 'comment_count' };
 
         #
         #  Ensure entities are escaped.
@@ -6022,10 +6025,10 @@ sub edit_weblog
 # ===========================================================================
 sub author_search
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     my $form = $self->query();
-    my $auth = $form->param( "author" );
+    my $auth = $form->param("author");
 
     # get required info from database
     my $found;
@@ -6034,18 +6037,16 @@ sub author_search
     $found = $articles->searchByAuthor($auth);
 
     # set up the HTML template
-    my $template = $self->load_layout( "search_results.inc", loop_context_vars => 1 );
+    my $template =
+      $self->load_layout( "search_results.inc", loop_context_vars => 1 );
 
     # fill in the template parameters
     $template->param( results => $found,
                       title   => "Search Results", );
 
     # generate the output
-    return( $template->output() );
+    return ( $template->output() );
 }
-
-
-
 
 
 
@@ -6055,13 +6056,13 @@ sub author_search
 # ===========================================================================
 sub edit_article
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     #  Gain access to the objects we use.
     #
     my $form     = $self->query();
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -6277,10 +6278,124 @@ EOF
     }
 
     # generate the output
-    return( $template->output());
+    return ( $template->output() );
 
 }
 
+
+
+# ===========================================================================
+# Edit a comment on a poll, article, or weblog.
+# ===========================================================================
+sub edit_comment
+{
+    my ($self) = (@_);
+
+    #
+    #  Comment details we're going to be editing.
+    #
+    my $form       = $self->query();
+    my $poll_id    = $form->param('poll_id');
+    my $article_id = $form->param('article_id');
+    my $weblog_id  = $form->param('weblog_id');
+    my $id         = $form->param('comment_id');
+
+    #
+    #  Load our HTML template.
+    #
+    my $template = $self->load_layout( "edit_comment.inc", session => 1 );
+
+
+    #
+    #  Create the comment
+    #
+    my $comment = Yawns::Comment->new( article => $article_id,
+                                       poll    => $poll_id,
+                                       weblog  => $weblog_id,
+                                       id      => $id
+                                     );
+
+
+    #
+    #  Save the comment if we're supposed to.
+    #
+    if ( $form->param("submit") )
+    {
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        #
+        #  Get the body + title from the form if we're editing..
+        #
+        my $submit_title = $form->param('submit_title');
+        my $submit_body  = $form->param('submit_body');
+
+        #
+        #  Edit the comment
+        #
+        $comment->editComment( newtitle => $submit_title,
+                               newbody  => $submit_body );
+
+        my $link = undef;
+        if ($poll_id)
+        {
+            $link = "/polls/" . $poll_id . "#comment_" . $id;
+        }
+
+        if ($article_id)
+        {
+            $link = "/articles/" . $article_id . "#comment_" . $id;
+        }
+
+        if ($weblog_id)
+        {
+            my $w            = Yawns::Weblog->new( gid => $weblog_id );
+            my $weblog_owner = $w->getOwner();
+            my $weblog_id    = $w->getID();
+            $link = "/users/$weblog_owner/weblog/$weblog_id";
+            $link .= "#comment_" . $id;
+        }
+
+        if ( defined($link) ) {$template->param( link => $link );}
+        $template->param( saved => 1,
+                          title => "Comment Saved" );
+
+        #
+        #  Flush the cache.
+        #
+        my $c = Yawns::Cache->new();
+        $c->flush("Comment edited - $link");
+    }
+    else
+    {
+
+        #
+        #  Get the current title + body.
+        #
+        my $commentStuff = $comment->get();
+        my $submit_title = $commentStuff->{ 'title' };
+        my $submit_body  = $commentStuff->{ 'body' };
+
+        #
+        #  Set them in the form
+        #
+        $template->param( submit_title => $submit_title,
+                          submit_body  => $submit_body,
+                          title        => "Edit Comment"
+                        );
+    }
+
+
+    # fill in all the parameters you got from the database
+    $template->param( article_id => $article_id,
+                      poll_id    => $poll_id,
+                      weblog_id  => $weblog_id,
+                      id         => $id,
+                    );
+
+    # generate the output
+    return ( $template->output() );
+}
 
 
 1;
