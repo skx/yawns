@@ -648,7 +648,7 @@ sub application_login
     my $q       = $self->query();
     my $session = $self->param('session');
 
-    # if already logged in redirect
+    # If already logged in redirect
     my $username = $session->param("username") || undef;
     if ( $username && ( $username ne "Anonymous" ) )
     {
@@ -656,6 +656,15 @@ sub application_login
     }
 
     #
+    # This should be a POST
+    #
+    if ( $self->query()->request_method() ne "POST" )
+    {
+        return( $self->permission_denied( invalid_mode => 1,
+                                          title => "Invalid HTTP Request Method" ) );
+    }
+
+
     # If the user isn't submitting a form then show it
     #
     if ( !$q->param("submit") )
@@ -798,6 +807,10 @@ sub application_logout
 
     my $q       = $self->query();
     my $session = $self->param('session');
+
+    # validate session
+    my $ret = $self->validateSession();
+    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
 
 
     my $user = $session->param("logged_in") || "Anonymous";
@@ -1112,6 +1125,7 @@ sub edit_about
     {
         return ( $self->permission_denied( login_required => 1 ) );
     }
+
 
     #
     #  Ensure the user has permissions

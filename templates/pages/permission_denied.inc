@@ -24,6 +24,12 @@
   <p>The IP address of your current connection doesn't match that you had when you logged in initially (<!-- tmpl_var name='session_ip' escape='html' -->).</p>
   <!-- /tmpl_if -->
 
+  <!-- tmpl_if name='invalid_mode' -->
+  <h1>Invalid HTTP Request Method</h1>
+  <blockquote>
+  <p>The request you made was of the incorrect type - Perhaps you made a GET when you should have made a POST?</p>
+  </blockquote>
+  <!-- /tmpl_if -->
 
   <!-- tmpl_if name='comment_reported' -->
   <h1>Thank You</h1>
