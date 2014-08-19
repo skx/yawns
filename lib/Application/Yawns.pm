@@ -506,7 +506,7 @@ Send an alert message
 
 sub send_alert
 {
-    my ($self, $text) = (@_);
+    my ( $self, $text ) = (@_);
 
     #
     #  Abort if we're disabled, or have empty text.
@@ -603,13 +603,14 @@ sub debug
     my $host = `hostname`;
     chomp($host);
 
-    my $text ="This request was received at $date on $host, from the $username user\n\n";
+    my $text =
+      "This request was received at $date on $host, from the $username user\n\n";
 
     #
     #  Environment dump.
     #
     $text .= "\n\n";
-    $text .="Environment\n";
+    $text .= "Environment\n";
     foreach my $key ( sort keys %ENV )
     {
         $text .= "$key\t\t\t$ENV{$key}\n";
@@ -706,12 +707,11 @@ sub application_login
     #
     if ( ($logged_in) and ( !( lc($logged_in) eq lc('Anonymous') ) ) )
     {
-
-        my $event = Yawns::Event->new();
-        my $link  = $protocol . $ENV{ "SERVER_NAME" } . "/users/$logged_in";
-        $event->send(
+        my $link = $protocol . $ENV{ "SERVER_NAME" } . "/users/$logged_in";
+        $self->send_alert(
                  "Successful login for <a href=\"$link\">$logged_in</a> from " .
                    $ENV{ 'REMOTE_ADDR' } );
+
 
         #
         #  Setup the session variables.
@@ -769,9 +769,9 @@ sub application_login
     else
     {
 
-        my $event = Yawns::Event->new();
         $lname = "_unknown_" if ( !defined($lname) );
-        $event->send( "Failed login for $lname from " . $ENV{ 'REMOTE_ADDR' } );
+        $self->send_alert(
+                      "Failed login for $lname from " . $ENV{ 'REMOTE_ADDR' } );
 
         #
         # Login failed:  Invalid username or wrong password.
@@ -792,6 +792,11 @@ sub application_logout
 
     my $q       = $self->query();
     my $session = $self->param('session');
+
+
+    my $user = $session->param("logged_in") || "Anonymous";
+    $self->send_alert(
+                  "Successful logout for $user from " . $ENV{ 'REMOTE_ADDR' } );
 
     #
     #  Clear the session
@@ -6346,13 +6351,13 @@ EOF
 
 sub submit_article
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     #
     # Gain access to objects we use.
     #
     my $form     = $self->query();
-    my $session  = $self->param( "session" );
+    my $session  = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
 
@@ -6390,6 +6395,7 @@ sub submit_article
 
     if ($preview)
     {
+
         # validate session
         my $ret = $self->validateSession();
         return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
@@ -6429,6 +6435,7 @@ sub submit_article
     }
     elsif ($confirm)
     {
+
         # validate session
         my $ret = $self->validateSession();
         return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
@@ -6517,7 +6524,7 @@ sub submit_article
 
 
     # generate the output
-    return($template->output());
+    return ( $template->output() );
 }
 
 
@@ -6644,7 +6651,7 @@ sub edit_comment
 # ===========================================================================
 sub add_comment
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
 
     #
@@ -6652,7 +6659,7 @@ sub add_comment
     #
     my $db        = Singleton::DBI->instance();
     my $form      = $self->query();
-    my $session   = $self->param( "session" );
+    my $session   = $self->param("session");
     my $username  = $session->param("logged_in") || "Anonymous";
     my $anonymous = 0;
 
@@ -7088,8 +7095,7 @@ sub add_comment
         #
         # Save the MD5 hash of the last comment posted.
         #
-        $session->param( md5_hex( Encode::encode( "utf8", $submit_body ) ),
-                         1 );
+        $session->param( md5_hex( Encode::encode( "utf8", $submit_body ) ), 1 );
 
 
 
@@ -7209,7 +7215,7 @@ sub add_comment
 
 
     # generate the output
-    return($template->output());
+    return ( $template->output() );
 
 }
 
@@ -7221,7 +7227,7 @@ sub add_comment
 # ===========================================================================
 sub new_user
 {
-    my( $self ) = ( @_ );
+    my ($self) = (@_);
 
     # Get access to the form.
     my $form = $self->query();
@@ -7229,7 +7235,7 @@ sub new_user
     #
     #  Get the currently logged in user.
     #
-    my $session  = $self->param( "session" );
+    my $session = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     # Deny access if the user is already logged in.
@@ -7258,6 +7264,7 @@ sub new_user
 
     if ( $form->param('submit') eq 'Create User' )
     {
+
         # validate session
         my $ret = $self->validateSession();
         return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
@@ -7305,14 +7312,15 @@ sub new_user
 
             if ($prev_banned)
             {
-                $self->send_alert( "Denied registration for '$new_user_name' from " .
-                                   $ENV{ 'REMOTE_ADDR' } );
+                $self->send_alert(
+                              "Denied registration for '$new_user_name' from " .
+                                $ENV{ 'REMOTE_ADDR' } );
             }
             if ($prev_banned)
             {
                 $self->send_alert(
-                                  "Denied registration for in-use email " . $new_user_email .
-                                  " " . $ENV{ 'REMOTE_ADDR' } );
+                     "Denied registration for in-use email " . $new_user_email .
+                       " " . $ENV{ 'REMOTE_ADDR' } );
             }
 
             #
@@ -7379,8 +7387,8 @@ sub new_user
                     $user->create();
 
                     $self->send_alert(
-                                      "New user, <a href=\"http://www.debian-administration.org/users/$new_user_name\">$new_user_name</a>, created from IP $ip."
-                                     );
+                        "New user, <a href=\"http://www.debian-administration.org/users/$new_user_name\">$new_user_name</a>, created from IP $ip."
+                    );
 
                     $new_user_sent = 1;
                 }
@@ -7420,7 +7428,7 @@ sub new_user
                     );
 
     # generate the output
-    return($template->output());
+    return ( $template->output() );
 
 }
 
