@@ -1657,7 +1657,7 @@ sub article
                           filename => "../templates/includes/comments.template",
                           global_vars => 1 );
 
-        my $ses = Singleton::Session->instance();
+        my $ses = $self->param( "session" );
         $templateC->param( session => md5_hex( $ses->id() ) );
 
 
@@ -1808,7 +1808,7 @@ sub single_weblog
                           filename => "../templates/includes/comments.template",
                           global_vars => 1 );
 
-            my $sess = Singleton::Session->instance();
+            my $sess = $self->param( "session" );
             $templateC->param( session => md5_hex( $sess->id() ) );
 
             my $comments =
@@ -2350,7 +2350,7 @@ sub view_bookmarks
     #
     #  Get the current logged in user.
     #
-    my $session = Singleton::Session->instance();
+    my $session = $self->param( "session" );
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -4214,7 +4214,7 @@ sub poll_view
                           filename => "../templates/includes/comments.template",
                           global_vars => 1 );
 
-        my $sess = Singleton::Session->instance();
+        my $sess = $self->param( "session" );
         $templateC->param( session => md5_hex( $sess->id() ) );
 
 
@@ -4259,6 +4259,12 @@ sub poll_vote
     my $form = $self->query();
 
     #
+    #  Get our username
+    #
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    #
     # The poll the user is voting upon.
     #
     my $poll_id = 0;
@@ -4278,7 +4284,8 @@ sub poll_vote
 
         my ( $anon_voted, $prev_vote, $new_vote ) =
           $p->vote( ip_address => $ENV{ 'REMOTE_ADDR' },
-                    choice     => $poll_answer );
+                    choice     => $poll_answer ,
+                    username   => $username );
 
         my $c = Yawns::Cache->new();
         $c->flush("Poll voted upon.");

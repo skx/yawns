@@ -54,7 +54,6 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Session;
 
 
 =head2 new
@@ -189,6 +188,7 @@ sub vote
     #
     my $ip_address = $params{ 'ip_address' };
     my $choice     = $params{ 'choice' };
+    my $username   = $params{ 'username' } || "Anonymous";
 
     die "No IP address"  unless defined($ip_address);
     die "No vote choice" unless defined($choice);
@@ -196,12 +196,7 @@ sub vote
     $ip_address =~ s/^::ffff://g;
 
 
-    my $db       = Singleton::DBI->instance();
-    my $form     = Singleton::CGI->instance();
-    my $session  = Singleton::Session->instance();
-    my $username = $session->param("logged_in");
-
-    if ( !defined($username) ) {$username = 'Anonymous';}
+    my $db = Singleton::DBI->instance();
 
 
     if ( $username =~ /^anonymous$/i )
