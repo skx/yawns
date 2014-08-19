@@ -290,17 +290,6 @@ my %dispatch = (
         type => "Content-Type: text/html; charset=UTF-8\n\n",
       },
 
-    "new_user" =>      # Create a new user account
-      { sub  => \&new_user,
-        type => "Content-Type: text/html; charset=UTF-8\n\n",
-      },
-
-
-    "submit" =>        # Submit an article
-      { sub   => \&submit_article,
-        type  => "Content-Type: text/html; charset=UTF-8\n\n",
-        cache => 1,
-      },
 
 );
 

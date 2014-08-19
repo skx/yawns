@@ -23,6 +23,7 @@ use Cache::Memcached;
 use HTML::Template;
 use HTML::Entities qw! encode_entities !;
 use Digest::MD5 qw! md5_hex !;
+use Mail::Verify;
 use Text::Diff;
 
 
@@ -225,6 +226,7 @@ sub setup
         'edit_user'        => 'edit_user',
         'edit_prefs'       => 'edit_prefs',
         'edit_permissions' => 'edit_permissions',
+        'new_user'         => 'new_user',
 
         # static pages
         'about'      => 'about_page',
@@ -300,11 +302,11 @@ sub setup
         'tag_cloud'  => 'tag_cloud',
         'tag_search' => 'tag_search',
 
-
-        # View an article
+        # Article functions.
         'article'         => 'article',
         'article_wrapper' => 'article_wrapper',
         'edit_article'    => 'edit_article',
+        'submit_article'  => 'submit_article',
 
         # Weblogs
         'weblog'        => 'weblog',
@@ -493,6 +495,32 @@ sub load_layout
     return ($l);
 }
 
+
+=begin doc
+
+Send an alert message
+
+=end doc
+
+=cut
+
+sub send_alert
+{
+    my ($self, $text) = (@_);
+
+    #
+    #  Abort if we're disabled, or have empty text.
+    #
+    my $enabled = conf::SiteConfig::get_conf('alerts') || 0;
+    return unless ($enabled);
+    return unless ( $text && length($text) );
+
+    #
+    #  Send it.
+    #
+    my $event = Yawns::Event->new();
+    $event->send($text);
+}
 
 
 # ===========================================================================
@@ -6284,6 +6312,187 @@ EOF
 }
 
 
+# ===========================================================================
+# Submit article
+# ===========================================================================
+
+sub submit_article
+{
+    my( $self ) = ( @_ );
+
+    #
+    # Gain access to objects we use.
+    #
+    my $form     = $self->query();
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+
+    # get new/preview status for article submissions
+    my $submit = $form->param('submit') || "new";
+
+    # set some variables
+    my $anon    = 0;
+    my $new     = 0;
+    my $preview = 0;
+    my $confirm = 0;
+    $anon = 1 if ( $username =~ /^anonymous$/i );
+    $new     = 1 if $submit eq 'new';
+    $preview = 1 if $submit eq 'Preview';
+    $confirm = 1 if $submit eq 'Confirm';
+
+    my $submit_title  = '';
+    my $preview_title = '';
+    my $submit_body   = '';
+    my $preview_body  = '';
+
+    my $submit_ondate = '';
+    my $submit_attime = '';
+    my $submission_id = 0;    # ID of the article which has been submitted.
+
+
+    #
+    #  Anonymous users can't post articles
+    #
+    if ( $username =~ /^anonymous$/i )
+    {
+        return ( $self->permission_denied( login_required => 1 ) );
+    }
+
+
+    if ($preview)
+    {
+        # validate session
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        $submit_title = $form->param('submit_title') || " ";
+        $submit_body  = $form->param('submit_body')  || " ";
+
+        # HTML Encode the title.
+        $submit_title  = HTML::Entities::encode_entities($submit_title);
+        $preview_title = $submit_title;
+
+        #
+        #  Create the correct formatter object.
+        #
+        my $creator = Yawns::Formatters->new();
+        my $formatter = $creator->create( $form->param('type'), $submit_body );
+
+
+
+        #
+        #  Get the formatted and safe versions.
+        #
+        $preview_body = $formatter->getPreview();
+        $submit_body  = $formatter->getOriginal();
+
+
+        #
+        # Linkize the preview.
+        #
+        my $linker = HTML::Linkize->new();
+        $preview_body = $linker->linkize($preview_body);
+
+
+        # get date in human readable format
+        ( $submit_ondate, $submit_attime ) = Yawns::Date::get_str_date();
+
+    }
+    elsif ($confirm)
+    {
+        # validate session
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        #
+        #  Get the data.
+        #
+        $submit_title = $form->param('submit_title') || " ";
+        $submit_body  = $form->param('submit_body')  || " ";
+
+        # HTML Encode the title.
+        $submit_title = HTML::Entities::encode_entities($submit_title);
+
+        #
+        #  Create the correct formatter object.
+        #
+        my $creator = Yawns::Formatters->new();
+        my $formatter = $creator->create( $form->param('type'), $submit_body );
+
+        #
+        #  Get the submitted body.
+        #
+        $submit_body = $formatter->getPreview();
+
+        #
+        # Linkize the preview.
+        #
+        my $linker = HTML::Linkize->new();
+        $submit_body = $linker->linkize($submit_body);
+
+        my $submissions = Yawns::Submissions->new();
+        $submission_id =
+          $submissions->addArticle( title    => $submit_title,
+                                    bodytext => $submit_body,
+                                    ip       => $ENV{ 'REMOTE_ADDR' },
+                                    author   => $username
+                                  );
+
+        #
+        #  Flush the cache
+        #
+        my $c = Yawns::Cache->new();
+        $c->flush("New article submitted");
+
+    }
+
+    # open the html template
+    my $template = $self->load_layout( "submit_article.inc", session => 1 );
+
+    # fill in all the parameters you got from the database
+    $template->param( anon          => $anon,
+                      new           => $new,
+                      preview       => $preview,
+                      confirm       => $confirm,
+                      username      => $username,
+                      submit_title  => $submit_title,
+                      submit_body   => $submit_body,
+                      preview_title => $preview_title,
+                      preview_body  => $preview_body,
+                      submit_ondate => $submit_ondate,
+                      submit_attime => $submit_attime,
+                      submission_id => $submission_id,
+                      title         => "Submit Article",
+                      tag_url => "/ajax/addtag/submission/$submission_id/",
+                    );
+
+
+    #
+    #  Make sure the format is setup.
+    #
+    if ( $form->param('type') )
+    {
+        $template->param( $form->param('type') . "_selected" => 1 );
+    }
+    else
+    {
+
+        #
+        #  Choose the users format.
+        #
+        my $prefs = Yawns::Preferences->new( username => $username );
+        my $type = $prefs->getPreference("posting_format") || "text";
+
+        $template->param( $type . "_selected" => 1 );
+    }
+
+
+    # generate the output
+    return($template->output());
+}
+
+
 
 # ===========================================================================
 # Edit a comment on a poll, article, or weblog.
@@ -6976,6 +7185,216 @@ sub add_comment
 
 }
 
+
+
+
+# ===========================================================================
+# create a new user account.
+# ===========================================================================
+sub new_user
+{
+    my( $self ) = ( @_ );
+
+    # Get access to the form.
+    my $form = $self->query();
+
+    #
+    #  Get the currently logged in user.
+    #
+    my $session  = $self->param( "session" );
+    my $username = $session->param("logged_in") || "Anonymous";
+
+    # Deny access if the user is already logged in.
+    if ( $username !~ /^anonymous$/i )
+    {
+        return ( $self->permission_denied( already_logged_in => 1 ) );
+    }
+
+
+    my $new_user_name  = '';
+    my $new_user_email = '';
+
+    my $new_user_sent  = 0;
+    my $already_exists = 0;
+
+    my $blank_email   = 0;
+    my $invalid_email = 0;
+
+    my $blank_username   = 0;
+    my $invalid_username = 0;
+    my $prev_banned      = 0;
+    my $prev_email       = 0;
+    my $invalid_hash     = 0;
+    my $mail_error       = "";
+
+
+    if ( $form->param('submit') eq 'Create User' )
+    {
+        # validate session
+        my $ret = $self->validateSession();
+        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
+
+        $new_user_name = $form->param('new_user_name');
+        $new_user_name =~ s/&/\+/g;
+        $new_user_email = $form->param('new_user_email');
+
+        if ( $new_user_name =~ /^([0-9a-zA-Z_-]+)$/ )
+        {
+
+            #
+            # Usernames are 1-25 characters long.
+            #
+            if ( length($new_user_name) > 25 )
+            {
+                $invalid_username = 1;
+            }
+
+            #
+            # Make sure we have an email address.
+            #
+            if ( !length($new_user_email) )
+            {
+                $blank_email = 1;
+            }
+
+
+            #
+            #  See if this user comes from an IP address with a previous suspension.
+            #
+            my $db = Singleton::DBI->instance();
+            my $sql = $db->prepare(
+                "SELECT COUNT(username) FROM users WHERE ip=? AND suspended=1");
+            $sql->execute( $ENV{ 'REMOTE_ADDR' } );
+            $prev_banned = $sql->fetchrow_array();
+            $sql->finish();
+
+
+            $sql = $db->prepare(
+                         "SELECT COUNT(username) FROM users WHERE realemail=?");
+            $sql->execute($new_user_email);
+            $prev_email = $sql->fetchrow_array();
+            $sql->finish();
+
+            if ($prev_banned)
+            {
+                $self->send_alert( "Denied registration for '$new_user_name' from " .
+                                   $ENV{ 'REMOTE_ADDR' } );
+            }
+            if ($prev_banned)
+            {
+                $self->send_alert(
+                                  "Denied registration for in-use email " . $new_user_email .
+                                  " " . $ENV{ 'REMOTE_ADDR' } );
+            }
+
+            #
+            # Now test to see if the email address is valid
+            #
+            $invalid_email = Mail::Verify::CheckAddress($new_user_email);
+
+            if ( $invalid_email == 1 )
+            {
+                $mail_error = "No email address was supplied.";
+            }
+            elsif ( $invalid_email == 2 )
+            {
+                $mail_error =
+                  "There is a syntaxical error in the email address.";
+            }
+            elsif ( $invalid_email == 3 )
+            {
+                $mail_error =
+                  "There are no DNS entries for the host in question (no MX records or A records).";
+            }
+            elsif ( $invalid_email == 4 )
+            {
+                $mail_error =
+                  "There are no live SMTP servers accepting connections for this email address.";
+            }
+
+            #
+            # Test to see if the username already exists.
+            #
+            if ( ( $invalid_email +
+                   $prev_email +
+                   $prev_banned +
+                   $invalid_username +
+                   $blank_email
+                 ) < 1
+               )
+            {
+                my $users = Yawns::Users->new();
+                my $exists = $users->exists( username => $new_user_name );
+                if ($exists)
+                {
+                    $already_exists = 1;
+                }
+                else
+                {
+                    my $password = '';
+                    $password =
+                      join( '', map {( 'a' .. 'z' )[rand 26]} 0 .. 7 );
+
+                    my $ip = $ENV{ 'REMOTE_ADDR' };
+                    if ( $ip =~ /^::ffff:(.*)/ )
+                    {
+                        $ip = $1;
+                    }
+
+                    my $user =
+                      Yawns::User->new( username  => $new_user_name,
+                                        email     => $new_user_email,
+                                        password  => $password,
+                                        ip        => $ip,
+                                        send_mail => 1
+                                      );
+                    $user->create();
+
+                    $self->send_alert(
+                                      "New user, <a href=\"http://www.debian-administration.org/users/$new_user_name\">$new_user_name</a>, created from IP $ip."
+                                     );
+
+                    $new_user_sent = 1;
+                }
+            }
+        }
+        else
+        {
+            if ( length($new_user_name) )
+            {
+                $invalid_username = 1;
+            }
+            else
+            {
+                $blank_username = 1;
+            }
+        }
+    }
+
+
+    # open the html template
+    my $template = $self->load_layout( "new_user.inc", session => 1 );
+
+    # set the required values
+    $template->param( new_user_sent    => $new_user_sent,
+                      new_user_email   => $new_user_email,
+                      already_exists   => $already_exists,
+                      invalid_email    => $invalid_email,
+                      mail_error       => $mail_error,
+                      invalid_username => $invalid_username,
+                      blank_email      => $blank_email,
+                      blank_username   => $blank_username,
+                      prev_banned      => $prev_banned,
+                      prev_email       => $prev_email,
+                      new_user_name    => $new_user_name,
+                      new_user_email   => $new_user_email,
+                      title            => "Register Account",
+                    );
+
+    # generate the output
+    return($template->output());
+
+}
 
 
 
