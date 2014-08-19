@@ -20,9 +20,11 @@ use base 'CGI::Application';
 # Standard module(s)
 #
 use Cache::Memcached;
-use HTML::Template;
-use HTML::Entities qw! encode_entities !;
 use Digest::MD5 qw! md5_hex !;
+use HTML::Entities qw! encode_entities !;
+use HTML::Template;
+use JSON;
+use LWP::Simple;
 use Mail::Verify;
 use Text::Diff;
 
@@ -7253,6 +7255,7 @@ sub new_user
     my $prev_banned      = 0;
     my $prev_email       = 0;
     my $invalid_hash     = 0;
+    my $bad_ip           = 0;
     my $mail_error       = "";
 
 
@@ -7318,6 +7321,27 @@ sub new_user
             }
 
             #
+            #  Test against blogspam.net
+            #
+            my $i = $ENV{ 'REMOTE_ADDR' };
+            if ( $i =~ /^::ffff:(.*)/ )
+            {
+                $i = $1;
+            }
+
+            my $content = get("http://test.blogspam.net:9999/lookup/$i");
+            if ( $content )
+            {
+                my $j = decode_json( $content );
+                if ( $j->{'listed'} ne "false" )
+                {
+                    $bad_ip = 1;
+
+                    $self->send_alert( "Denied registration - blogspam.net listing of IP $i " );
+                }
+            }
+
+            #
             # Now test to see if the email address is valid
             #
             $invalid_email = Mail::Verify::CheckAddress($new_user_email);
@@ -7349,7 +7373,8 @@ sub new_user
                    $prev_email +
                    $prev_banned +
                    $invalid_username +
-                   $blank_email
+                   $blank_email +
+                   $bad_ip
                  ) < 1
                )
             {
@@ -7416,6 +7441,7 @@ sub new_user
                       blank_username   => $blank_username,
                       prev_banned      => $prev_banned,
                       prev_email       => $prev_email,
+                      bad_ip           => $bad_ip,
                       new_user_name    => $new_user_name,
                       new_user_email   => $new_user_email,
                       title            => "Register Account",

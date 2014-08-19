@@ -19,6 +19,9 @@
 	<!-- tmpl_if name='prev_banned' -->
 	<p>The IP address you are using is associated with a previously banned account - you may not re-register.</p>
 	<!-- /tmpl_if -->
+	<!-- tmpl_if name='bad_ip' -->
+	<p>The IP address you are using is listed as a spam-source on <a href="http://blogspam.net/">BlogSpam</a>.</p>
+	<!-- /tmpl_if -->
 	<!-- tmpl_if name='prev_email' -->
 	<p>The email address you are using is already associated with an account.</p>
 	<!-- /tmpl_if -->
