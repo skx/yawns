@@ -20,7 +20,7 @@ Overview
 The codebase stores articles, comments, weblogs, polls, and user-details in
 a simple MySQL database.
 
-The code makes use of several classes, in the `YAWNS::` namespace to interact
+The code makes use of several classes in the `YAWNS::` namespace to interact
 with these objects and presents the site interface.
 
 
@@ -83,14 +83,12 @@ The code is deployed upon five hosts:
 
 The master IP runs pound on port 80, which routes traffic to varnish on each host, listening on :8000, which passes traffic to Apache on localhost:8080.
 
-All data is stored in MySQL *except* login sessions.  Login sessions go
-to memcached, which is on the same host as MySQL for reference.
+All data is stored in MySQL *except* login sessions.  Login sessions go to memcached, which is on the same host as MySQL for reference.
 
 
 This means the hosts run the following services:
 
 * db-db1.dh - MySQL, memcache
-
 * db-web1.dh - ucarp, varnish, pound, apache
 * db-web2.dh - ucarp, varnish, pound, apache
 * db-web3.dh - ucarp, varnish, pound, apache
@@ -104,5 +102,12 @@ Because only one host is the "master" at any given time the actual deployment is
 * db-web3.dh - ucarp, apache
 * db-web4.dh - ucarp, apache
 
-The use of ucarp ensures that the site is functional if only a single
-host is alive.
+The use of ucarp ensures that the site is functional if only a single host is alive.
+
+
+Apache Setup
+------------
+
+There are three FastCGI scripts beneath `/cgi-bin/` which should be configured to be
+executable.  These are invoked via the pretty URLs which you can see listed in
+`apache/rewrite.rules.conf`.
