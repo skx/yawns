@@ -5514,7 +5514,8 @@ sub report_comment
     $comment->report( poll    => $poll,
                       article => $article,
                       weblog  => $weblog,
-                      id      => $id
+                      id      => $id,
+                      reporter => $username
                     );
 
     #

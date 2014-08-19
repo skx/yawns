@@ -74,7 +74,6 @@ use HTML::Entities;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
-use Singleton::Session;
 
 #
 #  Accessors for getting titles, links, etc.
@@ -251,14 +250,7 @@ sub addTag
     # logged in user, if  there is no logged in then we'll
     # use 'Anonymous'.
     #
-    my $username = $params{ 'username' };
-    if ( !defined($username) )
-    {
-        my $session = Singleton::Session->instance();
-        $username = $session->param("logged_in");
-
-        if ( !defined($username) ) {$username = 'Anonymous';}
-    }
+    my $username = $params{ 'username' } || "Anonymous";
 
     #
     #  These will need to be determined.

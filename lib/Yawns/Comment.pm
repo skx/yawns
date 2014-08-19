@@ -568,6 +568,7 @@ sub report
     my $poll    = $parameters{ 'poll' };
     my $weblog  = $parameters{ 'weblog' };
     my $id      = $parameters{ 'id' };
+    my $user    = $parameters{ 'reporter'};
 
     #
     # We wish to invalidate the user after deleting the comment.
@@ -605,8 +606,6 @@ sub report
     # to zero instantly.
     #
     my $decrease = 1;
-    my $session  = Singleton::Session->instance();
-    my $user     = $session->param("logged_in") || "Anonymous";
 
     #
     #  You can't report your own comment
