@@ -53,8 +53,6 @@ install libtext-markdown-perl
 install libtext-textile-perl
 install libtimedate-perl
 install liburi-find-perl
-install memcached
-install mysql-server
 install libjson-perl
 install libwww-perl
 
