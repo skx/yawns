@@ -551,6 +551,7 @@ sub validateSession
 
     if ( ( !defined($got) ) || ( $got ne $wanted ) )
     {
+        $self->send_alert( "Form validation failed" );
         return 1;
     }
 
