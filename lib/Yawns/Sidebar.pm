@@ -54,9 +54,6 @@ use HTML::Template;
 #
 #  Yawns modules which we use.
 #
-use Singleton::DBI;
-use Singleton::Session;
-
 use Yawns::Adverts;
 use Yawns::Articles;
 use Yawns::Permissions;
@@ -92,19 +89,12 @@ sub new
 
 sub getMenu
 {
-    my ( $class, $u ) = (@_);
-
-    #
-    #  Get objects we need to generate output.
-    #
-    my $session = Singleton::Session->instance();
-
+    my ( $class, $session ) = (@_);
 
     #
     #  Get the current username, and see if we're anonymous.
     #
-    my $username = $u ? $u : $session->param("logged_in");
-    $username = "Anonymous" if ( !$username );
+    my $username = $session->param("logged_in") || "Anonymous";
 
     my $anonymous = 0;
     $anonymous = 1 if ( $username =~ /^anonymous$/i );
@@ -337,18 +327,12 @@ sub getMenu
 
 sub getLoginBox
 {
-    my ( $class, $u ) = (@_);
-
-    #
-    #  Get objects we need to generate output.
-    #
-    my $session = Singleton::Session->instance();
-
+    my ( $class, $session ) = (@_);
 
     #
     #  Settings which control what is displayed upon the sidebar
     #
-    my $username = $u ? $u : $session->param("logged_in");
+    my $username = $session->param("logged_in") || "Anonymous";
     my $failed_login = $session->param("failed_login");
 
 

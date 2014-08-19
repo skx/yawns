@@ -19,6 +19,7 @@ use base 'CGI::Application';
 #
 # Standard module(s)
 #
+use CGI::Session;
 use Cache::Memcached;
 use Digest::MD5 qw! md5_hex !;
 use HTML::Entities qw! encode_entities !;
@@ -479,16 +480,15 @@ sub load_layout
     #
     my $sidebar = Yawns::Sidebar->new();
     $l->param(
-            sidebar_text => $sidebar->getMenu( $session->param("logged_in") ) );
+            sidebar_text => $sidebar->getMenu( $session ) );
     $l->param(
-         login_box_text => $sidebar->getLoginBox( $session->param("logged_in") )
-    );
+         login_box_text => $sidebar->getLoginBox( $session ) );
     $l->param( site_title => get_conf('site_title') );
     $l->param( metadata   => get_conf('metadata') );
 
     my $logged_in = 1;
 
-    my $username = $session->param("logged_in");
+    my $username = $session->param("logged_in") || "Anonymous";
     if ( $username =~ /^anonymous$/i )
     {
         $logged_in = 0;
@@ -655,14 +655,6 @@ sub application_login
         return $self->redirectURL("/");
     }
 
-    #
-    # This should be a POST
-    #
-    if ( $self->query()->request_method() ne "POST" )
-    {
-        return( $self->permission_denied( invalid_mode => 1,
-                                          title => "Invalid HTTP Request Method" ) );
-    }
 
 
     # If the user isn't submitting a form then show it
@@ -689,7 +681,18 @@ sub application_login
 
         return ( $template->output() );
     }
+    else
+    {
 
+        #
+        # This should be a POST
+        #
+        if ( $self->query()->request_method() ne "POST" )
+        {
+            return( $self->permission_denied( invalid_mode => 1,
+                                              title => "Invalid HTTP Request Method" ) );
+        }
+    }
 
     my $lname  = $q->param('lname');
     my $lpass  = $q->param('lpass');
