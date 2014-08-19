@@ -5550,12 +5550,6 @@ sub report_weblog
     my $form = $self->query();
     my $id   = $form->param("id");
 
-    #
-    # If you've already reported this then don't do it again.
-    #
-    my $session  = $self->param("session");
-    my $username = $session->param("logged_in");
-
     if ( !$session->param( "reported_" . $id ) )
     {
 
