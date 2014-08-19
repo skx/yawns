@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Install debian dependencies
 #
@@ -32,7 +32,6 @@ install cgi-session-perl
 install cronolog
 install libapache2-mod-fastcgi
 install libapache2-mod-rpaf
-install libauthen-captcha-perl
 install libcache-memcached-perl
 install libcgi-application-perl
 install libcgi-fast-perl
