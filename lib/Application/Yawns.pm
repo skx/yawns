@@ -159,13 +159,13 @@ sub cgiapp_prerun
 
         if ( $cur ne $old )
         {
-            my $str =<<EOF;
+            my $str = <<EOF;
 Content-type: text/html
 
 
 IP changed - session dropped.
 EOF
-            return( $str );
+            return ($str);
         }
     }
 }
@@ -479,12 +479,10 @@ sub load_layout
     # Make sure the sidebar text is setup.
     #
     my $sidebar = Yawns::Sidebar->new();
-    $l->param(
-            sidebar_text => $sidebar->getMenu( $session ) );
-    $l->param(
-         login_box_text => $sidebar->getLoginBox( $session ) );
-    $l->param( site_title => get_conf('site_title') );
-    $l->param( metadata   => get_conf('metadata') );
+    $l->param( sidebar_text   => $sidebar->getMenu($session) );
+    $l->param( login_box_text => $sidebar->getLoginBox($session) );
+    $l->param( site_title     => get_conf('site_title') );
+    $l->param( metadata       => get_conf('metadata') );
 
     my $logged_in = 1;
 
@@ -551,7 +549,7 @@ sub validateSession
 
     if ( ( !defined($got) ) || ( $got ne $wanted ) )
     {
-        $self->send_alert( "Form validation failed" );
+        $self->send_alert("Form validation failed");
         return 1;
     }
 
@@ -689,8 +687,11 @@ sub application_login
         #
         if ( $self->query()->request_method() ne "POST" )
         {
-            return( $self->permission_denied( invalid_mode => 1,
-                                              title => "Invalid HTTP Request Method" ) );
+            return (
+                     $self->permission_denied(
+                                          invalid_mode => 1,
+                                          title => "Invalid HTTP Request Method"
+                     ) );
         }
     }
 
@@ -1150,7 +1151,7 @@ sub edit_about
     #
     my $action = $form->param('page') || "";
 
-    if ( $action eq 'pick' )
+    if ( $action eq "" )
     {
 
         # Get the page options.
@@ -1165,7 +1166,7 @@ sub edit_about
     #
     #  Are we saving?
     #
-    if ( $form->param("submit") )
+    if ( $form->param("submit") eq "Save Changes" )
     {
 
         # validate session.
@@ -1173,7 +1174,7 @@ sub edit_about
         return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
 
         my $old_page = $form->param('pagename');
-        my $new_page = $form->param('pageid');
+        my $new_page = $form->param('page');
         my $body     = $form->param('bodytext');
 
         #
@@ -1660,7 +1661,7 @@ sub article
                           filename => "../templates/includes/comments.template",
                           global_vars => 1 );
 
-        my $ses = $self->param( "session" );
+        my $ses = $self->param("session");
         $templateC->param( session => md5_hex( $ses->id() ) );
 
 
@@ -1811,7 +1812,7 @@ sub single_weblog
                           filename => "../templates/includes/comments.template",
                           global_vars => 1 );
 
-            my $sess = $self->param( "session" );
+            my $sess = $self->param("session");
             $templateC->param( session => md5_hex( $sess->id() ) );
 
             my $comments =
@@ -2353,7 +2354,7 @@ sub view_bookmarks
     #
     #  Get the current logged in user.
     #
-    my $session = $self->param( "session" );
+    my $session = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -4217,7 +4218,7 @@ sub poll_view
                           filename => "../templates/includes/comments.template",
                           global_vars => 1 );
 
-        my $sess = $self->param( "session" );
+        my $sess = $self->param("session");
         $templateC->param( session => md5_hex( $sess->id() ) );
 
 
@@ -4225,7 +4226,7 @@ sub poll_view
           Yawns::Comments->new( poll    => $poll_id,
                                 enabled => $enabled );
 
-        $templateC->param( comments => $comments->get( $username), );
+        $templateC->param( comments => $comments->get($username), );
 
         # generate the output
         my $comment_text = $templateC->output();
@@ -4264,7 +4265,7 @@ sub poll_vote
     #
     #  Get our username
     #
-    my $session  = $self->param( "session" );
+    my $session = $self->param("session");
     my $username = $session->param("logged_in") || "Anonymous";
 
     #
@@ -4287,8 +4288,9 @@ sub poll_vote
 
         my ( $anon_voted, $prev_vote, $new_vote ) =
           $p->vote( ip_address => $ENV{ 'REMOTE_ADDR' },
-                    choice     => $poll_answer ,
-                    username   => $username );
+                    choice     => $poll_answer,
+                    username   => $username
+                  );
 
         my $c = Yawns::Cache->new();
         $c->flush("Poll voted upon.");
@@ -4300,7 +4302,7 @@ sub poll_vote
     }
     else
     {
-        return ( $self->poll_view(  0, 0, 0 ) );
+        return ( $self->poll_view( 0, 0, 0 ) );
     }
 }
 
@@ -5521,10 +5523,10 @@ sub report_comment
     # Report the comment
     #
     my $comment = Yawns::Comment->new();
-    $comment->report( poll    => $poll,
-                      article => $article,
-                      weblog  => $weblog,
-                      id      => $id,
+    $comment->report( poll     => $poll,
+                      article  => $article,
+                      weblog   => $weblog,
+                      id       => $id,
                       reporter => $username
                     );
 
@@ -7110,7 +7112,7 @@ sub add_comment
         #  This will not do anything if the notifications are disabled
         # by the article author, comment poster, etc.
         #
-        $notifier->sendNotification($num, $username);
+        $notifier->sendNotification( $num, $username );
 
         #
         # Save the comment time.
@@ -7359,14 +7361,15 @@ sub new_user
             }
 
             my $content = get("http://test.blogspam.net:9999/lookup/$i");
-            if ( $content )
+            if ($content)
             {
-                my $j = decode_json( $content );
-                if ( $j->{'listed'} ne "false" )
+                my $j = decode_json($content);
+                if ( $j->{ 'listed' } ne "false" )
                 {
                     $bad_ip = 1;
 
-                    $self->send_alert( "Denied registration - blogspam.net listing of IP $i " );
+                    $self->send_alert(
+                        "Denied registration - blogspam.net listing of IP $i ");
                 }
             }
 
