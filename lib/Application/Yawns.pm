@@ -7420,7 +7420,7 @@ sub new_user
                 {
                     my $password = '';
                     $password =
-                      join( '', map {( 'a' .. 'z' )[rand 26]} 0 .. 7 );
+                      join( '', map {( 'a' .. 'z' )[rand 26]} 0 .. 10 );
 
                     my $ip = $ENV{ 'REMOTE_ADDR' };
                     if ( $ip =~ /^::ffff:(.*)/ )
