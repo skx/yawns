@@ -220,7 +220,7 @@ sub check
     #
     #  Make sure we got something.
     #
-    die "No username"      unless ( defined($username) );
+    die "No username for $priv -check"      unless ( defined($username) );
     die "Nothing to check" unless ( defined($priv) );
 
     #

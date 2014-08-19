@@ -61,7 +61,6 @@ use HTML::Balance;
 use HTML::BreakupText;
 use HTML::Linkize;
 use Singleton::DBI;
-use Singleton::Session;
 use Yawns::Date;
 use Yawns::User;
 use Yawns::Weblog;
@@ -103,20 +102,13 @@ sub new
 
 sub get
 {
-    my ($class) = (@_);
-
-    #
-    #  Get the various attributes of the current user.
-    #
-    my $session = Singleton::Session->instance();
-    my $username = $session->param("logged_in") || "Anonymous";
+    my ($class, $username) = (@_);
 
     #
     #  Are we logged in?
     #
     my $logged_in = 1;
     $logged_in = 0 if ( $username =~ /^anonymous$/i );
-
 
     #
     # Can the user see the full IP address of comments?
@@ -128,7 +120,6 @@ sub get
         $comment_admin = 1;
     }
 
-
     my $comments;
 
 
@@ -139,19 +130,19 @@ sub get
     if ( ( defined( $class->{ 'article' } ) ) &&
          ( $class->{ 'article' } =~ /([0-9]+)/ ) )
     {
-        $comments = _get_article_comments( $class->{ 'article' } );
+        $comments = _get_article_comments( $class->{ 'article' }, $username );
     }
     elsif ( ( defined( $class->{ 'poll' } ) ) &&
             ( $class->{ 'poll' } =~ /([0-9]+)/ ) )
     {
         $comments =
-          _get_poll_comments( $class->{ 'poll' }, $class->{ 'enabled' } );
+          _get_poll_comments( $class->{ 'poll' }, $class->{ 'enabled' }, $username );
     }
     elsif ( ( defined( $class->{ 'weblog' } ) ) &&
             ( $class->{ 'weblog' } =~ /([0-9]+)/ ) )
     {
         $comments =
-          _get_weblog_comments( $class->{ 'weblog' }, $class->{ 'enabled' } );
+          _get_weblog_comments( $class->{ 'weblog' }, $class->{ 'enabled' }, $username );
     }
     else
     {
@@ -672,12 +663,13 @@ sub _getCommentFeed
 
 sub _get_article_comments
 {
-    my ($article_id) = (@_);
+    my ($article_id,$username) = (@_);
 
 
     #
     #  If not fetch from database
     #
+
     my $comments = _get_comments( 'a', 1, $article_id, 0, 0 );
     return ($comments);
 }
@@ -692,7 +684,7 @@ sub _get_article_comments
 
 sub _get_weblog_comments
 {
-    my ( $weblog_id, $enabled ) = @_;
+    my ( $weblog_id, $enabled, $username ) = @_;
 
     #
     #  Fetch from the database.
@@ -710,7 +702,7 @@ sub _get_poll_comments
 {
 
     # Get and arrange the comments for a poll
-    my ( $poll_id, $enabled ) = @_;
+    my ( $poll_id, $enabled, $username ) = @_;
 
     #
     #  Fetch from database
@@ -739,23 +731,7 @@ sub _get_comments
 {
     my ( $type, $enabled, $root, $parent, $depth, $comments ) = (@_);
 
-    #
-    #  Find the currently logged in username.
-    #
-    my $db       = Singleton::DBI->instance();
-    my $session  = Singleton::Session->instance();
-    my $username = $session->param("logged_in") || "Anonymous";
-
-    #
-    # Can the user see the full IP address of comments?
-    #
-    my $comment_admin = 0;
-    my $perms = Yawns::Permissions->new( username => $username );
-    if ( $perms->check( priv => "edit_comments" ) )
-    {
-        $comment_admin = 1;
-    }
-
+    my $db = Singleton::DBI->instance();
     my $linker = HTML::Linkize->new();
 
 
@@ -844,7 +820,6 @@ sub _get_comments
                           attime        => $posttime,
                           body          => $body_text,
                           ip            => $ip,
-                          comment_admin => $comment_admin,
                           indent        => $indent,
                           modifier      => $magic,
                           enabled       => $enabled,
@@ -868,7 +843,6 @@ sub _get_comments
                           attime        => $posttime,
                           body          => $body_text,
                           ip            => $ip,
-                          comment_admin => $comment_admin,
                           indent        => $indent,
                           modifier      => $magic,
                           enabled       => $enabled,
@@ -895,7 +869,6 @@ sub _get_comments
                           attime        => $posttime,
                           body          => $body_text,
                           ip            => $ip,
-                          comment_admin => $comment_admin,
                           indent        => $indent,
                           modifier      => $magic,
                           enabled       => $enabled,

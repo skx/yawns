@@ -1666,7 +1666,7 @@ sub article
         #
         #  Only show comments if found.
         #
-        my $found = $comments->get();
+        my $found = $comments->get($username);
         $templateC->param( comments => $found ) if ($found);
 
         # generate the output
@@ -1816,7 +1816,7 @@ sub single_weblog
                                     enabled => $enabled );
 
             #
-            my $com = $comments->get();
+            my $com = $comments->get($username);
             $templateC->param( comments => $com ) if ($com);
 
             # generate the output
@@ -4222,7 +4222,7 @@ sub poll_view
           Yawns::Comments->new( poll    => $poll_id,
                                 enabled => $enabled );
 
-        $templateC->param( comments => $comments->get(), );
+        $templateC->param( comments => $comments->get( $username), );
 
         # generate the output
         my $comment_text = $templateC->output();
@@ -7107,7 +7107,7 @@ sub add_comment
         #  This will not do anything if the notifications are disabled
         # by the article author, comment poster, etc.
         #
-        $notifier->sendNotification($num);
+        $notifier->sendNotification($num, $username);
 
         #
         # Save the comment time.

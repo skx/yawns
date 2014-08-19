@@ -96,7 +96,7 @@ sub new
 
 sub sendNotification
 {
-    my ( $self, $new_id ) = (@_);
+    my ( $self, $new_id, $sender ) = (@_);
 
     #
     #  Get the details
@@ -111,7 +111,7 @@ sub sendNotification
     #
     if ( defined($oncomment) && ( $oncomment =~ /^([0-9]+)$/ ) )
     {
-        $self->commentReply($new_id);
+        $self->commentReply($new_id, $sender);
     }
     else
     {
@@ -123,7 +123,7 @@ sub sendNotification
         {
 
             # Reply to an article
-            $self->articleReply($new_id);
+            $self->articleReply($new_id, $sender);
         }
         elsif ( defined($onpoll) && ( $onpoll =~ /^([0-9]+)$/ ) )
         {
@@ -135,7 +135,7 @@ sub sendNotification
         {
 
             # Notification of a reply to a weblog.
-            $self->weblogReply($new_id);
+            $self->weblogReply($new_id, $sender);
         }
         else
         {
@@ -302,13 +302,7 @@ sub save
 
 sub articleReply
 {
-    my ( $self, $id ) = (@_);
-
-    #
-    #  Get the person who just posted the reply
-    #
-    my $session = Singleton::Session->instance();
-    my $sender = $session->param("logged_in") || "Anonymous";
+    my ( $self, $id, $sender ) = (@_);
 
     #
     #  Find the username of the article poster.
@@ -361,18 +355,13 @@ sub articleReply
 
 sub commentReply
 {
-    my ( $self, $id ) = (@_);
+    my ( $self, $id, $sender ) = (@_);
 
     my $oncomment = $self->{ 'oncomment' };
     my $onweblog  = $self->{ 'onweblog' };
     my $onpoll    = $self->{ 'onpoll' };
     my $onarticle = $self->{ 'onarticle' };
 
-    #
-    #  Get the person who just posted the reply
-    #
-    my $session = Singleton::Session->instance();
-    my $sender = $session->param("logged_in") || "Anonymous";
 
     #
     #  Find the username of the comment we've received a reply to.
@@ -424,13 +413,8 @@ sub commentReply
 
 sub weblogReply
 {
-    my ( $self, $id ) = (@_);
+    my ( $self, $id, $sender ) = (@_);
 
-    #
-    #  Get the person who just posted the reply
-    #
-    my $session = Singleton::Session->instance();
-    my $sender = $session->param("logged_in") || "Anonymous";
 
     #
     #  Find the username of the article poster.
