@@ -158,12 +158,13 @@ sub cgiapp_prerun
 
         if ( $cur ne $old )
         {
-            print <<EOF;
+            my $str =<<EOF;
 Content-type: text/html
 
 
 IP changed - session dropped.
 EOF
+            return( $str );
         }
     }
 }
@@ -605,8 +606,10 @@ sub debug
     my $host = `hostname`;
     chomp($host);
 
+    my $method = $self->query()->request_method();
+
     my $text =
-      "This request was received at $date on $host, from the $username user\n\n";
+      "This $method request was received at $date on $host, from the $username user\n\n";
 
     #
     #  Environment dump.
