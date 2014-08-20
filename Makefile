@@ -53,7 +53,7 @@ test-html:
 #
 tidy:
 	if [ -x /usr/bin/perltidy ]; then \
-	for i in `find . -name '*.pm' -o -name '*.cgi' `; do \
+	for i in `find . -name '*.pm' -o -name '*.fcgi' `; do \
 		echo "tidying $$i"; \
 		perltidy  $$i \
 	; done \

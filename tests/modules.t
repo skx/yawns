@@ -83,12 +83,8 @@ BEGIN{ use_ok( 'Pod::Parser' ); }
 require_ok( 'Pod::Parser' );
 BEGIN{ use_ok( 'Pod::Usage' ); }
 require_ok( 'Pod::Usage' );
-BEGIN{ use_ok( 'Singleton::CGI' ); }
-require_ok( 'Singleton::CGI' );
 BEGIN{ use_ok( 'Singleton::DBI' ); }
 require_ok( 'Singleton::DBI' );
-BEGIN{ use_ok( 'Singleton::Session' ); }
-require_ok( 'Singleton::Session' );
 BEGIN{ use_ok( 'strict' ); }
 require_ok( 'strict' );
 BEGIN{ use_ok( 'String::Approx' ); }
