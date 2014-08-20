@@ -111,7 +111,7 @@ sub sendNotification
     #
     if ( defined($oncomment) && ( $oncomment =~ /^([0-9]+)$/ ) )
     {
-        $self->commentReply($new_id, $sender);
+        $self->commentReply( $new_id, $sender );
     }
     else
     {
@@ -123,7 +123,7 @@ sub sendNotification
         {
 
             # Reply to an article
-            $self->articleReply($new_id, $sender);
+            $self->articleReply( $new_id, $sender );
         }
         elsif ( defined($onpoll) && ( $onpoll =~ /^([0-9]+)$/ ) )
         {
@@ -135,7 +135,7 @@ sub sendNotification
         {
 
             # Notification of a reply to a weblog.
-            $self->weblogReply($new_id, $sender);
+            $self->weblogReply( $new_id, $sender );
         }
         else
         {

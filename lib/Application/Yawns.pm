@@ -150,6 +150,7 @@ sub cgiapp_prerun
 
     if ( $session && $session->param("session_ip") )
     {
+
         #
         #  Test IP
         #
@@ -161,10 +162,7 @@ sub cgiapp_prerun
             my $cur = $self->get_current_runmode();
             if ( $cur !~ /about/i )
             {
-                return (
-                        $self->redirectURL(
-                                           "/about/secure"
-                                          ) );
+                return ( $self->redirectURL( "/about/secure" ) );
             }
         }
     }

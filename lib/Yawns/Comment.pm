@@ -568,7 +568,7 @@ sub report
     my $poll    = $parameters{ 'poll' };
     my $weblog  = $parameters{ 'weblog' };
     my $id      = $parameters{ 'id' };
-    my $user    = $parameters{ 'reporter'};
+    my $user    = $parameters{ 'reporter' };
 
     #
     # We wish to invalidate the user after deleting the comment.

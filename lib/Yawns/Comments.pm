@@ -102,7 +102,7 @@ sub new
 
 sub get
 {
-    my ($class, $username) = (@_);
+    my ( $class, $username ) = (@_);
 
     #
     #  Are we logged in?
@@ -135,14 +135,14 @@ sub get
     elsif ( ( defined( $class->{ 'poll' } ) ) &&
             ( $class->{ 'poll' } =~ /([0-9]+)/ ) )
     {
-        $comments =
-          _get_poll_comments( $class->{ 'poll' }, $class->{ 'enabled' }, $username );
+        $comments = _get_poll_comments( $class->{ 'poll' },
+                                        $class->{ 'enabled' }, $username );
     }
     elsif ( ( defined( $class->{ 'weblog' } ) ) &&
             ( $class->{ 'weblog' } =~ /([0-9]+)/ ) )
     {
-        $comments =
-          _get_weblog_comments( $class->{ 'weblog' }, $class->{ 'enabled' }, $username );
+        $comments = _get_weblog_comments( $class->{ 'weblog' },
+                                          $class->{ 'enabled' }, $username );
     }
     else
     {
@@ -663,7 +663,7 @@ sub _getCommentFeed
 
 sub _get_article_comments
 {
-    my ($article_id,$username) = (@_);
+    my ( $article_id, $username ) = (@_);
 
 
     #
@@ -731,7 +731,7 @@ sub _get_comments
 {
     my ( $type, $enabled, $root, $parent, $depth, $comments ) = (@_);
 
-    my $db = Singleton::DBI->instance();
+    my $db     = Singleton::DBI->instance();
     my $linker = HTML::Linkize->new();
 
 
@@ -812,19 +812,19 @@ sub _get_comments
             #  Article comments
             #
             $c = push( @$comments,
-                       {  comment_id    => $comment[0],
-                          article_id    => $comment[7],
-                          title         => $comment[2],
-                          byuser        => $comment[3],
-                          ondate        => $postdate,
-                          attime        => $posttime,
-                          body          => $body_text,
-                          ip            => $ip,
-                          indent        => $indent,
-                          modifier      => $magic,
-                          enabled       => $enabled,
-                          parent        => $comment[1],
-                          suspended     => $comment[10],
+                       {  comment_id => $comment[0],
+                          article_id => $comment[7],
+                          title      => $comment[2],
+                          byuser     => $comment[3],
+                          ondate     => $postdate,
+                          attime     => $posttime,
+                          body       => $body_text,
+                          ip         => $ip,
+                          indent     => $indent,
+                          modifier   => $magic,
+                          enabled    => $enabled,
+                          parent     => $comment[1],
+                          suspended  => $comment[10],
                        } );
         }
         if ( $type eq 'p' )
@@ -834,20 +834,20 @@ sub _get_comments
             #  Poll comments.
             #
             $c = push( @$comments,
-                       {  comment_id    => $comment[0],
-                          is_poll       => 1,
-                          poll          => $comment[7],
-                          title         => $comment[2],
-                          byuser        => $comment[3],
-                          ondate        => $postdate,
-                          attime        => $posttime,
-                          body          => $body_text,
-                          ip            => $ip,
-                          indent        => $indent,
-                          modifier      => $magic,
-                          enabled       => $enabled,
-                          parent        => $comment[1],
-                          suspended     => $comment[10],
+                       {  comment_id => $comment[0],
+                          is_poll    => 1,
+                          poll       => $comment[7],
+                          title      => $comment[2],
+                          byuser     => $comment[3],
+                          ondate     => $postdate,
+                          attime     => $posttime,
+                          body       => $body_text,
+                          ip         => $ip,
+                          indent     => $indent,
+                          modifier   => $magic,
+                          enabled    => $enabled,
+                          parent     => $comment[1],
+                          suspended  => $comment[10],
                        } );
         }
         if ( $type eq 'w' )
@@ -860,20 +860,20 @@ sub _get_comments
             #  Weblog comments
             #
             $c = push( @$comments,
-                       {  weblog_id     => $comment[7],
-                          weblog_link   => $weblog_link,
-                          comment_id    => $comment[0],
-                          title         => $comment[2],
-                          byuser        => $comment[3],
-                          ondate        => $postdate,
-                          attime        => $posttime,
-                          body          => $body_text,
-                          ip            => $ip,
-                          indent        => $indent,
-                          modifier      => $magic,
-                          enabled       => $enabled,
-                          parent        => $comment[1],
-                          suspended     => $comment[10],
+                       {  weblog_id   => $comment[7],
+                          weblog_link => $weblog_link,
+                          comment_id  => $comment[0],
+                          title       => $comment[2],
+                          byuser      => $comment[3],
+                          ondate      => $postdate,
+                          attime      => $posttime,
+                          body        => $body_text,
+                          ip          => $ip,
+                          indent      => $indent,
+                          modifier    => $magic,
+                          enabled     => $enabled,
+                          parent      => $comment[1],
+                          suspended   => $comment[10],
                        } );
         }
 

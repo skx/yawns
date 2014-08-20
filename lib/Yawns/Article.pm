@@ -493,7 +493,7 @@ sub deleteRelated
 
 sub getRelated
 {
-    my ($class, $username) = (@_);
+    my ( $class, $username ) = (@_);
 
     #
     # Get the article ID
@@ -503,7 +503,7 @@ sub getRelated
     #
     #  Get the current username so we can see if we're a "related admin".
     #
-    $username = "Anonymous" if ( ! defined( $username ) );
+    $username = "Anonymous" if ( !defined($username) );
 
     #
     #  Do we have permissions to modify related links?

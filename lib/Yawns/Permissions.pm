@@ -220,8 +220,8 @@ sub check
     #
     #  Make sure we got something.
     #
-    die "No username for $priv -check"      unless ( defined($username) );
-    die "Nothing to check" unless ( defined($priv) );
+    die "No username for $priv -check" unless ( defined($username) );
+    die "Nothing to check"             unless ( defined($priv) );
 
     #
     #  Anonymous users have no special privileges.  Ever.
