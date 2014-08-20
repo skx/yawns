@@ -43,7 +43,7 @@ install libdbi-perl libdbd-mysql-perl
 install libhtml-parser-perl
 install libhtml-template-perl
 install libhtml-tree-perl
-install liblucy-simple-perl
+install liblucy-perl
 install libmail-verify-perl
 install libredis-perl
 install libstring-approx-perl
