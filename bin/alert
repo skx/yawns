@@ -46,15 +46,15 @@ use IO::Socket;
 #
 #  Get the message
 #
-my $msg = shift( @ARGV );
-exit(0) unless( defined( $msg ) && length($msg) );
+my $msg = shift(@ARGV);
+exit(0) unless ( defined($msg) && length($msg) );
 
 my $sock = IO::Socket::INET->new( Proto    => 'udp',
                                   PeerPort => 4433,
                                   PeerAddr => "misc.debian-administration.org",
-                                ) or
+  ) or
   exit(0);
 
 
-$sock->send( $msg );
+$sock->send($msg);
 exit(0);
