@@ -24,8 +24,6 @@ BEGIN { use_ok( 'Yawns::Article'); }
 require_ok( 'Yawns::Article' );
 BEGIN { use_ok( 'Yawns::Comment::Notifier'); }
 require_ok( 'Yawns::Comment::Notifier' );
-BEGIN { use_ok( 'Yawns::Messages'); }
-require_ok( 'Yawns::Messages' );
 
 
 #
@@ -66,20 +64,6 @@ my $notifications = Yawns::Comment::Notifier->new( username  => $username,
 isa_ok( $notifications, "Yawns::Comment::Notifier" );
 
 
-#
-#  Create a messages object.
-#
-my $msg = Yawns::Messages->new( username => $username );
-isa_ok( $msg, "Yawns::Messages" );
-
-
-#
-#  A new user should have no messages
-#
-my $result = $msg->getMessages();
-my @msgs = @$result;
-is( $#msgs, -1 , "The new user has no site messages" );
-
 
 #
 #  Test that the new user has sane defaults.
@@ -92,11 +76,11 @@ foreach my $key ( qw/ article comment weblog / )
 
 
 #
-#  Change each option to "site message"
+#  Change each option to "none".
 #
-$notifications->save(  article => "message",
-                       comment => "message",
-                       weblog  => "message"  );
+$notifications->save(  article => "none",
+                       comment => "none",
+                       weblog  => "none"  );
 
 
 #
@@ -105,52 +89,8 @@ $notifications->save(  article => "message",
 foreach my $key ( qw/ article comment weblog / )
 {
     is( $notifications->getNotificationMethod( $username, $key ),
-        "message",  "Updated notification of type: '$key' - to message" );
+        "none",  "Updated notification of type: '$key' - to none" );
 }
-
-
-#
-#  Send a notification message, on a ficticious comment.
-#
-$notifications->sendNotification( 1 );
-
-#
-#  Make sure the user now has a single message.
-#
-$result = $msg->getMessages();
-@msgs = @$result;
-is( $#msgs, 0 , "After sending a notification the user has a message." );
-
-
-#
-#  Get the message ID of that message.
-#
-my $id = undef;
-foreach my $m ( @msgs )
-{
-    my %f = %$m;
-    $id = $f{'id'};
-}
-ok( $id, "There is a message ID for the new message" );
-ok( $id =~ /^([0-9]+)$/, " Which is a number" );
-
-
-#
-#  Get the message body.
-#
-if ( $id )
-{
-    my $alert  = $msg->getMessage( $id );
-    my @alerts = @$alert;
-
-    foreach my $a ( @alerts )
-    {
-        my %aa = %$a;
-        ok( $aa{'text'} =~ /\/articles\/0#comment_1/,
-            "Notification message has the correct link" );
-    }
-}
-
 
 
 #
@@ -163,14 +103,6 @@ deleteUser( $user, $username );
 # Now delete the article
 #
 $article->delete();
-
-#
-#  Ensure the message is deleted.
-#
-$result = $msg->getMessages();
-@msgs = @$result;
-is( $#msgs, -1 , "The new user has no site messages" );
-
 
 #
 #  Ensure the notification options are removed too.
