@@ -64,6 +64,8 @@ install libtest-pod-perl
 install libxml2-utils
 install libtemplate-perl
 
+# for meta
+install mercurial
 
 
 #
