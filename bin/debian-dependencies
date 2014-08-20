@@ -56,6 +56,8 @@ install liburi-find-perl
 install libjson-perl
 install libwww-perl
 install libtap-formatter-html-perl
+install make
+install libhtml-template-perl
 
 # for test-suite
 install libtest-file-perl
