@@ -31,9 +31,10 @@ clean:
 
 
 feeds:
-	@./bin/gen-feeds
-	@chmod 777 ~/current/htdocs/*.xml
-	@chmod 777 ~/current/htdocs/*.rdf
+	@./bin/gen-feeds                     || true
+	@chmod 777 ~/current/htdocs/*.xml    || true
+	@chmod 777 ~/current/htdocs/*.rdf    || true
+
 
 test:
 	prove --shuffle tests/
