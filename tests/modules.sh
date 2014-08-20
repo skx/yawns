@@ -23,7 +23,7 @@ use Test::More qw( no_plan );
 EOF
 
 
-for i in `rgrep '^use ' .. | grep -v stats | grep -v file |grep -v POSIX | awk '{print $2}' | tr -d \;\(\) | sort | uniq`; \
+for i in `rgrep '^use ' .. | grep -v stats | grep -v accessors | grep -v TAP::Fo | grep -v feature | grep -v 5 | grep -v file |grep -v POSIX | awk '{print $2}' | tr -d \;\(\) | sort | uniq`; \
     do \
      echo "BEGIN{ use_ok( '$i' ); }"; \
      echo "require_ok( '$i' );" ; \

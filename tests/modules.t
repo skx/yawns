@@ -7,20 +7,30 @@
 
 use Test::More qw( no_plan );
 
-BEGIN{ use_ok( 'Authen::Captcha' ); }
-require_ok( 'Authen::Captcha' );
+BEGIN{ use_ok( 'Application::Ajax' ); }
+require_ok( 'Application::Ajax' );
+BEGIN{ use_ok( 'Application::Feeds' ); }
+require_ok( 'Application::Feeds' );
+BEGIN{ use_ok( 'Application::Yawns' ); }
+require_ok( 'Application::Yawns' );
 BEGIN{ use_ok( 'base' ); }
 require_ok( 'base' );
+BEGIN{ use_ok( 'Cache::Memcached' ); }
+require_ok( 'Cache::Memcached' );
 BEGIN{ use_ok( 'CGI' ); }
 require_ok( 'CGI' );
 BEGIN{ use_ok( 'CGI::Carp' ); }
 require_ok( 'CGI::Carp' );
 BEGIN{ use_ok( 'CGI::Cookie' ); }
 require_ok( 'CGI::Cookie' );
+BEGIN{ use_ok( 'CGI::Fast' ); }
+require_ok( 'CGI::Fast' );
 BEGIN{ use_ok( 'CGI::Session' ); }
 require_ok( 'CGI::Session' );
 BEGIN{ use_ok( 'conf::SiteConfig' ); }
 require_ok( 'conf::SiteConfig' );
+BEGIN{ use_ok( 'constant' ); }
+require_ok( 'constant' );
 BEGIN{ use_ok( 'Data::Dumper' ); }
 require_ok( 'Data::Dumper' );
 BEGIN{ use_ok( 'Date::Format' ); }
@@ -29,8 +39,6 @@ BEGIN{ use_ok( 'Date::Parse' ); }
 require_ok( 'Date::Parse' );
 BEGIN{ use_ok( 'DBI' ); }
 require_ok( 'DBI' );
-BEGIN{ use_ok( 'Digest::MD5' ); }
-require_ok( 'Digest::MD5' );
 BEGIN{ use_ok( 'File::Basename' ); }
 require_ok( 'File::Basename' );
 BEGIN{ use_ok( 'File::Find' ); }
@@ -57,6 +65,16 @@ BEGIN{ use_ok( 'HTML::TokeParser' ); }
 require_ok( 'HTML::TokeParser' );
 BEGIN{ use_ok( 'HTML::TreeBuilder' ); }
 require_ok( 'HTML::TreeBuilder' );
+BEGIN{ use_ok( 'IO::File' ); }
+require_ok( 'IO::File' );
+BEGIN{ use_ok( 'IO::Socket' ); }
+require_ok( 'IO::Socket' );
+BEGIN{ use_ok( 'JSON' ); }
+require_ok( 'JSON' );
+BEGIN{ use_ok( 'Lucy::Simple' ); }
+require_ok( 'Lucy::Simple' );
+BEGIN{ use_ok( 'LWP::Simple' ); }
+require_ok( 'LWP::Simple' );
 BEGIN{ use_ok( 'Mail::Verify' ); }
 require_ok( 'Mail::Verify' );
 BEGIN{ use_ok( 'Pod::Checker' ); }
@@ -73,8 +91,14 @@ BEGIN{ use_ok( 'Singleton::Session' ); }
 require_ok( 'Singleton::Session' );
 BEGIN{ use_ok( 'strict' ); }
 require_ok( 'strict' );
+BEGIN{ use_ok( 'String::Approx' ); }
+require_ok( 'String::Approx' );
 BEGIN{ use_ok( 'Sys::CpuLoad' ); }
 require_ok( 'Sys::CpuLoad' );
+BEGIN{ use_ok( 'TAP::Harness' ); }
+require_ok( 'TAP::Harness' );
+BEGIN{ use_ok( 'Template' ); }
+require_ok( 'Template' );
 BEGIN{ use_ok( 'Test::More' ); }
 require_ok( 'Test::More' );
 BEGIN{ use_ok( 'Text::Diff' ); }
@@ -83,6 +107,8 @@ BEGIN{ use_ok( 'Text::Markdown' ); }
 require_ok( 'Text::Markdown' );
 BEGIN{ use_ok( 'Text::Textile' ); }
 require_ok( 'Text::Textile' );
+BEGIN{ use_ok( 'URI' ); }
+require_ok( 'URI' );
 BEGIN{ use_ok( 'URI::Find' ); }
 require_ok( 'URI::Find' );
 BEGIN{ use_ok( 'utf8' ); }
@@ -101,6 +127,8 @@ BEGIN{ use_ok( 'Yawns::Articles' ); }
 require_ok( 'Yawns::Articles' );
 BEGIN{ use_ok( 'Yawns::Bookmarks' ); }
 require_ok( 'Yawns::Bookmarks' );
+BEGIN{ use_ok( 'Yawns::Cache' ); }
+require_ok( 'Yawns::Cache' );
 BEGIN{ use_ok( 'Yawns::Comment' ); }
 require_ok( 'Yawns::Comment' );
 BEGIN{ use_ok( 'Yawns::Comment::Notifier' ); }
@@ -109,6 +137,8 @@ BEGIN{ use_ok( 'Yawns::Comments' ); }
 require_ok( 'Yawns::Comments' );
 BEGIN{ use_ok( 'Yawns::Date' ); }
 require_ok( 'Yawns::Date' );
+BEGIN{ use_ok( 'Yawns::Event' ); }
+require_ok( 'Yawns::Event' );
 BEGIN{ use_ok( 'Yawns::Formatters' ); }
 require_ok( 'Yawns::Formatters' );
 BEGIN{ use_ok( 'Yawns::Formatters::HTML' ); }
@@ -121,8 +151,6 @@ BEGIN{ use_ok( 'Yawns::Formatters::Textile' ); }
 require_ok( 'Yawns::Formatters::Textile' );
 BEGIN{ use_ok( 'Yawns::Mailer' ); }
 require_ok( 'Yawns::Mailer' );
-BEGIN{ use_ok( 'Yawns::Messages' ); }
-require_ok( 'Yawns::Messages' );
 BEGIN{ use_ok( 'Yawns::Permissions' ); }
 require_ok( 'Yawns::Permissions' );
 BEGIN{ use_ok( 'Yawns::Poll' ); }
@@ -139,8 +167,6 @@ BEGIN{ use_ok( 'Yawns::Sidebar' ); }
 require_ok( 'Yawns::Sidebar' );
 BEGIN{ use_ok( 'Yawns::Stats' ); }
 require_ok( 'Yawns::Stats' );
-BEGIN{ use_ok( 'Yawns::Submission::Notes' ); }
-require_ok( 'Yawns::Submission::Notes' );
 BEGIN{ use_ok( 'Yawns::Submissions' ); }
 require_ok( 'Yawns::Submissions' );
 BEGIN{ use_ok( 'Yawns::Tags' ); }
