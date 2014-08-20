@@ -28,7 +28,6 @@ function modenable
 install perl
 install perl-modules
 install apache2
-install cgi-session-perl
 install cronolog
 install libapache2-mod-fastcgi
 install libapache2-mod-rpaf
