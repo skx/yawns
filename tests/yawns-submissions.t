@@ -16,8 +16,6 @@ require 'tests/user.utils';
 #
 BEGIN { use_ok( 'Yawns::Submissions'); }
 require_ok( 'Yawns::Submissions' );
-BEGIN { use_ok( 'Yawns::Submission::Notes'); }
-require_ok( 'Yawns::Submission::Notes' );
 
 
 
@@ -70,10 +68,6 @@ is( $newCount, $articleCount+1, " After adding an article the count increases" )
 #
 is( $queue->articleCountByUsername(), 1, "After submission the user has an article pending" );
 
-#
-#  The submission should have no notes.
-#
-ok( !defined( $queue->getSubmissionNotes( $added ) ), "The new submission has no notes" );
 
 #
 #  Get the article.
@@ -103,16 +97,6 @@ $queue->updateSubmission( title    => " Updated article title",
 is( $new{'author'}, $username, "The edited submision still has the correct author" );
 is( $new{'title'}, "Updated article title", "The edited submission has the updated title" );
 
-
-#
-#  Add a note to the submission.
-#
-$queue->addSubmissionNote( note => "Note", username => $username, submission => $added );
-
-#
-#  The submission should now have a note defined.
-#
-ok( defined( $queue->getSubmissionNotes( $added ) ), "The new submission has a new note." );
 
 
 #
@@ -190,11 +174,6 @@ is( 0, $queue->articleCountByUsername(), " After deletion the user has no pendin
 
 is( $queue->articleCount(), $articleCount, " After deleting the article submission the count is back to the starting value." );
 
-
-#
-#  A deleted submission has no notes.
-#
-ok( !defined( $queue->getSubmissionNotes( $added ) ), "A deleted submission has no notes." );
 
 
 #
