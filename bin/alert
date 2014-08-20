@@ -1,7 +1,41 @@
 #!/usr/bin/perl
-#
-# Send an alert
-#
+
+=head1 NAME
+
+alert - Send an alert.
+
+=head1 SYNOPSIS
+
+  alert message to send
+
+=cut
+
+=head1 DESCRIPTION
+
+This script is designed to send a message to our alerting system, via
+a single UDP messages.
+
+=cut
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+=cut
+
+=head1 LICENSE
+
+Copyright (c) 2014 by Steve Kemp.  All rights reserved.
+
+This script is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+
+The LICENSE file contains the full text of the license.
+
+=cut
+
 
 use strict;
 use warnings;

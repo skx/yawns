@@ -33,7 +33,7 @@ sub checkFile
 
     # We have some false positives which fail our test but
     # are actually ok.  Skip them.
-    my @false = qw( tests-lib modules.sh user.utils articles search.cgi index.cgi ~ tests/ );
+    my @false = qw( /.git/ tests-lib modules.sh user.utils articles search.cgi index.cgi ~ tests/ );
 
     foreach my $err ( @false )
     {
