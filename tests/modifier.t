@@ -38,9 +38,7 @@ my ($user, $username ) = setupNewUser();
 #
 my $modifier = $user->getModifier();
 ok( defined( $modifier ), "Modifier for new user is found" );
-is( $modifier,
-    "[ <a href=\"/create/message/$username\">Send Message</a> ]",
-    "Modifier matches what we'd expect a new user to have" );
+is( $modifier, "", "Modifier matches what we'd expect a new user to have" );
 
 #
 #  Get the scratchpad object.
