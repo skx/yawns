@@ -62,24 +62,39 @@ sub cgiapp_init
     my $cookie_expiry = '+7d';
     my $sid           = $query->cookie($cookie_name) || undef;
 
-    #
-    # The memcached host is the same as the DBI host.
-    #
-    my $dbserv = conf::SiteConfig::get_conf('dbserv');
-    $dbserv .= ":11211";
+    my $session;
 
     #
-    # Get the memcached handle.
+    #  Are we using memcached?
     #
-    my $mem = Cache::Memcached->new( { servers => [$dbserv],
-                                       debug   => 0
-                                     } );
+    if ( conf::SiteConfig::get_conf( "memcached" ) )
+    {
+        #
+        # The memcached host is the same as the DBI host.
+        #
+        my $dbserv = conf::SiteConfig::get_conf('dbserv');
+        $dbserv .= ":11211";
 
-    # session setup
-    my $session =
-      new CGI::Session( "driver:memcached", $query, { Memcached => $mem } ) or
-      die($CGI::Session::errstr);
+        #
+        # Get the memcached handle.
+        #
+        my $mem = Cache::Memcached->new( { servers => [$dbserv],
+                                           debug   => 0
+                                         } );
 
+        # session setup
+        $session =
+          new CGI::Session( "driver:memcached", $query, { Memcached => $mem } ) or
+            die($CGI::Session::errstr);
+    }
+    else
+    {
+        my $db = Singleton::DBI->instance();
+        $session =
+          new CGI::Session( "driver:MySQL", undef, { Handle => $db } ) or
+            die($CGI::Session::errstr);
+
+    }
 
 
     # assign the session object to a param
