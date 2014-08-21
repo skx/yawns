@@ -1,10 +1,31 @@
 #!/bin/sh
 
+#
+#  If we're installed on a host that doesn't have pound/varnish
+# installed then we should just terminate
+#
+for i in /etc/init.d/pound /etc/init.d/varnish ; do
+    if [ ! -x $ ]; then
+        exit 0
+    fi
+done
+
+
+#
+#  OK if we have the virtual IP then start pound/varnish
+#
 if ( ip -4 addr list | grep ucarp >/dev/null 2>/dev/null ) ; then
     echo "We have the virtual IP"
     /etc/init.d/varnish start
     /etc/init.d/pound start
 else
+    #
+    #  Otherwise make sure they're not running.
+    #
+    #  (Leaving them running just wastes resources, it is not actively
+    # harmful.)
+    #
+    #
     echo "We don't have the virtual IP"
     /etc/init.d/pound stop ; killall -9 pound
     /etc/init.d/varnish stop
