@@ -24,22 +24,6 @@ The code makes use of several classes in the `YAWNS::` namespace to interact
 with these objects and presents the site interface.
 
 
-Caching
--------
-
-As is common in dynamic frameworks the codebase does make a fair number of
-MySQL queries in the generation of pages.  This can mean that if you're running
-with a lot of traffic, or on a single server, you might find performance begins
-to suffer.
-
-In the past there were two layers of caching to deal wih this:
-
-* Memcached caching of SQL queries/results.
-* Static file caching of rendered articles.
-
-This is currently being removed and reworked to allow Varnish to be used instead.
-
-
 Installation
 ------------
 
