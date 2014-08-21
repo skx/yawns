@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -Ilib/ -I../lib/
 
 =head1 NAME
 
@@ -36,10 +36,12 @@ The LICENSE file contains the full text of the license.
 use strict;
 use warnings;
 
-use DBI;
+use File::Path;
+use Singleton::DBI;
 use Lucy::Simple;
 
 
+#
 # Ensure the index directory is both available and empty.
 #
 my $index = "/tmp/index";
@@ -48,7 +50,8 @@ if ( -d $index )
 {
     system( "rm", "-rf", $index );
 }
-system( "mkdir", "-p", $index );
+
+File::Path::make_path( '/tmp/index', { verbose => 0, mode => 0755 } );
 
 
 
@@ -61,9 +64,8 @@ my $lucy = Lucy::Simple->new( path => $index, language => 'en', );
 #
 # Connect to the database
 #
-my $dbi = DBI->connect( "dbi:mysql:yawns\;host=db1.debian-administration.org",
-                        "yawns", "yawns" );
-die "Unable to connect to database" unless ($dbi);
+my $dbi = Singleton::DBI->instance() or
+  die "Unable to connect to database";
 
 #
 # Select the data
