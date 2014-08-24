@@ -111,7 +111,6 @@ if ( ( $HASH1{ 'articles' } ne $HASH2{ 'articles' } ) ||
      ( $HASH1{ 'headlines' } ne $HASH2{ 'headlines' } ) )
 {
     system( "/root/current/bin/alert", "RSS Feeds replaced" );
-    system("/root/current/bin/expire-varnish");
 }
 
 
