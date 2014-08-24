@@ -26,57 +26,54 @@ Installation consists of several steps:
    * Using the interface you can create a new user.
    * Then promote that user via `bin/make-admin`.
 
-The Apache configuration can be copied from the included ~/apache/ file.
+The Apache configuration can be copied from the sample located
+at `etc/apache/`.  There is also a HAProxy configuration file, but that
+shouldn't be required.
 
 
 
 Live Usage
 ----------
 
-The code is deployed upon five hosts:
+The code is deployed upon five hosts which are configured like this:
 
 * da-db1.vm
-    MySQL running for storage.
-    MemCached for caching.
+    MySQL.
+    MemCached.
 
 * da-web1.vm
 * da-web2.vm
 * da-web3.vm
 * da-web4.vm
-    * pound
-    * varnish
     * apache
-    * Each host has a been configured with ucarp so that they can potentially own the master IP.
-
-The master IP runs pound on port 80, which routes traffic to varnish on each host, listening on :8000, which passes traffic to Apache on localhost:8080.
-
-All data is stored in MySQL *except* login sessions.  Login sessions go to memcached, which is on the same host as MySQL for reference.
+    * haproxy
 
 
-This means the hosts run the following services:
+Each of the four web-hosts has been configured with ucarp, such that one
+of the four can claim the master-IP.  The master-IP is the one that is
+published in DNS, and runs HAProxy on :80 + :443.
 
-* db-db1.dh - MySQL, memcache
-* db-web1.dh - ucarp, varnish, pound, apache
-* db-web2.dh - ucarp, varnish, pound, apache
-* db-web3.dh - ucarp, varnish, pound, apache
-* db-web4.dh - ucarp, varnish, pound, apache
+HAProxy is used as a load-balancer/reverse-proxy which will attempt to
+proxy to each of the Apache instances on :8080.
 
-
-Because only one host is the "master" at any given time the actual deployment is more like this:
-
-* db-web1.dh - ucarp, memcache, varnish, pound, apache
-* db-web2.dh - ucarp, apache
-* db-web3.dh - ucarp, apache
-* db-web4.dh - ucarp, apache
-
-The use of ucarp ensures that the site is functional if only a single host is alive.
+This means if a single backend fails, and it is not the master, the
+HAProxy instance will notice and stop sending traffic to it.  If the
+master fails then another will take over and the same will occur.
 
 
 Apache Setup
 ------------
 
-There are three FastCGI scripts beneath `/cgi-bin/` which should be configured to be
-executable.  These are invoked via the pretty URLs which you can see listed in
-`apache/rewrite.rules.conf`.
+Apache is configured to run on *:8080, handling only the single virtual
+host.  It runs on the high-port because HAProxy presents the front-end,
+and firewalling prevents that high port from being exposed generally.
+
+The Apache server is configured to serve static-content beneath
+`htdocs/` and the CGI scripts that launch the site are located in
+`cgi-bin/`.  The CGI scripts run under FastCGI, for performance, and
+are invokedvia pretty URLs via `mod_rewrite`, which is configured
+in `etc/apache`.
 
 
+Steve
+--
