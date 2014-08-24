@@ -66,8 +66,9 @@ sub cgiapp_init
     #
     #  Are we using memcached?
     #
-    if ( conf::SiteConfig::get_conf( "memcached" ) )
+    if ( conf::SiteConfig::get_conf("memcached") )
     {
+
         #
         # The memcached host is the same as the DBI host.
         #
@@ -83,15 +84,16 @@ sub cgiapp_init
 
         # session setup
         $session =
-          new CGI::Session( "driver:memcached", $query, { Memcached => $mem } ) or
-            die($CGI::Session::errstr);
+          new CGI::Session( "driver:memcached", $query, { Memcached => $mem } )
+          or
+          die($CGI::Session::errstr);
     }
     else
     {
         my $db = Singleton::DBI->instance();
         $session =
           new CGI::Session( "driver:MySQL", undef, { Handle => $db } ) or
-            die($CGI::Session::errstr);
+          die($CGI::Session::errstr);
 
     }
 
@@ -176,7 +178,7 @@ sub cgiapp_prerun
             my $cur = $self->get_current_runmode();
             if ( $cur !~ /about/i )
             {
-                return ( $self->redirectURL( "/about/secure" ) );
+                return ( $self->redirectURL("/about/secure") );
             }
         }
     }

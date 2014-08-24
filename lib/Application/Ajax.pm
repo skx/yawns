@@ -79,8 +79,9 @@ sub cgiapp_init
         #
         #  Are we using memcached?
         #
-        if ( conf::SiteConfig::get_conf( "memcached" ) )
+        if ( conf::SiteConfig::get_conf("memcached") )
         {
+
             #
             # The memcached host is the same as the DBI host.
             #
@@ -90,21 +91,23 @@ sub cgiapp_init
             #
             # Get the memcached handle.
             #
-            my $mem = Cache::Memcached->new( { servers => [$dbserv],
-                                               debug   => 0
-                                             } );
+            my $mem =
+              Cache::Memcached->new( { servers => [$dbserv],
+                                       debug   => 0
+                                     } );
 
             # session setup
             $session =
-              new CGI::Session( "driver:memcached", $query, { Memcached => $mem } ) or
-                die($CGI::Session::errstr);
+              new CGI::Session( "driver:memcached", $query,
+                                { Memcached => $mem } ) or
+              die($CGI::Session::errstr);
         }
         else
         {
             my $db = Singleton::DBI->instance();
             $session =
               new CGI::Session( "driver:MySQL", undef, { Handle => $db } ) or
-                die($CGI::Session::errstr);
+              die($CGI::Session::errstr);
 
         }
 
