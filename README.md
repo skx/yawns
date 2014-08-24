@@ -2,46 +2,29 @@
 Yet Another Weblog/News System
 ==============================
 
-YAWNS is a simple CMS which was originally writen by Danny.
+YAWNS is a simple CMS which was originally writen by Denny De La Haye.
 
 It was forked from that code by Steve Kemp, and updated considerably
-such that it could be used for [his Debian-Administration website](http://www.debian-administration.org/).
+so that it could be used upon [his Debian-Administration website](http://www.debian-administration.org/).
 
-The code has undergone further work, and is now deployed as a cluster.
-
-This re-development means that there are slightly more assumptions made
-about the operating environment than in the past.  That said it is still
-a bug if this cannot be installed by a perl-aware sysadmin, or developer.
-
-
-Overview
---------
-
-The codebase stores articles, comments, weblogs, polls, and user-details in
+The code stores articles, comments, weblogs, polls, and user-details in
 a simple MySQL database.
-
-The code makes use of several classes in the `YAWNS::` namespace to interact
-with these objects and presents the site interface.
 
 
 Installation
 ------------
 
-Installation is threefold:
+Installation consists of several steps:
 
 * Deploy the database.
+   * Using the dump provided in `sql/`.
 * Deploy the code.
+   * This should just be a matter of using rsync, ftp, or similar.
 * Configure Apache, etc.
-
-The mysql configuration is simple.
-
-The code assumes a Unix user called "yawns" is present - all code will be
-installed beneath that users home-directory, specifically the code
-**must** be installed in ~/current/.  This is because the path used to
-generate RSS feeds, etc, assumes this prefix.
-
-The sample "fabric" script demonstrates how this is done, via the GitHub
-repository.
+   * There are several `mod_rewrite` rules present.
+* Creating your first user.
+   * Using the interface you can create a new user.
+   * Then promote that user via `bin/make-admin`.
 
 The Apache configuration can be copied from the included ~/apache/ file.
 
