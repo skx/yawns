@@ -80,22 +80,6 @@ sub flush
 {
     my ( $class, $msg ) = (@_);
 
-    #
-    #  Flush the cache.
-    #
-    my $cmd = "/root/current/bin/expire-varnish";
-    system("$cmd >/dev/null 2>&1 &");
-
-    #
-    #  Get the default reason why we flushed.
-    #
-    $msg = "Unknown reason!" if ( !defined($msg) );
-
-    #
-    #  Send the alert.
-    #
-    my $obj = Yawns::Event->new();
-    $obj->send("Varnish cache flush: $msg");
 
 }
 
