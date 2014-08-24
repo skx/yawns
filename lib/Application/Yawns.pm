@@ -37,7 +37,6 @@ use HTML::AddNoFollow;
 use Yawns::About;
 use Yawns::Comment;
 use Yawns::Articles;
-use Yawns::Cache;
 use Yawns::Event;
 use Yawns::Formatters;
 use Yawns::Sidebar;
@@ -2248,11 +2247,6 @@ sub edit_scratchpad
 
         $saved = 1;
 
-        #
-        #  Flush the cache.
-        #
-        my $c = Yawns::Cache->new();
-        $c->flush("Edit scratchpad for user $edituser");
     }
 
 
@@ -2538,11 +2532,6 @@ sub delete_bookmark
     my $bookmarks = Yawns::Bookmarks->new( username => $username );
     $bookmarks->remove( id => $id );
 
-    #
-    # Update the cache
-    #
-    my $c = Yawns::Cache->new();
-    $c->flush("Bookmark deleted by user $username");
 
     return ( $self->redirectURL("/users/$username/bookmarks") );
 }
@@ -3059,9 +3048,6 @@ sub create_advert
                             display  => 5000,
                           );
 
-        my $c = Yawns::Cache->new();
-        $c->flush("New advert submitted by user $username");
-
     }
 
     # open the html template
@@ -3363,12 +3349,6 @@ sub edit_user
                          bio       => $form->param('bio') );
             $saved = 1;
 
-            #
-            #  Mark a cache flush
-            #
-            my $c = Yawns::Cache->new();
-            $c->flush("Edit user $edituser");
-
         }
 
 
@@ -3445,12 +3425,6 @@ sub submission_reject
         $queue->rejectArticle($id);
 
 
-        #
-        #  Flush the cache
-        #
-        my $c = Yawns::Cache->new();
-        $c->flush("Submission rejected.");
-
         return (
                  $self->permission_denied( submission_rejected => 1,
                                            title => "Submission Rejected"
@@ -3501,12 +3475,6 @@ sub submission_post
         my $id    = $form->param('id');
         my $queue = Yawns::Submissions->new();
         $queue->postArticle($id);
-
-        #
-        #  Flush the cache
-        #
-        my $c = Yawns::Cache->new();
-        $c->flush("New article posted");
 
         return (
                  $self->permission_denied( submission_posted => 1,
@@ -3627,11 +3595,6 @@ sub submission_edit
                           title => "Submission Updated"
                         );
 
-        #
-        #  Flush the cache
-        #
-        my $c = Yawns::Cache->new();
-        $c->flush("Submission edited.");
     }
     else
     {
@@ -4305,9 +4268,6 @@ sub poll_vote
                     username   => $username
                   );
 
-        my $c = Yawns::Cache->new();
-        $c->flush("Poll voted upon.");
-
         #
         # Show the result.
         #
@@ -4420,9 +4380,6 @@ sub poll_post
     $submisssions->postPoll($id);
 
 
-    my $c = Yawns::Cache->new();
-    $c->flush("Pending poll promoted to live status.");
-
     #
     #  Redirect to the homepage
     #
@@ -4477,9 +4434,6 @@ sub poll_reject
     #
     my $submisssions = Yawns::Submissions->new();
     $submisssions->rejectPoll($id);
-
-    my $c = Yawns::Cache->new();
-    $c->flush("Pending poll deleted.");
 
     #
     #  Redirect to the homepage
@@ -4571,9 +4525,6 @@ sub poll_edit
                           poll_id => $id,
                           title   => "Poll Updated"
                         );
-
-        my $c = Yawns::Cache->new();
-        $c->flush("Pending poll edited.");
 
     }
     else
@@ -4748,9 +4699,6 @@ sub submit_poll
                                    ip       => $ip,
                                    question => $question,
                                  );
-
-            my $c = Yawns::Cache->new();
-            $c->flush("New poll submitted.");
 
         }
     }
@@ -4954,9 +4902,6 @@ sub edit_prefs
                 }
             }
 
-            my $c = Yawns::Cache->new();
-            $c->flush("Edited user preferences.");
-
             $saved = 1;
         }
     }
@@ -5118,8 +5063,6 @@ sub edit_permissions
                           edit    => $edit
                         );
 
-        my $c = Yawns::Cache->new();
-        $c->flush("Edited user permissions.");
     }
     else
     {
@@ -5414,11 +5357,6 @@ sub add_related
         $template->param( title   => "Link added",
                           confirm => 1 );
 
-        #
-        #  Flush the cache.
-        #
-        my $c = Yawns::Cache->new();
-        $c->flush("Related-Link added.");
 
     }
     else
@@ -5477,12 +5415,6 @@ sub delete_related
 
     my $articles = Yawns::Article->new();
     $articles->deleteRelated( $article, $id );
-
-    #
-    #  Flush the cache.
-    #
-    my $c = Yawns::Cache->new();
-    $c->flush("Related-Link removed");
 
     return ( $self->redirectURL("/articles/$article") );
 
@@ -5544,12 +5476,6 @@ sub report_comment
                     );
 
     #
-    #  Flush the cache.
-    #
-    my $c = Yawns::Cache->new();
-    $c->flush("Comment reported");
-
-    #
     # Show a good result.
     #
     return (
@@ -5607,14 +5533,6 @@ sub report_weblog
 
         $session->param( "reported_" . $id, 1 );
     }
-
-
-    #
-    #  Flush the cache.
-    #
-    my $c = Yawns::Cache->new();
-    $c->flush("Blog reported");
-
 
     #
     # Show a good result.
@@ -5788,12 +5706,6 @@ sub add_weblog
                           comments_allowed => $comments_enabled
                         );
 
-            #
-            #  Flush the cache.
-            #
-            my $c = Yawns::Cache->new();
-            $c->flush("Blog post added");
-
         }
     }
 
@@ -5911,12 +5823,6 @@ sub delete_weblog
         $weblog->remove( gid      => $gid,
                          username => $username );
 
-
-        #
-        #  Flush the cache.
-        #
-        my $c = Yawns::Cache->new();
-        $c->flush("Blog post deleted");
 
         #
         #  All done.
@@ -6039,13 +5945,6 @@ sub edit_weblog
             $tag_helper->addTag( weblog => $gid,
                                  tag    => $tag );
         }
-
-
-        #
-        #  Flush the cache.
-        #
-        my $c = Yawns::Cache->new();
-        $c->flush("Blog post updated");
 
 
         $saved = 1;
@@ -6349,12 +6248,6 @@ EOF
                        );
 
 
-        #
-        #  Flush the cache.
-        #
-        my $c = Yawns::Cache->new();
-        $c->flush("Article edited");
-
     }
 
     # open the html template
@@ -6514,11 +6407,6 @@ sub submit_article
                                     author   => $username
                                   );
 
-        #
-        #  Flush the cache
-        #
-        my $c = Yawns::Cache->new();
-        $c->flush("New article submitted");
 
     }
 
@@ -6645,11 +6533,6 @@ sub edit_comment
         $template->param( saved => 1,
                           title => "Comment Saved" );
 
-        #
-        #  Flush the cache.
-        #
-        my $c = Yawns::Cache->new();
-        $c->flush("Comment edited - $link");
     }
     else
     {

@@ -123,8 +123,6 @@ BEGIN{ use_ok( 'Yawns::Articles' ); }
 require_ok( 'Yawns::Articles' );
 BEGIN{ use_ok( 'Yawns::Bookmarks' ); }
 require_ok( 'Yawns::Bookmarks' );
-BEGIN{ use_ok( 'Yawns::Cache' ); }
-require_ok( 'Yawns::Cache' );
 BEGIN{ use_ok( 'Yawns::Comment' ); }
 require_ok( 'Yawns::Comment' );
 BEGIN{ use_ok( 'Yawns::Comment::Notifier' ); }
