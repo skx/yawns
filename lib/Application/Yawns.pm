@@ -6886,14 +6886,15 @@ sub add_comment
         #  If anonymous we use Steve's RPC server to test comment
         # validity.
         #
-        if ( ($anonymous) &&
-             ( get_conf("rpc_comment_test") ) )
-        {
 
+        if ( ($anonymous) && ( get_conf("blogspam_test") ) )
+        {
             my %params;
             $params{ 'comment' } = $submit_body;
             $params{ 'ip' }      = $ENV{ 'REMOTE_ADDR' };
             $params{ 'subject' } = $submit_title;
+            $params{ 'agent' }   = $ENV{ 'HTTP_USER_AGENT' }
+              if ( $ENV{ 'HTTP_USER_AGENT' } );
 
             #
             #  Build up a link to the website we're on.
@@ -6913,35 +6914,52 @@ sub add_comment
             #
             my $drop = 0;
             eval {
-                require RPC::XML;
-                require RPC::XML::Client;
 
                 #
                 #  Host:port to test against
                 #
-                my $host = get_conf("rpc_comment_host");
-                my $port = get_conf("rpc_comment_port");
+                my $url = get_conf("blogspam_url");
 
                 #
                 #  Special options to use, if any.
                 #
-                my $opts = get_conf("rpc_test_options");
+                my $opts = get_conf("blogspam_options");
                 if ($opts)
                 {
                     $params{ 'options' } = $opts;
                 }
 
-                my $client = RPC::XML::Client->new("http://$host:$port");
-                my $req    = RPC::XML::request->new( 'testComment', \%params );
-                my $res    = $client->send_request($req);
-                my $result = $res->value();
 
-                if ( $result =~ /^spam/i )
+                #
+                #  Serialize the parameters
+                #
+                my $json = encode_json( \%params );
+
+                #
+                #  Make the request.
+                #
+                my $req = HTTP::Request->new( 'POST', $url );
+                $req->header( 'Content-Type' => 'application/json' );
+                $req->content($json);
+
+                #
+                #  Send the request.
+                #
+                my $lwp      = LWP::UserAgent->new();
+                my $response = $lwp->request($req);
+
+
+                #
+                # The status code and response
+                #
+                my $code   = $response->code;
+                my $result = $response->decoded_content();
+
+                if ( $result =~ /\"SPAM\"/ )
                 {
                     $drop = 1;
                 }
             };
-
             if ($drop)
             {
                 return ( $self->permission_denied( blogspam => 1 ) );
