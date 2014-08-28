@@ -418,25 +418,6 @@ sub redirectURL
 
 =begin doc
 
-  A filter to allow dynamic page inclusions.
-
-=end doc
-
-=cut
-
-sub mk_include_filter
-{
-    my $page = shift;
-    return sub {
-        my $text_ref = shift;
-        $$text_ref =~ s/###/$page/g;
-    };
-}
-
-
-
-=begin doc
-
   Load a layout and a page snippet with it.
 
 =end doc
@@ -450,9 +431,9 @@ sub load_layout
     #
     #  Make sure the snippet exists.
     #
-    if ( -e "../templates/pages/$page" )
+    if ( -e "../templates/pages/$page.out" )
     {
-        $page = "../templates/pages/$page";
+        $page = "../templates/pages/$page.out";
     }
     else
     {
@@ -460,15 +441,10 @@ sub load_layout
     }
 
     #
-    #  Load our layout.
+    #  Load our template
     #
-    #
-    #  TODO: Parametize:
-    #
-    my $layout = "../templates/layouts/default.template";
-    my $l = HTML::Template->new( filename => $layout,
-                                 %options,
-                                 filter => mk_include_filter($page) );
+    my $l = HTML::Template->new( filename => $page,
+                                 %options, );
 
     #
     #  IPv6 ?
