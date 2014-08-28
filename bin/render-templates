@@ -1,0 +1,111 @@
+#!/usr/bin/perl
+
+=head1 NAME
+
+render-templates - Update our templates
+
+=head1 SYNOPSIS
+
+  render-templates
+
+=cut
+
+=head1 DESCRIPTION
+
+Each of our different run-modes loads a single template for providing the
+output.
+
+For example the process of editing a user involves the use of the
+template called "edit_user.inc".  This template should be inserted into
+the global layout template "default.template".
+
+Unfortunately there is no support for including files with dynamic names
+in the L<HTML::Template> library, so instead we use this script to create
+rendered versions comprising of:
+
+=over 8
+
+=item The global layout
+
+=item The mode-specific template
+
+=back
+
+The end result is that "edit_user.inc.out" will be generated from the
+input "edit_user.inc" + "default.template".
+
+It is this combined template which will be loaded by L<Application::Yawns>
+
+=cut
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+=cut
+
+=head1 LICENSE
+
+Copyright (c) 2014 by Steve Kemp.  All rights reserved.
+
+This script is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+
+The LICENSE file contains the full text of the license.
+
+=cut
+
+
+use strict;
+use warnings;
+
+#
+#  The layout
+#
+my $layout = load_file("templates/layouts/default.template");
+
+foreach my $file ( sort( glob("templates/pages/*.inc") ) )
+{
+    handle_page( $layout, $file );
+}
+
+sub load_file
+{
+    my ($file) = (@_);
+
+    open( my $handle, "<", $file ) or
+      die "Failed to open $file";
+
+    my $content = "";
+    while ( my $line = <$handle> )
+    {
+        $content .= $line;
+    }
+    close($handle);
+
+    return ($content);
+}
+
+
+sub handle_page
+{
+    my ( $layout, $file ) = (@_);
+
+    open( my $hn, ">", $file . ".out" ) or
+      die "failed to open the output file";
+
+    foreach my $line ( split( /[\r\n]/, $layout ) )
+    {
+        if ( $line =~ /###/ )
+        {
+            print $hn load_file($file) . "\n";
+        }
+        else
+        {
+            print $hn $line . "\n";
+        }
+    }
+    close($hn);
+}
