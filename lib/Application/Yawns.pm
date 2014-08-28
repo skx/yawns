@@ -23,7 +23,7 @@ use CGI::Session;
 use Cache::Memcached;
 use Digest::MD5 qw! md5_hex !;
 use HTML::Entities qw! encode_entities !;
-use HTML::Template;
+use HTML::Template::Compiled;
 use JSON;
 use LWP::Simple;
 use Mail::Verify;
@@ -443,7 +443,7 @@ sub load_layout
     #
     #  Load our template
     #
-    my $l = HTML::Template->new( filename => $page,
+    my $l = HTML::Template::Compiled->new( filename => $page,
                                  %options, );
 
     #
