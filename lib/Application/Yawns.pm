@@ -2290,7 +2290,7 @@ sub recent_users
     }
 
     my $form = $self->query();
-    my $count = $form->param('recent_users') || 10;
+    my $count = $form->param('count') || 10;
     if ( $count =~ /([0-9]+)/ )
     {
         $count = $1;
