@@ -1,7 +1,26 @@
 #
-# This is a CGI::Application class which is designed to handle
-# our main site.
+# This is a L<CGI::Application> module which powers the site.
 #
+# The code here is huge because one script contains all the
+# run-modes, except:
+#
+#  * Those related to Ajax requests which are in L<Application::Ajax>
+#
+#  * Those relating to RSS feeds which are in L<Application::Feeds>
+#
+# We should further abstract the code but that has not yet been done
+# due to lack of time.
+#
+# I suspect the following would be natural modules:
+#
+#  * L<Application::Poll> - Poll-related code
+#
+#  * L<Application::Weblog> - Weblog-related code
+#
+#  * L<Application::Admin> - Grab-bag of "privileged" operations.
+#
+# Steve
+# --
 #
 
 
@@ -418,7 +437,7 @@ sub redirectURL
 
 =begin doc
 
-  Load a layout and a page snippet with it.
+Load a page-template, and the layout.
 
 =end doc
 
@@ -646,7 +665,7 @@ sub application_login
     }
 
 
-
+    #
     # If the user isn't submitting a form then show it
     #
     if ( !$q->param("submit") )
