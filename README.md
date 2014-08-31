@@ -52,7 +52,7 @@ Apache Setup
 
 Apache is configured to run on *:8080, handling only the single virtual host.  It runs on the high-port because HAProxy presents the front-end, and firewalling prevents that high port from being exposed generally.
 
-The Apache server is configured to serve static-content beneath `htdocs/` and the CGI scripts that launch the site are located in `cgi-bin/`.  The CGI scripts run under FastCGI, for performance, and are invokedvia pretty URLs via `mod_rewrite`, which is configured in `etc/apache`.
+The Apache server is configured to serve static-content beneath `htdocs/` and the CGI scripts that launch the site are located in `cgi-bin/`.  The CGI scripts run under FastCGI, for performance, and are invoked via pretty URLs via `mod_rewrite`, which is configured in `etc/apache`.
 
 
 Steve
