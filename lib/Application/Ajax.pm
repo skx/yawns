@@ -51,7 +51,11 @@ sub my_error_rm
 
 =begin doc
 
-Setup - Just setup UTF.
+Setup UTF output, and attempt to setup a session.
+
+NOTE:  We're not going to create a session, just follow the same routine
+as in L<Application::Yawns> such that we can determine whether a remote
+user is authenticated/logged-in or anonymous.
 
 =end doc
 
