@@ -15,13 +15,14 @@ Installation
 Installation consists of several steps:
 
 * Deploy the database.
-    * Using the dump provided in `sql/`.
+    * Using the table-structure provided in `sql/`.
 * Deploy the code.
     * This should just be a matter of using rsync, ftp, or similar.
+    * I deploy via [fabric](http://fabfile.py/) and the top-level `fabfile.py` shows how that is done.
 * Configure Apache, etc.
     * There are several `mod_rewrite` rules present in `etc/apache/rewrite.rules.conf`.
 * Creating your first user using your web-browser.
-    * Then promote that user via `bin/make-admin`.
+    * Then promote that user via `bin/make-admin` to gain all site-admin permissions.
 
 The Apache configuration can be copied from the sample located at `etc/apache/`.  There is also a HAProxy configuration file, but that shouldn't be required.
 
@@ -35,7 +36,7 @@ The code is deployed upon five hosts which are configured like this:
 * 1 x DB server
     * Runs MySQL, along with memcached for storing login-sessions.
 * 4 x Web nodes.
-    * Each node runs Apache to serve the application.
+    * Each node runs Apache to serve the application, and static-resources.
     * Each node also runs HAProxy to handle load-balancing and SSL termination.
 
 Each of the four web-hosts has been configured with `ucarp`, such that one of them can claim a floating "master-IP".
@@ -50,10 +51,36 @@ If a single backend fails, and it is not the master, the HAProxy instance will n
 Apache Setup
 ------------
 
-Apache is configured to run on *:8080, handling only the single virtual host.  It runs on the high-port because HAProxy presents the front-end, and firewalling prevents that high port from being exposed generally.
+Apache is configured to run on `*:8080`, handling only the single virtual host.  It runs on the high-port because HAProxy presents the front-end, and firewalling prevents that high port from being exposed generally.
 
-The Apache server is configured to serve static-content beneath `htdocs/` and the CGI scripts that launch the site are located in `cgi-bin/`.  The CGI scripts run under FastCGI, for performance, and are invoked via pretty URLs via `mod_rewrite`, which is configured in `etc/apache`.
+The Apache server is configured to serve static-content from beneath `htdocs/` and the CGI scripts that launch the site are located in `cgi-bin/`.  The CGI scripts run under FastCGI, for performance, and are invoked via pretty URLs via `mod_rewrite`, which is configured in `etc/apache`.
+
+
+
+History
+-------
+
+* Originally written by Denny.
+* Updated by Steve to move code into modules, add test-cases, etc.
+* Deployed on Debian Administration.
+* Deployed on Police State UK.
+* Updated by Steve to use [CGI::Application](http://search.cpan.org/perldoc?CGI%3A%3AApplication) framework.
+
+Over time several things were added/removed, largely reolving around caching, these things still exist as historical artifacts in the repository history, but no longer in the live codebase.
+
+Current status:
+
+* Things are functional, but we've not had a lot of testing in-anger of the new CGI::Application-based codebase.
+
+TODO:
+
+* Overhaul the test-cases some of which are broken.
+* Refactory d-a-specific code:
+    * Such as `Yawns::Events` module.
+* Write decent documentation.
+* Your issue here?
 
 
 Steve
 --
+
