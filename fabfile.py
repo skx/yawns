@@ -5,7 +5,7 @@
 #
 #  There are two real targets:
 #
-#   fab deploy
+#   fab live
 #      Deploy the codebase to the five-node cluster hosted on BigV
 #    at Bytemark.  There are four web-nodes, along with a DB servers,
 #    and one misc machine.
@@ -65,55 +65,55 @@ env.user = 'root'
 
 
 
+#
+#  Our live-target.
+#
 @roles('web')
-def deploy():
+def live():
     """
-    Deploy the application to our four LIVE web-nodes.
+    Deploy our codebase to our LIVE environment.
     """
-
-    #
-    #  Upload the git repository to ~/releases/XXX, and symlink
-    # ~/current to the most recent version.
-    #
-    #  Using a symlink ~/current allows quickish reverts if required.
-    #
-    _upload()
-
-    #
-    #  Place the LIVE configuration file into place.
-    #
-    put( "./lib/conf/SiteConfig.pm.live", "~/current/lib/conf/SiteConfig.pm" )
-
-    #
-    #  These should happen AFTER the configuration file has been uploaded,
-    # as they might require access to the configuration file containing the
-    # database connection details, etc.
-    #
-    _build_feeds()
-    _build_templates()
-
-    #
-    #  Include any cron-jobs we might have.
-    #
-    _build_cron()
-
-    #
-    #  Include the resources for our articles.
-    #
-    _include_resources()
-
-    #
-    # Finally restart Apache
-    #
-    run( "/etc/init.d/apache2 restart", pty=True )
+    deploy( "./lib/conf/SiteConfig.pm.live" )
 
 
-
+#
+#  Our staging-target.
+#
 @roles('beta')
 def beta():
     """
     Deploy our codebase to our two BETA nodes.
     """
+    deploy( "./lib/conf/SiteConfig.pm.beta" )
+
+
+
+
+
+
+#
+# Deploy our application to an environment.
+#
+# The environment here doesn't matter because the hosts involved will be
+# inferred from the callers "roles" decorator.
+#
+# The single parameter required is the name of the configuration file
+# which should be deployed.
+#
+def deploy( config_file ):
+    """
+    Deploy the application to a given environment.
+
+    Once installed upload the specified configuration file.
+    """
+
+    #
+    #  Test the configuration file exists.
+    #
+    if not os.path.isfile(config_file):
+        print "Configuration file not found:", config_file
+        exit(1)
+
 
     #
     #  Upload the git repository to ~/releases/XXX, and symlink
@@ -124,9 +124,9 @@ def beta():
     _upload()
 
     #
-    #  Place the BETA configuration file into place.
+    #  Place the configuration file into place.
     #
-    put( "./lib/conf/SiteConfig.pm.beta", "/root/current/lib/conf/SiteConfig.pm" )
+    put( config_file, "~/current/lib/conf/SiteConfig.pm" )
 
     #
     #  These should happen AFTER the configuration file has been uploaded,
@@ -150,6 +150,8 @@ def beta():
     # Finally restart Apache
     #
     run( "/etc/init.d/apache2 restart", pty=True )
+
+
 
 
 
