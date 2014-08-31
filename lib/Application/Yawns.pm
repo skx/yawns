@@ -444,8 +444,9 @@ sub load_layout
     #  Load our template
     #
     my $l = HTML::Template->new( filename => $page,
-                                 cache => 1,
-                                 %options, );
+                                 cache    => 1,
+                                 %options,
+                               );
 
     #
     #  IPv6 ?
