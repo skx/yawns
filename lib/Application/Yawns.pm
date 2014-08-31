@@ -1099,6 +1099,18 @@ sub article_search
 
     if ($terms)
     {
+        #
+        #  We use L<Lucy::Simple> for the search index.
+        #
+        #  The search index is built using the script "bin/build-search-index"
+        # You will need to add that to cron.
+        #
+        #  liblucy-perl is present in Debian from Jessie onwards.
+        #
+        #  For wheezy see:
+        #
+        #  http://packages.steve.org.uk/lucy/
+        #
         use Lucy::Simple;
 
         my $lucy = Lucy::Simple->new( path     => "/tmp/index",
