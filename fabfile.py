@@ -80,9 +80,9 @@ def deploy():
     _upload()
 
     #
-    #  Place the live configuration file into place.
+    #  Place the LIVE configuration file into place.
     #
-    put( "./lib/conf/SiteConfig.pm", "~/current/lib/conf/SiteConfig.pm" )
+    put( "./lib/conf/SiteConfig.pm.live", "~/current/lib/conf/SiteConfig.pm" )
 
     #
     #  These should happen AFTER the configuration file has been uploaded,
