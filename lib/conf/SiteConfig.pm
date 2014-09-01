@@ -1,8 +1,5 @@
 #!/usr/bin/perl
 
-use strict;
-use warnings;
-
 =head1 NAME
 
 conf::SiteConfig - Configuration file for Yawns.
@@ -53,7 +50,7 @@ sub get_conf
     #
     # number of articles to display on the front page
     #
-    $headlines     = 10;
+    $headlines = 10;
 
     #
     # number of headlines in previous articles sidebox
@@ -118,10 +115,20 @@ sub get_conf
     #
     $sendmail_path = '/usr/lib/sendmail -t';
 
+
     #
-    #  Do we send alerts?
+    #  Do we send events to a central location?
     #
-    $alerts = 1;
+    #  If we do then this will specify the endpoint to submit to, if this
+    # is unset then no events will be sent.
+    #
+    #  NOTE:  The event-server is not contained within Yawns, instead
+    # it must be installed from its own repository:
+    #
+    #    http://git.steve.org.uk/yawns/events
+    #
+    $event_endpoint = "udp://misc.debian-administration.org:4433";
+
 
     #
     #  This is inserted into the top of each output page
@@ -170,7 +177,7 @@ END_OF_META
     #
     #  If enabled specify the HTTP/JSON end-point here
     #
-    $blogspam_url  = "http://test.blogspam.net:9999/";
+    $blogspam_url = "http://test.blogspam.net:9999/";
 
     #
     #  Options to pass to the filtering.
