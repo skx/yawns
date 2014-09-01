@@ -42,3 +42,8 @@ The dashboard may be viewed here:
 * http://misc.debian-administration.org/events/
 
 This behaviour is disabled by setting `alerts = 0` in the configuration file.
+
+You can see the server-side code to this system at the following location:
+
+* http://git.steve.org.uk/yawns/events
+
