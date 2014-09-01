@@ -18,7 +18,7 @@ Installation consists of several steps:
     * Using the table-structure provided in `sql/`.
 * Deploy the code.
     * This should just be a matter of using rsync, FTP, or similar.
-    * I deploy via [fabric](http://fabfile.py/) and the top-level `fabfile.py` shows how that is done.
+    * I deploy via [fabric](http://fabfile.org/) and the top-level `fabfile.py` shows how that is done.
 * Configure Apache, etc.
     * There are several `mod_rewrite` rules present in `etc/apache/rewrite.rules.conf`.
 * Creating your first user using your web-browser.
