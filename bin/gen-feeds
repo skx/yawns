@@ -19,7 +19,7 @@ gen-feeds - Produce new XML + RSS feeds.
 =over 8
 
 =item B<--help>
-Show the scripts help information.
+Show the help information.
 
 =item B<--manual>
 Read the manual.
@@ -32,22 +32,20 @@ Show the version number and exit.
 
 =head1 DESCRIPTION
 
-  This script regenerates the static RSS and XML feeds which are
- served for our recent articles.
+This script regenerates the static RSS and XML feeds which are
+served for our recent articles.
 
-  Other feeds such as "recent comments", "recently reported comments",
- etc, are generated dynamically so they don't get affected by this
- scrpit.
+Other feeds such as "recent comments", "recently reported comments",
+etc, are generated dynamically so they don't get affected by this
+script.
 
 =cut
 
 =head1 AUTHOR
 
- Steve
- --
- http://www.steve.org.uk/
-
- $Id: gen-feeds,v 1.6 2007-02-04 15:59:45 steve Exp $
+Steve
+--
+http://www.steve.org.uk/
 
 =cut
 
@@ -56,6 +54,8 @@ use strict;
 use warnings;
 use Getopt::Long;
 use Pod::Usage;
+
+use Yawns::Event;
 use Yawns::RSS;
 
 
@@ -79,7 +79,7 @@ my ( undef, undef, undef, undef, undef, undef, undef, $home, undef, undef ) =
   getpwnam($login);
 
 #
-#  Get the filenames we output, and get their hashes.
+#  Get the filenames we output, and the current hash of their contents.
 #
 my %HASH1;
 
@@ -94,8 +94,9 @@ $HASH1{ 'atom' }      = hashFile( $home . "/current/htdocs/atom.xml" );
 my $feeds = Yawns::RSS->new();
 $feeds->output();
 
+
 #
-#  Now re-hash the files.
+#  Now re-hash the files - so we can see if the feeds changed.
 #
 my %HASH2;
 
@@ -105,12 +106,26 @@ $HASH2{ 'atom' }      = hashFile( $home . "/current/htdocs/atom.xml" );
 
 
 #
-#  If the hashes differ then we need to flush
+#  If the hashes differ then we should send an alert.
 #
-if ( ( $HASH1{ 'articles' } ne $HASH2{ 'articles' } ) ||
-     ( $HASH1{ 'headlines' } ne $HASH2{ 'headlines' } ) )
+my $alerted = 0;
+
+foreach my $key (qw! articles headlines atom !)
 {
-    system( "/root/current/bin/alert", "RSS Feeds replaced" );
+    if ( ( $HASH1{ $key } ne $HASH2{ $key } ) &&
+         ( $alerted == 0 ) )
+    {
+
+        # get our hostname
+        my $host = `hostname`;
+        chomp($host);
+
+        my $event = Yawns::Event->new();
+        $event->send("RSS Feeds replaced on $host");
+
+        # avoid multiple alerts.
+        $alerted += 1;
+    }
 }
 
 
