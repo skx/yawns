@@ -222,9 +222,13 @@ def _build_templates():
 
 def _build_cron():
     """
-    Build our cronjobs.  We have only one at the moment.
+    Upload our crontab.  We have two jobs:
+
+    1.  Rebuild our RSS feeds every two minutes, if changed.
+
+    2.  Build our search indexes.
     """
-    run( "echo '*/2 * * * * cd current && perl bin/gen-feeds' | crontab -" );
+    run( "cat ~/current/etc/cron/crontab | crontab -" )
 
 
 def _include_resources():
