@@ -523,9 +523,9 @@ sub send_alert
     #
     #  Abort if we're disabled, or have empty text.
     #
-    my $enabled = conf::SiteConfig::get_conf('alerts') || 0;
-    return unless ($enabled);
-    return unless ( $text && length($text) );
+    my $enabled = conf::SiteConfig::get_conf('event_endpoint') || "";
+    return unless ( $enabled && length($enabled) );
+    return unless ( $text    && length($text) );
 
     #
     #  Send it.
@@ -1099,6 +1099,7 @@ sub article_search
 
     if ($terms)
     {
+
         #
         #  We use L<Lucy::Simple> for the search index.
         #

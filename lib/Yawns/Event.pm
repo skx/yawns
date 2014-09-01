@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Yawns::Event - A module for sending event-updates
+Yawns::Event - A module for sending event messages.
 
 =head1 SYNOPSIS
 
@@ -25,7 +25,22 @@ Yawns::Event - A module for sending event-updates
 
 =head1 DESCRIPTION
 
-This module allows event notices to be sent.
+This module allows the sending of arbitrary "events".  Events are nothing more
+than simple text strings which are sent to a central event-service, where they
+may be viewed in chronological order via a simple display.
+
+The intention is that the event-viewer will show "significant" activity from
+the installation of Yawns.
+
+=cut
+
+
+=head2 EVENT SERVER
+
+The event-server is not contained within the Yawns codebase, instead it
+has its own repository:
+
+http://git.steve.org.uk/yawns/events
 
 =cut
 
@@ -50,7 +65,7 @@ use strict;
 use warnings;
 
 use IO::Socket;
-
+use conf::SiteConfig;
 
 
 =head2 new
@@ -80,19 +95,29 @@ sub send
 {
     my ( $class, $msg ) = (@_);
 
-    my $sock = IO::Socket::INET->new(
-                                   Proto    => 'udp',
-                                   PeerPort => 4433,
-                                   PeerAddr => "misc.debian-administration.org",
-      ) or
-      return;
-
-
     #
-    #  Send the computed values
+    #  Get the event-server
     #
-    $sock->send($msg);
+    my $endpoint = get_conf("event_endpoint") || "";
 
+    if ( $endpoint =~ /^(udp|tcp):\/\/([^:]+):?([0-9]+)?$/i )
+    {
+        my $proto = lc($1);
+        my $host  = $2;
+        my $port  = $3 || 4433;
+
+        my $sock = IO::Socket::INET->new( Proto    => $proto,
+                                          PeerPort => $port,
+                                          PeerAddr => $host
+          ) or
+          return;
+
+
+        #
+        #  Send the computed values
+        #
+        $sock->send($msg);
+    }
 }
 
 1;
