@@ -70,16 +70,15 @@ History
 
 Over time several things were added/removed, largely reolving around caching, these things still exist as historical artifacts in the repository history, but no longer in the live codebase.
 
-Current status:
 
-* Things are functional, but we've not had a lot of testing in-anger of the new CGI::Application-based codebase.
+Current status
+--------------
+
+* Things are functional, but we've not had a lot of testing in-anger of the new `CGI::Application`-based codebase.
 
 TODO:
 
-* Overhaul the test-cases some of which are broken.
-* Refactory d-a-specific code:
-    * Such as `Yawns::Events` module.
-* Write decent documentation.
+* Overhaul the test-cases, some of which are broken.
 * Your issue here?
 
 
