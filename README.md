@@ -17,7 +17,7 @@ Installation consists of several steps:
 * Deploy the database.
     * Using the table-structure provided in `sql/`.
 * Deploy the code.
-    * This should just be a matter of using rsync, ftp, or similar.
+    * This should just be a matter of using rsync, FTP, or similar.
     * I deploy via [fabric](http://fabfile.py/) and the top-level `fabfile.py` shows how that is done.
 * Configure Apache, etc.
     * There are several `mod_rewrite` rules present in `etc/apache/rewrite.rules.conf`.
@@ -26,10 +26,11 @@ Installation consists of several steps:
 
 The Apache configuration can be copied from the sample located at `etc/apache/`.  There is also a HAProxy configuration file, but that shouldn't be required.
 
+There are some notes included in the file `NOTES.md` which should also be examined for configuration details.
 
 
-Live Usage
-----------
+Live Deployment
+---------------
 
 The code is deployed upon five hosts which are configured like this:
 
@@ -55,6 +56,7 @@ Apache is configured to run on `*:8080`, handling only the single virtual host. 
 
 The Apache server is configured to serve static-content from beneath `htdocs/` and the CGI scripts that launch the site are located in `cgi-bin/`.  The CGI scripts run under FastCGI, for performance, and are invoked via pretty URLs via `mod_rewrite`, which is configured in `etc/apache`.
 
+If you run things on only a single node then you can drop the idea of using `haproxy` as a reverse-proxy and just configure apache as vhost.  There's nothing else special involved.
 
 
 History
