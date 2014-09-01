@@ -24,7 +24,7 @@ Most notably the MySQL databaase, and session-setup are controlled via this conf
 Search Setup
 ------------
 
-The search index is built using the script "`bin/build-search-index`", which uses the `Lucy::Simple` perl module.   You will need to add that to cron.
+The search index is built using the script "`bin/build-search-index`", which uses the `Lucy::Simple` perl module.
 
 `liblucy-perl` is present in Debian from Jessie onwards, for Wheezy you will need to either install from CPAN, or via my personal [apt-get repository](http://packages.steve.org.uk/lucy/).
 
@@ -79,3 +79,16 @@ If you wish to suspend a user, via the command-line, run:
      $ ./bin/suspend-user --user=taxation --reason="<p>Spammer</p>" [--delete-weblogs]
 
 The `--reason` you give will be visible upon the suspended users' profile page.
+
+
+
+Cron Jobs
+---------
+
+A sample `crontab` file is provided beneath `etc/cron`, and is installed via the `fabfile.py` installation script I use.
+
+In short:
+
+* One job runs often to update the RSS feeds if a new article has been posted.
+    * This is required because the CGI script might promote an article upon a single host, and the others wouldn't know about it.
+* One job runs once per day to update the search index.
