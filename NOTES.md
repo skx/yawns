@@ -47,3 +47,35 @@ You can see the server-side code to this system at the following location:
 
 * http://git.steve.org.uk/yawns/events
 
+
+
+Links
+-----
+
+Useful links, using the live-site as an example:
+
+* Recent members
+    * https://debian-administration.org/recent/users/10
+* Recent comments
+    * https://debian-administration.org/recent/comments
+* Recently reported comments
+    * https://debian-administration.org/recent/reported
+* Recently reported weblog entries
+    * https://debian-administration.org/recent/reported/weblogs
+
+
+
+Comment Reporting
+-----------------
+
+Reporting comments decrements the score associated with that comment by one point.  If a comment hits zero then it will be hidden.
+
+The feed of reporte-comments will show comments, and their scores.  To remove items from the feed:
+
+     $ update comment set score=-1 WHERE score=0;
+
+If you wish to suspend a user, via the command-line, run:
+
+     $ ./bin/suspend-user --user=taxation --reason="<p>Spammer</p>" [--delete-weblogs]
+
+The `--reason` you give will be visible upon the suspended users' profile page.
