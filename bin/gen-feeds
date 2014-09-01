@@ -85,7 +85,6 @@ my %HASH1;
 
 $HASH1{ 'articles' }  = hashFile( $home . "/current/htdocs/articles.rdf" );
 $HASH1{ 'headlines' } = hashFile( $home . "/current/htdocs/headlines.rdf" );
-$HASH1{ 'atom' }      = hashFile( $home . "/current/htdocs/atom.xml" );
 
 
 #
@@ -96,13 +95,12 @@ $feeds->output();
 
 
 #
-#  Now re-hash the files - so we can see if the feeds changed.
+#  Now re-hash the files - so we can see if the feed contents changed.
 #
 my %HASH2;
 
 $HASH2{ 'articles' }  = hashFile( $home . "/current/htdocs/articles.rdf" );
 $HASH2{ 'headlines' } = hashFile( $home . "/current/htdocs/headlines.rdf" );
-$HASH2{ 'atom' }      = hashFile( $home . "/current/htdocs/atom.xml" );
 
 
 #
@@ -110,7 +108,11 @@ $HASH2{ 'atom' }      = hashFile( $home . "/current/htdocs/atom.xml" );
 #
 my $alerted = 0;
 
-foreach my $key (qw! articles headlines atom !)
+#
+#  NOTE: We don't care about atom.xml here, because the timestamps
+# will cause each entry to differ on each run.
+#
+foreach my $key (qw! articles headlines !)
 {
     if ( ( $HASH1{ $key } ne $HASH2{ $key } ) &&
          ( $alerted == 0 ) )
@@ -133,7 +135,7 @@ foreach my $key (qw! articles headlines atom !)
 
 =begin doc
 
-  Parse the arguments specified upon the command line.
+Parse the arguments specified upon the command line.
 
 =end doc
 
@@ -166,6 +168,14 @@ sub parseCommandLineArguments
     }
 }
 
+
+=begin doc
+
+Hash the contents of the named file.
+
+=end doc
+
+=cut
 
 sub hashFile
 {
