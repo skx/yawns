@@ -33,7 +33,7 @@ The search index is built using the script "`bin/build-search-index`", which use
 Events
 ------
 
-Some parts of the code use the `Yawns/Event` module to send "event notices".
+Some parts of the codebase use the `Yawns/Event` module to send "event notices".
 
 In brief there is a server listening for UDP submissions, on a remote host, which will bundle up received messages into a simple dashboard.
 
@@ -41,9 +41,9 @@ The dashboard may be viewed here:
 
 * http://misc.debian-administration.org/events/
 
-This behaviour is disabled by setting `alerts = 0` in the configuration file.
+This behaviour is disabled by commenting out the setting of the `event_endpoint` configuration variable in the `lib/conf/SiteConfig.pm` file.
 
-You can see the server-side code to this system at the following location:
+The server-side code is available at the following location:
 
 * http://git.steve.org.uk/yawns/events
 
