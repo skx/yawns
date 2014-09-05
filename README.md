@@ -1,3 +1,9 @@
+Source Repository:
+    https://github.com/skx/yawns/
+
+Mirror:
+    http://git.steve.org.uk/yawns
+
 
 Yet Another Weblog/News System
 ==============================
@@ -6,7 +12,7 @@ YAWNS is a simple CMS which was originally writen by Denny De La Haye.
 
 It was forked from that code by Steve Kemp, and updated considerably so that it could be used upon [his Debian-Administration website](http://www.debian-administration.org/).
 
-The code stores articles, comments, weblogs, polls, and user-details ina simple MySQL database.
+The code stores articles, comments, weblogs, polls, and user-details ina simple MySQL database, and is setup for easy clustering with no local-state.
 
 
 Installation

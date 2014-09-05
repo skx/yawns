@@ -1,0 +1,70 @@
+==================================================================
+https://keybase.io/skx
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://debian-administration.org
+  * I am skx (https://keybase.io/skx) on keybase.
+  * I have a public key with fingerprint D516 C42B 1D0E 3F85 4CAB  9723 1909 D408 0C62 6242
+
+To claim this, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "fingerprint": "d516c42b1d0e3f854cab97231909d4080c626242",
+            "host": "keybase.io",
+            "key_id": "1909d4080c626242",
+            "uid": "d741259c75b1e809ed2b4945e1d86500",
+            "username": "skx"
+        },
+        "service": {
+            "hostname": "debian-administration.org",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1409904689,
+    "expire_in": 157680000,
+    "prev": "33ca5323b757ddbdd9c817534d00a52d422db1df0b71c504a09d0150237d763c",
+    "seqno": 13,
+    "tag": "signature"
+}
+
+with the aforementioned key, yielding the PGP signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+owGbwMvMwMQoyXmFgycpyYnx9IE/SQwhnAWO1UpJ+SmVSlbVStmpYCotMy89taig
+KDOvRMlKKcXU0CzZxCjJMMUg1TjNwtQkOTHJ0tzI2NDSwDLFxMDCINnMyMzIxEhJ
+RykjvxikA2hMUmJxql5mPlAMyInPTAGKYlFfCpZIMTcxNDK1TDY3TTJMtTCwTE0x
+SjKxNDFNNUyxMDM1MAApLE4tykvMTQWqLs6uUKrVUQIKlGUmp4KcC7IVKpmSmpSZ
+mKebmJKbmZdZXFKUWJKZn6eXX5QONKOgKL8kPzk/B6gso6SkoNgKZExJZQFIX3lq
+UjzUxPikzLwUYAAAdZSlFhUD9StZGQJVJpdkgqwwNDGwtDQwMbOw1FFKrSjILEqN
+zwSpMDU3szAAApA9qWVAI42NkxNNjY2Mk8xNzVNSklJSLJMtDM1NjU1SDAwSTY1S
+TIyMUoBhmmaQZG6YbGpgkggMHQNDUwMjY/MUczPjZCWQHwvz8oFmGwPdmZgO8ntm
+el5iSWlRqlItVyeTDAsDIxMDGysTKBIZuDgFYFF735b/n9ESxwqmQua6gltPo779
+d5I/HWs2wf/3wShtId3Fsq5M3Ye27qvf6jEp1j7+g4dLraLePM/7PJ+tlj28xaTo
+cGtX9tKeV6b//J48NKjc0Kdewv4j2i/KuUx+a8nR2HuCPW8m/pX89+Do/J4p8RvO
+rQ28F6H0IEj69FMv4xfCFq4HuArufk7kq5hZsmFG0T8BJbZPB5q29FSvvJV98uP2
+BcvzpKbPubLt09mOT6evNgVMmqXAPXcT80z5QH5G+5Rdt35Lex55u/aNfGLspJr0
+0tl1Z/bvtbfYb7rwueTLXRPKuZx7Xt9LvblheU7E3SdXjj87MCnh+Fx1mXN/2Da3
+cne5zfcLmmfAUdA2MW5Zd7DgFra1fzN2fZde/PVz6MWDXM9C9nF8k6raO2OuxHqx
+pV+qWSZ4GXNkpapWLZ9x5MyWF4cMJ93tTHB/osgmffT3mw/By3kWBerMy2WMKEk8
+FiZ42mlSjcDk0Isfdn2+9jLq7MyVmXfKZt1kf7ZcLiruzZ4DNbZfHYs+Oh3fWzqh
+slk2JCx6wpM8sx9p+44Yu185tj1swUz+w8828dxRfCnl7DpHeL78shaWyH3fctxe
+K6f7bczdF8OtHb2z5GPEO+6r557sl7/HuXfr+6t6K83PSzrrr2qpiA3l3n5FVjRI
+QSn7gov8whZFqejdOb4sVcdXLlsmXWKteCdy7vsFFhscvh6donzXcGp2FseSI7U3
+AA==
+=uTyK
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/skx
+
+==================================================================

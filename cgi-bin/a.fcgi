@@ -36,7 +36,7 @@ use strict;
 use warnings;
 
 
-use CGI::Fast();
+use CGI::Fast ();
 use Application::Ajax;
 
 
