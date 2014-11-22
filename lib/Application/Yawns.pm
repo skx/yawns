@@ -7227,6 +7227,13 @@ sub new_user
         $new_user_name =~ s/&/\+/g;
         $new_user_email = $form->param('new_user_email');
 
+
+        if ( $new_user_email && ( $new_user_email =~ /^([^+]*)(\+.*)\@(.*)$/ ) )
+        {
+            $new_user_email = $1 . '@' . $3;
+        }
+
+
         if ( $new_user_name =~ /^([0-9a-zA-Z_-]+)$/ )
         {
 
@@ -7352,6 +7359,11 @@ sub new_user
                     if ( $ip =~ /^::ffff:(.*)/ )
                     {
                         $ip = $1;
+                    }
+
+                    if ( $new_user_email && ( $new_user_email =~ /^([^+]*)(\+.*)\@(.*)$/ ) )
+                    {
+                        $new_user_email = $1 . '@' . $3;
                     }
 
                     my $user =
