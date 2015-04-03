@@ -7225,7 +7225,10 @@ sub new_user
 
         $new_user_name = $form->param('new_user_name');
         $new_user_name =~ s/&/\+/g;
+        $new_user_name =~ s/^\s+|\s+$//g ;
+
         $new_user_email = $form->param('new_user_email');
+        $new_user_email =~ s/^\s+|\s+$//g ;
 
 
         if ( $new_user_email && ( $new_user_email =~ /^([^+]*)(\+.*)\@(.*)$/ ) )
