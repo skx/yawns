@@ -7300,12 +7300,21 @@ sub new_user
             if ($content)
             {
                 my $j = decode_json($content);
-                if ( $j->{ 'listed' } ne "false" )
+                if ( ( $j ) && ( $j->{'listed'} ) )
                 {
-                    $bad_ip = 1;
+                    my $reeson = $j->{'listed'};
 
-                    $self->send_alert(
-                        "Denied registration - blogspam.net listing of IP $i ");
+                    if ( $reeson =~ /false/i )
+                    {
+                        # nop
+                    }
+                    else
+                    {
+                        $bad_ip = 1;
+
+                        $self->send_alert(
+                        "Denied registration - blogspam.net listing of IP $i <pre>$content</pre>");
+                    }
                 }
             }
 
