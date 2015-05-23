@@ -189,7 +189,7 @@ sub cgiapp_prerun
         #
         #  Test IP
         #
-        my $cur = $ENV{ 'REMOTE_ADDR' };
+        my $cur = $ENV{ 'HTTP_X_FORWARDED_FOR' };
         my $old = $session->param("session_ip");
 
         if ( $cur ne $old )
@@ -470,9 +470,9 @@ sub load_layout
     #
     #  IPv6 ?
     #
-    if ( $ENV{ 'REMOTE_ADDR' } =~ /:/ )
+    if ( $ENV{ 'HTTP_X_FORWARDED_FOR' } =~ /:/ )
     {
-        $l->param( ipv6 => 1 ) unless ( $ENV{ 'REMOTE_ADDR' } =~ /^::ffff:/ );
+        $l->param( ipv6 => 1 ) unless ( $ENV{ 'HTTP_X_FORWARDED_FOR' } =~ /^::ffff:/ );
     }
 
     #
@@ -740,7 +740,7 @@ sub application_login
         my $link = $protocol . $ENV{ "SERVER_NAME" } . "/users/$logged_in";
         $self->send_alert(
                  "Successful login for <a href=\"$link\">$logged_in</a> from " .
-                   $ENV{ 'REMOTE_ADDR' } );
+                   $ENV{ 'HTTP_X_FORWARDED_FOR' } );
 
 
         #
@@ -756,7 +756,7 @@ sub application_login
         #
         if ( defined($secure) && ($secure) )
         {
-            $session->param( "session_ip", $ENV{ 'REMOTE_ADDR' } );
+            $session->param( "session_ip", $ENV{ 'HTTP_X_FORWARDED_FOR' } );
         }
         else
         {
@@ -801,7 +801,7 @@ sub application_login
 
         $lname = "_unknown_" if ( !defined($lname) );
         $self->send_alert(
-                      "Failed login for $lname from " . $ENV{ 'REMOTE_ADDR' } );
+                      "Failed login for $lname from " . $ENV{ 'HTTP_X_FORWARDED_FOR' } );
 
         #
         # Login failed:  Invalid username or wrong password.
@@ -830,7 +830,7 @@ sub application_logout
 
     my $user = $session->param("logged_in") || "Anonymous";
     $self->send_alert(
-                  "Successful logout for $user from " . $ENV{ 'REMOTE_ADDR' } );
+                  "Successful logout for $user from " . $ENV{ 'HTTP_X_FORWARDED_FOR' } );
 
     #
     #  Clear the session
@@ -4275,7 +4275,7 @@ sub poll_vote
 
 
         my ( $anon_voted, $prev_vote, $new_vote ) =
-          $p->vote( ip_address => $ENV{ 'REMOTE_ADDR' },
+          $p->vote( ip_address => $ENV{ 'HTTP_X_FORWARDED_FOR' },
                     choice     => $poll_answer,
                     username   => $username
                   );
@@ -4681,7 +4681,7 @@ sub submit_poll
 
         # and the username + ip
         $author = $username;
-        my $ip = $ENV{ 'REMOTE_ADDR' };
+        my $ip = $ENV{ 'HTTP_X_FORWARDED_FOR' };
 
         my $count = 1;
         my @answers;
@@ -5210,7 +5210,7 @@ sub reset_password
                               from       => $sender,
                               username   => $username,
                               sitename   => $sitename,
-                              ip_address => $ENV{ "REMOTE_ADDR" },
+                              ip_address => $ENV{ "HTTP_X_FORWARDED_FOR" },
                               magic      => $magic,
                             );
 
@@ -6415,7 +6415,7 @@ sub submit_article
         $submission_id =
           $submissions->addArticle( title    => $submit_title,
                                     bodytext => $submit_body,
-                                    ip       => $ENV{ 'REMOTE_ADDR' },
+                                    ip       => $ENV{ 'HTTP_X_FORWARDED_FOR' },
                                     author   => $username
                                   );
 
@@ -6780,7 +6780,7 @@ sub add_comment
     #
     #  And IP address
     #
-    my $ip = $ENV{ 'REMOTE_ADDR' };
+    my $ip = $ENV{ 'HTTP_X_FORWARDED_FOR' };
     if ( defined($ip) && length($ip) )
     {
         if ( $ip =~ /([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)/ )
@@ -6901,7 +6901,7 @@ sub add_comment
         {
             my %params;
             $params{ 'comment' } = $submit_body;
-            $params{ 'ip' }      = $ENV{ 'REMOTE_ADDR' };
+            $params{ 'ip' }      = $ENV{ 'HTTP_X_FORWARDED_FOR' };
             $params{ 'subject' } = $submit_title;
             $params{ 'agent' }   = $ENV{ 'HTTP_USER_AGENT' }
               if ( $ENV{ 'HTTP_USER_AGENT' } );
@@ -7263,7 +7263,7 @@ sub new_user
             my $db = Singleton::DBI->instance();
             my $sql = $db->prepare(
                 "SELECT COUNT(username) FROM users WHERE ip=? AND suspended=1");
-            $sql->execute( $ENV{ 'REMOTE_ADDR' } );
+            $sql->execute( $ENV{ 'HTTP_X_FORWARDED_FOR' } );
             $prev_banned = $sql->fetchrow_array();
             $sql->finish();
 
@@ -7278,19 +7278,19 @@ sub new_user
             {
                 $self->send_alert(
                               "Denied registration for '$new_user_name' from " .
-                                $ENV{ 'REMOTE_ADDR' } );
+                                $ENV{ 'HTTP_X_FORWARDED_FOR' } );
             }
             if ($prev_banned)
             {
                 $self->send_alert(
                      "Denied registration for in-use email " . $new_user_email .
-                       " " . $ENV{ 'REMOTE_ADDR' } );
+                       " " . $ENV{ 'HTTP_X_FORWARDED_FOR' } );
             }
 
             #
             #  Test against blogspam.net
             #
-            my $i = $ENV{ 'REMOTE_ADDR' };
+            my $i = $ENV{ 'HTTP_X_FORWARDED_FOR' };
             if ( $i =~ /^::ffff:(.*)/ )
             {
                 $i = $1;
@@ -7367,7 +7367,7 @@ sub new_user
                     $password =
                       join( '', map {( 'a' .. 'z' )[rand 26]} 0 .. 10 );
 
-                    my $ip = $ENV{ 'REMOTE_ADDR' };
+                    my $ip = $ENV{ 'HTTP_X_FORWARDED_FOR' };
                     if ( $ip =~ /^::ffff:(.*)/ )
                     {
                         $ip = $1;

@@ -132,7 +132,7 @@ sub newArticleSubmission
                       author     => $username,
                       title      => $title,
                       article    => $body,
-                      ip_address => $ENV{ "REMOTE_ADDR" } );
+                      ip_address => $ENV{ "HTTP_X_FORWARDED_FOR" } );
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or
       die "Cannot open $sendmail: $!";
@@ -188,7 +188,7 @@ sub newArticleReply
                       title        => $title,
                       article_link => $article_link,
                       home_url     => $home_url,
-                      ip_address   => $ENV{ "REMOTE_ADDR" } );
+                      ip_address   => $ENV{ "HTTP_X_FORWARDED_FOR" } );
 
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or
@@ -246,7 +246,7 @@ sub newWeblogReply
                       title        => $title,
                       comment_link => $comment_link,
                       home_url     => $home_url,
-                      ip_address   => $ENV{ "REMOTE_ADDR" } );
+                      ip_address   => $ENV{ "HTTP_X_FORWARDED_FOR" } );
 
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or
@@ -318,7 +318,7 @@ sub newCommentReply
                       title        => $title,
                       article_link => $article_link,
                       home_url     => $home_url,
-                      ip_address   => $ENV{ "REMOTE_ADDR" } );
+                      ip_address   => $ENV{ "HTTP_X_FORWARDED_FOR" } );
 
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or
