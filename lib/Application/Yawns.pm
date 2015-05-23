@@ -641,6 +641,9 @@ sub debug
         $text .= "\n";
     }
 
+    # show the remote IP
+    $text .= "X-Forwarded-For : " . $ENV{'HTTP_X_FORWARDED_FOR'};
+
     $self->header_add( '-type' => 'text/plain' );
     return ($text);
 }
