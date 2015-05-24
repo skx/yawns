@@ -7392,7 +7392,7 @@ sub new_user
                     $user->create();
 
                     $self->send_alert(
-                        "New user, <a href=\"http://www.debian-administration.org/users/$new_user_name\">$new_user_name</a>, created from IP $ip."
+                        "New user, <a href=\"http://www.debian-administration.org/users/$new_user_name\">$new_user_name</a>, created from IP $remote_ip."
                     );
 
                     $new_user_sent = 1;
