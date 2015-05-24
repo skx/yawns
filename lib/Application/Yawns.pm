@@ -34,6 +34,8 @@ use warnings;
 package Application::Yawns;
 use base 'CGI::Application';
 
+use CGI::Application::Plugin::RemoteIP;
+
 
 #
 # Standard module(s)
@@ -642,7 +644,9 @@ sub debug
     }
 
     # show the remote IP
-    $text .= "X-Forwarded-For : " . $ENV{'HTTP_X_FORWARDED_FOR'};
+    $text .= "X-Forwarded-For : " . $self->remote_ip() . "\n";
+    $text .= "Is_ipv4 " . $self->is_ipv4() . "\n";
+    $text .= "is_ipv6 " . $self->is_ipv6() . "\n";
 
     $self->header_add( '-type' => 'text/plain' );
     return ($text);
