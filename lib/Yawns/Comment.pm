@@ -318,7 +318,7 @@ sub add
     my $title     = $parameters{ 'title' };
     my $username  = $parameters{ 'username' };
     my $oncomment = $parameters{ 'oncomment' };
-    my $ip        = $ENV{ "HTTP_X_FORWARDED_FOR" } || "";
+    my $ip        = $parameters{ 'ip' };
     my $force     = $parameters{ 'force' } || 0;
 
     #

@@ -7023,6 +7023,7 @@ sub add_comment
                                  title     => $submit_title,
                                  username  => $username,
                                  body      => $submit_body,
+                                 ip        => $ENV{ 'HTTP_X_FORWARDED_FOR' },
                                );
 
 
@@ -7036,7 +7037,7 @@ sub add_comment
                                          onpoll    => $onpoll,
                                          onweblog  => $onweblog,
                                          oncomment => $oncomment,
-                                         ip        => $ip,
+                                         ip        => $ENV{ 'HTTP_X_FORWARDED_FOR' },
                                        );
 
         #
