@@ -191,7 +191,7 @@ sub cgiapp_prerun
         #
         #  Test IP
         #
-        my $cur = $ENV{ 'HTTP_X_FORWARDED_FOR' };
+        my $cur = $self->remote_ip();
         my $old = $session->param("session_ip");
 
         if ( $cur ne $old )
@@ -472,10 +472,7 @@ sub load_layout
     #
     #  IPv6 ?
     #
-    if ( $ENV{ 'HTTP_X_FORWARDED_FOR' } =~ /:/ )
-    {
-        $l->param( ipv6 => 1 ) unless ( $ENV{ 'HTTP_X_FORWARDED_FOR' } =~ /^::ffff:/ );
-    }
+    $l->param( ipv6 => 1 ) if ( $self->is_ipv6() );
 
     #
     #  If we're supposed to setup a session token for a FORM element
@@ -740,6 +737,11 @@ sub application_login
                     password => $lpass );
 
     #
+    #  Get the remote IP address.
+    #
+    my $remote_ip = $self->remote_ip();
+
+    #
     #  If it worked
     #
     if ( ($logged_in) and ( !( lc($logged_in) eq lc('Anonymous') ) ) )
@@ -747,7 +749,7 @@ sub application_login
         my $link = $protocol . $ENV{ "SERVER_NAME" } . "/users/$logged_in";
         $self->send_alert(
                  "Successful login for <a href=\"$link\">$logged_in</a> from " .
-                   $ENV{ 'HTTP_X_FORWARDED_FOR' } );
+                   $remote_ip );
 
 
         #
@@ -763,7 +765,7 @@ sub application_login
         #
         if ( defined($secure) && ($secure) )
         {
-            $session->param( "session_ip", $ENV{ 'HTTP_X_FORWARDED_FOR' } );
+            $session->param( "session_ip", $remote_ip );
         }
         else
         {
@@ -807,8 +809,7 @@ sub application_login
     {
 
         $lname = "_unknown_" if ( !defined($lname) );
-        $self->send_alert(
-                      "Failed login for $lname from " . $ENV{ 'HTTP_X_FORWARDED_FOR' } );
+        $self->send_alert( "Failed login for $lname from " . $remote_ip );
 
         #
         # Login failed:  Invalid username or wrong password.
@@ -835,9 +836,9 @@ sub application_logout
     return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
 
 
+    my $remote_ip = $self->remote_ip();
     my $user = $session->param("logged_in") || "Anonymous";
-    $self->send_alert(
-                  "Successful logout for $user from " . $ENV{ 'HTTP_X_FORWARDED_FOR' } );
+    $self->send_alert( "Successful logout for $user from " . $remote_ip );
 
     #
     #  Clear the session
@@ -4282,7 +4283,7 @@ sub poll_vote
 
 
         my ( $anon_voted, $prev_vote, $new_vote ) =
-          $p->vote( ip_address => $ENV{ 'HTTP_X_FORWARDED_FOR' },
+          $p->vote( ip_address => $self->remote_ip(),
                     choice     => $poll_answer,
                     username   => $username
                   );
@@ -4688,7 +4689,7 @@ sub submit_poll
 
         # and the username + ip
         $author = $username;
-        my $ip = $ENV{ 'HTTP_X_FORWARDED_FOR' };
+        my $ip = $self->remote_ip();
 
         my $count = 1;
         my @answers;
@@ -5217,7 +5218,7 @@ sub reset_password
                               from       => $sender,
                               username   => $username,
                               sitename   => $sitename,
-                              ip_address => $ENV{ "HTTP_X_FORWARDED_FOR" },
+                              ip_address => $self->remote_ip(),
                               magic      => $magic,
                             );
 
@@ -6422,7 +6423,7 @@ sub submit_article
         $submission_id =
           $submissions->addArticle( title    => $submit_title,
                                     bodytext => $submit_body,
-                                    ip       => $ENV{ 'HTTP_X_FORWARDED_FOR' },
+                                    ip       => $self->remote_ip(),
                                     author   => $username
                                   );
 
@@ -6787,7 +6788,7 @@ sub add_comment
     #
     #  And IP address
     #
-    my $ip = $ENV{ 'HTTP_X_FORWARDED_FOR' };
+    my $ip = $self->remote_ip();
     if ( defined($ip) && length($ip) )
     {
         if ( $ip =~ /([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)/ )
@@ -6908,10 +6909,13 @@ sub add_comment
         {
             my %params;
             $params{ 'comment' } = $submit_body;
-            $params{ 'ip' }      = $ENV{ 'HTTP_X_FORWARDED_FOR' };
+            $params{ 'ip' }      = $self->remote_ip();
             $params{ 'subject' } = $submit_title;
+
+            # Add user-agent
             $params{ 'agent' }   = $ENV{ 'HTTP_USER_AGENT' }
               if ( $ENV{ 'HTTP_USER_AGENT' } );
+
 
             #
             #  Build up a link to the website we're on.
@@ -7027,7 +7031,7 @@ sub add_comment
                                  title     => $submit_title,
                                  username  => $username,
                                  body      => $submit_body,
-                                 ip        => $ENV{ 'HTTP_X_FORWARDED_FOR' },
+                                 ip        => $self->remote_ip()
                                );
 
 
@@ -7035,13 +7039,12 @@ sub add_comment
         #
         #  Now handle the notification sending
         #
-        my $ip = $ENV{ 'HTTP_X_FORWARDED_FOR' };
         my $notifier =
           Yawns::Comment::Notifier->new( onarticle => $onarticle,
                                          onpoll    => $onpoll,
                                          onweblog  => $onweblog,
                                          oncomment => $oncomment,
-                                         ip        => $ENV{ 'HTTP_X_FORWARDED_FOR' },
+                                         ip        => self->remote_ip(),
                                        );
 
         #
@@ -7225,6 +7228,9 @@ sub new_user
     my $bad_ip           = 0;
     my $mail_error       = "";
 
+    # Remote IP
+    my $remote_ip = self->remote_ip();
+
 
     if ( $form->param('submit') eq 'Create User' )
     {
@@ -7249,7 +7255,6 @@ sub new_user
 
         if ( $new_user_name =~ /^([0-9a-zA-Z_-]+)$/ )
         {
-
             #
             # Usernames are 1-25 characters long.
             #
@@ -7273,7 +7278,7 @@ sub new_user
             my $db = Singleton::DBI->instance();
             my $sql = $db->prepare(
                 "SELECT COUNT(username) FROM users WHERE ip=? AND suspended=1");
-            $sql->execute( $ENV{ 'HTTP_X_FORWARDED_FOR' } );
+            $sql->execute( $remote_ip );
             $prev_banned = $sql->fetchrow_array();
             $sql->finish();
 
@@ -7288,25 +7293,19 @@ sub new_user
             {
                 $self->send_alert(
                               "Denied registration for '$new_user_name' from " .
-                                $ENV{ 'HTTP_X_FORWARDED_FOR' } );
+                                $remote_ip );
             }
             if ($prev_banned)
             {
                 $self->send_alert(
                      "Denied registration for in-use email " . $new_user_email .
-                       " " . $ENV{ 'HTTP_X_FORWARDED_FOR' } );
+                       " " . $remote_ip );
             }
 
             #
             #  Test against blogspam.net
             #
-            my $i = $ENV{ 'HTTP_X_FORWARDED_FOR' };
-            if ( $i =~ /^::ffff:(.*)/ )
-            {
-                $i = $1;
-            }
-
-            my $content = get("http://test.blogspam.net:9999/lookup/$i");
+            my $content = get("http://test.blogspam.net:9999/lookup/$remote_ip");
             if ($content)
             {
                 my $j = decode_json($content);
@@ -7323,7 +7322,7 @@ sub new_user
                         $bad_ip = 1;
 
                         $self->send_alert(
-                        "Denied registration - blogspam.net listing of IP $i <pre>$content</pre>");
+                        "Denied registration - blogspam.net listing of IP $remote_ip <pre>$content</pre>");
                     }
                 }
             }
@@ -7377,11 +7376,6 @@ sub new_user
                     $password =
                       join( '', map {( 'a' .. 'z' )[rand 26]} 0 .. 10 );
 
-                    my $ip = $ENV{ 'HTTP_X_FORWARDED_FOR' };
-                    if ( $ip =~ /^::ffff:(.*)/ )
-                    {
-                        $ip = $1;
-                    }
 
                     if ( $new_user_email && ( $new_user_email =~ /^([^+]*)(\+.*)\@(.*)$/ ) )
                     {
@@ -7392,7 +7386,7 @@ sub new_user
                       Yawns::User->new( username  => $new_user_name,
                                         email     => $new_user_email,
                                         password  => $password,
-                                        ip        => $ip,
+                                        ip        => $remote_ip,
                                         send_mail => 1
                                       );
                     $user->create();
