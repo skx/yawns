@@ -7044,7 +7044,7 @@ sub add_comment
                                          onpoll    => $onpoll,
                                          onweblog  => $onweblog,
                                          oncomment => $oncomment,
-                                         ip        => self->remote_ip(),
+                                         ip        => $self->remote_ip(),
                                        );
 
         #
@@ -7229,7 +7229,7 @@ sub new_user
     my $mail_error       = "";
 
     # Remote IP
-    my $remote_ip = self->remote_ip();
+    my $remote_ip = $self->remote_ip();
 
 
     if ( $form->param('submit') eq 'Create User' )
