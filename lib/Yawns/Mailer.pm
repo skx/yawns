@@ -209,7 +209,7 @@ sub newArticleReply
 sub newWeblogReply
 {
 
-    my ( $self, $address, $title, $gid, $owner, $entry, $author, $id ) = (@_);
+    my ( $self, $address, $title, $gid, $owner, $entry, $author, $id, $ip ) = (@_);
 
 
     #
@@ -246,7 +246,7 @@ sub newWeblogReply
                       title        => $title,
                       comment_link => $comment_link,
                       home_url     => $home_url,
-                      ip_address   => $ENV{ "HTTP_X_FORWARDED_FOR" } );
+                      ip_address   => $ip );
 
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or
