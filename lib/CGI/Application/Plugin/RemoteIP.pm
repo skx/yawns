@@ -108,10 +108,8 @@ sub remote_ip
             # Get the first/trusted value.
             my $ip = $vals[0];
 
-            # drop IPv6 prefix
+            # drop IPv6 prefix and optional port
             $ip =~ s/^::ffff://gi;
-
-            # Drop a port
             $ip =~ s/:([0-9]+)$//g;
 
             return $ip;
@@ -119,16 +117,42 @@ sub remote_ip
     }
 
     # This should always work.
-    my $ip = $ENV{ 'REMOTE_ADDR' };
+    my $ra = $ENV{ 'REMOTE_ADDR' } || "";
 
-    # drop IPv6 prefix
-    $ip =~ s/^::ffff://gi;
+    if ( length $ra )
+    {
 
-    # Drop a port
-    $ip =~ s/:([0-9]+)$//g;
+        # drop IPv6 prefix and optional port
+        $ra =~ s/^::ffff://gi;
+        $ra =~ s/:([0-9]+)$//g;
 
-    return ($ip);
+        return ($ra);
+    }
 
+    #
+    #  Final attempt
+    #
+    my $ssh = $ENV{ 'SSH_CLIENT' } || "";
+    if ( length $ssh )
+    {
+
+        # Get the first token
+        if ( $ssh =~ /^([^ \t]+)[ \t]/ )
+        {
+            $ssh = $1;
+
+            # drop IPv6 prefix & optional port
+            $ssh =~ s/^::ffff://gi;
+            $ssh =~ s/:([0-9]+)$//g;
+
+            return ($ssh);
+        }
+    }
+
+    #
+    #  All failed
+    #
+    die "Failed to determine remote IP address";
 }
 
 
