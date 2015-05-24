@@ -341,7 +341,7 @@ sub articleReply
     {
         my $mailer = Yawns::Mailer->new();
         $mailer->newArticleReply( $mail, $title, $self->{ 'onarticle' },
-                                  $sender, $id );
+                                  $sender, $id, $self->{'ip'} );
     }
 }
 
@@ -399,7 +399,7 @@ sub commentReply
     {
         my $mailer = Yawns::Mailer->new();
         $mailer->newCommentReply( $mail, $parent_title, $onarticle, $onpoll,
-                                  $onweblog, $sender, $id );
+                                  $onweblog, $sender, $id, $self->{'ip'} );
     }
 }
 
@@ -452,7 +452,8 @@ sub weblogReply
                                  $owner,                   # owner
                                  $weblog->getID(),         # entry
                                  $sender,                  # author
-                                 $id
+                                 $id,
+                                 $self->{'ip'},
                                );     # id
     }
 }

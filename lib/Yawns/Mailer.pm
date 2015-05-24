@@ -105,7 +105,7 @@ sub new
 
 sub newArticleSubmission
 {
-    my ( $self, $recipient, $username, $title, $body ) = (@_);
+    my ( $self, $recipient, $username, $title, $body, $ip ) = (@_);
 
 
     #
@@ -132,7 +132,7 @@ sub newArticleSubmission
                       author     => $username,
                       title      => $title,
                       article    => $body,
-                      ip_address => $ENV{ "HTTP_X_FORWARDED_FOR" } );
+                      ip_address => $ip );
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or
       die "Cannot open $sendmail: $!";
@@ -151,7 +151,7 @@ sub newArticleSubmission
 
 sub newArticleReply
 {
-    my ( $self, $address, $title, $id, $author, $comment ) = (@_);
+    my ( $self, $address, $title, $id, $author, $comment, $ip ) = (@_);
 
     #
     #  Details to include in the mail.
@@ -188,7 +188,7 @@ sub newArticleReply
                       title        => $title,
                       article_link => $article_link,
                       home_url     => $home_url,
-                      ip_address   => $ENV{ "HTTP_X_FORWARDED_FOR" } );
+                      ip_address   => $ip );
 
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or
@@ -267,7 +267,7 @@ sub newWeblogReply
 sub newCommentReply
 {
     my ( $self, $address, $title, $article, $poll, $weblog, $user,
-         $comment_num ) = @_;
+         $comment_num, $ip ) = @_;
 
     my $sitename = get_conf('sitename');
     my $sender   = get_conf('bounce_email');
@@ -318,7 +318,7 @@ sub newCommentReply
                       title        => $title,
                       article_link => $article_link,
                       home_url     => $home_url,
-                      ip_address   => $ENV{ "HTTP_X_FORWARDED_FOR" } );
+                      ip_address   => $ip );
 
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or
@@ -342,7 +342,7 @@ http://www.steve.org.uk/
 
 =head1 LICENSE
 
-Copyright (c) 2005,2006 by Steve Kemp.  All rights reserved.
+Copyright (c) 2005-2015 by Steve Kemp.  All rights reserved.
 
 This module is free software;
 you can redistribute it and/or modify it under

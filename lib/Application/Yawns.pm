@@ -7030,11 +7030,13 @@ sub add_comment
         #
         #  Now handle the notification sending
         #
+        my $ip = $ENV{ 'HTTP_X_FORWARDED_FOR' };
         my $notifier =
           Yawns::Comment::Notifier->new( onarticle => $onarticle,
                                          onpoll    => $onpoll,
                                          onweblog  => $onweblog,
-                                         oncomment => $oncomment
+                                         oncomment => $oncomment,
+                                         ip        => $ip,
                                        );
 
         #

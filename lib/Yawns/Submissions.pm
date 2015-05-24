@@ -571,7 +571,8 @@ sub addArticle
     {
         $class->sendMail( author   => $author,
                           title    => $title,
-                          bodytext => $bodytext
+                          bodytext => $bodytext,
+                          ip       => $ip
                         );
     }
 
@@ -743,6 +744,7 @@ sub sendMail
     my $author = $params{ 'author' };
     my $title  = $params{ 'title' };
     my $body   = $params{ 'bodytext' };
+    my $ip     = $params{ 'ip' };
 
     #
     # Find all the users with the "article_admin" privilege.
@@ -792,7 +794,7 @@ sub sendMail
                 # Send a mail
                 #
                 $mailer->newArticleSubmission( $recipient, $author, $title,
-                                               $body );
+                                               $body , $ip );
             }
             else
             {
