@@ -1,0 +1,48 @@
+#!/usr/bin/perl -w
+#
+# Suspend all users who have a given link in their homeage.
+#
+# Steve
+# --
+
+use strict;
+use warnings;
+
+use DBI;
+
+my $pattern = shift || die "Missing pattern!";
+
+#
+# Connect to the database
+#
+my $dbi = DBI->connect( "dbi:mysql:yawns\;host=db1.debian-administration.org",
+                        "yawns", "yawns" );
+die "Unable to connect to database" unless ($dbi);
+
+
+
+#
+#  Get the stats
+#
+my $sql = $dbi->prepare( "SELECT username,suspended,url FROM users WHERE url != ''" )  or die "Failed to prepare";
+
+
+#
+# Find the current users.
+#
+my ( $user, $suspended, $url );
+$sql->execute() or die "Failed to execute";
+$sql->bind_columns( undef, \$user, \$suspended, \$url );
+while ( $sql->fetch() )
+{
+    next if ( $suspended );
+
+    if ( $url =~ /$pattern/i )
+    {
+        print $user . " " . $url . "\n";
+    }
+}
+$sql->finish();
+
+
+$dbi->disconnect();

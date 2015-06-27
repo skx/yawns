@@ -1,0 +1,40 @@
+#!/usr/bin/perl -w
+#
+# Suspend users who registered from IPs that other spammers used.
+#
+# Steve
+# --
+
+use strict;
+use warnings;
+
+use DBI;
+
+#
+# Connect to the database
+#
+my $dbi = DBI->connect( "dbi:mysql:yawns\;host=db1.debian-administration.org",
+                        "yawns", "yawns" );
+die "Unable to connect to database" unless ($dbi);
+
+my %seen;
+
+#
+# Select the malicious IPs
+#
+my $sql = $dbi->prepare("select username,suspended FROM users where ip IN ( SELECT ip FROM users WHERE suspended=1)" );
+$sql->execute();
+
+#
+# Bind & Fetch results
+#
+my ( $username, $susp );
+$sql->bind_columns( undef, \$username, \$susp );
+while ( $sql->fetch() )
+{
+    print  $username . "\n" if ( ! $susp );
+}
+
+$sql->finish();
+$dbi->disconnect();
+

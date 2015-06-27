@@ -1,0 +1,69 @@
+#!/usr/bin/perl -w
+#
+# Suspend all users of a given domain.
+#
+# Steve
+# --
+
+use strict;
+use warnings;
+
+use DBI;
+
+my $domain = shift || "goood-mail.org";
+
+#
+# Connect to the database
+#
+my $dbi = DBI->connect( "dbi:mysql:yawns\;host=db1.debian-administration.org",
+                        "yawns", "yawns" );
+die "Unable to connect to database" unless ($dbi);
+
+
+
+#
+#  Get the stats
+#
+my $sql = $dbi->prepare( "SELECT username,suspended FROM users WHERE realemail LIKE '%\@$domain'" ) or die "Failed to prepare";
+
+#
+#  Totals
+#
+my %totals;
+$totals{'suspended'} = 0;
+$totals{'valid'} = 0;
+
+#
+# Find the current users.
+# 
+my ( $user, $suspended );
+$sql->execute() or die "Failed to execute";
+$sql->bind_columns( undef, \$user, \$suspended );
+while ( $sql->fetch() )
+{
+    if ( $suspended )
+    {
+        $totals{'suspended'} += 1;
+    }
+    else
+    {
+        $totals{'valid'} += 1;
+    }
+}
+$sql->finish();
+
+print "Domain    : $domain\n";
+print "Suspended : $totals{'suspended'}\n";
+print "Valid     : $totals{'suspended'}\n";
+
+
+#
+# Now suspend them all.
+#
+$sql = $dbi->prepare(
+   "UPDATE users SET suspended=1 WHERE realemail LIKE '%\@$domain' AND suspended=0"
+   ) or die "Failed to prepare 2";
+
+$sql->execute();
+$sql->finish();
+$dbi->disconnect();
