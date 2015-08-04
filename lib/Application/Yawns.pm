@@ -3312,12 +3312,12 @@ sub edit_user
     #
     # Per-form variable
     #
-    my $edituser = $form->param("user");
+    my $edituser = $form->param("edit_user");
 
     #
     # If no username was specified then use the current logged in user.
     #
-    if ( ( !defined($edituser) ) || ( $edituser eq 1 ) )
+    if ( !defined($edituser) || !length($edituser) )
     {
         $edituser = $username;
     }
