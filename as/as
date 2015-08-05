@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# Drop spammers - simple mass-wrapper
+#
+
+cd ~/current/
+
+
+
+#
+#  Drop bad domains
+#
+echo "Dropping bogus mail-domains"
+/root/current/as/drop-domain mail.ru
+/root/current/as/drop-domain yandex.ru
+/root/current/as/drop-domain runbox.com
+/root/current/as/drop-domain wegas.ru
+/root/current/as/drop-domain zohomail.com
+/root/current/as/drop-domain yandex.com
+/root/current/as/drop-domain kuwel.ru
+/root/current/as/drop-domain rambler.ru
+/root/current/as/drop-domain inbox.lv
+/root/current/as/drop-domain theparryscope.com
+/root/current/as/drop-domain nonspam.eu
+/root/current/as/drop-domain trash-mail.com
+/root/current/as/drop-domain mailabconline.com
+/root/current/as/drop-domain big-post.com
+/root/current/as/drop-domain foodslosebellyfat.com
+/root/current/as/drop-domain mailondandan.com
+/root/current/as/drop-domain freemail.hu
+
+#
+#  Drop users who have bogus links in their homepage
+#
+echo "Dropping links from homepages"
+for term in viagra xxx; do
+    for i in $(/root/current/as/drop-links $term | awk '{print $1}' ); do
+        echo "Dropping user $i for term $term"
+        perl -Ilib/ ./bin/suspend-user  --username="$i" --reason="<p>Spammer</p>" --delete-weblogs
+    done
+done
+
+
+#
+#  Now drop duplicates
+#
+for i in $(/root/current/as/duplicates); do
+    echo "Dropping duplicate user - $i"
+    perl -Ilib/ ./bin/suspend-user  --username="$i" --reason="<p>Spammer - Duplicate IP</p>" --delete-weblogs
+done
