@@ -65,6 +65,7 @@ our $VERSION = '0.1';
 =head2 import
 
 Force the C<remote_ip> method into the caller's namespace.
+
 =cut
 
 sub import
