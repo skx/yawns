@@ -7231,6 +7231,9 @@ sub new_user
     # Remote IP
     my $remote_ip = $self->remote_ip();
 
+    # Do we have recaptcha enabled?
+    my $pub = get_conf('rc_pubkey');
+    my $sec = get_conf('rc_secret');
 
     if ( $form->param('submit') eq 'Create User' )
     {
@@ -7245,6 +7248,9 @@ sub new_user
 
         $new_user_email = $form->param('new_user_email');
         $new_user_email =~ s/^\s+|\s+$//g ;
+
+        # captcha response, if enabled
+        my $cap = $form->param('g-recaptcha-response');
 
 
         if ( $new_user_email && ( $new_user_email =~ /^([^+]*)(\+.*)\@(.*)$/ ) )
@@ -7353,6 +7359,44 @@ sub new_user
             }
 
             #
+            #  Test if the user passed the recaptcha test.
+            #
+            my $bad_cap = 0;
+            if ( $rc_secret && $rc_pubkey )
+            {
+                #
+                # Test the recaptcha process.
+                #
+                my $c_url = "https://www.google.com/recaptcha/api/siteverify";
+                $c_url .= "?secret=$sec";
+                $c_url .= "&remoteip=$remote_ip";
+                $c_url .= "&response=$cap";
+
+
+                my $content= get( $c_url );
+
+                if ( ! $content )
+                {
+                    $bad_cap = 1;
+                }
+                else
+                {
+                    # decode JSON
+                    my $out = decode_json( $content );
+                    if ( $out && ( $out->{'success'} =~ /true/i) )
+                    {
+                        # OK!
+                    }
+                    else
+                    {
+                        $bad_cap += 1;
+                    }
+                }
+            }
+
+
+
+            #
             # Test to see if the username already exists.
             #
             if ( ( $invalid_email +
@@ -7360,7 +7404,8 @@ sub new_user
                    $prev_banned +
                    $invalid_username +
                    $blank_email +
-                   $bad_ip
+                   $bad_ip +
+                   $bad_cap
                  ) < 1
                )
             {
@@ -7415,6 +7460,11 @@ sub new_user
 
     # open the html template
     my $template = $self->load_layout( "new_user.inc", session => 1 );
+
+    if ( $pub && $sec ) {
+        $template->param( recaptcha => $pub );
+    }
+
 
     # set the required values
     $template->param( new_user_sent    => $new_user_sent,

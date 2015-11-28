@@ -1,4 +1,6 @@
-<script src="https://www.google.com/recaptcha/api.js"></script>
+<!-- tmpl_if name='recaptcha' -->
+  <script src="https://www.google.com/recaptcha/api.js"></script>
+<!-- /tmpl_if name='recaptcha' -->
 
 <!-- tmpl_unless name='new_user_sent' -->
 <h1>Create a new user account</h1>
@@ -48,7 +50,9 @@
 	<!-- /tmpl_if -->
     </td></tr>
 
-    <tr><td></td><td><div class="g-recaptcha" data-sitekey="6Lck7xETAAAAAJ197ADxS6TUui5wCi-b8wbDU2gr"></div></td></tr>
+<!-- tmpl_if name='recaptcha' -->
+    <tr><td></td><td><div class="g-recaptcha" data-sitekey="<!-- tmpl_var name='recaptcha' escape='html' -->"></div></td></tr>
+<!-- /tmpl_if name='recaptcha' -->
 
     <tr><td></td><td>
         <p><input type="submit" name="submit" value="Create User" /> &nbsp;
