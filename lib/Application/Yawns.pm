@@ -7311,12 +7311,20 @@ sub new_user
             {
                 $self->send_alert(
                               "Denied registration for '$new_user_name' from " .
-                                $remote_ip );
+                                  $remote_ip );
+
+                # Blacklist
+                my $redis = Singleton::Redis->instance();
+                $redis->set( "IP:" . $self->remote_ip(), "1" );
+
             }
-            if ($prev_banned)
+            if ($prev_email)
             {
                 $self->send_alert( "Denied registration for in-use email " .
                                    $new_user_email . " " . $remote_ip );
+                # Blacklist
+                my $redis = Singleton::Redis->instance();
+                $redis->set( "IP:" . $self->remote_ip(), "1" );
             }
 
             #
@@ -7340,8 +7348,13 @@ sub new_user
                         $bad_ip = 1;
 
                         $self->send_alert(
-                            "Denied registration - blogspam.net listing of IP $remote_ip <pre>$content</pre>"
-                        );
+                                          "Denied registration - blogspam.net listing of IP $remote_ip <pre>$content</pre>"
+                                         );
+
+                        # Blacklist
+                        my $redis = Singleton::Redis->instance();
+                        $redis->set( "IP:" . $self->remote_ip(), "1" );
+
                     }
                 }
             }
@@ -7391,6 +7404,9 @@ sub new_user
                 if ( !$content )
                 {
                     $bad_cap = 1;
+
+                    $self->send_alert( "Failed to fetch '$c_url'" );
+
                 }
                 else
                 {
@@ -7403,6 +7419,12 @@ sub new_user
                     else
                     {
                         $bad_cap += 1;
+
+                        $self->send_alert( "Denied access via recaptcha: '$content'" );
+
+                        # Blacklist
+                        my $redis = Singleton::Redis->instance();
+                        $redis->set( "IP:" . $self->remote_ip(), "1" );
                     }
                 }
             }
