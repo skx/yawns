@@ -8,9 +8,7 @@
 	<blockquote>
 	<p>The user <tt><!-- tmpl_var name='viewusername' --></tt> has been suspended from this site.</p>
 	</blockquote>
-	<blockquote>
-	<!-- tmpl_var name='bio' -->
-	</blockquote>
+
 <!-- tmpl_if name="edit_user" -->
 	<p><a href="/edit/user/<!-- tmpl_var name="viewusername" -->">Edit this Suspended User</a>.</p>
 <!-- /tmpl_if -->
