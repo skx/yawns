@@ -7362,7 +7362,7 @@ sub new_user
             #  Test if the user passed the recaptcha test.
             #
             my $bad_cap = 0;
-            if ( $rc_secret && $rc_pubkey )
+            if ( $sec && $pub )
             {
                 #
                 # Test the recaptcha process.
