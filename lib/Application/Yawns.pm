@@ -7413,7 +7413,7 @@ sub new_user
                     {
                         $bad_cap += 1;
 
-                        $self->send_alert( "Denied access via recaptcha: '$content'" );
+                        $self->send_alert( "Denied access via recaptcha: '$content' from IP " . $self->remote() );
 
                         # Blacklist
                         my $redis = Singleton::Redis->instance();
