@@ -1,3 +1,5 @@
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
 <!-- tmpl_unless name='new_user_sent' -->
 <h1>Create a new user account</h1>
 <!-- tmpl_else -->
@@ -45,6 +47,8 @@
 	<p>Sorry, your email address contained errors: <!-- tmpl_var name='mail_error' -->.</p>
 	<!-- /tmpl_if -->
     </td></tr>
+
+    <tr><td></td><td><div class="g-recaptcha" data-sitekey="6Lck7xETAAAAAJ197ADxS6TUui5wCi-b8wbDU2gr"></div></td></tr>
 
     <tr><td></td><td>
         <p><input type="submit" name="submit" value="Create User" /> &nbsp;
