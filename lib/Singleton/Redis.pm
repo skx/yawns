@@ -70,7 +70,7 @@ since this object is used as a Singleton.
 
 sub new
 {
-    return ( Redis->new(  server => 'db.vpn.internal' ) );
+    return ( Redis->new(  server => 'db.vpn.internal:6379' ) );
 }
 
 
