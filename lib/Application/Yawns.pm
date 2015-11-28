@@ -206,19 +206,15 @@ sub cgiapp_prerun
         }
     }
 
-}
-
-
-sub cgiapp_postrun
-{
-    my ( $self, $ref ) = (@_);
-
     #  Blacklisted?
     my $redis = Singleton::Redis->instance();
-    if ( $redis->get( "IP:" .. $self->remote_ip() ) )
+    if ( $redis->get( "IP:" . $self->remote_ip() ) )
     {
-        # Tell the user.
-        $$ref = "Blacklisted IP " . $self->remote_ip();
+        my $cur = $self->get_current_runmode();
+        if ( $cur !~ /about/i )
+        {
+            return ( $self->redirectURL("/about/blacklisted") );
+        }
     }
 }
 
