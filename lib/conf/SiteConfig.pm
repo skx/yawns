@@ -193,6 +193,17 @@ END_OF_META
     $stop_words = '';
 
     #
+    # These are used for anti-spam purposes on the signup page.
+    #
+    # Signup here - https://www.google.com/recaptcha/
+    #
+    # You'll need to add the public/private keys
+    #
+    $rc_pubkey = "xxx-xx";
+    $rc_secret = "xxx-yy";
+
+
+    #
     # Return the requested config variable
     #
     return ($$requested);
@@ -220,4 +231,3 @@ the same terms as Perl itself.
 The LICENSE file contains the full text of the license.
 
 =cut
-
