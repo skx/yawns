@@ -760,10 +760,24 @@ sub application_login
     if ( ($logged_in) and ( !( lc($logged_in) eq lc('Anonymous') ) ) )
     {
         my $link = $protocol . $ENV{ "SERVER_NAME" } . "/users/$logged_in";
-        $self->send_alert(
-                 "Successful login for <a href=\"$link\">$logged_in</a> from " .
-                   $remote_ip );
 
+        if( $suspended ) {
+
+            # Record the suspended login.
+            $self->send_alert(
+                              "Login from suspended user <a href=\"$link\">$logged_in</a> at " .
+                              $remote_ip );
+
+            # ban.
+            my $redis = Singleton::Redis->instance();
+            $redis->set( "IP:" . $remote_ip, "1" );
+
+        }
+        else {
+            $self->send_alert(
+                              "Successful login for <a href=\"$link\">$logged_in</a> from " .
+                              $remote_ip );
+        }
 
         #
         #  Setup the session variables.
