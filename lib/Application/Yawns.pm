@@ -150,23 +150,6 @@ sub cgiapp_prerun
 
     my $session = $self->param("session");
 
-    if ( $session && $session->param("suspended") )
-    {
-
-        #
-        #  Get the current run-mode, we want to allow
-        # access to /logout/
-        #
-        my $cur = $self->get_current_runmode();
-        if ( $cur !~ /logout$/i )
-        {
-            my $query = $self->query();
-            $query->param( "about", "suspended" );
-            $self->prerun_mode('about');
-            return;
-        }
-    }
-
     if ( $session && $session->param("ssl") )
     {
 
@@ -784,7 +767,6 @@ sub application_login
         #
         $session->param( "logged_in",    $logged_in );
         $session->param( "failed_login", undef );
-        $session->param( "suspended",    $suspended ) if $suspended;
 
         #
         #  If the user wanted a secure login bind their cookie to the
@@ -872,9 +854,6 @@ sub application_logout
     #
     $session->param( 'logged_in', undef );
     $session->clear('logged_in');
-
-    $session->param( 'suspended', undef );
-    $session->clear('suspended');
 
     $self->param( 'session', undef );
     $session->flush();
