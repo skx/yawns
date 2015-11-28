@@ -100,7 +100,8 @@ sub cgiapp_init
         #
         # Get the memcached handle.
         #
-        my $mem = Cache::Memcached->new( { servers => [$dbserv],
+        my $mem = Cache::Memcached->new(
+                                         { servers => [$dbserv],
                                            debug   => 0
                                          } );
 
@@ -205,15 +206,20 @@ sub cgiapp_prerun
         }
     }
 
-    #
+}
+
+
+sub cgiapp_postrun
+{
+    my ( $self, $ref ) = (@_);
+
     #  Blacklisted?
-    #
     my $redis = Singleton::Redis->instance();
     if ( $redis->get( "IP:" .. $self->remote_ip() ) )
     {
-        return ( $self->redirectURL("/about/banned") );
+        # Tell the user.
+        $$ref = "Blacklisted IP " . $self->remote_ip();
     }
-
 }
 
 
@@ -697,8 +703,8 @@ sub application_login
             $template->param( http => 1 );
 
             # Secure link
-            $template->param( secure => "https://" . $ENV{ 'SERVER_NAME' } .
-                                $ENV{ 'REQUEST_URI' },
+            $template->param( secure => "https://" .
+                                $ENV{ 'SERVER_NAME' } . $ENV{ 'REQUEST_URI' },
                               title => "Advanced Login Options"
                             );
         }
@@ -1079,7 +1085,7 @@ sub tag_search
 
     # Error?
     if ( ( !$articles ) &&
-         ( !$polls ) &&
+         ( !$polls )       &&
          ( !$submissions ) &&
          ( !$weblogs ) )
     {
@@ -1886,7 +1892,7 @@ sub single_weblog
         $body = @$entries[0]->{ 'bodytext' };
 
         if ( defined($weblog_owner) &&
-             length($weblog_owner) &&
+             length($weblog_owner)  &&
              defined($weblog_title) &&
              length($weblog_title) )
         {
@@ -6333,7 +6339,7 @@ sub submit_article
     my $new     = 0;
     my $preview = 0;
     my $confirm = 0;
-    $anon = 1 if ( $username =~ /^anonymous$/i );
+    $anon    = 1 if ( $username =~ /^anonymous$/i );
     $new     = 1 if $submit eq 'new';
     $preview = 1 if $submit eq 'Preview';
     $confirm = 1 if $submit eq 'Confirm';
@@ -6924,7 +6930,7 @@ sub add_comment
             $params{ 'subject' } = $submit_title;
 
             # Add user-agent
-            $params{ 'agent' }   = $ENV{ 'HTTP_USER_AGENT' }
+            $params{ 'agent' } = $ENV{ 'HTTP_USER_AGENT' }
               if ( $ENV{ 'HTTP_USER_AGENT' } );
 
 
@@ -7042,8 +7048,7 @@ sub add_comment
                                  title     => $submit_title,
                                  username  => $username,
                                  body      => $submit_body,
-                                 ip        => $self->remote_ip()
-                               );
+                                 ip        => $self->remote_ip() );
 
 
 
@@ -7255,10 +7260,10 @@ sub new_user
 
         $new_user_name = $form->param('new_user_name');
         $new_user_name =~ s/&/\+/g;
-        $new_user_name =~ s/^\s+|\s+$//g ;
+        $new_user_name =~ s/^\s+|\s+$//g;
 
         $new_user_email = $form->param('new_user_email');
-        $new_user_email =~ s/^\s+|\s+$//g ;
+        $new_user_email =~ s/^\s+|\s+$//g;
 
         # captcha response, if enabled
         my $cap = $form->param('g-recaptcha-response');
@@ -7295,7 +7300,7 @@ sub new_user
             my $db = Singleton::DBI->instance();
             my $sql = $db->prepare(
                 "SELECT COUNT(username) FROM users WHERE ip=? AND suspended=1");
-            $sql->execute( $remote_ip );
+            $sql->execute($remote_ip);
             $prev_banned = $sql->fetchrow_array();
             $sql->finish();
 
@@ -7314,21 +7319,21 @@ sub new_user
             }
             if ($prev_banned)
             {
-                $self->send_alert(
-                     "Denied registration for in-use email " . $new_user_email .
-                       " " . $remote_ip );
+                $self->send_alert( "Denied registration for in-use email " .
+                                   $new_user_email . " " . $remote_ip );
             }
 
             #
             #  Test against blogspam.net
             #
-            my $content = get("http://test.blogspam.net:9999/lookup/$remote_ip");
+            my $content =
+              get("http://test.blogspam.net:9999/lookup/$remote_ip");
             if ($content)
             {
                 my $j = decode_json($content);
-                if ( ( $j ) && ( $j->{'listed'} ) )
+                if ( ($j) && ( $j->{ 'listed' } ) )
                 {
-                    my $reeson = $j->{'listed'};
+                    my $reeson = $j->{ 'listed' };
 
                     if ( $reeson =~ /false/i )
                     {
@@ -7339,7 +7344,8 @@ sub new_user
                         $bad_ip = 1;
 
                         $self->send_alert(
-                        "Denied registration - blogspam.net listing of IP $remote_ip <pre>$content</pre>");
+                            "Denied registration - blogspam.net listing of IP $remote_ip <pre>$content</pre>"
+                        );
                     }
                 }
             }
@@ -7384,17 +7390,17 @@ sub new_user
                 $c_url .= "&response=$cap";
 
 
-                my $content= get( $c_url );
+                my $content = get($c_url);
 
-                if ( ! $content )
+                if ( !$content )
                 {
                     $bad_cap = 1;
                 }
                 else
                 {
                     # decode JSON
-                    my $out = decode_json( $content );
-                    if ( $out && ( $out->{'success'} =~ /true/i) )
+                    my $out = decode_json($content);
+                    if ( $out && ( $out->{ 'success' } =~ /true/i ) )
                     {
                         # OK!
                     }
@@ -7410,13 +7416,12 @@ sub new_user
             #
             # Test to see if the username already exists.
             #
-            if ( ( $invalid_email +
+            if (
+                 ( $invalid_email +
                    $prev_email +
                    $prev_banned +
                    $invalid_username +
-                   $blank_email +
-                   $bad_ip +
-                   $bad_cap
+                   $blank_email + $bad_ip + $bad_cap
                  ) < 1
                )
             {
@@ -7433,7 +7438,8 @@ sub new_user
                       join( '', map {( 'a' .. 'z' )[rand 26]} 0 .. 10 );
 
 
-                    if ( $new_user_email && ( $new_user_email =~ /^([^+]*)(\+.*)\@(.*)$/ ) )
+                    if ( $new_user_email &&
+                         ( $new_user_email =~ /^([^+]*)(\+.*)\@(.*)$/ ) )
                     {
                         $new_user_email = $1 . '@' . $3;
                     }
@@ -7472,7 +7478,8 @@ sub new_user
     # open the html template
     my $template = $self->load_layout( "new_user.inc", session => 1 );
 
-    if ( $pub && $sec ) {
+    if ( $pub && $sec )
+    {
         $template->param( recaptcha => $pub );
     }
 
