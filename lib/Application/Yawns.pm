@@ -55,6 +55,7 @@ use Text::Diff;
 # Our code
 #
 use HTML::AddNoFollow;
+use Singleton::Redis;
 use Yawns::About;
 use Yawns::Comment;
 use Yawns::Articles;
