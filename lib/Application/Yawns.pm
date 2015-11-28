@@ -203,6 +203,16 @@ sub cgiapp_prerun
             }
         }
     }
+
+    #
+    #  Blacklisted?
+    #
+    my $redis = Singleton::Redis->instance();
+    if ( $redis->get( "IP:" .. $self->remote_ip() ) )
+    {
+        return ( $self->redirectURL("/about/banned") );
+    }
+
 }
 
 
