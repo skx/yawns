@@ -157,11 +157,6 @@ sub new
         recent_users => 1,
 
         #
-        #  Add/delete related links to articles
-        #
-        related_admin => 1,
-
-        #
         #  Avoid the HTML filtering
         #
         raw_html => 1,
