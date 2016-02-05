@@ -133,7 +133,6 @@ src="//pagead2.googlesyndication.com/pagead/show_ads.js">
    <h3>Administrivia</h3>
    <ul>
     <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
-    <li><a href="/create/related/<!-- tmpl_var name="article_id" -->">Add Related Link</a></li>
    </ul>
 <!-- tmpl_else -->
    <!-- tmpl_if name='article_author' -->
@@ -144,14 +143,6 @@ src="//pagead2.googlesyndication.com/pagead/show_ads.js">
    <!-- /tmpl_if -->
 <!-- /tmpl_if -->
 
-  <!-- tmpl_if name="related" -->
-   <h3>Related Links</h3>
-   <ul>
-   <!-- tmpl_loop name="related" -->
-    <li><a href="<!-- tmpl_var name="link" -->"><!-- tmpl_var name="title" --></a> <!-- tmpl_if name="related_admin" -->[ <a href="/delete/related/<!-- tmpl_var name="article" -->/<!-- tmpl_var name="id" -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to delete this link?') );">x</a> ]<!-- /tmpl_if --></li>
-  <!-- /tmpl_loop -->
-   </ul>
-  <!-- /tmpl_if -->
 
 <!-- tmpl_if name='show_poll_archive' -->
  <h3>Poll Archive</h3>
