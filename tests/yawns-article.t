@@ -107,33 +107,6 @@ ok( $title eq "Editted Title", "Editted article has the title we expect '$title'
 
 
 #
-#  See if there are any related items.
-#
-my $related = $article->getRelated();
-is( @$related[0], undef, "The new article has no related links" );
-
-#
-#  Add a related link.
-#
-$article->addRelated( "test title", "http://www.steve.org.uk" );
-
-#
-#  Make sure that worked.
-#
-$related = $article->getRelated();
-ok( defined( $related ), "After adding a related linke it exists" );
-
-my $related_link =  @$related[0]->{"link"};
-is( $related_link, "http://www.steve.org.uk", "Which has the correct link" );
-
-my $related_title =  @$related[0]->{"title"};
-is( $related_title, "test title", "Which has the correct title" );
-
-my $related_article = @$related[0]->{"article"};
-is( $related_article, 0, "and belongs to the correct article" );
-
-
-#
 # Now delete the article
 #
 $article->delete();
@@ -143,12 +116,6 @@ $article->delete();
 #
 is( $user->getArticleCount(), 0, "New user has got no authored articles" );
 
-
-#
-#  Ensure the related links are gone too.
-#
-$related = $article->getRelated();
-is(  @$related[0], undef, "A deleted article has no related links" );
 
 #
 # Get the article title and verify it doesn't exist.
