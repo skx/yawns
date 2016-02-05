@@ -1005,8 +1005,6 @@ sub tag_cloud
     #
     my $tags   = Yawns::Tags->new();
     my $all    = $tags->getAllTags();
-    my $recent = $tags->getRecent();
-
 
     # read in the template file
     my $template = $self->load_layout("tag_view.inc");
@@ -1020,11 +1018,6 @@ sub tag_cloud
     #  Actual Tags
     #
     $template->param( all_tags => $all ) if ($all);
-
-    #
-    #  Recent tags.
-    #
-    $template->param( recent_tags => $recent ) if ($recent);
 
     # generate the output
     return ( $template->output() );
@@ -1050,7 +1043,6 @@ sub tag_search
     #
     my $tags = Yawns::Tags->new();
     my ( $articles, $polls, $submissions, $weblogs ) = $tags->findByTag($tag);
-    my $recent  = $tags->getRecent();
     my $related = $tags->getRelatedTags($tag);
 
 
@@ -1077,10 +1069,6 @@ sub tag_search
         $template->param( empty => 1 );
     }
 
-    #
-    #  Recent tags.
-    #
-    $template->param( recent_tags => $recent ) if ($recent);
     $template->param( title => "Tag search results for: $tag" );
 
     # generate the output

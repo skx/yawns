@@ -143,18 +143,6 @@ src="//pagead2.googlesyndication.com/pagead/show_ads.js">
    <!-- /tmpl_if -->
 <!-- /tmpl_if -->
 
-<!-- tmpl_if name='recent_tags' -->
- <h3>Recent Tags</h3>
-<span id="recent_tags">
-<ul>
-<!-- tmpl_loop name='recent_tags' -->
-<li><a href="/tag/<!-- tmpl_var name='tag' escape='html' -->"><!-- tmpl_var name='tag' escape='html' --></a></li>
-<!-- /tmpl_loop -->
-</ul>
-</span>
-<!-- /tmpl_if -->
-
-
 <!-- tmpl_if name='recent_tips' -->
 <p>&nbsp;</p>
 <div id="tipbox">

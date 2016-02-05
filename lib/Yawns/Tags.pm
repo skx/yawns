@@ -556,61 +556,6 @@ sub getAllTagsByType
 
 
 
-=head2 getRecent
-
-  Return a hash of all the tags added recently.
-
-  This includes those added to articles, polls, submissions, and weblog
- entries.
-
-=cut
-
-sub getRecent
-{
-    my ( $class, $count ) = (@_);
-
-    #
-    #  No explicit count?
-    #
-    $count = 10 if ( !defined($count) );
-
-    my $tags;
-
-    #
-    # Get the database handle.
-    #
-    my $db = Singleton::DBI->instance();
-
-    #
-    # Now the tags - don't fetch 's'ubmission tags..
-    #
-    my $sql = $db->prepare(
-        "SELECT DISTINCT(tag) FROM tags WHERE type !='s' ORDER BY id DESC LIMIT 0,$count"
-    );
-    $sql->execute() or die $db->errstr();
-
-    my ($tag);
-    $sql->bind_columns( \$tag );
-
-    #
-    # Process the results.
-    #
-    while ( $sql->fetch() )
-    {
-
-        #
-        #  Now we can add the tag to our results hash.
-        #
-        push( @$tags, { tag => $tag, } );
-
-    }
-    $sql->finish();
-
-    return ($tags);
-}
-
-
-
 =head2 getTagTypes
 
   Return the type of tags which are in use upon the site.
@@ -822,7 +767,7 @@ sub getRelatedTags
 
 =head2 invalidateCache
 
-  Invalidate the cache of recent weblogs.
+Invalidate our cache.
 
 =cut
 

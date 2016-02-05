@@ -114,13 +114,6 @@ my $tag_name =  @$set[0]->{"tag"};
 is( $tag_name, $new_tag, "The new tag is correct" );
 
 #
-#  Now get the recent tags.
-#
-my $recent   = $tags->getRecent( 10 );
-$tag_name =  @$recent[0]->{"tag"};
-is( $tag_name, $new_tag, "The most recent tag is correct" );
-
-#
 # Now delete the article
 #
 $article->delete();
@@ -139,13 +132,3 @@ $newArticleTagCount = 0;
 $newArticleTagCount = scalar(@$articleTags) if defined( $articleTags );
 
 is( $articleTagCount, $newArticleTagCount, "And the count of article tags is back to normal" );
-
-#
-#  Now get the recent tags to make sure our new tag is no more.
-#
-$recent   = $tags->getRecent( 10 );
-if ( defined( $recent ) )
-{
-    $tag_name =  @$recent[0]->{"tag"};
-    ok( $tag_name ne $new_tag, "The most recent tag is not the one we added" );
-}
