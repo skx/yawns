@@ -25,6 +25,7 @@ function modenable
 #
 #  Install what we need
 #
+install make
 install perl
 install perl-modules
 install apache2
