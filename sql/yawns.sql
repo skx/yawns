@@ -282,23 +282,6 @@ CREATE TABLE `preferences` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `related`
---
-
-DROP TABLE IF EXISTS `related`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `related` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `article` int(11) NOT NULL DEFAULT '0',
-  `title` varchar(100) DEFAULT NULL,
-  `link` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `article` (`article`)
-) ENGINE=InnoDB AUTO_INCREMENT=1442 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `scratchpads`
 --
 
