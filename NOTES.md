@@ -49,6 +49,17 @@ The server-side code is available at the following location:
 
 
 
+Templates
+---------
+
+The layout of the site is made of pages, inserted into a master
+layout.
+
+The master layout is located at `templates/layouts/default.layout`,
+but to speedup things each page is preprocessed.  This must be done
+post-deployment via `bin/render-templates`.
+
+
 Links
 -----
 
