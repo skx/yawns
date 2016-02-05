@@ -4156,8 +4156,7 @@ sub poll_view
     #
     #  Tag addition URL
     #
-    $template->param( tag_url           => "/ajax/addtag/poll/$poll_id/" );
-    $template->param( show_poll_archive => 1 );
+    $template->param( tag_url  => "/ajax/addtag/poll/$poll_id/" );
 
     if ($error)
     {

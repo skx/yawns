@@ -143,12 +143,6 @@ src="//pagead2.googlesyndication.com/pagead/show_ads.js">
    <!-- /tmpl_if -->
 <!-- /tmpl_if -->
 
-
-<!-- tmpl_if name='show_poll_archive' -->
- <h3>Poll Archive</h3>
-<p><a href="/poll/archive">View Prior Polls</a></p>
-<!-- /tmpl_if -->
-
 <!-- tmpl_if name='recent_tags' -->
  <h3>Recent Tags</h3>
 <span id="recent_tags">
