@@ -39,9 +39,10 @@ sub get_conf
     $dbserv = 'db.vpn.internal';
 
     #
-    # If this is set then we'll use memcached for login-sessions,
+    # We'll use memcached for login-sessions, which is also
+    # on the DB-host.
     #
-    session = memcache://127.0.0.1:11211/
+    session = memcache://db.vpn.internal:11211/
 
 
     #
