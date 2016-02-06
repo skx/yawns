@@ -108,11 +108,8 @@
 		      <td valign="top" width="200" align="center">
 
 
-			<p>&nbsp;</p>
-			<div id="flattr">
-			  <h3>Flattr</h3>
-			  <div style="text-align:center;"><a class="FlattrButton" style="display:none;" href="http://debian-administration.org"></a></div>
-			</div>
+                        <!-- Flattr -->
+			<div style="text-align:center;"><a class="FlattrButton" style="display:none;" href="http://debian-administration.org"></a></div>
 
 
 			<!-- tmpl_if name='show_pending_header' -->
@@ -158,6 +155,20 @@
 			</ul>
 			<!-- /tmpl_if -->
 
+
+                        <!-- tmpl_if name="article_admin" -->
+                        <h3>Administrivia</h3>
+                        <ul>
+                          <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
+                        </ul>
+                        <!-- /tmpl_if -->
+
+                        <!-- tmpl_if name='article_author' -->
+                        <h3>Author Links</h3>
+                        <ul>
+                          <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
+                        </ul>
+                        <!-- /tmpl_if -->
 
 			<!-- tmpl_if name='show_pollbooth' -->
 			<p>&nbsp;</p>
@@ -254,19 +265,6 @@
 
   <!-- /tmpl_if -->
 
-  <!-- tmpl_if name="article_admin" -->
-  <h3>Administrivia</h3>
-  <ul>
-    <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
-  </ul>
-  <!-- tmpl_else -->
-  <!-- tmpl_if name='article_author' -->
-  <h3>Author Links</h3>
-  <ul>
-    <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
-  </ul>
-  <!-- /tmpl_if -->
-  <!-- /tmpl_if -->
 
   <!-- tmpl_if name='recent_tips' -->
   <p>&nbsp;</p>
