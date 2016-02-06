@@ -16,7 +16,6 @@ Yawns::Sidebar - A module for retrieving the user's sidebar
     my $bar   = Yawns::Sidebar->new();
 
     my $menu  = $bar->getMenu();
-    my $login = $bar->getLoginBox();
 
 
 =for example end
@@ -317,74 +316,6 @@ sub getMenu
 
 }
 
-
-
-=head2 getLoginBox
-
-  Return the login box.
-
-=cut
-
-sub getLoginBox
-{
-    my ( $class, $session ) = (@_);
-
-    #
-    #  Settings which control what is displayed upon the sidebar
-    #
-    my $username = $session->param("logged_in") || "Anonymous";
-
-
-    my $logged_in = 0;
-    if ( defined($username) && ( $username ne 'Anonymous' ) )
-    {
-        $logged_in = 1;
-    }
-
-    #
-    # read in the template file
-    #
-    my $login = HTML::Template->new(
-                         filename => "../templates/includes/login-box.template",
-                         global_vars => 1 );
-
-
-    #
-    # Anti-spoof protection
-    #
-    $login->param( session => md5_hex( $session->id() ) );
-
-    #
-    # set the parameters
-    #
-    $login->param( username     => $username,
-                   target       => $ENV{ 'REQUEST_URI' },
-                   logged_in    => $logged_in,
-                 );
-
-
-    #
-    #  If the user is not anonymous then we'll show their adverts, if any.
-    #
-    if ($logged_in)
-    {
-        #
-        #  Adverts
-        #
-        my $adverts = Yawns::Adverts->new();
-        my $ads     = $adverts->advertsByUser($username);
-
-        if ( defined($ads) )
-        {
-            $login->param( show_adverts => 1 );
-        }
-
-    }
-
-
-    # generate the output
-    return ( $login->output );
-}
 
 
 1;

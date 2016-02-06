@@ -468,14 +468,17 @@ sub load_layout
     $l->param( ipv6 => 1 ) if ( $self->is_ipv6() );
 
     #
-    #  If we're supposed to setup a session token for a FORM element
-    # then do so here.
+    #  Is the user logged in?
     #
     my $session = $self->param("session");
-    if ( $options{ 'session' } )
+    my $username = $session->param("logged_in") || "Anonymous";
+    if ( $username !~ /^anonymous$/i )
     {
-        delete $options{ 'session' };
-        $l->param( session => md5_hex( $session->id() ) );
+        # If so set the username
+        $l->param( username => $username, logged_in => 1);
+
+        # Set the session so that logout works
+        $login->param( session => md5_hex( $session->id() ) );
     }
 
     #
@@ -483,18 +486,9 @@ sub load_layout
     #
     my $sidebar = Yawns::Sidebar->new();
     $l->param( sidebar_text   => $sidebar->getMenu($session) );
-    $l->param( login_box_text => $sidebar->getLoginBox($session) );
     $l->param( site_title     => get_conf('site_title') );
     $l->param( metadata       => get_conf('metadata') );
 
-    my $logged_in = 1;
-
-    my $username = $session->param("logged_in") || "Anonymous";
-    if ( $username =~ /^anonymous$/i )
-    {
-        $logged_in = 0;
-    }
-    $l->param( logged_in => $logged_in );
 
     return ($l);
 }
