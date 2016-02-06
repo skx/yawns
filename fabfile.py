@@ -47,8 +47,7 @@ env.roledefs = {
                 'web2.debian-administration.org:2222',
                 'web3.debian-administration.org:2222',
                 'web4.debian-administration.org:2222'],
-        'beta': ["[2a02:1348:17c:9275:24:19ff:fef2:49d6]",
-                 "[2a02:1348:178:8f2b:24:19ff:fee2:3cae]"],
+        'beta': ["46.43.2.187"],
 
         # These hosts are documented, but ignored, in this script.
         'db':  ['db1.debian-administration.org:2222' ],

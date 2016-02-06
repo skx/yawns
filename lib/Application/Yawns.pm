@@ -2004,7 +2004,7 @@ sub single_weblog
             $template->param( reportable => 1 );
         }
     }
-    if ( not defined(@$entries) )
+    if ( not @$entries )
     {
         $error = 1;
 
@@ -2588,7 +2588,7 @@ sub view_bookmarks
     my $poll_bookmarks    = undef;
     my $weblog_bookmarks  = undef;
 
-    if ( defined(@$ref) )
+    if ( $ref && @$ref )
     {
         my @all_bookmarks = @$ref;
         foreach my $row (@all_bookmarks)
