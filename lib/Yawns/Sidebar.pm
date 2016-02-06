@@ -333,7 +333,6 @@ sub getLoginBox
     #  Settings which control what is displayed upon the sidebar
     #
     my $username = $session->param("logged_in") || "Anonymous";
-    my $failed_login = $session->param("failed_login");
 
 
     my $logged_in = 0;
@@ -361,34 +360,14 @@ sub getLoginBox
     $login->param( username     => $username,
                    target       => $ENV{ 'REQUEST_URI' },
                    logged_in    => $logged_in,
-                   failed_login => $failed_login,
                  );
 
 
     #
-    #  If the user is not anonymous then we'll show submissions +
-    # adverts if there are any.
+    #  If the user is not anonymous then we'll show their adverts, if any.
     #
     if ($logged_in)
     {
-
-        #
-        #  Count the number of pending articles the user has
-        #
-        my $submissions = Yawns::Submissions->new( username => $username );
-        my $submit_count = $submissions->articleCountByUsername();
-
-        #
-        #  If there are any pending articles then set them in the cache.
-        #
-        if ( $submit_count > 0 )
-        {
-            my $submitted_articles = $submissions->articlesByUser();
-            $login->param( submitted_articles => $submitted_articles,
-                           show_submissions   => 1 );
-        }
-
-
         #
         #  Adverts
         #

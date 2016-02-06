@@ -2,53 +2,24 @@
 
 <h4><a style="color:black;" href="/users/<!-- tmpl_var name='username' -->"><b><!-- tmpl_var name='username' --></b></a></h4>
 <ul>
-<li><a href="/edit/prefs">options</a></li>
-<!-- tmpl_if name='show_adverts' -->
-<li><a href="/users/<!-- tmpl_var name='username' -->/adverts">adverts</a></li>
-<!-- /tmpl_if -->
-<li><a href="/users/<!-- tmpl_var name='username' -->/weblog">blog</a></li>
-<li><a href="/logout/<!-- tmpl_var name='session' -->">logout</a></li>
+  <li><a href="/edit/prefs">options</a></li>
+  <!-- tmpl_if name='show_adverts' -->
+  <li><a href="/users/<!-- tmpl_var name='username' -->/adverts">adverts</a></li>
+  <!-- /tmpl_if -->
+  <li><a href="/users/<!-- tmpl_var name='username' -->/weblog">blog</a></li>
+  <li><a href="/logout/<!-- tmpl_var name='session' -->">logout</a></li>
 </ul>
-
-<!-- <a href="/edit/user">User information</a> -->
-<!--
-	<!-- tmpl_if name='show_submissions' -->
-	<p>Submissions</p>
-	<ul>
-	<!-- tmpl_loop name='submitted_articles' -->
-	<li><a href="/view/submission/<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a></li>
-	<!-- /tmpl_loop -->
-	</ul>
-	<!-- /tmpl_if -->
--->
-
-
-<!-- tmpl_else -->
-
-
-<!-- tmpl_if name="failed_login" -->
-<h4>Login Failed</h4>
-<ul>
-<li><a href="/password/sendmail">forgotten your password?</a></li>
-<li><a href="/login/">try again?</a></li>
-</ul>
-
 
 <!-- tmpl_else -->
 
 <h4>Sign In</h4>
 <form id="user-login" action="/login" method="post">
-<input type="hidden" name="mode" value="login">
-<input type="hidden" name="target" value="<!-- tmpl_var name="target" escape='html' -->" />
-
-<p><b>Username</b>:<br/> <input id="name" name="lname" type="text" size="14" maxlength="25" /></p>
-<p><b>Password</b>:<br /> <input id="pass" name="lpass" type="password" size="15" maxlength="25" /></p>
-<p><input type="submit" name="submit" value="Login" /> </p>
-<p>[<a href="/create/user/">Register</a>|<a href="/login">Advanced</a>]</p>
-
- <!-- /tmpl_if name='failed_login'-->
-
-            </form>
-
+  <input type="hidden" name="mode" value="login">
+  <input type="hidden" name="target" value="<!-- tmpl_var name="target" escape='html' -->" />
+  <p><b>Username</b>:<br/> <input id="name" name="lname" type="text" size="14" maxlength="25" /></p>
+  <p><b>Password</b>:<br /> <input id="pass" name="lpass" type="password" size="15" maxlength="25" /></p>
+  <p><input type="submit" name="submit" value="Login" /> </p>
+  <p>[<a href="/create/user/">Register</a>|<a href="/login">Advanced</a>]</p>
+</form>
 
 <!-- /tmpl_if -->
