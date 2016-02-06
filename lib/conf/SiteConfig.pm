@@ -42,7 +42,7 @@ sub get_conf
     # We'll use memcached for login-sessions, which is also
     # on the DB-host.
     #
-    session = memcache://db.vpn.internal:11211/
+    $session = "memcache://db.vpn.internal:11211/";
 
 
     #
