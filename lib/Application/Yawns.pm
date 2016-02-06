@@ -584,7 +584,7 @@ sub load_layout
                        poll_comment_count => $poll_comment_count,
                        poll_question      => $poll_question,
                        poll_total_votes   => $poll_total_votes,
-                       poll_answers       => $poll_answers
+                       poll_answers       => $poll_answers,
                        show_pollbooth     => 1,
                      );
 
