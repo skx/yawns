@@ -458,6 +458,7 @@ sub load_layout
     #
     my $l = HTML::Template->new( filename => $page,
                                  cache    => 1,
+                                 die_on_bad_params => 0,
                                  %options,
                                );
 
