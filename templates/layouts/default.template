@@ -94,9 +94,6 @@ $(function() {
 <h4><a style="color:black;" href="/users/<!-- tmpl_var name='username' -->"><b><!-- tmpl_var name='username' --></b></a></h4>
 <ul>
   <li><a href="/edit/prefs">options</a></li>
-  <!-- tmpl_if name='show_adverts' -->
-  <li><a href="/users/<!-- tmpl_var name='username' -->/adverts">adverts</a></li>
-  <!-- /tmpl_if -->
   <li><a href="/users/<!-- tmpl_var name='username' -->/weblog">blog</a></li>
   <li><a href="/logout/<!-- tmpl_var name='session' -->">logout</a></li>
 </ul>
