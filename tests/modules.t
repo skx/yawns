@@ -17,12 +17,8 @@ BEGIN{ use_ok( 'base' ); }
 require_ok( 'base' );
 BEGIN{ use_ok( 'Cache::Memcached' ); }
 require_ok( 'Cache::Memcached' );
-BEGIN{ use_ok( 'CGI' ); }
-require_ok( 'CGI' );
-BEGIN{ use_ok( 'CGI::Carp' ); }
-require_ok( 'CGI::Carp' );
-BEGIN{ use_ok( 'CGI::Cookie' ); }
-require_ok( 'CGI::Cookie' );
+BEGIN{ use_ok( 'CGI::Application::Plugin::RemoteIP' ); }
+require_ok( 'CGI::Application::Plugin::RemoteIP' );
 BEGIN{ use_ok( 'CGI::Fast' ); }
 require_ok( 'CGI::Fast' );
 BEGIN{ use_ok( 'CGI::Session' ); }
@@ -83,14 +79,16 @@ BEGIN{ use_ok( 'Pod::Parser' ); }
 require_ok( 'Pod::Parser' );
 BEGIN{ use_ok( 'Pod::Usage' ); }
 require_ok( 'Pod::Usage' );
+BEGIN{ use_ok( 'Redis' ); }
+require_ok( 'Redis' );
 BEGIN{ use_ok( 'Singleton::DBI' ); }
 require_ok( 'Singleton::DBI' );
+BEGIN{ use_ok( 'Singleton::Redis' ); }
+require_ok( 'Singleton::Redis' );
 BEGIN{ use_ok( 'strict' ); }
 require_ok( 'strict' );
 BEGIN{ use_ok( 'String::Approx' ); }
 require_ok( 'String::Approx' );
-BEGIN{ use_ok( 'Sys::CpuLoad' ); }
-require_ok( 'Sys::CpuLoad' );
 BEGIN{ use_ok( 'TAP::Harness' ); }
 require_ok( 'TAP::Harness' );
 BEGIN{ use_ok( 'Template' ); }
@@ -107,8 +105,6 @@ BEGIN{ use_ok( 'URI' ); }
 require_ok( 'URI' );
 BEGIN{ use_ok( 'URI::Find' ); }
 require_ok( 'URI::Find' );
-BEGIN{ use_ok( 'utf8' ); }
-require_ok( 'utf8' );
 BEGIN{ use_ok( 'vars' ); }
 require_ok( 'vars' );
 BEGIN{ use_ok( 'warnings' ); }
@@ -157,8 +153,6 @@ BEGIN{ use_ok( 'Yawns::RSS' ); }
 require_ok( 'Yawns::RSS' );
 BEGIN{ use_ok( 'Yawns::Scratchpad' ); }
 require_ok( 'Yawns::Scratchpad' );
-BEGIN{ use_ok( 'Yawns::Sidebar' ); }
-require_ok( 'Yawns::Sidebar' );
 BEGIN{ use_ok( 'Yawns::Stats' ); }
 require_ok( 'Yawns::Stats' );
 BEGIN{ use_ok( 'Yawns::Submissions' ); }
