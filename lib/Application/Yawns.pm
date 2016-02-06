@@ -57,12 +57,18 @@ use Text::Diff;
 use HTML::AddNoFollow;
 use Singleton::Redis;
 use Yawns::About;
-use Yawns::Comment;
+use Yawns::Adverts;
 use Yawns::Articles;
+use Yawns::Comment;
 use Yawns::Event;
 use Yawns::Formatters;
-use Yawns::Sidebar;
+use Yawns::Permissions;
+use Yawns::Poll;
+use Yawns::Polls;
+use Yawns::Submissions;
 use Yawns::User;
+use Yawns::User;
+use Yawns::Weblogs;
 use conf::SiteConfig;
 
 
@@ -468,6 +474,23 @@ sub load_layout
     $l->param( ipv6 => 1 ) if ( $self->is_ipv6() );
 
     #
+    #  Default to showing blogs and polls
+    #
+    my $show_polls = 1;
+    my $show_blogs = 1;
+
+    #
+    # Administative display
+    #
+    my $show_pending_adverts  = 0;
+    my $show_pending_articles = 0;
+    my $show_pending_polls    = 0;
+    my $show_recent_users     = 0;
+    my $show_static_edit      = 0;
+    my $show_edit_users       = 0;
+
+
+    #
     #  Is the user logged in?
     #
     my $session = $self->param("session");
@@ -479,15 +502,192 @@ sub load_layout
 
         # Set the session so that logout works
         $l->param( session => md5_hex( $session->id() ) );
+
+        # per-user preferences might change the display
+        my $user = Yawns::User->new( username => $username );
+        my $userprefs = $user->get();
+        $show_polls = $userprefs->{ 'polls' };
+        $show_blogs = $userprefs->{ 'blogs' };
+
+        # Are we showing admin-stuff?
+        my $perms = Yawns::Permissions->new( username => $username );
+        $show_pending_adverts  = $perms->check( priv => "advert_admin" );
+        $show_pending_articles = $perms->check( priv => "article_admin" );
+        $show_pending_polls    = $perms->check( priv => "poll_admin" );
+        $show_recent_users     = $perms->check( priv => "recent_users" );
+        $show_static_edit      = $perms->check( priv => "edit_about" );
+        $show_edit_users       = $perms->check( priv => "edit_user" );
     }
 
     #
-    # Make sure the sidebar text is setup.
+    # Setup the meta-data
     #
-    my $sidebar = Yawns::Sidebar->new();
-    $l->param( sidebar_text   => $sidebar->getMenu($session) );
-    $l->param( site_title     => get_conf('site_title') );
-    $l->param( metadata       => get_conf('metadata') );
+    $l->param( site_title => get_conf('site_title') );
+    $l->param( metadata   => get_conf('metadata') );
+
+    #
+    # Now setup the poll display, if we should
+    #
+    if ( $show_polls )
+    {
+        #
+        #  Data used when showing the polls.
+        #
+        my $poll_id            = '';
+        my $poll_question      = '';
+        my $poll_comment_count = 0;
+        my $poll_total_votes   = 0;
+        my $poll_answers       = ();
+
+        #
+        #  If showing polls find the relevant information.
+        #
+        my $polls = Yawns::Polls->new();
+        $poll_id = $polls->getCurrentPoll();
+
+        #
+        #  Only show the comment count, and poll answers if we
+        # *actually* have a poll.
+        #
+        if ( $poll_id > 0 )
+        {
+            my $poll = Yawns::Poll->new( id => $poll_id );
+            $poll_comment_count = $poll->commentCount();
+
+            #
+            #  Get the data from the relevant poll.
+            #
+            my $answers;
+            ( $poll_question, $poll_total_votes, $answers, undef ) =
+              $poll->get();
+
+            #
+            #  Build up the answers, and IDs for displaying in a tmpl_loop.
+            #
+            foreach (@$answers)
+            {
+                my @answer = @$_;
+
+                push( @$poll_answers,
+                      {  id       => $answer[2],
+                         response => $answer[0] } );
+            }
+        }
+
+        if ($poll_id)
+        {
+
+            #
+            # Fill in poll data.
+            #
+            $l->param( poll_id            => $poll_id,
+                       poll_comment_count => $poll_comment_count,
+                       poll_question      => $poll_question,
+                       poll_total_votes   => $poll_total_votes,
+                       poll_answers       => $poll_answers
+                       show_pollbooth     => 1,
+                     );
+
+        }
+        else
+        {
+            $l->param( poll_error => "The administrator should add a poll" );
+        }
+
+    }
+
+
+    #
+    # Fetch the blog data, only if it is supposed to be displayed.
+    #
+    if ($show_blogs)
+    {
+        my $weblogs        = Yawns::Weblogs->new();
+        my $recent_weblogs = $weblogs->getRecent();
+
+        if ($recent_weblogs)
+        {
+            $l->param(
+                            recent_weblogs => $recent_weblogs,
+                            show_blogs     => 1,
+                           );
+        }
+
+        #
+        #  Show the planet link?
+        #
+        my $planet_url = conf::SiteConfig::get_conf("planet_url");
+        if ( defined($planet_url) )
+        {
+            $l->param( planet_url  => $planet_url,
+                       planet_site => 1,
+                       sitename => conf::SiteConfig::get_conf("sitename")
+                     );
+        }
+    }
+
+
+    #
+    #  Show the submissions header?
+    #
+    my $show_pending_header = $show_pending_adverts ||
+      $show_pending_articles ||
+      $show_pending_polls;
+
+    if ($show_pending_header)
+    {
+        $l->param( show_pending_header => 1 );
+
+        #
+        #  Display advert count
+        #
+        if ($show_pending_adverts)
+        {
+            my $adverts              = Yawns::Adverts->new();
+            my $pending_advert_count = $adverts->countPending();
+            $l->param( pending_advert_count => $pending_advert_count,
+                       show_pending_advert_count => 1 );
+
+        }
+
+        #
+        #  Article + poll count.
+        #
+        my $submissions = Yawns::Submissions->new();
+
+        if ($show_pending_articles)
+        {
+            my $pending_article_count = $submissions->articleCount();
+            $l->param(pending_article_count => $pending_article_count,
+                      show_pending_article_count => 1 );
+        }
+
+        if ($show_pending_polls)
+        {
+            my $pending_poll_count = $submissions->pollCount();
+            $l->param( pending_poll_count      => $pending_poll_count,
+                             show_pending_poll_count => 1 );
+        }
+    }
+
+    #
+    #  Should we show more site-admin stuff?
+    #
+    if ($show_recent_users)
+    {
+        $l->param( show_recent_users => 1,
+                   show_misc_header  => 1 );
+    }
+    if ($show_static_edit)
+    {
+        $l->param( "show_static_edit" => 1,
+                   show_misc_header   => 1 );
+    }
+    if ($show_edit_users)
+    {
+        $l->param( "show_edit_users" => 1,
+                   show_misc_header  => 1 );
+    }
 
 
     return ($l);

@@ -112,7 +112,108 @@ $(function() {
 
 <!-- /tmpl_if -->
 
-              <!-- tmpl_var name="sidebar_text" -->
+
+<!-- tmpl_if name='show_pending_header' -->
+<h3 class="sideBarTitle">Submissions</h3>
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name='show_pending_advert_count' -->
+<ul>
+  <li><a href="/adverts/pending">Adverts</a>
+    <!-- tmpl_if name="pending_advert_count" -->(<span class="alert"><!-- tmpl_var name='pending_advert_count' --></span>)<!-- /tmpl_if --></li>
+</ul>
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name='show_pending_article_count' -->
+<ul>
+  <li><a href="/submission/list">Articles</a>
+    <!-- tmpl_if name="pending_article_count" -->(<span class="alert"><!-- tmpl_var name='pending_article_count' --></span>)<!-- /tmpl_if --></li>
+</ul>
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name='show_pending_poll_count' -->
+<ul>
+  <li><a href="/submissions/polls">Polls</a>
+    <!-- tmpl_if name="pending_poll_count" -->(<span class="alert"><!-- tmpl_var name='pending_poll_count' --></span>)<!-- /tmpl_if --></li>
+</ul>
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name='show_misc_header' -->
+<h3 class="sideBarTitle">Administrivia</h3>
+<ul>
+  <!-- /tmpl_if -->
+
+  <!-- tmpl_if name='show_recent_users' -->
+  <li> <a href="/recent/users">Recent members</a></li>
+  <!-- /tmpl_if -->
+  <!-- tmpl_if name='show_static_edit' -->
+  <li><a href="/edit/about">Static pages</a></li>
+  <!-- /tmpl_if -->
+  <!-- tmpl_if name='show_edit_users' -->
+  <li><a href="/user/admin">User Administration</a></li>
+  <!-- /tmpl_if -->
+  <!-- tmpl_if name='show_misc_header' -->
+</ul>
+<!-- /tmpl_if -->
+
+
+<p>&nbsp;</p>
+<div id="flattr">
+  <h3>Flattr</h3>
+  <div style="text-align:center;"><a class="FlattrButton" style="display:none;" href="http://debian-administration.org"></a></div>
+</div>
+
+
+<!-- tmpl_if name='show_pollbooth' -->
+<p>&nbsp;</p>
+<div id="poll">
+  <h3>Current Poll</h3>
+  <!-- tmpl_if name="poll_error" -->
+  <!-- tmpl_if name="pending_poll_count" -->
+  <p>Please <a href="/submissions/polls">publish a queued poll</a>.</p>
+  <!-- tmpl_else -->
+  <p>Please <a href="/create/poll">create a new poll</a>.</p>
+  <!-- /tmpl_if -->
+  <!-- tmpl_else -->
+  <form method="post" action="/polls/<!-- tmpl_var name="poll_id" -->">
+    <p><input type="hidden" name="poll_id" value="<!-- tmpl_var name="poll_id" -->" /><b><!-- tmpl_var name="poll_question" --></b></p><p>
+      <!-- tmpl_loop name="poll_answers" -->
+      <label><input type="radio" name="pollanswer" value="<!-- tmpl_var name="id" -->" /><!-- tmpl_var name="response" --></label><br />
+      <!-- /tmpl_loop -->
+      <input type="hidden" name="mode" value="poll_vote" />
+      <input type="hidden" name="id" value="<!-- tmpl_var name='poll_id' -->" />
+      <input type="submit"  value="Vote" /><br />
+      <span class="votescast">
+	( <a href="/polls/<!-- tmpl_var name="poll_id" -->"><!-- tmpl_var name="poll_total_votes"> votes ~ <!-- tmpl_var name="poll_comment_count"> comments</a> )</span></p>
+	                                                         </form>
+  <!-- /tmpl_if -->
+</div>
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name='show_blogs' -->
+<p>&nbsp;</p>
+<div id="blogs">
+  <h3>Recent Weblogs</h3>
+  <!-- tmpl_unless name='recent_weblogs' -->
+  <p>No weblogs posted yet.</p>
+  <!-- tmpl_else -->
+  <div class="weblogs">
+    <!-- tmpl_loop name="recent_weblogs" -->
+    <div class="body">
+      <div class="title"><a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a></div>
+      <div class="tagline">by <a href="/users/<!-- tmpl_var name='poster' -->"><!-- tmpl_var name='poster' --></a></div>
+      <div class="comments"> <!-- tmpl_if name="comments" --> <a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->#comments"><!-- tmpl_var name='comments' --> comment<!-- tmpl_if name='plural' -->s<!-- /tmpl_if --></a><!-- /tmpl_if --></div>
+    </div>
+    <!-- /tmpl_loop -->
+  <!-- tmpl_if name='planet_site' -->
+  <p><a href="<!-- tmpl_var name='planet_url' -->" title="Planet <!-- tmpl_var name='sitename' -->" style="float:right;">Archived weblogs</a></p>
+  <p></p>
+  <!-- /tmpl_if -->
+  </div>
+</div>
+
+<!-- /tmpl_unless -->
+<!-- /tmpl_if -->
               <p>&nbsp;</p>
 <!-- tmpl_if  name="show_adverts" -->
               <!-- tmpl_if name="user_adverts" -->
