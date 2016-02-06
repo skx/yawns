@@ -478,7 +478,7 @@ sub load_layout
         $l->param( username => $username, logged_in => 1);
 
         # Set the session so that logout works
-        $login->param( session => md5_hex( $session->id() ) );
+        $l->param( session => md5_hex( $session->id() ) );
     }
 
     #
