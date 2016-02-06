@@ -40,12 +40,9 @@ sub get_conf
 
     #
     # If this is set then we'll use memcached for login-sessions,
-    # if this is set to zero instead we'll use MySQL for session-storage.
     #
-    # See L<CGI::Session> for the required database table definition in
-    # that case.
-    #
-    $memcached = 1;
+    session = memcache://127.0.0.1:11211/
+
 
     #
     # number of articles to display on the front page
