@@ -96,18 +96,18 @@ sub cgiapp_init
     #
     my $cache = conf::SiteConfig::get_conf("session");
 
-    if ( $cache =~ /memcache:\/\/(.*)\// )
+    if ( $cache =~ /^memcache:\/\/(.*)\/$/i )
     {
         #
         # The host is specified after the port.
         #
-        my $dbserv = conf::SiteConfig::get_conf('dbserv');
+        my $host = $1;
 
         #
         # Get the memcached handle.
         #
         my $mem = Cache::Memcached->new(
-                                         { servers => [$dbserv],
+                                         { servers => [$host],
                                            debug   => 0
                                          } );
 
