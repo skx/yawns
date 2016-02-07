@@ -3,16 +3,26 @@
   <li><a href="/users/<!-- tmpl_var name="viewusername" -->/bookmarks">Bookmarks</a></li>
 </ol>
 
+<div class="container-fluid">
 
 <!-- tmpl_if name='has_bookmarks' -->
 
-   <!-- tmpl_if name='article_bookmarks' -->
-<h3>Bookmarked Articles</h3>
+
+<!-- tmpl_if name='article_bookmarks' -->
+  <div class="row">
+    <div class="col-sm-1 col-md-1"></div>
+    <div class="col-sm-11 col-md-11"><h2>Bookmarked Articles</h2></h2></div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-1 col-md-2"></div>
+    <div class="col-sm-1 col-md-10">
    <ul>
    <!-- tmpl_loop name='article_bookmarks' -->
    <li><a href="/article/<!-- tmpl_var name='uid' -->/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='title' --></a> <!-- tmpl_if name='delete' -->[<a href="/delete/bookmark/<!-- tmpl_var name='gid' -->/<!-- tmpl_var name='session' -->" title="Delete this bookmark">x</a>]<!-- /tmpl_if --></li>
    <!-- /tmpl_loop -->
    </ul>
+   </div></div>
    <!-- /tmpl_if -->
 
    <!-- tmpl_if name='poll_bookmarks' -->
@@ -42,3 +52,4 @@
 <!-- /tmpl_if -->
 
 <!-- /tmpl_if -->
+</div>
