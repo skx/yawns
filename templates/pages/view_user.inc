@@ -49,18 +49,18 @@
 
 <table cellspacing="5" cellpadding="5">
   <!-- tmpl_if name='showname' -->
-  <tr><td><b>Real name:</b></td><td><!-- tmpl_var name='realname' escape='html' -->	 <!-- /tmpl_if -->
-  </td></tr>
+  <tr><td><b>Real name:</b></td><td><!-- tmpl_var name='realname' escape='html' --></td></tr>
+  <!-- /tmpl_if -->
 
   <!-- tmpl_if name='showemail' -->
   <tr><td></td><td><a href="mailto:<!-- tmpl_var name='fakeemail' -->"><!-- tmpl_var name='fakeemail' --></a></td></tr>
   <!-- /tmpl_if -->
+
   <!-- tmpl_if name='showurl' -->
   <tr><td></td><td><a href="<!-- tmpl_var name='url' -->" rel="nofollow"><!-- tmpl_var name='url' --></a></td></tr>
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='show_scratchpad'-->
-  <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
   <tr><td><b>Scratchpad</b></td><td>
       <a href="/users/<!--tmpl_var name='viewusername'>/scratchpad">Scratchpad</a></td>	</tr>
   <!-- /tmpl_if -->
@@ -71,9 +71,9 @@
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='weblogs'-->
-  <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
   <tr><td><b>Weblogs</b></td><td>
-      <a href="/users/<!--tmpl_var name='viewusername'>/weblog"><!-- tmpl_var name="weblogs" --> <!-- tmpl_if name="weblog_plural" -->Entries<!-- tmpl_else -->Entry<!-- /tmpl_if --></a>  </td>	</tr>
+      <a href="/users/<!--tmpl_var name='viewusername'>/weblog"><!-- tmpl_var name="weblogs" --> <!-- tmpl_if name="weblog_plural" -->Entries<!-- tmpl_else -->Entry<!-- /tmpl_if --></a>
+  </td>	</tr>
   <!-- /tmpl_if -->
 
 </table>
