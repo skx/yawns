@@ -41,11 +41,7 @@
 </ol>
   <div class="row">
     <div class="col-sm-1 col-md-1"></div>
-    <div class="col-sm-11 col-md-11"><h2><!-- tmpl_var name='viewusername' --></h2></div>
-  </div>
-  <div class="row">
-    <div class="col-sm-1 col-md-2"></div>
-    <div class="col-sm-1 col-md-10">
+    <div class="col-sm-1 col-md-11">
 
 <!-- tmpl_if name='is_owner' -->
 <p>As this is your user-page you <a href="/edit/user/<!-- tmpl_var name='viewusername' -->">can change the information</a> that it is displayed here.</p>
