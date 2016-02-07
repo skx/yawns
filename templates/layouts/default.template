@@ -48,7 +48,7 @@
 		<nav class="navbar navbar-inverse">
 		  <div class="container-fluid">
 		    <div class="navbar-header">
-		      <a href="#" class="pull-left"><img height="25" width="25"  src="/images/logo.png"></a>
+		      <a href="#" class="pull-left"><img height="75" width="75"  src="/images/logo.png"></a>
                         <a class="navbar-brand" href="/">Debian-Administration.org</a>
 		    </div>
 		    <ul class="nav navbar-nav">
