@@ -94,24 +94,23 @@
 
 			<!-- tmpl_if name='show_pending_header' -->
 			<h3 class="sideBarTitle">Submissions</h3>
+                        <ul class="list-group">
 			<!-- /tmpl_if -->
 
 			<!-- tmpl_if name='show_pending_advert_count' -->
-                        <ul class="list-group">
-			  <li class="list-group-item"><!-- tmpl_if name="pending_advert_count" --><span class="badge"><!-- tmpl_var name='pending_advert_count' --></span><!-- /tmpl_if --><a href="/adverts/pending">Adverts</a></li>
-			</ul>
+			<li class="list-group-item"><!-- tmpl_if name="pending_advert_count" --><span class="badge"><!-- tmpl_var name='pending_advert_count' --></span><!-- /tmpl_if --><a href="/adverts/pending">Adverts</a></li>
 			<!-- /tmpl_if -->
 
 			<!-- tmpl_if name='show_pending_article_count' -->
-			<ul class="list-group">
 			  <li class="list-group-item"><!-- tmpl_if name="pending_article_count" --><span class="badge"><!-- tmpl_var name='pending_article_count' --></span><!-- /tmpl_if --><a href="/submission/list">Articles</a></li>
-			</ul>
 			<!-- /tmpl_if -->
 
 			<!-- tmpl_if name='show_pending_poll_count' -->
-			<ul class="list-group">
 			  <li class="list-group-item"><!-- tmpl_if name="pending_poll_count" --><span class="badge"><!-- tmpl_var name='pending_poll_count' --></span><!-- /tmpl_if --><a href="/submissions/polls">Polls</a></li>
-			</ul>
+			<!-- /tmpl_if -->
+
+			<!-- tmpl_if name='show_pending_header' -->
+                        </ul>
 			<!-- /tmpl_if -->
 
 			<!-- tmpl_if name='show_misc_header' -->
