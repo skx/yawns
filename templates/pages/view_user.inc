@@ -1,3 +1,4 @@
+<div class="container-fluid">
 <!-- tmpl_if name="extra_options" -->
 <p align="right">
   <!-- /tmpl_if -->
@@ -130,3 +131,4 @@
 </table>
 
 <!-- /tmpl_if -->
+</div>
