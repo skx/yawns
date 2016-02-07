@@ -26,11 +26,14 @@
 
       <div class="container-fluid">
         <h1>Previous Archives</h1>
-        <p>
+        <div class="row">
+          <div class="col-sm-1 col-md-1"></div>
+          <div class="col-sm-1 col-md-11"><p>
 <!-- tmpl_loop name='show_archive_year' -->
 <a href="/archive/<!-- tmpl_var name='year' -->"><!-- tmpl_var name='year' --></a><!-- tmpl_unless name="__last__" -->, <!-- /tmpl_unless -->
 <!-- /tmpl_loop -->
-        </p>
+          </p></div>
+        </div>
       </div>
 <!-- /tmpl_if name='show_archive_year' -->
 
