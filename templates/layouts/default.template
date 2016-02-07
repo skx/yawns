@@ -198,7 +198,7 @@
       <!-- /tmpl_loop -->
       <!-- tmpl_if name='planet_site' -->
       <p><a href="<!-- tmpl_var name='planet_url' -->" title="Planet <!-- tmpl_var name='sitename' -->" style="float:right;">Archived weblogs</a></p>
-      <p>&nbsp;</p>      <p>&nbsp;</p>
+      <p>&nbsp;</p>
       <!-- /tmpl_if -->
     </div>
   </div>
