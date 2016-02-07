@@ -45,7 +45,7 @@
     <body>
 
 
-		<nav class="navbar navbar-inverse">
+		<nav class="navbar">
 		  <div class="container-fluid">
 		    <div class="navbar-header">
 		      <a class="navbar-brand" href="/" class="pull-left"><img height="75" width="75"  src="/images/logo.png"></a>
