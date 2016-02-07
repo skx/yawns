@@ -21,7 +21,7 @@ $(document).ready(function(){
 <div class="tags">
   <span id="current_tags"><!-- tmpl_include name="../includes/tags.template" --></span>
   <!-- tmpl_if name='logged_in' -->
-    <a name="toggle" id="toggle">Add New Tag</a></p>
+    <a name="toggle" id="toggle">Add New Tag</a>
     <div id="add_tag" style="display: none;">
       <form action="" method="">
         <input type="text" id="new_tag" size="25" maxlength="25" name="new_tag" value="">
