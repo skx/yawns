@@ -47,28 +47,13 @@
         </div>
 
         <div style="margin-top:10px" class="form-group pull-right">
-          <div class="col-sm-12 controls">
-            <input type="submit" id="submit" name="submit" value="Login" class="btn btn-info">
-          </div>
-        </div>
-
-
-        <div class="form-group">
-          <div class="col-md-12 control">
-            <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >Don't have an account?
-              <a href="/create/user">
-                Sign Up Here
-              </a>
-            </div>
-          </div>
+          <input type="submit" id="submit" name="submit" value="Login" class="btn btn-info">
         </div>
       </form>
-
-
 
     </div>
   </div>
 </div>
 
 
-  </div>
+</div>
