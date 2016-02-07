@@ -15,8 +15,8 @@
   <!-- tmpl_else -->
 
 <ol class="breadcrumb">
-  <li><a href="/users/<!-- tmpl_var name="user" -->/"><!-- tmpl_var name="user" --></a></li>
-  <li><a href="/users/<!-- tmpl_var name="user" -->/weblog">Blog</a></li>
+  <li><a href="/users/<!-- tmpl_var name="viewusername" -->/"><!-- tmpl_var name="viewusername" --></a></li>
+  <li><a href="/users/<!-- tmpl_var name="viewusername" -->/weblog">Blog</a></li>
 </ol>
 
   <!-- tmpl_if name='entries' --> <p align="right"> <a href="/weblog/feeds/<!-- tmpl_var name="viewusername" -->"><img src="/images/xml.gif" alt="XML Logo" width="36" height="14"></a></p> <!-- /tmpl_if -->
