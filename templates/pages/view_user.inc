@@ -105,7 +105,7 @@
 	  <!-- tmpl_if name="weblog_link" -->
         <li><a href="<!-- tmpl_var name="weblog_link" -->#comment_<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a>
 	  <!-- /tmpl_if -->
-          <ul class="list-unstyled">
+          <ul>
             <li>Posted on <!-- tmpl_var name='ondate' -->.</li>
         </ul></li>
         <!-- /tmpl_loop -->
