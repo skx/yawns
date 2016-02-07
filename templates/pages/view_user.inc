@@ -49,39 +49,44 @@
 
 <table cellspacing="5" cellpadding="5">
   <!-- tmpl_if name='showname' -->
+  <tr><td><p>&nbsp;</p></td><td><p>&nbsp;</p></td></tr>
   <tr><td><b>Real name:</b></td><td><!-- tmpl_var name='realname' escape='html' --></td></tr>
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='showemail' -->
+  <tr><td><p>&nbsp;</p></td><td><p>&nbsp;</p></td></tr>
   <tr><td></td><td><a href="mailto:<!-- tmpl_var name='fakeemail' -->"><!-- tmpl_var name='fakeemail' --></a></td></tr>
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='showurl' -->
+  <tr><td><p>&nbsp;</p></td><td><p>&nbsp;</p></td></tr>
   <tr><td></td><td><a href="<!-- tmpl_var name='url' -->" rel="nofollow"><!-- tmpl_var name='url' --></a></td></tr>
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='show_scratchpad'-->
+  <tr><td><p>&nbsp;</p></td><td><p>&nbsp;</p></td></tr>
   <tr><td><b>Scratchpad</b></td><td>
       <a href="/users/<!--tmpl_var name='viewusername'>/scratchpad">Scratchpad</a></td>	</tr>
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='show_bookmarks' -->
+  <tr><td><p>&nbsp;</p></td><td><p>&nbsp;</p></td></tr>
   <tr><td></td>
     <td><a href="/users/<!-- tmpl_var name='viewusername' -->/bookmarks">Bookmarks</a></td></tr>
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='weblogs'-->
+  <tr><td><p>&nbsp;</p></td><td><p>&nbsp;</p></td></tr>
   <tr><td><b>Weblogs</b></td><td>
       <a href="/users/<!--tmpl_var name='viewusername'>/weblog"><!-- tmpl_var name="weblogs" --> <!-- tmpl_if name="weblog_plural" -->Entries<!-- tmpl_else -->Entry<!-- /tmpl_if --></a>
   </td>	</tr>
   <!-- /tmpl_if -->
-
 </table>
 
 <!-- tmpl_if name='showbio' -->
-<p>&nbsp;</p>
+  <p>&nbsp;</p>
   <!-- tmpl_var name='bio' -->
-<p>&nbsp;</p>
+  <p>&nbsp;</p>
 <!-- /tmpl_if -->
 
     </div>
