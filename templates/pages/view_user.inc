@@ -47,47 +47,69 @@
 <p>As this is your user-page you <a href="/edit/user/<!-- tmpl_var name='viewusername' -->">can change the information</a> that it is displayed here.</p>
 <!-- /tmpl_if -->
 
-<table cellspacing="5" cellpadding="5">
-  <!-- tmpl_if name='showname' -->
-  <tr><td><b>Real name:</b></td><td><!-- tmpl_var name='realname' escape='html' --></td></tr>
-  <!-- /tmpl_if -->
 
-  <!-- tmpl_if name='showemail' -->
-  <tr><td></td><td><a href="mailto:<!-- tmpl_var name='fakeemail' -->"><!-- tmpl_var name='fakeemail' --></a></td></tr>
-  <!-- /tmpl_if -->
 
-  <!-- tmpl_if name='showurl' -->
-  <tr><td></td><td><a href="<!-- tmpl_var name='url' -->" rel="nofollow"><!-- tmpl_var name='url' --></a></td></tr>
-  <!-- /tmpl_if -->
 
-  <!-- tmpl_if name='show_scratchpad'-->
-  <tr><td><b>Scratchpad</b></td><td><a href="/users/<!--tmpl_var name='viewusername'>/scratchpad">Scratchpad</a></td></tr>
-  <!-- tmpl_else -->
-  <tr><td><b>Scratchpad</b></td><td>None</td></tr>
-  <!-- /tmpl_if -->
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <!-- tmpl_if name='showname' -->
+      <!-- tmpl_var name='realname' escape='html' -->
+      <!-- tmpl_else -->
+      <!-- tmpl_var name='viewusername' -->
+      <!-- /tmpl_if -->
+    </h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="<!-- tmpl_var name='gravitar' -->" class="img-circle img-responsive"> </div>
+      <div class=" col-md-9 col-lg-9 ">
+        <table class="table table-user-information">
+          <tbody>
+            <!-- tmpl_if name='showurl' -->
+            <tr>
+              <td>Homepage:</td>
+              <td><a href="<!-- tmpl_var name='url' -->" rel="nofollow"><!-- tmpl_var name='url' --></a></td>
+            </tr>
+            <!-- /tmpl_if -->
 
-  <!-- tmpl_if name='show_bookmarks' -->
-  <tr><td><b>Bookmarks</b></td><td><a href="/users/<!-- tmpl_var name='viewusername' -->/bookmarks">Bookmarks</a></td></tr>
-  <!-- tmpl_else -->
-  <tr><td><b>Bookmarks</b></td><td>None</td></tr>
-  <!-- /tmpl_if -->
+            <!-- tmpl_if name='showemail' -->
+            <tr>
+              <td>Email</td>
+              <td><a href="mailto:<!-- tmpl_var name='fakeemail' -->"><!-- tmpl_var name='fakeemail' --></a></td>
+            </tr>
+            <!-- /tmpl_if -->
 
-  <!-- tmpl_if name='weblogs'-->
-  <tr><td><b>Weblog</b></td><td><a href="/users/<!--tmpl_var name='viewusername'>/weblog"><!-- tmpl_var name="weblogs" --> <!-- tmpl_if name="weblog_plural" -->Entries<!-- tmpl_else -->Entry<!-- /tmpl_if --></a></td></tr>
-  <!-- tmpl_else -->
-  <tr><td><b>Weblog</b></td><td>None</td></tr>
-  <!-- /tmpl_if -->
-</table>
+            <!-- tmpl_if name='show_scratchpad'-->
+            <tr><td>Scratchpad</td><td><a href="/users/<!--tmpl_var name='viewusername'>/scratchpad">Scratchpad</a></td></tr>
+            <!-- /tmpl_if -->
 
-<!-- tmpl_if name='showbio' -->
-  <p>&nbsp;</p>
-  <!-- tmpl_var name='bio' -->
-  <p>&nbsp;</p>
-<!-- /tmpl_if -->
 
+            <!-- tmpl_if name='show_bookmarks' -->
+            <tr><td><b>Bookmarks</b></td><td><a href="/users/<!-- tmpl_var name='viewusername' -->/bookmarks">Bookmarks</a></td></tr>
+            <!-- /tmpl_if -->
+
+            <!-- tmpl_if name='weblogs'-->
+            <tr><td>Weblog</td><td><a href="/users/<!--tmpl_var name='viewusername'>/weblog"><!-- tmpl_var name="weblogs" --> <!-- tmpl_if name="weblog_plural" -->Entries<!-- tmpl_else -->Entry<!-- /tmpl_if --></a></td></tr>
+            <!-- /tmpl_if -->
+
+          </tbody>
+        </table>
+
+      </div>
     </div>
   </div>
 
+  <!-- tmpl_if name='showbio' -->
+  <p>&nbsp;</p>
+  <!-- tmpl_var name='bio' -->
+  <p>&nbsp;</p>
+  <!-- /tmpl_if -->
+
+</div>
+    </div>
+  </div>
+</div>
 
   <!-- tmpl_unless name='anon' -->
   <div class="row">

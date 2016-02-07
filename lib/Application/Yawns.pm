@@ -3317,6 +3317,7 @@ sub view_user
     my $error = 0;
     if ( !$userdata->{ 'username' } ) {$error = 1;}
 
+    my $realemail = $userdata->{ 'realemail' };
     my $fakeemail = $userdata->{ 'fakeemail' };
     my $showemail = 1 if $fakeemail;
     my $realname  = $userdata->{ 'realname' };
@@ -3330,6 +3331,16 @@ sub view_user
     my $comments;
     my $comment_count;
     my $article_count;
+
+    #
+    #  Gravitar
+    #
+    my $gravitar;
+    if ( $realemail ){
+        my $size     = 32;
+        $gravitar = "//www.gravatar.com/avatar.php?gravatar_id=" .
+          md5_hex( lc $realmail ) . ";size=" . $size;
+    }
 
     #
     #  Are we viewing the anonymous user?
@@ -3412,6 +3423,7 @@ sub view_user
 
     # set parameters
     $template->param( viewusername    => $viewusername,
+                      gravitar        => $gravitar,
                       is_owner        => $is_owner,
                       showemail       => $showemail,
                       fakeemail       => $fakeemail,
