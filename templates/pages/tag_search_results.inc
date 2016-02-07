@@ -22,7 +22,7 @@
 
 <!-- tmpl_else -->
 
-<p class="right">You may subscribe to a feed of items which <a href="/tag/feeds/<!-- tmpl_var name='tag' escape='html'-->">are tagged <!-- tmpl_var name='tag' escape='html' --></a>: <a href="/tag/feeds/<!-- tmpl_var name='tag' escape='html'-->"><img src="/images/xml.gif" alt="XML logo" width="36" height="14"></a></p>
+<p class="right"><a href="/tag/feeds/<!-- tmpl_var name='tag' escape='html'-->"><img src="/images/xml.gif" alt="XML logo" width="36" height="14"></a></p>
 
 
 
