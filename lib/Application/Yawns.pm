@@ -681,6 +681,19 @@ sub load_layout
                    show_misc_header  => 1 );
     }
 
+    #
+    # Are there any flashes?
+    #
+    if ( $session->param( "ok_flash" ) )
+    {
+        $l->param( ok_flash => $session->param( "ok_flash" ) );
+        $session->param( "ok_flash", undef );
+    }
+    if ( $session->param( "error_flash" ) )
+    {
+        $l->param( error_flash => $session->param( "error_flash" ) );
+        $session->param( "error_flash", undef );
+    }
 
     return ($l);
 }
@@ -3534,9 +3547,7 @@ sub edit_user
         }
     }
 
-    # check for updates
-    my $saved = 0;
-
+    # Are we submitting?
     if ( defined $form->param('update') )
     {
 
@@ -3553,7 +3564,10 @@ sub edit_user
                          url       => $form->param('url'),
                          sig       => $form->param('sig'),
                          bio       => $form->param('bio') );
-            $saved = 1;
+
+            # Update
+            $session->param( ok_flash => "Profile updated" );
+            return( $self->redirectURL( "/users/$edituser" ) );
 
         }
 
@@ -3582,8 +3596,7 @@ sub edit_user
                       url       => $url,
                       bio       => $bio,
                       sig       => $sig,
-                      saved     => $saved,
-                      title     => "Edit User Information",
+                      title     => "Edit Profile - $edituser",
                     );
 
     # generate the output

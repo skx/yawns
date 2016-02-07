@@ -176,7 +176,9 @@
 
 
 </td>
-<td valign="top">
+                      <td valign="top">
+                        <!-- tmpl_if name='ok_flash' --> <div class="alert alert-success"><!-- tmpl_var name='ok_flash' --></div><!-- /tmpl_if -->
+                        <!-- tmpl_if name='error_flash' --> <div class="alert alert-danger"><!-- tmpl_var name='error_flash' --></div><!-- /tmpl_if -->
   <!-- tmpl_include name='###' -->
 </td>
 <td valign="top" width="200" align="center">
