@@ -3,7 +3,6 @@
 //
 //  If we have fragment in the URL load that up type of tags.
 //
-//  Either way update the recent tags every 2 seconds.
 //
 function setupView()
 {
@@ -15,7 +14,6 @@ function setupView()
         updateView(loc.substring( frag + 1 ) );
     }
 
-    setTimeout('updateRecent();', 2000);
 }
 
 
@@ -28,16 +26,6 @@ function updateLinks( type )
    $("#link_" + type ).css( "font-weight", "bold" );
 }
 
-
-//
-//  Update the recent tags.
-//
-function updateRecent()
-{
-    $("#recent_tags").load("/ajax/tags/recent",
-                          function () { setTimeout("updateRecent();", 60000); } )
-
-}
 
 
 //
@@ -60,8 +48,12 @@ $(document).ready(function(){ setupView(); } );
 </script>
 
 
-      <h1>Tag Cloud</h1>
-      <p>Here you can see the list of <a href="/tag/">all tags</a> which our registered users have applied to the content upon this site.</p>
+<div class="container-fluid">
+  <h1>Tag Cloud</h1>
+  <div class="row">
+    <div class="col-sm-1 col-md-1"></div>
+    <div class="col-sm-11 col-md-10">
+
 <!-- tmpl_if name='all_tags' -->
       <p>If you wish you can restrict the view to only those tags which have been applied to
 <a href="#a" onClick="updateView('a');" class="linkable" id="link_a">articles</a>,
@@ -83,5 +75,7 @@ $(document).ready(function(){ setupView(); } );
       <p>No tags have been added to this site yet.</p>
 <!-- /tmpl_if -->
 
-      <p>Some <a href="/about/FAQ%20:%20Tags">tag help</a> is available via the <a href="/about/FAQ">site FAQ</a>.</p>
-
+   </div>
+   <div class="col-sm-1 col-md-1"></div>
+   </div>
+   </div>
