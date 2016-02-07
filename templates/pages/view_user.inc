@@ -85,27 +85,32 @@
     <td valign="top"><!-- tmpl_var name='bio' --></td></tr>
   <!-- /tmpl_if -->
 
+    </div>
+  </div>
+
+
   <!-- tmpl_unless name='anon' -->
-  <!-- tmpl_if name='articles' -->
-  <tr><td><p></p></td><td><p></p></td></tr>
-  <tr><td valign="top" colspan="2"><b>Recent articles:</b>
-      <ul>
+  <div class="row">
+    <div class="col-sm-1 col-md-6">
+
+      <!-- tmpl_if name='articles' -->
+      <p><b>Recent articles:</b></p>
+      <ul class="list-unstyled">
         <!-- tmpl_loop name='articles' -->
         <li><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='title' --></a>
-          <ul>
+          <ul class="list-unstyled">
             <li>Posted on <!-- tmpl_var name='ondate' -->.</li>
         </ul></li>
         <!-- /tmpl_loop -->
-  </ul></td></tr>
-  <tr><td valign="top"><p></p></td>
-    <td valign="top"><b>Total articles</b>: <!-- tmpl_var name="article_count" --> <!-- tmpl_if name='edit_user' -->[<a href="/search/byauthor/<!-- tmpl_var name='viewusername' -->">View All</a>]<!-- /tmpl_if --></td></tr>
+      </ul>
+      <p>Total articles: <!-- tmpl_var name="article_count" --> <!-- tmpl_if name='edit_user' -->[<a href="/search/byauthor/<!-- tmpl_var name='viewusername' -->">View All</a>]<!-- /tmpl_if --></p>
+      <!-- /tmpl_if -->
+    </div>
 
-  <!-- /tmpl_if -->
-
-  <!-- tmpl_if name='comments' -->
-  <tr><td><p></p></td><td><p></p></td></tr>
-  <tr><td valign="top" colspan="2"><b>Recent comments:</b>
-      <ul>
+    <div class="col-sm-1 col-md-6">
+      <!-- tmpl_if name='comments' -->
+      <p><b>Recent comments:</b></p>
+      <ul class="list-unstyled">
         <!-- tmpl_loop name='comments' -->
 	<!-- tmpl_if name='is_poll'-->
         <li><a href="/polls/<!-- tmpl_var name='poll' -->#comment_<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a>
@@ -116,17 +121,16 @@
 	  <!-- tmpl_if name="weblog_link" -->
         <li><a href="<!-- tmpl_var name="weblog_link" -->#comment_<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a>
 	  <!-- /tmpl_if -->
-          <ul>
+          <ul class="list-unstyled">
             <li>Posted on <!-- tmpl_var name='ondate' -->.</li>
         </ul></li>
         <!-- /tmpl_loop -->
-  </ul>                    </td></tr>
-  <tr><td valign="top"><p></p></td>
-    <td valign="top"><b>Total comments</b>: <!-- tmpl_var name="comment_count" -->
+      </ul>
+      <p>Total comments</b>: <!-- tmpl_var name="comment_count" --></p>
       <p>Recent comments: <a href="/recent/comments/<!-- tmpl_var name='viewusername' escape='html'-->"><img src="/images/xml.gif" width="36" height="14" alt="Recent comments by <!-- tmpl_var name='viewusername' escape='html' -->"></a></p>
-
-  </td></tr>
-  <!-- /tmpl_if -->
+      <!-- /tmpl_if -->
+</div>
+</div>
   <!-- /tmpl_unless -->
 </table>
 
