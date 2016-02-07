@@ -134,7 +134,7 @@ sub get_conf
     $metadata = <<END_OF_META;
 <meta name="description" content="$site_desc" />
 <meta name="keywords"  content="Debian System Administration News, Debian Sysadmin, Linux Administration, Linux Sysadmin, Sysadmin" />
-<meta name="copyright" content="(c) 2004-2014 $sitename" />
+<meta name="copyright" content="(c) 2004-2016 $sitename" />
 <meta name="author"  content="$sitename" />
 <meta name="robots" content="index,follow" />
 <meta name="resource-type" content="document" />
