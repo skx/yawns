@@ -1,23 +1,3 @@
-<script type="text/javascript">
-
-//
-//  Reload the recent tags every few seconds
-//
-function loadRecent()
-{
-    $("#recent_tags").load("/ajax/tags/recent",
-                            function (text) {
-                              setTimeout("loadRecent();", 60000);
-                            });
-}
-
-//
-//  Start the loading on page-load
-//
-$(document).ready(function(){ loadRecent(); } );
-</script>
-
-
 <h1>Tag Search</h1>
 
 <div class="tag_search">
