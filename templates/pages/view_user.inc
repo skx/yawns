@@ -47,7 +47,7 @@
 <p>As this is your user-page you <a href="/edit/user/<!-- tmpl_var name='viewusername' -->">can change the information</a> that it is displayed here.</p>
 <!-- /tmpl_if -->
 
-<table width="100%">
+<table cellspacing="5" cellpadding="5">
   <!-- tmpl_if name='showname' -->
   <tr><td><b>Real name:</b></td><td><!-- tmpl_var name='realname' escape='html' -->	 <!-- /tmpl_if -->
   </td></tr>
