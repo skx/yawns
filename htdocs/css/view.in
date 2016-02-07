@@ -55,46 +55,6 @@ a:active {
 dt {
    font-weight:bold;
 }
-#header {
-        height:110px;
-        background-color: white;
-        border-bottom:1px solid black;
-	background-image: url(/images/logo.png);
-	background-repeat: no-repeat;
-	padding-left:120px;
-}
-
-#header h1 {
-    color: black !important;
-}
-
-#header h1 a, #header h1 a:hover, #header h1 a:visited {
-    color: #cc0033;
-    text-decoration: none !important;
-}
-
-#header ul {
-    list-style-type:none;
-    margin:0;
-    padding:0;
-    overflow:hidden;
-}
-#header li {
-    float:left;
-}
-#header ul li a:link, #header ul li a:visited {
-    display:block;
-    width:110px;
-    font-weight:bold;
-    color:black;
-    background-color:white;
-    text-align:center;
-    padding:4px;
-    text-decoration:none;
-}
-#header ul li a:hover, #header ul li a:visited #header h1 a:hover  {
-    background-color:#cc0033;
-}
 
 
 #signup {
