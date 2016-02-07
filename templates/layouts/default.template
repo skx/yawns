@@ -176,10 +176,10 @@
 			      <input type="hidden" name="id" value="<!-- tmpl_var name='poll_id' -->" />
 			      <input type="submit"  value="Vote" /><br />
 			      <span class="votescast">
-				( <a href="/polls/<!-- tmpl_var name="poll_id" -->"><!-- tmpl_var name="poll_total_votes"> votes ~ <!-- tmpl_var name="poll_comment_count"> comments</a> )</span></p>
-											 </form>
+				<p>( <a href="/polls/<!-- tmpl_var name="poll_id" -->"><!-- tmpl_var name="poll_total_votes"> votes ~ <!-- tmpl_var name="poll_comment_count"> comments</a> )</span></p>
+											    </form>
 <!-- /tmpl_if -->
-</div>
+                        </div>
 <!-- /tmpl_if -->
 
 
