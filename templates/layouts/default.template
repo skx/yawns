@@ -115,20 +115,19 @@
 
 			<!-- tmpl_if name='show_misc_header' -->
 			<h3 class="sideBarTitle">Administrivia</h3>
-			<ul>
-			  <!-- /tmpl_if -->
-
+                        <div class="list-group">
+			<!-- /tmpl_if -->
 			  <!-- tmpl_if name='show_recent_users' -->
-			  <li> <a href="/recent/users">Recent members</a></li>
+			  <a href="/recent/users">Recent members</a>
 			  <!-- /tmpl_if -->
 			  <!-- tmpl_if name='show_static_edit' -->
-			  <li><a href="/edit/about">Static pages</a></li>
+			  <a href="/edit/about">Static pages</a>
 			  <!-- /tmpl_if -->
 			  <!-- tmpl_if name='show_edit_users' -->
-			  <li><a href="/user/admin">User Administration</a></li>
+			  <a href="/user/admin">User Administration</a>
 			  <!-- /tmpl_if -->
-			  <!-- tmpl_if name='show_misc_header' -->
-			</ul>
+			<!-- tmpl_if name='show_misc_header' -->
+			</div>
 			<!-- /tmpl_if -->
 
 
