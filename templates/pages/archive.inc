@@ -18,12 +18,12 @@
 <!-- tmpl_if name='show_archive_year' -->
 <h2>Past Years</h2>
 <p>&nbsp;</p>
-<ul class="list-group row">
+<ul>
 <!-- tmpl_loop name='show_archive_year' -->
-<li class="list-group-item col-xs-1"></li>
-<li class="list-group-item col-xs-5"><a href="/archive/<!-- tmpl_var name='year' -->"><!-- tmpl_var name='year' --></a></li>
+<li><a href="/archive/<!-- tmpl_var name='year' -->"><!-- tmpl_var name='year' --></a></li>
 <!-- /tmpl_loop -->
 </ul>
+</blockquote>
 <!-- /tmpl_if name='show_archive_year' -->
 
 <p>&nbsp;</p>
