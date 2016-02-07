@@ -1107,7 +1107,7 @@ sub archive
     #
     # Load the display template.
     #
-    my $template = $self->load_layout("archive.inc", global_vars => 1);
+    my $template = $self->load_layout("archive.inc", global_vars => 1, loop_context_vars => 1 );
 
     #
     #  Articles.
