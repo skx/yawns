@@ -5765,6 +5765,8 @@ sub add_weblog
                           comments_allowed => $comments_enabled
                         );
 
+            # now show it
+            return( $self->redirectURL( "/users/$username/weblog" ) );
         }
     }
 
