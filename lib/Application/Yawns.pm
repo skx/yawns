@@ -841,8 +841,8 @@ sub application_login
     my $session = $self->param('session');
 
     # If already logged in redirect
-    my $username = $session->param("username") || undef;
-    if ( $username && ( $username !~ /^Anonymous$/i ) )
+    my $username = $session->param("logged_in") || undef;
+    if ( $username && ( $username !~ /^anonymous$/i ) )
     {
         return $self->redirectURL("/");
     }
