@@ -29,9 +29,9 @@
 	    <div class="tags"><span id="current_tags_<!-- tmpl_var name='item_id' -->">
             <!-- tmpl_include name="../includes/tags.template" -->
             </span></div>
-        
+
 	<div class="body">
-                      <!-- tmpl_var name='bodytext' -->	
+                      <!-- tmpl_var name='bodytext' -->
 	</div>
 
 	<div class="links">
@@ -48,20 +48,15 @@
 	<p>&nbsp;</p>
 	    <!-- /tmpl_loop -->
 
-<div class="navigation">
-	<div class="row">
-	<span class="left">
-<!-- tmpl_if name='show_prev' -->
-<a href="/users/<!-- tmpl_var name='viewusername' -->/weblog/start/<!-- tmpl_var name='show_prev' -->">Previous Entries</a>
-<!-- /tmpl_if -->
-	</span>
-	<span class="right">
-<!-- tmpl_if name='show_next' -->
-<a href="/users/<!-- tmpl_var name='viewusername' -->/weblog/start/<!-- tmpl_var name='show_next' -->">Next Entries</a>
-<!-- /tmpl_if -->
-	</span>
-	<div class="clear"> </div>
-	</div>
-</div>
 
+<nav>
+  <ul class="pager">
+<!-- tmpl_if name='show_prev' -->
+   <li class="previous"><a href="/users/<!-- tmpl_var name='viewusername' -->/weblog/start/<!-- tmpl_var name='show_prev' -->"><span aria-hidden="true">&larr;</span> Older</a></li>
+<!-- /tmpl_if -->
+<!-- tmpl_if name='show_next' -->
+    <li class="next"><a href="/users/<!-- tmpl_var name='viewusername' -->/weblog/start/<!-- tmpl_var name='show_next' -->">Newer <span aria-hidden="true">&rarr;</span></a></li>
+<!-- /tmpl_if -->
+   </ul>
+</nav>
 	<!-- /tmpl_if -->  <!-- matches error -->
