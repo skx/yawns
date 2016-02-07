@@ -2,7 +2,9 @@
 
 <div class="row">
   <div class="col-sm-1 col-md-1"></div>
-  <div class="col-sm-1 col-md-11">
+  <div class="col-sm-1 col-md-11"><h1>Edit your profile</h1></div>
+</div>
+
 
          <form action="/edit/user/<!-- tmpl_var name="username" -->" method="post">
        <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
