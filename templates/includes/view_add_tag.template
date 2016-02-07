@@ -1,4 +1,4 @@
-<script>
+<script type="text/javascript">
 function addTag(url)
 {
     $("#current_tags").load( url,
@@ -6,16 +6,17 @@ function addTag(url)
                                  $("#new_tag").val( "" )
                                  $("#add_tag").hide()
                              })
-
 }
 
- $(document).ready(function(){
-    $("#new_tag").autocomplete("/ajax/complete");
-    $('a#toggle').click(function() {
-       $('#add_tag').toggle(400);
-     })
+$(document).ready(function(){
+    $.getScript("/js/jquery.autocomplete.js", function() {
 
-} )
+        $("#new_tag").autocomplete("/ajax/complete");
+        $('a#toggle').click(function() {
+            $('#add_tag').toggle(400);
+        })
+    });
+});
 </script>
 <div class="tags">
   <span id="current_tags"><!-- tmpl_include name="../includes/tags.template" --></span>
