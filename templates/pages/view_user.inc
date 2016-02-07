@@ -47,7 +47,7 @@
 <p>As this is your user-page you <a href="/edit/user/<!-- tmpl_var name='viewusername' -->">can change the information</a> that it is displayed here.</p>
 <!-- /tmpl_if -->
 
-<table>
+<table width="100%">
   <!-- tmpl_if name='showname' -->
   <tr><td><b>Real name:</b></td><td><!-- tmpl_var name='realname' escape='html' -->	 <!-- /tmpl_if -->
   </td></tr>
@@ -73,7 +73,7 @@
   <!-- tmpl_if name='weblogs'-->
   <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
   <tr><td><b>Weblogs</b></td><td>
-      <a href="/users/<!--tmpl_var name='viewusername'>/weblog"><!-- tmpl_var name="weblogs" --> <!-- tmpl_if name="weblog_plural" -->Entries<!-- tmpl_else -->Entry<!-- /tmpl_if --></a>  <a href="/weblog/feeds/<!-- tmpl_var name="viewusername" -->"><img src="/images/xml.gif" alt="XML logo" width="36" height="14"></a></td>	</tr>
+      <a href="/users/<!--tmpl_var name='viewusername'>/weblog"><!-- tmpl_var name="weblogs" --> <!-- tmpl_if name="weblog_plural" -->Entries<!-- tmpl_else -->Entry<!-- /tmpl_if --></a>  </td>	</tr>
   <!-- /tmpl_if -->
 
 </table>
