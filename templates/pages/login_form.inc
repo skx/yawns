@@ -35,19 +35,15 @@
         </div>
 
         <div style="margin-top:10px" class="form-group pull-right">
-          <div class="col-sm-12 controls">
-            <p><input name="secure" value="1" type="checkbox"> <a href="/about/Secure%20Login">Bind session to your IP</a></p>
-          </div>
+          <p><input name="secure" value="1" type="checkbox"> <a href="/about/Secure%20Login">Bind session to your IP</a></p>
         </div>
 
         <div style="margin-top:10px" class="form-group pull-right">
-          <div class="col-sm-12 controls">
           <!-- tmpl_if name='http' -->
           <p><input name="ssl" value="1" type="checkbox"> Force SSL use for all pages (<a href="/about/SSL%20Certificate">validate the SSL certificate</a>)</p>
           <!-- tmpl_else -->
           <p><input name="ssl" value="1" type="checkbox" checked> Force SSL use for all pages (<a href="/about/SSL%20Certificate">validate the SSL certificate</a>)</p>
           <!-- /tmpl_if -->
-          </div>
         </div>
 
         <div style="margin-top:10px" class="form-group pull-right">
