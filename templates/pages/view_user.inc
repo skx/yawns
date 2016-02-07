@@ -60,7 +60,7 @@
       </div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="<!-- tmpl_var name='gravitar' -->" class="img-circle img-responsive"> </div>
+          <div class="col-md-3 col-lg-3 " align="center"> <!-- tmpl_if name='gravitar' --><img alt="User Pic" src="<!-- tmpl_var name='gravitar' -->" class="img-circle img-responsive"><!-- /tmpl_if --> </div>
           <div class=" col-md-9 col-lg-9 ">
             <table class="table table-user-information">
               <tbody>
