@@ -272,10 +272,10 @@ div.teaser div.body {
 }
 
 div.teaser .title {
-    font-size: 110%;
+	font-size: 110%;
     border-bottom: 1px solid silver;
-    padding: 0;
-    margin-bottom: 0px;
+padding: 0;
+margin-bottom: 0px;
 }
 
 div.teaser .title a {
@@ -407,15 +407,11 @@ div.weblog div.tags {
 }
 
 pre {
-    white-space: pre-wrap;       /* CSS 3 */
-    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-    white-space: -pre-wrap;      /* Opera 4-6 */
-    white-space: -o-pre-wrap;    /* Opera 7 */
-    word-wrap: break-word;       /* Internet Explorer 5.5+ */
-    background:     white;
-    border:         solid;
-    border-width:   thin;
-    padding: 5px  10px;
+       overflow:       auto;
+       background:     white;
+       border:         solid;
+       border-width:   thin;
+       padding: 5px  10px;
 }
 
 pre.terminal { background: black; color: white; padding: 1em; font-size: 90% ; overflow: auto; font-family: courier; }
