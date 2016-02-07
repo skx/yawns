@@ -708,7 +708,7 @@ sub _findByTagType
         push( @$tags,
               {  link  => $link,
                  title => $title,
-              } );
+              } ) if ( $link && $title );
 
     }
     $sql->finish();
