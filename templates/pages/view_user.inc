@@ -92,8 +92,8 @@
 
   <!-- tmpl_unless name='anon' -->
   <div class="row">
-
-    <div class="col-sm-1 col-md-6">
+    <div class="col-sm-1 col-md-1"></div>
+    <div class="col-sm-1 col-md-5">
       <!-- tmpl_if name='comments' -->
       <p><b>Recent comments:</b></p>
       <ul class="list-unstyled">
@@ -117,7 +117,7 @@
       <!-- /tmpl_if -->
     </div>
 
-    <div class="col-sm-1 col-md-6">
+    <div class="col-sm-1 col-md-5">
       <!-- tmpl_if name='articles' -->
       <p><b>Recent articles:</b></p>
       <ul class="list-unstyled">
