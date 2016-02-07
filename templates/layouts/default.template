@@ -52,8 +52,7 @@
 		      <a class="navbar-brand" href="/">Debian-Administration.org</a>
 		    </div>
 		    <ul class="nav navbar-nav">
-		      <li class="active"><a href="/">Home</a></li>
-
+		      <li><a href="/">Home</a></li>
 		      <li><a href="/about/Debian%20Administration">About</a></li>
 		      <li><a href="/archive/">Archive</a></li>
 		      <li><a href="/about/Contribute">Contribute</a></li>
