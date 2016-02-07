@@ -9,7 +9,7 @@
         <div class="row">
           <div class="col-sm-1 col-md-1"></div>
           <div class="col-sm-11 col-md-11">
-            <h2><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='title' --></a></h2>
+            <h3><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='title' --></a></h3>
           </div>
         </div>
         <div class="row">
