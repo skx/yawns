@@ -22,7 +22,7 @@
 
 <!-- tmpl_else -->
 
-<p class="right"><a href="/tag/feeds/<!-- tmpl_var name='tag' escape='html'-->"><img src="/images/xml.gif" alt="XML logo" width="36" height="14"></a></p>
+<p align="right"><a href="/tag/feeds/<!-- tmpl_var name='tag' escape='html'-->"><img src="/images/xml.gif" alt="XML logo" width="36" height="14"></a></p>
 
 
 
