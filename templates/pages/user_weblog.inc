@@ -46,14 +46,13 @@
       | <a href="/comment/feed/onweblog/<!-- tmpl_var name='gid' -->" title="Subscribe to comments on this weblog entry."><img src="/images/xml.gif" title="Subscribe to comments on this weblog entry." alt="XML logo" width="36" height="14"></a>
         ]
 	</div>
-<p></p>
 
 	</div>
         </div>
         <div class="col-sm-1 col-md-1"></div>
 
-	<p>&nbsp;</p>
         </div>
+	<p>&nbsp;</p>
 	    <!-- /tmpl_loop -->
 
 
