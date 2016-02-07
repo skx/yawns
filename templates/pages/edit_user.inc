@@ -19,18 +19,18 @@
             <table class="table table-user-information">
               <tbody>
                 <tr>
-                  <td>Real Name:</td>
+                  <td><b>Your Name:</b></td>
                   <td><input name="realname"  type="text" size="50" maxlength="25" value="<!-- tmpl_var name='realname' -->" /></td>
                 </tr>
                 <tr>
-                  <td>Private Email:</td>
+                  <td><b>Private Email:</b></td>
                   <td><input name="realemail" type="text" size="50" maxlength="50" value="<!-- tmpl_var name='realemail' -->" /></td>
                 </tr>
-                <tr><td></td> <td>(This is not displayed publicly and is used to validate your account, and receive comment notification emails if you enable that feature.)</td></tr>
+                <tr><td></td> <td>Your <b>private</b> email is not displayed publicly and is used to validate your account, and receive comment-notification emails if you enable that feature.</td></tr>
                 <tr><td><b>Public Email:</b></td>
                   <td><input name="fakeemail" type="text" size="50" maxlength="50" value="<!-- tmpl_var name='fakeemail' -->" /></td></tr>
 	        <tr><td></td>
-                  <td>(Displayed upon your user page, may be spam trapped or blank.)</td></tr>
+                  <td>The public email is shown upon your user page, and may be spam-trapped or blank.)</td></tr>
 	        <tr><td><b>Homepage:</b></td>
 	          <td><input name="url" type="text" size="50" maxlength="100" value="<!-- tmpl_var name='url' -->" /></td></tr>
 	        <tr><td valign="top"><b>Bio:</b></td>
