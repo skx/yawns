@@ -76,13 +76,13 @@
       <a href="/users/<!--tmpl_var name='viewusername'>/weblog"><!-- tmpl_var name="weblogs" --> <!-- tmpl_if name="weblog_plural" -->Entries<!-- tmpl_else -->Entry<!-- /tmpl_if --></a>  <a href="/weblog/feeds/<!-- tmpl_var name="viewusername" -->"><img src="/images/xml.gif" alt="XML logo" width="36" height="14"></a></td>	</tr>
   <!-- /tmpl_if -->
 
-
-  <!-- tmpl_if name='showbio' -->
-  <tr><td><p></p></td><td><p></p></td></tr>
-  <tr><td valign="top"><b>Bio:</b></td>
-    <td valign="top"><!-- tmpl_var name='bio' --></td></tr>
-  <!-- /tmpl_if -->
 </table>
+
+<!-- tmpl_if name='showbio' -->
+<p>&nbsp;</p>
+  <!-- tmpl_var name='bio' -->
+<p>&nbsp;</p>
+<!-- /tmpl_if -->
 
     </div>
   </div>
