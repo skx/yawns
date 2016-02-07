@@ -118,13 +118,13 @@
                         <div class="list-group">
 			<!-- /tmpl_if -->
 			  <!-- tmpl_if name='show_recent_users' -->
-			  <a href="/recent/users">Recent members</a>
+			  <a class="list-group-item" href="/recent/users">Recent members</a>
 			  <!-- /tmpl_if -->
 			  <!-- tmpl_if name='show_static_edit' -->
-			  <a href="/edit/about">Static pages</a>
+			  <a class="list-group-item" href="/edit/about">Static pages</a>
 			  <!-- /tmpl_if -->
 			  <!-- tmpl_if name='show_edit_users' -->
-			  <a href="/user/admin">User Administration</a>
+			  <a class="list-group-item" href="/user/admin">User Administration</a>
 			  <!-- /tmpl_if -->
 			<!-- tmpl_if name='show_misc_header' -->
 			</div>
