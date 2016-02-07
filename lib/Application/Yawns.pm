@@ -3566,7 +3566,7 @@ sub edit_user
                          bio       => $form->param('bio') );
 
             # Update
-            $session->param( ok_flash => "Profile updated" );
+            $session->param( ok_flash => "Profile Updated!" );
             return( $self->redirectURL( "/users/$edituser" ) );
 
         }
@@ -5795,6 +5795,8 @@ sub add_weblog
                         );
 
             # now show it
+            $session->param( ok_flash => "Weblog Updated!" );
+
             return( $self->redirectURL( "/users/$username/weblog" ) );
         }
     }
