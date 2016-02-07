@@ -1,7 +1,10 @@
-      <h1>Bookmarks for <!-- tmpl_var name='viewusername' --></h1>
+<ol class="breadcrumb">
+  <li><a href="/users/<!-- tmpl_var name="viewusername" -->"><!-- tmpl_var name="viewusername" --></a></li>
+  <li><a href="/users/<!-- tmpl_var name="viewusername" -->/scratchpad">Scratchpad</a></li>
+</ol>
+
 
 <!-- tmpl_if name='has_bookmarks' -->
-
 
    <!-- tmpl_if name='article_bookmarks' -->
 <h3>Bookmarked Articles</h3>
