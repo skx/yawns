@@ -1,3 +1,4 @@
+<div class="container-fluid">
 	<!-- tmpl_if name="error" -->
 	<h1>No Entries Found</h1>
 
@@ -18,6 +19,9 @@
 	<p>As this is your weblog you may <a href="/create/weblog">create a new entry</a>.</p>
 	<!-- /tmpl_if -->
 	    <!-- tmpl_loop name='entries' -->
+            <div class="row">
+            <div class="col-sm-1 col-md-1"></div>
+    <div class="col-sm-11 col-md-10">
 	<div class="weblog">
         <!-- link -->
         <div class="link">#<a href="/users/<!-- tmpl_var escape='url' name='user' -->/weblog/<!-- tmpl_var name='item_id' -->"><!-- tmpl_var name='item_id' --></a></div>
@@ -45,7 +49,11 @@
 <p></p>
 
 	</div>
+        </div>
+        <div class="col-sm-1 col-md-1"></div>
+
 	<p>&nbsp;</p>
+        </div>
 	    <!-- /tmpl_loop -->
 
 
@@ -60,3 +68,5 @@
    </ul>
 </nav>
 	<!-- /tmpl_if -->  <!-- matches error -->
+
+</div>
