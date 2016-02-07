@@ -55,46 +55,6 @@ a:active {
 dt {
    font-weight:bold;
 }
-#header {
-        height:110px;
-        background-color: white;
-        border-bottom:1px solid black;
-	background-image: url(/images/logo.png);
-	background-repeat: no-repeat;
-	padding-left:120px;
-}
-
-#header h1 {
-    color: black !important;
-}
-
-#header h1 a, #header h1 a:hover, #header h1 a:visited {
-    color: #cc0033;
-    text-decoration: none !important;
-}
-
-#header ul {
-    list-style-type:none;
-    margin:0;
-    padding:0;
-    overflow:hidden;
-}
-#header li {
-    float:left;
-}
-#header ul li a:link, #header ul li a:visited {
-    display:block;
-    width:110px;
-    font-weight:bold;
-    color:black;
-    background-color:white;
-    text-align:center;
-    padding:4px;
-    text-decoration:none;
-}
-#header ul li a:hover, #header ul li a:visited #header h1 a:hover  {
-    background-color:#cc0033;
-}
 
 
 #signup {
@@ -111,65 +71,9 @@ dt {
         float:left;
 }
 
-#logo h1{
-        font: 14px Georgia, "Hoefler Text", "DejaVu Serif", "Bistream Vera Serif", "Lucida Bright", serif;
-        font-size:26px;
-        color:#F76B0C;
-        font-weight:normal;
-        text-decoration:none;
-        margin-left: 40px;
-
-}
-#logo h1 a {
-        text-decoration: none;
-}
-#logo h4 {
-        font: 14px Georgia, "Hoefler Text", "DejaVu Serif", "Bistream Vera Serif", "Lucida Bright", serif;
-        font-size:11px;
-        color:#808080;
-        font-weight:normal;
-       text-decoration:none;
-        padding-left:75px;
-}
-
-#links ul {
-        margin:0px; 
-        padding-top:80px;
-        float: right;
-}
-
-#links li{
-        float:left;
-        list-style-type:none;
-        width:129px;
-        height:25px;
-        text-align:center;
-        background-color:#f0f0f0;
-        border-left:1px solid black;
-        border-top:1px solid black;
-        padding-top:4px;
-}
-#links li:hover {
-        background-color: silver;
-}
-#links a{
-        display: block;
-        font: 14px  Georgia, "Hoefler Text", "DejaVu Serif", "Bistream Vera Serif", "Lucida Bright", serif;
-        font-size:11px;
-        color: #cc0033;
-        font-weight: bold;
-        text-decoration: none;
-}
-
-#links a:hover {
-        color: red;
-}
-
-
 #advert, #poll, #headlines, #contribute, #blogs, #tipbox, #flattr
 {
     background-color: white;
-    border: 1px solid #cc0033;
     margin: 2px;
     padding:5px;
     width:80%;
@@ -177,7 +81,6 @@ dt {
 #advert h3, #poll h3, #headlines h3, #contribute h3, #blogs h3 , #tipbox h3, #flattr h3
 {
 	font-size: 110%;
-        border-bottom: 1px solid #cc0033;
         margin-left:0em;
 }
 
@@ -273,7 +176,7 @@ div.teaser div.body {
 
 div.teaser .title {
 	font-size: 110%;
-    border-bottom: 1px solid #cc0033;
+    border-bottom: 1px solid silver;
 padding: 0;
 margin-bottom: 0px;
 }
@@ -418,151 +321,3 @@ pre.terminal { background: black; color: white; padding: 1em; font-size: 90% ; o
 pre.terminal span.prompt { font-weight: bold; color: #f00; }
 pre.terminal span.input { font-weight: bold; color: #afa; }
 pre.terminal span.hiddeninput { font-style: italic; color: #afa; }
-
-
-
-
-
-
-/* --------
-  The CSS rules offered here are just an example.
- --------- */
-
-/* --- Page Structure  --- */
-html, body {
-    height:100%;
-    color: white;
-    margin: 0px;
-    padding:0px;
-}
-
-body {
-  min-width:720px;
-  width:100%;
-  height:101%;
-  background:white;
-  color:black;
-  font-family: Georgia, "Hoefler Text", "DejaVu Serif", "Bistream Vera Serif", "Lucida Bright", serif;
-
-}
-#wrapper{
-  padding:10px 2.5%;
-  border:1px solid #ccc;
-  text-align:left;
-  overflow: hidden
-}
-#content {
-  width: 100%;
-  margin: 0 auto;
-  padding-bottom: 20px;
-  overflow: hidden
-}
-#container {
-  float:left;
-  width:98%;
-  margin-right:-230px;
-  position:relative;
-  /*min-height:0;*/ /* hasLayout prevents jumping content in IE */
-}
-#inner {
-  float:right;
-  width:100%;
-}
-#main{
-padding: 5px;
-  margin-right:230px;
-  position:relative; /* for IE */
-  min-height:0; /* IE7 hasLayout */
-}
-#rightcol{
-  float:right;
-  display:inline;
-  width:225px;
-  position:relative;
-  overflow:hidden
-}
-
-.slide {
-  position:relative;
-  color: black;
-  top:0;
-  right:0;
-  float:left;
-  width:100%;
-  padding-bottom:2em;
-  padding-left:1em;
-  z-index:9
-}
-.trigger {
-  position:absolute;
-  top:1px;
-  right:1px;
-  width:3.9em;
-  font-weight:700;
-  text-align:center;
-  z-index:10
-}
-
-/* --- Links --- */
-a.trigger, a:link.trigger, a:visited.trigger {
-  padding:0 7px;
-  border-style:solid;
-  border-width:2px;
-  background:#f0f0f0 none;
-}
-a:hover.trigger, a:focus.trigger, a:active.trigger {border-color:#b3c5db}
-
-a.collapsed, a:link.collapsed, a:visited.collapsed {background:#000 none; color:#dfdfff}
-
-a:hover.collapsed, a:focus.collapsed, a:active.collapsed {color:#fff}
-
-a.switch.selected {color:#ff5900}
-
-
-
-#centeredmenu {
-   float:left;
-   width:100%;
-   background:#fff;
-   border-bottom:4px solid #000;
-   overflow:hidden;
-   position:relative;
-}
-#centeredmenu ul {
-   clear:left;
-   float:left;
-   list-style:none;
-   margin:0;
-   padding:0;
-   position:relative;
-   left:50%;
-   text-align:center;
-}
-#centeredmenu ul li {
-   display:block;
-   float:left;
-   list-style:none;
-   margin:0;
-   padding:0;
-   position:relative;
-   right:50%;
-}
-#centeredmenu ul li a {
-   display:block;
-   margin:0 0 0 1px;
-   padding:3px 10px;
-   background:#ddd;
-   color:#000;
-   text-decoration:none;
-   line-height:1.3em;
-}
-#centeredmenu ul li a:hover {
-   background:#369;
-   color:#fff;
-}
-#centeredmenu ul li a.active,
-#centeredmenu ul li a.active:hover {
-   color:#fff;
-   background:#000;
-   font-weight:bold;
-}
