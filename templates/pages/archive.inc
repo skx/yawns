@@ -5,7 +5,7 @@
   <!-- tmpl_if name='articles' -->
   <!-- tmpl_loop name='articles' -->
       <div class="container-fluid">
-<h1>Archive for <!-- tmpl_var name='year' --></h1>
+        <h1>Archive for <!-- tmpl_var name='year' --></h1>
         <div class="row">
           <div class="col-sm-1 col-md-1"></div>
           <div class="col-sm-11 col-md-11">
@@ -17,9 +17,12 @@
           <div class="col-sm-11 col-md-10"><!-- tmpl_var name='teaser' --></div>
         </div>
         <!-- /tmpl_loop -->
-        </div>
+      </div>
   <!-- tmpl_else -->
-  <p>No articles for this year.</p>
+  <div class="container-fluid">
+    <h1>Archive for <!-- tmpl_var name='year' --></h1>
+    <p>No articles for this year.</p>
+  </div>
   <!-- /tmpl_if -->
 </blockquote>
 
