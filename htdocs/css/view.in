@@ -169,7 +169,7 @@ dt {
 #advert, #poll, #headlines, #contribute, #blogs, #tipbox, #flattr
 {
     background-color: white;
-    border: 1px solid #cc0033;
+    border: 1px solid silver;
     margin: 2px;
     padding:5px;
     width:80%;
@@ -177,7 +177,7 @@ dt {
 #advert h3, #poll h3, #headlines h3, #contribute h3, #blogs h3 , #tipbox h3, #flattr h3
 {
 	font-size: 110%;
-        border-bottom: 1px solid #cc0033;
+        border-bottom: 1px solid silver;
         margin-left:0em;
 }
 
