@@ -61,19 +61,19 @@
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='show_scratchpad'-->
-  <tr><td>Scratchpad </td><td><a href="/users/<!--tmpl_var name='viewusername'>/scratchpad">Here</a></td></tr>
+  <tr><td><b>Scratchpad</b></td><td><a href="/users/<!--tmpl_var name='viewusername'>/scratchpad">Scratchpad</a></td></tr>
   <!-- tmpl_else -->
   <tr><td>Scratchpad </td><td>None</td></tr>
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='show_bookmarks' -->
-  <tr><td></td><td><a href="/users/<!-- tmpl_var name='viewusername' -->/bookmarks">Bookmarks</a></td></tr>
+  <tr><td><b>Bookmarks</b></td><td><a href="/users/<!-- tmpl_var name='viewusername' -->/bookmarks">Bookmarks</a></td></tr>
   <!-- tmpl_else -->
   <tr><td></td><td>None</td></tr>
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='weblogs'-->
-  <tr><td>Weblog</td><td><a href="/users/<!--tmpl_var name='viewusername'>/weblog"><!-- tmpl_var name="weblogs" --> <!-- tmpl_if name="weblog_plural" -->Entries<!-- tmpl_else -->Entry<!-- /tmpl_if --></a></td></tr>
+  <tr><td><b>Weblog</b></td><td><a href="/users/<!--tmpl_var name='viewusername'>/weblog"><!-- tmpl_var name="weblogs" --> <!-- tmpl_if name="weblog_plural" -->Entries<!-- tmpl_else -->Entry<!-- /tmpl_if --></a></td></tr>
   <!-- tmpl_else -->
   <tr><td>Weblog</td><td>None</td></tr>
   <!-- /tmpl_if -->
