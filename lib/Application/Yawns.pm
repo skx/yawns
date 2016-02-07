@@ -1996,7 +1996,7 @@ sub single_weblog
             $template->param( reportable => 1 );
         }
     }
-    if ( not @$entries )
+    if ( not $entries || not @$entries )
     {
         $error = 1;
 
