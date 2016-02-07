@@ -1,24 +1,18 @@
 
 <!-- tmpl_if name="error" -->
-<h1>Entry Not Found</h1>
-<blockquote>
+<ol class="breadcrumb">
+  <li>Weblog</li>
+  <li><a href="/users/<!-- tmpl_var name="user" -->/weblog"><!-- tmpl_var name="user" --></a></li>
+  <li class="active"><a href="/users/<!-- tmpl_var name='user' -->/weblog/<!-- tmpl_var name='item' -->">#<!-- tmpl_var name="item" --></a></li>
+</ol>
+
+<div class="row">
+  <div class="col-sm-1 col-md-1"></div>
+  <div class="col-sm-11 col-md-10">
   <p>The weblog entry you are trying to reach does not exist!</p>
-  <p>See <a href="/users/<!-- tmpl_var name="user" -->/weblog">all weblog entries</a> made by <a href="/users/<!-- tmpl_var name="user" -->"><!-- tmpl_var name="user"--></a>.</p>
-</blockquote>
-<table width="100%">
-  <tr>
-    <td align="left">
-      <!-- tmpl_if name='error_prev' -->
-      <a href="/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="error_prev" -->">&lt;&lt;&lt; Previous</a>
-      <!-- /tmpl_if -->
-    </td>
-    <td align="right">
-      <!-- tmpl_if name='error_next'>
-	   <a href="/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="error_next" -->">Next &gt;&gt;&gt;</a>
-	   <!-- /tmpl_if -->
-    </td>
-  </tr>
-</table>
+  </div>
+  <div class="col-sm-1 col-md-1"></div>
+</div>
 
 <!-- tmpl_else -->
 
