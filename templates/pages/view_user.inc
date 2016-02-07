@@ -121,7 +121,7 @@
       <ul class="list-unstyled">
         <!-- tmpl_loop name='articles' -->
         <li><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='title' --></a>
-          <ul class="list-unstyled">
+          <ul>
             <li>Posted on <!-- tmpl_var name='ondate' -->.</li>
         </ul></li>
         <!-- /tmpl_loop -->
