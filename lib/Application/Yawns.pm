@@ -842,7 +842,7 @@ sub application_login
 
     # If already logged in redirect
     my $username = $session->param("username") || undef;
-    if ( $username && ( $username ne "Anonymous" ) )
+    if ( $username && ( $username !~ /^Anonymous$/i ) )
     {
         return $self->redirectURL("/");
     }
