@@ -1,6 +1,6 @@
 <ol class="breadcrumb">
-  <li><a href="/users/<!-- tmpl_var name="user" -->"><!-- tmpl_var name="user" --></a></li>
-  <li><a href="/users/<!-- tmpl_var name="user" -->/scratchpad">Scratchpad</a></li>
+  <li><a href="/users/<!-- tmpl_var name="view" -->"><!-- tmpl_var name="view" --></a></li>
+  <li><a href="/users/<!-- tmpl_var name="view" -->/scratchpad">Scratchpad</a></li>
 </ol>
 
 <!-- tmpl_if name="empty" -->
