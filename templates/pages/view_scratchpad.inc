@@ -1,19 +1,40 @@
-      <h1>Scratchpad for : <a href="/users/<!-- tmpl_var name="view" -->"><!-- tmpl_var name="view" --></a></h1>
-	<p></p>
-	<!-- tmpl_if name="empty" -->
-           <p>The scratchpad for <!-- tmpl_var name='view' --> is currently empty.</p>
-	<!-- tmpl_else -->
+<ol class="breadcrumb">
+  <li><a href="/users/<!-- tmpl_var name="user" -->"><!-- tmpl_var name="user" --></a></li>
+  <li><a href="/users/<!-- tmpl_var name="user" -->/scratchpad">Scratchpad</a></li>
+</ol>
 
-           <!-- tmpl_if name="private" -->
-           <p>The scratchpad for <!-- tmpl_var name='view' --> is currently set to private, meaning only they can view it..</p>
-           <!-- tmpl_else -->
+<!-- tmpl_if name="empty" -->
+<div class="row">
+  <div class="col-sm-1 col-md-1"></div>
+  <div class="col-sm-11 col-md-10">
+    <p>The scratchpad for <!-- tmpl_var name='view' --> is currently empty.</p>
+  </div>
+  <div class="col-sm-1 col-md-1"></div>
+</row>
 
-	     <!-- tmpl_var name='scratchpad' -->
+<!-- tmpl_else -->
 
-           <!-- /tmpl_if -->
-	<!-- /tmpl_if -->
-	
-	<!-- tmpl_if name="edit" -->
-	<hr />
-	<p>As this is your scratchpad you may <a href="/edit/scratchpad/<!-- tmpl_var name="view" -->">edit it</a>.</p>
-	<!-- /tmpl_if -->
+<!-- tmpl_if name="edit" -->
+<p>As this is your scratchpad you may <a href="/edit/scratchpad/<!-- tmpl_var name="view" -->">edit it</a>.</p>
+<!-- /tmpl_if -->
+
+<!-- tmpl_if name="private" -->
+<div class="row">
+  <div class="col-sm-1 col-md-1"></div>
+  <div class="col-sm-11 col-md-10">
+   <p>The scratchpad for <!-- tmpl_var name='view' --> is currently set to private, meaning only they can view it.</p>
+  </div>
+  <div class="col-sm-1 col-md-1"></div>
+</div>
+
+<!-- tmpl_else -->
+
+<div class="row">
+  <div class="col-sm-1 col-md-1"></div>
+  <div class="col-sm-11 col-md-10">
+   <!-- tmpl_var name='scratchpad' -->
+  </div>
+  <div class="col-sm-1 col-md-1"></div>
+</div>
+<!-- /tmpl_if -->
+<!-- /tmpl_if -->
