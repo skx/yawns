@@ -46,7 +46,7 @@
           <!-- /tmpl_if -->
         </div>
 
-        <div style="margin-bottom: 25px" class="input-group">
+        <div style="margin-bottom: 25px" class="input-group pull-right">
           <input type="submit" id="submit" name="submit" value="Login" class="btn btn-info">
         </div>
       </form>
