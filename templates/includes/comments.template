@@ -24,7 +24,7 @@
    <!-- /tmpl_if -->
   </div>
 
- <div class="title"><a name="comment_<!-- tmpl_var name='comment_id' -->"><!-- tmpl_var name='title' --></a>
+ <div class="title" id="comment_<!-- tmpl_var name='comment_id' -->"><!-- tmpl_var name='title' -->
 
  </div>
 
