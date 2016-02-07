@@ -172,7 +172,8 @@
                         </div>
 <!-- /tmpl_if -->
 
-                        <!-- Flattr -->
+<!-- Flattr -->
+<p>&nbsp;</p>
 			<div style="text-align:center;"><a class="FlattrButton" style="display:none;" href="http://debian-administration.org"></a></div>
 
 
