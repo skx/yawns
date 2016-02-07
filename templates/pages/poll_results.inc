@@ -1,9 +1,9 @@
                   <!-- tmpl_if name='anon_voted' -->
-                  <p>    An anonymous user from your IP address 
-                        (<!-- tmpl_var name='anon_voted' -->) has already 
+                  <p>    An anonymous user from your IP address
+                        (<!-- tmpl_var name='anon_voted' -->) has already
                         voted, and so your vote has been ignored.
                   </p>
-                  <p>    If you have not already voted in this poll then it 
+                  <p>    If you have not already voted in this poll then it
                         was probably someone else using the same ISP as you.</p>
 		  <p>To avoid this problem in future, please <a href="/create/user">create a user account</a> and login - then you will always be able to vote, and you will also be able to change your vote if you wish.</p>
 		  <p>&nbsp;</p>
@@ -61,20 +61,19 @@
  <div class="spacer"> </div>
 </div>
 
-<div class="row">
- <span class="left" style="white-space: nowrap;">
+<p>&nbsp;</p>
+
+<nav>
+ <ul class="pager">
   <!-- tmpl_if name='prev' -->
-   <a href="/polls/<!-- tmpl_var name='prev_num' -->">&lt;&lt;&lt; <!-- tmpl_var name='prev' --></a>
+   <li class="previous"><a href="/polls/<!-- tmpl_var name='prev_num' -->">&lt;&lt;&lt; <!-- tmpl_var name='prev' --></a></li>
   <!-- /tmpl_if -->
- </span>
- <span class="right" style="white-space: nowrap;">
   <!-- tmpl_if name='next' -->
-   <a href="/polls/<!-- tmpl_var name='next_num' -->"><!-- tmpl_var name='next' --> &gt;&gt;&gt;</a>
+   <li class="next"><a href="/polls/<!-- tmpl_var name='next_num' -->"><!-- tmpl_var name='next' --> &gt;&gt;&gt;</a></li>
   <!-- /tmpl_if -->
- </span>
- <div class="spacer"> </div>
-</div>
-<p></p>
+ </ul>
+ </nav>
+ <p>&nbsp;</p>
 		  <!-- /tmpl_if -->
 
 <!-- tmpl_if name="comments" -->
