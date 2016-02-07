@@ -5,9 +5,30 @@
     border-top: 1px solid black;
 }
 
+h1 { font-size: 2.20em; }
+h2 { font-size: 1.90em; }
+h3 { font-size: 1.55em; }
+h4 { font-size: 1.30em; }
+h5 { font-size: 1.10em; }
+h6 { font-size: 1.00em; }
+
 img {
         border-style: none;
 }
+
+h1, h3, h4, h5, h6 {
+        color: black;
+        font-weight: bold;
+        margin-bottom: 0;
+        text-align: left;
+        margin-left: 4px;
+        font-family: Georgia, "Hoefler Text", "DejaVu Serif", "Bistream Vera Serif", "Lucida Bright", serif;
+}
+h3 a {
+        text-decoration: none;
+}
+
+
 
 a {
         text-decoration: none;
@@ -34,6 +55,46 @@ a:active {
 dt {
    font-weight:bold;
 }
+#header {
+        height:110px;
+        background-color: white;
+        border-bottom:1px solid black;
+	background-image: url(/images/logo.png);
+	background-repeat: no-repeat;
+	padding-left:120px;
+}
+
+#header h1 {
+    color: black !important;
+}
+
+#header h1 a, #header h1 a:hover, #header h1 a:visited {
+    color: #cc0033;
+    text-decoration: none !important;
+}
+
+#header ul {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+    overflow:hidden;
+}
+#header li {
+    float:left;
+}
+#header ul li a:link, #header ul li a:visited {
+    display:block;
+    width:110px;
+    font-weight:bold;
+    color:black;
+    background-color:white;
+    text-align:center;
+    padding:4px;
+    text-decoration:none;
+}
+#header ul li a:hover, #header ul li a:visited #header h1 a:hover  {
+    background-color:#cc0033;
+}
 
 
 #signup {
@@ -44,6 +105,31 @@ dt {
    background: #fefefe;
    width:100%;
    border:1px dotted grey;
+}
+
+#logo {
+        float:left;
+}
+
+#logo h1{
+        font: 14px Georgia, "Hoefler Text", "DejaVu Serif", "Bistream Vera Serif", "Lucida Bright", serif;
+        font-size:26px;
+        color:#F76B0C;
+        font-weight:normal;
+        text-decoration:none;
+        margin-left: 40px;
+
+}
+#logo h1 a {
+        text-decoration: none;
+}
+#logo h4 {
+        font: 14px Georgia, "Hoefler Text", "DejaVu Serif", "Bistream Vera Serif", "Lucida Bright", serif;
+        font-size:11px;
+        color:#808080;
+        font-weight:normal;
+       text-decoration:none;
+        padding-left:75px;
 }
 
 #links ul {
