@@ -84,7 +84,7 @@
 
 
                 <!-- tmpl_if name='show_bookmarks' -->
-                <tr><td><b>Bookmarks</b></td><td><a href="/users/<!-- tmpl_var name='viewusername' -->/bookmarks">Bookmarks</a></td></tr>
+                <tr><td>Bookmarks</td><td><a href="/users/<!-- tmpl_var name='viewusername' -->/bookmarks">Bookmarks</a></td></tr>
                 <!-- /tmpl_if -->
 
                 <!-- tmpl_if name='weblogs'-->
