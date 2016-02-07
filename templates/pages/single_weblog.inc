@@ -22,6 +22,12 @@
 
 	<!-- tmpl_else -->
 
+<ol class="breadcrumb">
+  <li>Weblog</li>
+  <li><a href="/users/<!-- tmpl_var name="user" -->/weblog"><!-- tmpl_var name="user" -->"</a></li>
+  <li class="active"><a href="#">#<!-- tmpl_var name="item" --></a></li>
+</ol>
+
        <h1>Weblog entry #<!-- tmpl_var name="item" --> for <!-- tmpl_var name='user' --></h1>
 <div class="navigation">
 	<p>See <a href="/users/<!-- tmpl_var name="user" -->/weblog">all weblog entries</a> made by <a href="/users/<!-- tmpl_var name="user" -->"><!-- tmpl_var name="user"--></a>.</p>
