@@ -62,7 +62,17 @@
 <!-- tmpl_else -->
 
 <!-- tmpl_if name='is_owner' -->
- <p>You currently have no bookmarks defined, to create one visit an article, poll, or weblog of interest.</p>
+  <div class="row">
+    <div class="col-sm-1 col-md-1"></div>
+    <div class="col-sm-11 col-md-11"><h2>No Bookmarks</h2></div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-1 col-md-2"></div>
+    <div class="col-sm-1 col-md-10">
+     <p>You have no bookmarks defined.</p>
+    </div>
+   </div>
 <!-- tmpl_else -->
 
   <div class="row">
