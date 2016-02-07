@@ -131,7 +131,7 @@
       <p>Total articles: <!-- tmpl_var name="article_count" --> <!-- tmpl_if name='edit_user' -->[<a href="/search/byauthor/<!-- tmpl_var name='viewusername' -->">View All</a>]<!-- /tmpl_if --></p>
       <!-- /tmpl_if -->
     </div>
-
+    <div class="col-sm-1 col-md-1"></div>
   </div>
   <!-- /tmpl_unless -->
   <!-- /tmpl_if -->
