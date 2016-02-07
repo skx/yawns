@@ -30,7 +30,7 @@
           <div class="col-sm-1 col-md-1"></div>
           <div class="col-sm-1 col-md-11"><p>
 <!-- tmpl_loop name='show_archive_year' -->
-<a href="/archive/<!-- tmpl_var name='year' -->"><!-- tmpl_var name='year' --></a><!-- tmpl_unless name="__last__" -->, <!-- /tmpl_unless -->
+<a href="/archive/<!-- tmpl_var name='year' -->"><!-- tmpl_var name='year' --></a><!-- tmpl_if name="__last__" -->.<!-- tmpl_else -->, <!-- /tmpl_if -->
 <!-- /tmpl_loop -->
           </p></div>
         </div>
