@@ -3406,6 +3406,9 @@ sub view_user
         $is_owner = 1 unless ($anon);
     }
 
+    my $show_user = 1;
+    $show_user = undef if ( $error );
+    $show_user = undef if ( $suspended );
 
     # set parameters
     $template->param( viewusername    => $viewusername,
@@ -3419,13 +3422,14 @@ sub view_user
                       showbio         => $showbio,
                       bio             => $bio,
                       anon            => $anon,
-                      error           => $error,
+                      missing_user           => $error,
                       show_scratchpad => $show_scratchpad,
                       show_bookmarks  => $show_bookmarks,
                       weblogs         => $weblog,
                       weblog_plural   => $weblog_plural,
-                      suspended       => $suspended,
-                      title           => "Viewing $viewusername"
+                      suspended_user       => $suspended,
+                      title           => "Viewing $viewusername",
+                      show_user       => $show_user,
                     );
 
 
