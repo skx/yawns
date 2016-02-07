@@ -3339,7 +3339,7 @@ sub view_user
     if ( $realemail ){
         my $size     = 32;
         $gravitar = "//www.gravatar.com/avatar.php?gravatar_id=" .
-          md5_hex( lc $realmail ) . ";size=" . $size;
+          md5_hex( lc $realemail ) . ";size=" . $size;
     }
 
     #
