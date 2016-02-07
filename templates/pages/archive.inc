@@ -5,13 +5,21 @@
 
   <!-- tmpl_if name='articles' -->
   <!-- tmpl_loop name='articles' -->
-  <dl>
-    <dt><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='title' --></a></dt>
-    <dd><!-- tmpl_var name='teaser' --></dd>
-  </dl>
-  <!-- /tmpl_loop -->
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-1 col-md-1"></div>
+          <div class="col-sm-11 col-md-11">
+            <h2><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name='slug' -->"><!-- tmpl_var name='title' --></a></h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-1 col-md-2"></div>
+          <div class="col-sm-11 col-md-10"><!-- tmpl_var name='teaser' --></div>
+        </div>
+        <!-- /tmpl_loop -->
+        </div>
   <!-- tmpl_else -->
-  <p>No articles for that year.</p>
+  <p>No articles for this year.</p>
   <!-- /tmpl_if -->
 </blockquote>
 
