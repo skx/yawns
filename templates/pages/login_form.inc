@@ -34,11 +34,11 @@
           <input id="lpass" type="password" class="form-control" name="lpass" placeholder="Your password">
         </div>
 
-        <div style="margin-top:10px" class="form-group pull-right">
+        <div style="margin-bottom: 25px" class="input-group">
           <p><input name="secure" value="1" type="checkbox"> <a href="/about/Secure%20Login">Bind session to your IP</a></p>
         </div>
 
-        <div style="margin-top:10px" class="form-group pull-right">
+        <div style="margin-bottom: 25px" class="input-group">
           <!-- tmpl_if name='http' -->
           <p><input name="ssl" value="1" type="checkbox"> Force SSL use for all pages (<a href="/about/SSL%20Certificate">validate the SSL certificate</a>)</p>
           <!-- tmpl_else -->
@@ -46,7 +46,7 @@
           <!-- /tmpl_if -->
         </div>
 
-        <div style="margin-top:10px" class="form-group pull-right">
+        <div style="margin-bottom: 25px" class="input-group">
           <input type="submit" id="submit" name="submit" value="Login" class="btn btn-info">
         </div>
       </form>
