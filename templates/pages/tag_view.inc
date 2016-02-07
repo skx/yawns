@@ -24,6 +24,7 @@ function updateLinks( type )
 {
    $(".linkable").css( "font-weight", "normal" )
    $("#link_" + type ).css( "font-weight", "bold" );
+   $( "#heading" ).text( "Tag Cloud : " +  $("#link_" + type).text() );
 }
 
 
@@ -49,7 +50,7 @@ $(document).ready(function(){ setupView(); } );
 
 
 <div class="container-fluid">
-  <h1>Tag Cloud</h1>
+  <h1 id="heading">Tag Cloud</h1>
   <div class="row">
     <div class="col-sm-1 col-md-1"></div>
     <div class="col-sm-11 col-md-10">
@@ -64,12 +65,7 @@ $(document).ready(function(){ setupView(); } );
 <div id="progress" style="display:none;">
   <img src="/images/progress.gif" alt="Loading .."/>
 </div>
-<!-- /tmpl_if -->
-
-<!-- tmpl_if name='all_tags' -->
-	<div id="all_tags"><p>
-      <!-- tmpl_include name='../includes/all_tags.template' -->
-	</p></div>
+   <div id="all_tags"><p><!-- tmpl_include name='../includes/all_tags.template' --></p></div>
 
 <!-- tmpl_else -->
       <p>No tags have been added to this site yet.</p>
