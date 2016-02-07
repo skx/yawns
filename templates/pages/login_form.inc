@@ -33,12 +33,6 @@
           <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
           <input id="lpass" type="password" class="form-control" name="lpass" placeholder="Your password">
         </div>
-        <div style="margin-top:10px" class="form-group pull-right">
-          <div class="col-sm-12 controls">
-            <input type="submit" id="submit" name="submit" value="Login" class="btn btn-info">
-          </div>
-        </div>
-
 
         <div style="margin-top:10px" class="form-group pull-right">
           <div class="col-sm-12 controls">
@@ -55,6 +49,13 @@
           <!-- /tmpl_if -->
           </div>
         </div>
+
+        <div style="margin-top:10px" class="form-group pull-right">
+          <div class="col-sm-12 controls">
+            <input type="submit" id="submit" name="submit" value="Login" class="btn btn-info">
+          </div>
+        </div>
+
 
         <div class="form-group">
           <div class="col-md-12 control">
