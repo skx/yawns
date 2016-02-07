@@ -1,23 +1,77 @@
-<h1>Advanced Login Options</h1>
-<p>Here you can choose your login options for the site.</p>
-<!-- tmpl_if name='http' -->
-<p><a href="<!-- tmpl_var name='secure' -->">Switch to secure page</a>.</p>
-<!-- /tmpl_if -->
+<div class="container-fluid">
+  <!-- tmpl_if name='http' -->
+  <div class="row">
+    <div class="col-sm-1 col-md-1"></div>
+    <div class="col-sm-11 col-md-11"><h2>Insecure Access</h2></div>
+  </div>
+  <div class="row">
+    <div class="col-sm-1 col-md-2"></div>
+    <div class="col-sm-1 col-md-10">
+      <p><a href="<!-- tmpl_var name='secure' -->">Switch to secure page</a>.</p>
+    </div>
+  </div>
+  <!-- /tmpl_if -->
 
- <form action="/login" method="post">
- <input type="hidden" name="mode" value="login">
 
-<table>
-<tr><td><b>Username</b>:</td><td><p><input name="lname" type="text" size="14" maxlength="25" /></p></td></tr>
- <tr><td><b>Password</b>:</td><td><p><input name="lpass" type="password" size="15" maxlength="25" /></p></td></tr>
- <tr><td valign="top"><b>Advanced</b>:</td><td>
- <p><input name="secure" value="1" type="checkbox"> <a href="/about/Secure%20Login">Bind session to your IP</a></p>
-<!-- tmpl_if name='http' -->
- <p><input name="ssl" value="1" type="checkbox"> Force SSL use for all pages (<a href="/about/SSL%20Certificate">validate the SSL certificate</a>)</p>
-<!-- tmpl_else -->
- <p><input name="ssl" value="1" type="checkbox" checked> Force SSL use for all pages (<a href="/about/SSL%20Certificate">validate the SSL certificate</a>)</p>
-<!-- /tmpl_if -->
- </td></tr>
- <tr><td></td><td valign="top"> <p><input type="submit" name="submit" value="Login" /></p></td></tr>
- </table>
- </form>
+<div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+  <div class="panel panel-info" >
+    <div class="panel-heading">
+      <div class="panel-title">Login</div>
+      <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="/password/sendmail/">Forgot your password?</a></div>
+    </div>
+    <div style="padding-top:30px" class="panel-body" >
+
+      <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+
+      <form id="loginform" class="form-horizontal" role="form" method="POST" action="/login/">
+        <input type="hidden" name="mode" value="login" />
+        <div style="margin-bottom: 25px" class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+          <input id="lname" type="text" class="form-control" name="lname" value="" placeholder="Your username ">
+        </div>
+        <div style="margin-bottom: 25px" class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+          <input id="lpass" type="password" class="form-control" name="lpass" placeholder="Your password">
+        </div>
+        <div style="margin-top:10px" class="form-group pull-right">
+          <div class="col-sm-12 controls">
+            <input type="submit" id="submit" name="submit" value="Login" class="btn btn-info">
+          </div>
+        </div>
+
+
+        <div style="margin-top:10px" class="form-group pull-right">
+          <div class="col-sm-12 controls">
+            <p><input name="secure" value="1" type="checkbox"> <a href="/about/Secure%20Login">Bind session to your IP</a></p>
+          </div>
+        </div>
+
+        <div style="margin-top:10px" class="form-group pull-right">
+          <div class="col-sm-12 controls">
+          <!-- tmpl_if name='http' -->
+          <p><input name="ssl" value="1" type="checkbox"> Force SSL use for all pages (<a href="/about/SSL%20Certificate">validate the SSL certificate</a>)</p>
+          <!-- tmpl_else -->
+          <p><input name="ssl" value="1" type="checkbox" checked> Force SSL use for all pages (<a href="/about/SSL%20Certificate">validate the SSL certificate</a>)</p>
+          <!-- /tmpl_if -->
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-md-12 control">
+            <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >Don't have an account?
+              <a href="/create/user">
+                Sign Up Here
+              </a>
+            </div>
+          </div>
+        </div>
+      </form>
+
+
+
+    </div>
+  </div>
+</div>
+
+
+  </div>
