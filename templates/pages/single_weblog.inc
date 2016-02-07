@@ -96,8 +96,13 @@
 
 
 	<!-- tmpl_if name="comment_count" -->
-	<h2 id="comments">Comments on this Entry</h2><p></p>
+	<h1 id="comments">Comments on this Entry</h1><p></p>
 	<!-- /tmpl_if -->
+  <div class="row">
+    <div class="col-sm-1 col-md-1"></div>
+    <div class="col-sm-11 col-md-10">
+
         <!-- tmpl_var name="comment_text" -->
+    </div><div class="col-sm-1 col-md-1"></div></div>
 
 	<!-- /tmpl_if -->  <!-- matches error -->
