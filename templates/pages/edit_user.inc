@@ -1,19 +1,13 @@
 <div class="container-fluid">
 
-<div class="row">
-  <div class="col-sm-1 col-md-1"></div>
-  <div class="col-sm-1 col-md-11"><h1>Edit your profile</h1></div>
-</div>
-
-
-         <form action="/edit/user/<!-- tmpl_var name="username" -->" method="post">
-       <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
-       <input type="hidden" name="mode" value="edit_user" />
-       <input type="hidden" name="edit_user" value="<!-- tmpl_var name='username' -->">
+  <form action="/edit/user/<!-- tmpl_var name="username" -->" method="post">
+    <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
+    <input type="hidden" name="mode" value="edit_user" />
+    <input type="hidden" name="edit_user" value="<!-- tmpl_var name='username' -->">
 
     <div class="panel panel-info">
       <div class="panel-heading">
-        <h3 class="panel-title">Edit Your Profile</h3>
+        <h3 class="panel-title">Edit Profile</h3>
       </div>
       <div class="panel-body">
         <div class="row">
@@ -22,7 +16,7 @@
               <tbody>
                 <tr>
                   <td><b>Your Name:</b></td>
-                  <td><input name="realname"  type="text" size="50" maxlength="25" value="<!-- tmpl_var name='realname' -->" /></td>
+                  <td><input name="realname" type="text" size="50" maxlength="25" value="<!-- tmpl_var name='realname' -->" /></td>
                 </tr>
                 <tr>
                   <td><b>Private Email:</b></td>
@@ -37,7 +31,7 @@
 	          <td><input name="url" type="text" size="50" maxlength="100" value="<!-- tmpl_var name='url' -->" /></td></tr>
 	        <tr><td valign="top"><b>Bio:</b></td>
 	          <td valign="top">
-                    <textarea name="bio" cols="80" rows="10"><!-- tmpl_var name='bio' --></textarea>
+                    <textarea name="bio" cols="100" rows="14"><!-- tmpl_var name='bio' --></textarea>
 	        </td></tr>
 	        <tr><td>&nbsp;</td><td></td></tr>
 
@@ -52,5 +46,5 @@
         </div>
       </div>
     </div>
-         </form>
-  </div>
+  </form>
+</div>
