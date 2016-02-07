@@ -1,6 +1,6 @@
 
 <ol class="breadcrumb">
-  <li><a href="/tag">Tags</li>
+  <li><a href="/tag">Tags</a></li>
   <li class="current"><a href="/tag/<!-- tmpl_var name='tag' escape='html' -->"><!-- tmpl_var name='tag' escape='html' --></a></li>
 </ol>
 
