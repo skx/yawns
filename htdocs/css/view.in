@@ -243,7 +243,7 @@ div.comment p.foot {
  */
 div.article .title {
 	font-size: 110%;
-        border-bottom: 1px solid #cc0033;
+        border-bottom: 1px solid silver;
 	padding: 0;
 
 }
@@ -272,10 +272,10 @@ div.teaser div.body {
 }
 
 div.teaser .title {
-	font-size: 110%;
-    border-bottom: 1px solid #cc0033;
-padding: 0;
-margin-bottom: 0px;
+    font-size: 110%;
+    border-bottom: 1px solid silver;
+    padding: 0;
+    margin-bottom: 0px;
 }
 
 div.teaser .title a {
