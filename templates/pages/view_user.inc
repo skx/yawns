@@ -36,7 +36,9 @@
 <!-- /tmpl_if -->
 
 <!-- tmpl_if name='show_user' -->
-
+<ol class="breadcrumb">
+  <li><a href="/users/<!-- tmpl_var name="user" -->/"><!-- tmpl_var name="user" --></a></li>
+</ol>
   <div class="row">
     <div class="col-sm-1 col-md-1"></div>
     <div class="col-sm-11 col-md-11"><h2><!-- tmpl_var name='viewusername' --></h2></div>
