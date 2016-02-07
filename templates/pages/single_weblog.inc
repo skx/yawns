@@ -1,8 +1,8 @@
 
 <!-- tmpl_if name="error" -->
 <ol class="breadcrumb">
-  <li>Weblog</li>
-  <li><a href="/users/<!-- tmpl_var name="user" -->/weblog"><!-- tmpl_var name="user" --></a></li>
+  <li><a href="/users/<!-- tmpl_var name="user" -->/"><!-- tmpl_var name="user" --></a></li>
+  <li><a href="/users/<!-- tmpl_var name="user" -->/weblog">Blog</a></li>
   <li class="active"><a href="/users/<!-- tmpl_var name='user' -->/weblog/<!-- tmpl_var name='item' -->">#<!-- tmpl_var name="item" --></a></li>
 </ol>
 

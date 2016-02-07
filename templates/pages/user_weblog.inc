@@ -14,8 +14,12 @@
   </div>
   <!-- tmpl_else -->
 
-  <h1>Weblogs for <!-- tmpl_var name='viewusername' --></h1>
-  <!-- tmpl_if name='entries' --> <p class="right"> <a href="/weblog/feeds/<!-- tmpl_var name="viewusername" -->"><img src="/images/xml.gif" alt="XML Logo" width="36" height="14"></a></p> <!-- /tmpl_if -->
+<ol class="breadcrumb">
+  <li><a href="/users/<!-- tmpl_var name="user" -->/"><!-- tmpl_var name="user" --></a></li>
+  <li><a href="/users/<!-- tmpl_var name="user" -->/weblog">Blog</a></li>
+</ol>
+
+  <!-- tmpl_if name='entries' --> <p align="right"> <a href="/weblog/feeds/<!-- tmpl_var name="viewusername" -->"><img src="/images/xml.gif" alt="XML Logo" width="36" height="14"></a></p> <!-- /tmpl_if -->
 
   <!-- tmpl_if name='is_owner' -->
   <p>As this is your weblog you may <a href="/create/weblog">create a new entry</a>.</p>
