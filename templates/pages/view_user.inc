@@ -84,6 +84,7 @@
   <tr><td valign="top"><b>Bio:</b></td>
     <td valign="top"><!-- tmpl_var name='bio' --></td></tr>
   <!-- /tmpl_if -->
+</table>
 
     </div>
   </div>
@@ -127,12 +128,11 @@
         <!-- /tmpl_loop -->
       </ul>
       <p>Total comments</b>: <!-- tmpl_var name="comment_count" --></p>
-      <p>Recent comments: <a href="/recent/comments/<!-- tmpl_var name='viewusername' escape='html'-->"><img src="/images/xml.gif" width="36" height="14" alt="Recent comments by <!-- tmpl_var name='viewusername' escape='html' -->"></a></p>
+     <p>Recent comments: <a href="/recent/comments/<!-- tmpl_var name='viewusername' escape='html'-->"><img src="/images/xml.gif" width="36" height="14" alt="Recent comments by <!-- tmpl_var name='viewusername' escape='html' -->"></a></p>
       <!-- /tmpl_if -->
 </div>
 </div>
   <!-- /tmpl_unless -->
-</table>
 
 <!-- /tmpl_if -->
 </div>
