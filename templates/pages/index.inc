@@ -20,27 +20,20 @@
 
 
 <!-- Next and Previous Navigation Links -->
-<div class="navigation">
-<div class="row">
- <span class="left">
+<nav>
+<ul class="pager">
   <!-- tmpl_if name='showprev' -->
-  <a href="/start/<!-- tmpl_var name='prevfrom' -->">&lt;&lt;&lt; Previous <!-- tmpl_var name="prevcount" -->  Articles</a>
- <!-- tmpl_else -->
+  <li class="previous"><a href="/start/<!-- tmpl_var name='prevfrom' -->">&lt;&lt;&lt; Previous <!-- tmpl_var name="prevcount" -->  Articles</a></li>
  <!-- /tmpl_if -->
- </span>
- <span class="right">
   <!-- tmpl_if name='shownext' -->
-  <a href="/start/<!-- tmpl_var name='nextfrom' -->">Next <!-- tmpl_var name="nextcount" --> Articles &gt;&gt;&gt;</a>
- <!-- tmpl_else -->
+  <li class="next"><a href="/start/<!-- tmpl_var name='nextfrom' -->">Next <!-- tmpl_var name="nextcount" --> Articles &gt;&gt;&gt;</a></li>
  <!-- /tmpl_if -->
- </span>
-<div class="clear"> </div>
+</ul>
+</nav>
 </div>
-</div>
+
       <!-- tmpl_else -->
              <h2>Error</h2>
 	    <p>There are no articles to display.</p>
 	    <p>This is almost certainly an error, or a new installation of Yawns.   If it is a new installation plase <a href="/create/article">submit an article</a> to get started.</p>
       <!-- /tmpl_if -->
-
-
