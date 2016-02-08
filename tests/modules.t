@@ -111,8 +111,6 @@ BEGIN{ use_ok( 'warnings' ); }
 require_ok( 'warnings' );
 BEGIN{ use_ok( 'Yawns::About' ); }
 require_ok( 'Yawns::About' );
-BEGIN{ use_ok( 'Yawns::Adverts' ); }
-require_ok( 'Yawns::Adverts' );
 BEGIN{ use_ok( 'Yawns::Article' ); }
 require_ok( 'Yawns::Article' );
 BEGIN{ use_ok( 'Yawns::Articles' ); }
