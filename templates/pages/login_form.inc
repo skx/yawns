@@ -7,7 +7,7 @@
   <div class="row">
     <div class="col-sm-1 col-md-2"></div>
     <div class="col-sm-1 col-md-10">
-      <p><a href="<!-- tmpl_var name='secure' -->">Switch to secure page</a>.</p>
+      <p>You're accesing this page over HTTP, rather than using the secure access method.  You should probably switch <a href="<!-- tmpl_var name='secure' -->">to the secure version</a> of this page.</p>
     </div>
   </div>
   <!-- /tmpl_if -->
