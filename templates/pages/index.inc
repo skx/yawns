@@ -19,7 +19,6 @@
       <!-- /tmpl_loop -->
 
 
-<!-- Next and Previous Navigation Links -->
 <nav>
 <ul class="pager">
   <!-- tmpl_if name='showprev' -->
