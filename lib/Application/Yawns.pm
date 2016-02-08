@@ -57,7 +57,6 @@ use Text::Diff;
 use HTML::AddNoFollow;
 use Singleton::Redis;
 use Yawns::About;
-use Yawns::Adverts;
 use Yawns::Articles;
 use Yawns::Comment;
 use Yawns::Event;
@@ -286,17 +285,6 @@ sub setup
         'pending_polls' => 'pending_polls',
         'submit_poll'   => 'submit_poll',
 
-        # Adverts
-        'create_advert'    => 'create_advert',
-        'follow_advert'    => 'follow_advert',
-        'advert_stats'     => 'advert_stats',
-        'edit_adverts'     => 'edit_adverts',
-        'view_all_adverts' => 'view_all_adverts',
-        'enable_advert'    => 'enable_advert',
-        'disable_advert'   => 'disable_advert',
-        'delete_advert'    => 'delete_advert',
-        'adverts_byuser'   => 'adverts_byuser',
-
         # Submissions
         'submission_reject' => 'submission_reject',
         'submission_edit'   => 'submission_edit',
@@ -454,8 +442,8 @@ sub load_layout
     #
     #  Load our template
     #
-    my $l = HTML::Template->new( filename => $page,
-                                 cache    => 1,
+    my $l = HTML::Template->new( filename          => $page,
+                                 cache             => 1,
                                  die_on_bad_params => 0,
                                  %options,
                                );
@@ -490,7 +478,7 @@ sub load_layout
     if ( $username !~ /^anonymous$/i )
     {
         # If so set the username
-        $l->param( username => $username, logged_in => 1);
+        $l->param( username => $username, logged_in => 1 );
 
         # Set the session so that logout works
         $l->param( session => md5_hex( $session->id() ) );
@@ -520,7 +508,7 @@ sub load_layout
     #
     # Now setup the poll display, if we should
     #
-    if ( $show_polls )
+    if ($show_polls)
     {
         #
         #  Data used when showing the polls.
@@ -599,10 +587,8 @@ sub load_layout
 
         if ($recent_weblogs)
         {
-            $l->param(
-                            recent_weblogs => $recent_weblogs,
-                            show_blogs     => 1,
-                           );
+            $l->param( recent_weblogs => $recent_weblogs,
+                       show_blogs     => 1, );
         }
 
         #
@@ -613,8 +599,7 @@ sub load_layout
         {
             $l->param( planet_url  => $planet_url,
                        planet_site => 1,
-                       sitename => conf::SiteConfig::get_conf("sitename")
-                     );
+                       sitename    => conf::SiteConfig::get_conf("sitename") );
         }
     }
 
@@ -622,25 +607,12 @@ sub load_layout
     #
     #  Show the submissions header?
     #
-    my $show_pending_header = $show_pending_adverts ||
-      $show_pending_articles ||
+    my $show_pending_header = $show_pending_articles ||
       $show_pending_polls;
 
     if ($show_pending_header)
     {
         $l->param( show_pending_header => 1 );
-
-        #
-        #  Display advert count
-        #
-        if ($show_pending_adverts)
-        {
-            my $adverts              = Yawns::Adverts->new();
-            my $pending_advert_count = $adverts->countPending();
-            $l->param( pending_advert_count => $pending_advert_count,
-                       show_pending_advert_count => 1 );
-
-        }
 
         #
         #  Article + poll count.
@@ -650,15 +622,15 @@ sub load_layout
         if ($show_pending_articles)
         {
             my $pending_article_count = $submissions->articleCount();
-            $l->param(pending_article_count => $pending_article_count,
-                      show_pending_article_count => 1 );
+            $l->param( pending_article_count      => $pending_article_count,
+                       show_pending_article_count => 1 );
         }
 
         if ($show_pending_polls)
         {
             my $pending_poll_count = $submissions->pollCount();
             $l->param( pending_poll_count      => $pending_poll_count,
-                             show_pending_poll_count => 1 );
+                       show_pending_poll_count => 1 );
         }
     }
 
@@ -684,14 +656,14 @@ sub load_layout
     #
     # Are there any flashes?
     #
-    if ( $session->param( "ok_flash" ) )
+    if ( $session->param("ok_flash") )
     {
-        $l->param( ok_flash => $session->param( "ok_flash" ) );
+        $l->param( ok_flash => $session->param("ok_flash") );
         $session->param( "ok_flash", undef );
     }
-    if ( $session->param( "error_flash" ) )
+    if ( $session->param("error_flash") )
     {
-        $l->param( error_flash => $session->param( "error_flash" ) );
+        $l->param( error_flash => $session->param("error_flash") );
         $session->param( "error_flash", undef );
     }
 
@@ -940,22 +912,24 @@ sub application_login
     {
         my $link = $protocol . $ENV{ "SERVER_NAME" } . "/users/$logged_in";
 
-        if( $suspended ) {
+        if ($suspended)
+        {
 
             # Record the suspended login.
             $self->send_alert(
-                              "Login from suspended user <a href=\"$link\">$logged_in</a> at " .
-                              $remote_ip );
+                "Login from suspended user <a href=\"$link\">$logged_in</a> at "
+                  . $remote_ip );
 
             # ban.
             my $redis = Singleton::Redis->instance();
             $redis->set( "IP:" . $remote_ip, "1" );
 
         }
-        else {
+        else
+        {
             $self->send_alert(
-                              "Successful login for <a href=\"$link\">$logged_in</a> from " .
-                              $remote_ip );
+                 "Successful login for <a href=\"$link\">$logged_in</a> from " .
+                   $remote_ip );
         }
 
         #
@@ -1120,7 +1094,10 @@ sub archive
     #
     # Load the display template.
     #
-    my $template = $self->load_layout("archive.inc", global_vars => 1, loop_context_vars => 1 );
+    my $template = $self->load_layout( "archive.inc",
+                                       global_vars       => 1,
+                                       loop_context_vars => 1
+                                     );
 
     #
     #  Articles.
@@ -1203,8 +1180,8 @@ sub tag_cloud
     #
     # Get the tags.
     #
-    my $tags   = Yawns::Tags->new();
-    my $all    = $tags->getAllTags();
+    my $tags = Yawns::Tags->new();
+    my $all  = $tags->getAllTags();
 
     # read in the template file
     my $template = $self->load_layout("tag_view.inc");
@@ -1366,7 +1343,7 @@ sub edit_about
     my $form = $self->query();
 
     # load the template
-    my $template = $self->load_layout( "edit_about.inc" );
+    my $template = $self->load_layout("edit_about.inc");
 
     #
     # Are we viewing a page, or the picker?
@@ -1680,9 +1657,7 @@ sub article
     #
     # See if the user has altruisticly decided to show adverts
     #
-    my $show_adverts   = 1;
-    my $google_adverts = 0;
-    my $user_adverts   = 0;
+    my $show_adverts = 1;
 
     #
     #  Anonymous users always get adverts.
@@ -1701,24 +1676,6 @@ sub article
         my $user = Yawns::User->new( username => $username );
         my $user_data = $user->get();
         $show_adverts = $user_data->{ 'viewadverts' };
-    }
-
-
-    #
-    #  If we're showing adverts then choose the type randomly.
-    #
-    if ($show_adverts)
-    {
-        my $rnd = int( rand(100) );
-
-        if ( $rnd <= 10 )
-        {
-            $user_adverts = 1;
-        }
-        else
-        {
-            $google_adverts = 1;
-        }
     }
 
     my $template = $self->load_layout( "view_article.inc",
@@ -1788,36 +1745,6 @@ sub article
         $show_admin_links = 1 if ( $perms->check( priv => "article_admin" ) );
     }
 
-
-    #
-    #  If we're supposed to be showing user-adverts then
-    # display one at random.
-    #
-    if ($user_adverts)
-    {
-        my $adverts = Yawns::Adverts->new();
-        if ( $adverts->countActive() )
-        {
-            my $data = $adverts->fetchRandomAdvert();
-
-            $template->param( advert_id        => $data->{ 'id' },
-                              advert_link_text => $data->{ 'linktext' },
-                              advert_link      => $data->{ 'link' },
-                              advert_text      => $data->{ 'text' } );
-        }
-        else
-        {
-
-            #
-            #  We're supposed to show a user advert, but there aren't
-            # any.
-            #
-            $google_adverts = 1;
-            $user_adverts   = 0;
-        }
-    }
-
-
     #
     #  Tag addition URL
     #
@@ -1842,8 +1769,6 @@ sub article
         comments       => $article->{ 'comments' },
         logged_in      => $logged_in,
         show_adverts   => $show_adverts,
-        google_adverts => $google_adverts,
-        user_adverts   => $user_adverts,
         error          => $error,
         article_author => $article_author,
         article_admin  => $show_admin_links,
@@ -2007,7 +1932,7 @@ sub single_weblog
             $template->param( reportable => 1 );
         }
     }
-    if ( !$entries || ! @$entries )
+    if ( !$entries || !@$entries )
     {
         $error = 1;
 
@@ -2452,7 +2377,7 @@ sub edit_scratchpad
 
 
     # open the html template
-    my $template = $self->load_layout( "edit_scratchpad.inc" );
+    my $template = $self->load_layout("edit_scratchpad.inc");
 
     # get the data
     my $scratchpad = Yawns::Scratchpad->new( username => $edituser );
@@ -2551,9 +2476,8 @@ sub view_bookmarks
     my ($self) = (@_);
 
     # read in the template file
-    my $template = $self->load_layout( "view_bookmarks.inc",
-                                       global_vars => 1,
-                                     );
+    my $template =
+      $self->load_layout( "view_bookmarks.inc", global_vars => 1, );
 
 
     my $form = $self->query();
@@ -2739,537 +2663,6 @@ sub delete_bookmark
 
 
 # ===========================================================================
-# Follow an advert, recording the click.
-# ===========================================================================
-sub follow_advert
-{
-    my ($self) = (@_);
-
-    #
-    #  Gain access to the form parameters
-    #
-    my $form = $self->query();
-    my $id   = $form->param('id');
-
-    if ( defined($id) && ( $id =~ /^[0-9]+$/ ) )
-    {
-        my $adverts = Yawns::Adverts->new();
-
-        #
-        #  Record the click
-        #
-        $adverts->addClick($id);
-
-        #
-        #  Redirect to advert target.
-        #
-        my $details = $adverts->getAdvert($id);
-        return ( $self->redirectURL( $details->{ 'link' } ) );
-
-    }
-    else
-    {
-        $id =~ s/<>//g;
-        return ("Invalid advert - $id");
-    }
-}
-
-
-
-
-# ===========================================================================
-# Show all active adverts.
-# ===========================================================================
-sub view_all_adverts
-{
-    my ($self) = (@_);
-
-    # Get access to the form, session and database handles
-    my $session  = $self->param("session");
-    my $username = $session->param("logged_in");
-
-    #
-    # Is the user an advert administrator?
-    #
-    my $perms = Yawns::Permissions->new( username => $username );
-    my $admin = $perms->check( priv => "advert_admin" );
-
-
-    # set up the HTML template
-    my $template = $self->load_layout("all_adverts.inc");
-
-    #
-    #  Fetch all the adverts
-    #
-    my $ads     = Yawns::Adverts->new();
-    my $adverts = $ads->fetchAllActiveAdverts();
-
-    if ($adverts)
-    {
-
-        #
-        #  Add link to stats for adverts which the current user owns,
-        # or for side admins.
-        #
-        my $data;
-
-        foreach my $ad (@$adverts)
-        {
-            if ( ( lc( $ad->{ 'owner' } ) eq lc($username) ) ||
-                 ($admin) )
-            {
-                $ad->{ 'stats' } = 1;
-            }
-            push( @$data, $ad );
-        }
-
-        $adverts = $data;
-
-        $template->param( adverts => $adverts );
-    }
-    else
-    {
-        $template->param( error => 1 );
-    }
-
-    # fill in all the parameters
-    $template->param( title => "All Community Adverts" );
-
-    # generate the output
-    return ( $template->output() );
-}
-
-
-
-# ===========================================================================
-# Show all adverts belonging to the given user
-# ===========================================================================
-sub adverts_byuser
-{
-    my ($self) = (@_);
-
-
-    # Get access to the form, session and database handles
-    my $session  = $self->param("session");
-    my $username = $session->param("logged_in");
-
-    #
-    # Is the user an advert administrator?
-    #
-    my $perms = Yawns::Permissions->new( username => $username );
-    my $admin = $perms->check( priv => "advert_admin" );
-
-
-    # The user we're working with.
-    my $form  = $self->query();
-    my $owner = $form->param("user");
-
-
-    # set up the HTML template
-    my $template = $self->load_layout("all_adverts.inc");
-
-    #
-    #  Fetch all the adverts
-    #
-    my $ads     = Yawns::Adverts->new();
-    my $adverts = $ads->advertsByUser($owner);
-
-    if ($adverts)
-    {
-
-        #
-        #  If we're the owner then add a "stats".
-        #
-        if ( lc($username) eq lc($owner) ||
-             ($admin) )
-        {
-            my $data;
-
-            foreach my $ad (@$adverts)
-            {
-                $ad->{ 'stats' } = 1;
-                push( @$data, $ad );
-            }
-
-            $adverts = $data;
-        }
-
-        $template->param( by_user => 1, user => $owner );
-        $template->param( adverts => $adverts );
-    }
-    else
-    {
-        $template->param( by_user => 1, user => $owner );
-        $template->param( error => 1 );
-    }
-
-    # fill in all the parameters
-    $template->param( title => "Adverts by $owner" );
-
-    # generate the output
-    return ( $template->output() );
-}
-
-
-# ===========================================================================
-# Show all adverts pending or otherwise and allow admin to enable/disable.
-# ===========================================================================
-sub edit_adverts
-{
-    my ($self) = (@_);
-
-    # set up the HTML template
-    my $template = $self->load_layout( "edit_adverts.inc",
-                                       global_vars => 1
-                                     );
-
-    #
-    #  Fetch all adverts
-    #
-    my $ads = Yawns::Adverts->new();
-
-    #
-    #  This includes active and not.
-    #
-    my $adverts = $ads->fetchAllAdverts();
-
-    if ($adverts)
-    {
-        $template->param( adverts => $adverts );
-    }
-    else
-    {
-        $template->param( error => 1 );
-    }
-
-    # generate the output
-    return ( $template->output() );
-
-}
-
-
-# ===========================================================================
-# Show the performance of the given advert
-# ===========================================================================
-sub advert_stats
-{
-    my ($self) = (@_);
-
-
-    #
-    # Advert ID
-    #
-    my $form = $self->query();
-    my $id   = $form->param("id");
-
-    #
-    # Get data.
-    #
-    my $adverts = Yawns::Adverts->new();
-    my $data    = $adverts->getAdvert($id);
-
-    #
-    # Load the template
-    #
-    my $template = $self->load_layout("view_campaign.inc");
-
-    my $clickthrough = 0;
-    my $status       = "Pending";
-
-    if ( defined( $data->{ 'owner' } ) )
-    {
-        if ( $data->{ 'shown' } )
-        {
-            $clickthrough = ( $data->{ 'clicked' } / $data->{ 'shown' } ) * 100;
-            $clickthrough = sprintf( "%.2f", $clickthrough );
-        }
-
-        if ( $data->{ 'active' } eq 'y' )
-        {
-            $status = "Active";
-            if ( $data->{ 'shown' } >= $data->{ 'display' } )
-            {
-                $status = "Finished";
-            }
-        }
-    }
-    else
-    {
-        $template->param( error => 1 );
-    }
-
-    # set parameters
-    $template->param( advert_id         => $id,
-                      advert_owner      => $data->{ 'owner' },
-                      advert_link       => $data->{ 'link' },
-                      advert_link_title => $data->{ 'linktext' },
-                      shown             => $data->{ 'shown' },
-                      max               => $data->{ 'display' },
-                      clicked           => $data->{ 'clicked' },
-                      clickthrough      => $clickthrough,
-                      status            => $status,
-                      title             => "View Campaign $id",
-                    );
-
-    # generate the output
-    return ( $template->output() );
-
-}
-
-
-# ===========================================================================
-# Delete an advert
-# ===========================================================================
-sub delete_advert
-{
-
-    my ($self) = (@_);
-
-    #
-    # validate the session.
-    #
-    my $ret = $self->validateSession();
-    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
-
-    #
-    #  This requires a login
-    #
-    my $session  = $self->param("session");
-    my $username = $session->param("logged_in");
-
-    #
-    #  Ensure the user is logged in
-    #
-    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
-    {
-        return ( $self->permission_denied( login_required => 1 ) );
-    }
-
-    #
-    #  Ensure the user has permissions
-    #
-    my $perms = Yawns::Permissions->new( username => $username );
-    if ( !$perms->check( priv => "advert_admin" ) )
-    {
-        return ( $self->permission_denied( admin_only => 1 ) );
-    }
-
-    #
-    #  Remove the advert.
-    #
-    my $adverts = Yawns::Adverts->new();
-    my $form    = $self->query();
-    $adverts->deleteAdvert( $form->param('id') );
-
-    #
-    #  Show a good message.
-    #
-    return ( $self->permission_denied( advert_deleted => 1 ) );
-
-}
-
-
-
-# ===========================================================================
-# Enable an advert.
-# ===========================================================================
-sub enable_advert
-{
-    my ($self) = (@_);
-
-    #
-    # validate the session.
-    #
-    my $ret = $self->validateSession();
-    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
-
-    #
-    #  This requires a login
-    #
-    my $session  = $self->param("session");
-    my $username = $session->param("logged_in");
-
-    #
-    #  Ensure the user is logged in
-    #
-    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
-    {
-        return ( $self->permission_denied( login_required => 1 ) );
-    }
-
-    #
-    #  Ensure the user has permissions
-    #
-    my $perms = Yawns::Permissions->new( username => $username );
-    if ( !$perms->check( priv => "advert_admin" ) )
-    {
-        return ( $self->permission_denied( admin_only => 1 ) );
-    }
-
-    #
-    #  Remove the advert.
-    #
-    my $adverts = Yawns::Adverts->new();
-    my $form    = $self->query();
-    $adverts->enableAdvert( $form->param('id') );
-
-    #
-    #  Show a good message.
-    #
-    return ( $self->permission_denied( advert_enabled => 1 ) );
-}
-
-
-# ===========================================================================
-# Disable an advert.
-# ===========================================================================
-sub disable_advert
-{
-
-    my ($self) = (@_);
-
-    #
-    # validate the session.
-    #
-    my $ret = $self->validateSession();
-    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
-
-    #
-    #  This requires a login
-    #
-    my $session  = $self->param("session");
-    my $username = $session->param("logged_in");
-
-    #
-    #  Ensure the user is logged in
-    #
-    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
-    {
-        return ( $self->permission_denied( login_required => 1 ) );
-    }
-
-    #
-    #  Ensure the user has permissions
-    #
-    my $perms = Yawns::Permissions->new( username => $username );
-    if ( !$perms->check( priv => "advert_admin" ) )
-    {
-        return ( $self->permission_denied( admin_only => 1 ) );
-    }
-
-    #
-    #  Remove the advert.
-    #
-    my $adverts = Yawns::Adverts->new();
-    my $form    = $self->query();
-    $adverts->disableAdvert( $form->param('id') );
-
-    #
-    #  Show a good message.
-    #
-    return ( $self->permission_denied( advert_disabled => 1 ) );
-}
-
-
-
-
-# ===========================================================================
-# Add a user-submitted advert.
-# ===========================================================================
-sub create_advert
-{
-    my ($self) = (@_);
-
-    #
-    # Gain acess to the objects we use.
-    #
-    my $form     = $self->query();
-    my $session  = $self->param("session");
-    my $username = $session->param("logged_in");
-
-
-    #
-    #  Ensure the user is logged in
-    #
-    if ( ( !$username ) || ( $username =~ /^anonymous$/i ) )
-    {
-        return ( $self->permission_denied( login_required => 1 ) );
-    }
-
-    # get new/preview status
-    my $submit = '';
-    $submit = $form->param('add_advert') if defined $form->param('add_advert');
-
-
-
-    # set some variables
-    my $new     = 0;
-    my $preview = 0;
-    my $confirm = 0;
-    $new     = 1 if $submit eq 'new';
-    $preview = 1 if $submit eq 'Preview';
-    $confirm = 1 if $submit eq 'Confirm';
-
-    my $submit_link      = '';
-    my $submit_link_text = '';
-    my $submit_copy      = '';
-
-    if ($preview)
-    {
-        my $ret = $self->validateSession();
-        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
-
-        #
-        # Details to preview.
-        #
-        $submit_link      = $form->param('submit_link');
-        $submit_link_text = $form->param('submit_link_text');
-        $submit_copy      = $form->param('submit_copy');
-    }
-    elsif ($confirm)
-    {
-        my $ret = $self->validateSession();
-        return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
-
-        #
-        # Details we're confirming.
-        #
-        $submit_link      = $form->param('submit_link');
-        $submit_link_text = $form->param('submit_link_text');
-        $submit_copy      = $form->param('submit_copy');
-
-        my $advert = Yawns::Adverts->new();
-
-        $advert->addAdvert( link     => $submit_link,
-                            linktext => $submit_link_text,
-                            text     => $submit_copy,
-                            owner    => $username,
-                            display  => 5000,
-                          );
-
-    }
-
-    # open the html template
-    my $template = $self->load_layout( "submit_advert.inc" );
-
-    # fill in all the parameters you got from the database
-    $template->param( new              => $new,
-                      preview          => $preview,
-                      confirm          => $confirm,
-                      submit_link      => $submit_link,
-                      submit_link_text => $submit_link_text,
-                      submit_copy      => $submit_copy,
-                      title            => "Submit Advert",
-                    );
-
-    # generate the output
-    return ( $template->output() );
-}
-
-
-
-
-# ===========================================================================
 # view a users profile page.
 # ===========================================================================
 sub view_user
@@ -3345,8 +2738,9 @@ sub view_user
     #  Gravitar
     #
     my $gravitar;
-    if ( $realemail ){
-        my $size     = 32;
+    if ($realemail)
+    {
+        my $size = 32;
         $gravitar = "//www.gravatar.com/avatar.php?gravatar_id=" .
           md5_hex( lc $realemail ) . ";size=" . $size;
     }
@@ -3427,8 +2821,8 @@ sub view_user
     }
 
     my $show_user = 1;
-    $show_user = undef if ( $error );
-    $show_user = undef if ( $suspended );
+    $show_user = undef if ($error);
+    $show_user = undef if ($suspended);
 
     # set parameters
     $template->param( viewusername    => $viewusername,
@@ -3443,12 +2837,12 @@ sub view_user
                       showbio         => $showbio,
                       bio             => $bio,
                       anon            => $anon,
-                      missing_user           => $error,
+                      missing_user    => $error,
                       show_scratchpad => $show_scratchpad,
                       show_bookmarks  => $show_bookmarks,
                       weblogs         => $weblog,
                       weblog_plural   => $weblog_plural,
-                      suspended_user       => $suspended,
+                      suspended_user  => $suspended,
                       title           => "Viewing $viewusername",
                       show_user       => $show_user,
                     );
@@ -3563,7 +2957,7 @@ sub edit_user
 
             # Update
             $session->param( ok_flash => "Profile Updated!" );
-            return( $self->redirectURL( "/users/$edituser" ) );
+            return ( $self->redirectURL("/users/$edituser") );
 
         }
 
@@ -3582,7 +2976,7 @@ sub edit_user
     my $sig       = $userdata->{ 'sig' };
 
     # open the html template
-    my $template = $self->load_layout( "edit_user.inc" );
+    my $template = $self->load_layout("edit_user.inc");
 
     # set parameters
     $template->param( username  => $edituser,
@@ -3769,9 +3163,8 @@ sub submission_edit
     #
     #  The template we'll be working with.
     #
-    my $template = $self->load_layout( "edit_submission.inc",
-                                       global_vars => 1,
-                                     );
+    my $template =
+      $self->load_layout( "edit_submission.inc", global_vars => 1, );
 
     #
     #  Are we updating?
@@ -3913,9 +3306,8 @@ sub submission_view
     #
     #  The template we'll be working with.
     #
-    my $template = $self->load_layout( "view_submission.inc",
-                                       loop_context_vars => 1,
-                                     );
+    my $template =
+      $self->load_layout( "view_submission.inc", loop_context_vars => 1, );
 
     #
     #  Get the data from the submission.
@@ -4036,9 +3428,8 @@ sub submission_list
     #
     #  Load the templaate
     #
-    my $template = $self->load_layout( "pending_articles.inc",
-                                       global_vars => 1,
-                                     );
+    my $template =
+      $self->load_layout( "pending_articles.inc", global_vars => 1, );
 
     #
     #  Add the pending list
@@ -4071,8 +3462,7 @@ sub user_admin
     my ($self) = (@_);
 
     # set up the HTML template
-    my $template =
-      $self->load_layout( "user_administration.inc" );
+    my $template = $self->load_layout("user_administration.inc");
 
     #
     #  Get the current user.
@@ -4353,7 +3743,7 @@ sub poll_view
     #
     #  Tag addition URL
     #
-    $template->param( tag_url  => "/ajax/addtag/poll/$poll_id/" );
+    $template->param( tag_url => "/ajax/addtag/poll/$poll_id/" );
 
     if ($error)
     {
@@ -4526,9 +3916,7 @@ sub pending_polls
     my $subs  = $queue->getPolls();
 
     # set up the HTML template
-    my $template = $self->load_layout( "pending_polls.inc",
-                                       global_vars => 1,
-                                     );
+    my $template = $self->load_layout( "pending_polls.inc", global_vars => 1, );
 
     # fill in all the parameters
     $template->param( polls => $subs ) if $subs;
@@ -4703,7 +4091,7 @@ sub poll_edit
     my $submisssions = Yawns::Submissions->new();
 
     # set up the HTML template
-    my $template = $self->load_layout( "edit_poll.inc" );
+    my $template = $self->load_layout("edit_poll.inc");
 
     if ( defined($submit) &&
          $submit eq "Update Poll" )
@@ -4915,7 +4303,7 @@ sub submit_poll
 
 
     # open the html template
-    my $template = $self->load_layout( "submit_poll.inc" );
+    my $template = $self->load_layout("submit_poll.inc");
 
     $template->param( preview  => $preview,
                       confirm  => $confirm,
@@ -5145,7 +4533,7 @@ sub edit_prefs
 
 
     # open the html template
-    my $template = $self->load_layout( "edit_preferences.inc" );
+    my $template = $self->load_layout("edit_preferences.inc");
 
     #
     #  Set notification options.
@@ -5221,7 +4609,7 @@ sub edit_permissions
     #
     #  Load the template
     #
-    my $template = $self->load_layout( "edit_permissions.inc" );
+    my $template = $self->load_layout("edit_permissions.inc");
 
 
     #
@@ -5426,7 +4814,7 @@ sub reset_password
     }
 
     # open the html template
-    my $template = $self->load_layout( "forgot_password.inc" );
+    my $template = $self->load_layout("forgot_password.inc");
 
     # set the required values
     $template->param( submit => $submit,
@@ -5458,7 +4846,7 @@ sub change_password
 
 
     # open the html template
-    my $template = $self->load_layout( "update_password.inc" );
+    my $template = $self->load_layout("update_password.inc");
 
     $template->param( user  => $user,
                       magic => $magic );
@@ -5789,12 +5177,12 @@ sub add_weblog
             # now show it
             $session->param( ok_flash => "Weblog Updated!" );
 
-            return( $self->redirectURL( "/users/$username/weblog" ) );
+            return ( $self->redirectURL("/users/$username/weblog") );
         }
     }
 
     # open the html template
-    my $template = $self->load_layout( "add_weblog.inc" );
+    my $template = $self->load_layout("add_weblog.inc");
 
     #
     #  Make sure the format is setup.
@@ -5919,7 +5307,7 @@ sub delete_weblog
     }
 
     # open the html template
-    my $template = $self->load_layout( "delete_weblog.inc" );
+    my $template = $self->load_layout("delete_weblog.inc");
 
     if ($removed)
     {
@@ -6083,7 +5471,7 @@ sub edit_weblog
 
 
     # open the html template
-    my $template = $self->load_layout( "edit_weblog.inc" );
+    my $template = $self->load_layout("edit_weblog.inc");
 
 
     # fill in all the parameters you got from the database
@@ -6335,7 +5723,7 @@ EOF
     }
 
     # open the html template
-    my $template = $self->load_layout( "edit_article.inc" );
+    my $template = $self->load_layout("edit_article.inc");
 
 
     $template->param( confirm       => $confirm,
@@ -6495,7 +5883,7 @@ sub submit_article
     }
 
     # open the html template
-    my $template = $self->load_layout( "submit_article.inc" );
+    my $template = $self->load_layout("submit_article.inc");
 
     # fill in all the parameters you got from the database
     $template->param( anon          => $anon,
@@ -6560,7 +5948,7 @@ sub edit_comment
     #
     #  Load our HTML template.
     #
-    my $template = $self->load_layout( "edit_comment.inc" );
+    my $template = $self->load_layout("edit_comment.inc");
 
 
     #
@@ -7195,7 +6583,7 @@ sub add_comment
     }
 
     # open the html template
-    my $template = $self->load_layout( "submit_comment.inc" );
+    my $template = $self->load_layout("submit_comment.inc");
 
     # fill in all the parameters you got from the database
     $template->param( anon           => $anonymous,
@@ -7362,7 +6750,7 @@ sub new_user
             {
                 $self->send_alert(
                               "Denied registration for '$new_user_name' from " .
-                                  $remote_ip );
+                                $remote_ip );
 
                 # Blacklist
                 my $redis = Singleton::Redis->instance();
@@ -7373,6 +6761,7 @@ sub new_user
             {
                 $self->send_alert( "Denied registration for in-use email " .
                                    $new_user_email . " " . $remote_ip );
+
                 # Blacklist
                 my $redis = Singleton::Redis->instance();
                 $redis->set( "IP:" . $self->remote_ip(), "1" );
@@ -7399,8 +6788,8 @@ sub new_user
                         $bad_ip = 1;
 
                         $self->send_alert(
-                                          "Denied registration - blogspam.net listing of IP $remote_ip <pre>$content</pre>"
-                                         );
+                            "Denied registration - blogspam.net listing of IP $remote_ip <pre>$content</pre>"
+                        );
 
                         # Blacklist
                         my $redis = Singleton::Redis->instance();
@@ -7456,7 +6845,7 @@ sub new_user
                 {
                     $bad_cap = 1;
 
-                    $self->send_alert( "Failed to fetch '$c_url'" );
+                    $self->send_alert("Failed to fetch '$c_url'");
 
                 }
                 else
@@ -7471,7 +6860,9 @@ sub new_user
                     {
                         $bad_cap += 1;
 
-                        $self->send_alert( "Denied access via recaptcha: '$content' from IP " . $self->remote() );
+                        $self->send_alert(
+                              "Denied access via recaptcha: '$content' from IP "
+                                . $self->remote() );
 
                         # Blacklist
                         my $redis = Singleton::Redis->instance();
@@ -7545,7 +6936,7 @@ sub new_user
 
 
     # open the html template
-    my $template = $self->load_layout( "new_user.inc" );
+    my $template = $self->load_layout("new_user.inc");
 
     if ( $pub && $sec )
     {
