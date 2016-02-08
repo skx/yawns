@@ -1366,7 +1366,7 @@ sub edit_about
     my $form = $self->query();
 
     # load the template
-    my $template = $self->load_layout( "edit_about.inc", session => 1 );
+    my $template = $self->load_layout( "edit_about.inc" );
 
     #
     # Are we viewing a page, or the picker?
@@ -1724,7 +1724,6 @@ sub article
     my $template = $self->load_layout( "view_article.inc",
                                        loop_context_vars => 1,
                                        global_vars       => 1,
-                                       session           => 1
                                      );
 
     #
@@ -1987,7 +1986,6 @@ sub single_weblog
     my $template = $self->load_layout( "single_weblog.inc",
                                        loop_context_vars => 1,
                                        global_vars       => 1,
-                                       session           => 1
                                      );
 
     #
@@ -2454,7 +2452,7 @@ sub edit_scratchpad
 
 
     # open the html template
-    my $template = $self->load_layout( "edit_scratchpad.inc", session => 1 );
+    my $template = $self->load_layout( "edit_scratchpad.inc" );
 
     # get the data
     my $scratchpad = Yawns::Scratchpad->new( username => $edituser );
@@ -2555,7 +2553,6 @@ sub view_bookmarks
     # read in the template file
     my $template = $self->load_layout( "view_bookmarks.inc",
                                        global_vars => 1,
-                                       session     => 1
                                      );
 
 
@@ -2923,7 +2920,6 @@ sub edit_adverts
 
     # set up the HTML template
     my $template = $self->load_layout( "edit_adverts.inc",
-                                       session     => 1,
                                        global_vars => 1
                                      );
 
@@ -3254,7 +3250,7 @@ sub create_advert
     }
 
     # open the html template
-    my $template = $self->load_layout( "submit_advert.inc", session => 1 );
+    my $template = $self->load_layout( "submit_advert.inc" );
 
     # fill in all the parameters you got from the database
     $template->param( new              => $new,
@@ -3586,7 +3582,7 @@ sub edit_user
     my $sig       = $userdata->{ 'sig' };
 
     # open the html template
-    my $template = $self->load_layout( "edit_user.inc", session => 1 );
+    my $template = $self->load_layout( "edit_user.inc" );
 
     # set parameters
     $template->param( username  => $edituser,
@@ -3775,7 +3771,6 @@ sub submission_edit
     #
     my $template = $self->load_layout( "edit_submission.inc",
                                        global_vars => 1,
-                                       session     => 1
                                      );
 
     #
@@ -3920,7 +3915,6 @@ sub submission_view
     #
     my $template = $self->load_layout( "view_submission.inc",
                                        loop_context_vars => 1,
-                                       session           => 1
                                      );
 
     #
@@ -4044,7 +4038,6 @@ sub submission_list
     #
     my $template = $self->load_layout( "pending_articles.inc",
                                        global_vars => 1,
-                                       session     => 1
                                      );
 
     #
@@ -4079,7 +4072,7 @@ sub user_admin
 
     # set up the HTML template
     my $template =
-      $self->load_layout( "user_administration.inc", session => 1 );
+      $self->load_layout( "user_administration.inc" );
 
     #
     #  Get the current user.
@@ -4535,7 +4528,6 @@ sub pending_polls
     # set up the HTML template
     my $template = $self->load_layout( "pending_polls.inc",
                                        global_vars => 1,
-                                       session     => 1
                                      );
 
     # fill in all the parameters
@@ -4711,7 +4703,7 @@ sub poll_edit
     my $submisssions = Yawns::Submissions->new();
 
     # set up the HTML template
-    my $template = $self->load_layout( "edit_poll.inc", session => 1 );
+    my $template = $self->load_layout( "edit_poll.inc" );
 
     if ( defined($submit) &&
          $submit eq "Update Poll" )
@@ -4923,7 +4915,7 @@ sub submit_poll
 
 
     # open the html template
-    my $template = $self->load_layout( "submit_poll.inc", session => 1 );
+    my $template = $self->load_layout( "submit_poll.inc" );
 
     $template->param( preview  => $preview,
                       confirm  => $confirm,
@@ -5153,7 +5145,7 @@ sub edit_prefs
 
 
     # open the html template
-    my $template = $self->load_layout( "edit_preferences.inc", session => 1 );
+    my $template = $self->load_layout( "edit_preferences.inc" );
 
     #
     #  Set notification options.
@@ -5229,7 +5221,7 @@ sub edit_permissions
     #
     #  Load the template
     #
-    my $template = $self->load_layout( "edit_permissions.inc", session => 1 );
+    my $template = $self->load_layout( "edit_permissions.inc" );
 
 
     #
@@ -5434,7 +5426,7 @@ sub reset_password
     }
 
     # open the html template
-    my $template = $self->load_layout( "forgot_password.inc", session => 1 );
+    my $template = $self->load_layout( "forgot_password.inc" );
 
     # set the required values
     $template->param( submit => $submit,
@@ -5466,7 +5458,7 @@ sub change_password
 
 
     # open the html template
-    my $template = $self->load_layout( "update_password.inc", session => 0 );
+    my $template = $self->load_layout( "update_password.inc" );
 
     $template->param( user  => $user,
                       magic => $magic );
@@ -5802,7 +5794,7 @@ sub add_weblog
     }
 
     # open the html template
-    my $template = $self->load_layout( "add_weblog.inc", session => 1 );
+    my $template = $self->load_layout( "add_weblog.inc" );
 
     #
     #  Make sure the format is setup.
@@ -5927,7 +5919,7 @@ sub delete_weblog
     }
 
     # open the html template
-    my $template = $self->load_layout( "delete_weblog.inc", session => 1 );
+    my $template = $self->load_layout( "delete_weblog.inc" );
 
     if ($removed)
     {
@@ -6091,7 +6083,7 @@ sub edit_weblog
 
 
     # open the html template
-    my $template = $self->load_layout( "edit_weblog.inc", session => 1 );
+    my $template = $self->load_layout( "edit_weblog.inc" );
 
 
     # fill in all the parameters you got from the database
@@ -6343,7 +6335,7 @@ EOF
     }
 
     # open the html template
-    my $template = $self->load_layout( "edit_article.inc", session => 1 );
+    my $template = $self->load_layout( "edit_article.inc" );
 
 
     $template->param( confirm       => $confirm,
@@ -6503,7 +6495,7 @@ sub submit_article
     }
 
     # open the html template
-    my $template = $self->load_layout( "submit_article.inc", session => 1 );
+    my $template = $self->load_layout( "submit_article.inc" );
 
     # fill in all the parameters you got from the database
     $template->param( anon          => $anon,
@@ -6568,7 +6560,7 @@ sub edit_comment
     #
     #  Load our HTML template.
     #
-    my $template = $self->load_layout( "edit_comment.inc", session => 1 );
+    my $template = $self->load_layout( "edit_comment.inc" );
 
 
     #
@@ -7203,7 +7195,7 @@ sub add_comment
     }
 
     # open the html template
-    my $template = $self->load_layout( "submit_comment.inc", session => 1 );
+    my $template = $self->load_layout( "submit_comment.inc" );
 
     # fill in all the parameters you got from the database
     $template->param( anon           => $anonymous,
@@ -7553,7 +7545,7 @@ sub new_user
 
 
     # open the html template
-    my $template = $self->load_layout( "new_user.inc", session => 1 );
+    my $template = $self->load_layout( "new_user.inc" );
 
     if ( $pub && $sec )
     {
