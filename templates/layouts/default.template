@@ -93,11 +93,7 @@
 			<!-- tmpl_if name='show_pending_header' -->
 			<h3 class="sideBarTitle">Submissions</h3>
                         <ul class="list-group">
-			<!-- /tmpl_if -->
-
-			<!-- tmpl_if name='show_pending_advert_count' -->
-			<li class="list-group-item"><!-- tmpl_if name="pending_advert_count" --><span class="badge"><!-- tmpl_var name='pending_advert_count' --></span><!-- /tmpl_if --><a href="/adverts/pending">Adverts</a></li>
-			<!-- /tmpl_if -->
+                        <!-- /tmpl_if -->
 
 			<!-- tmpl_if name='show_pending_article_count' -->
 			  <li class="list-group-item"><!-- tmpl_if name="pending_article_count" --><span class="badge"><!-- tmpl_var name='pending_article_count' --></span><!-- /tmpl_if --><a href="/submission/list">Articles</a></li>
@@ -208,20 +204,6 @@
   <!-- /tmpl_if -->
   <p>&nbsp;</p>
   <!-- tmpl_if  name="show_adverts" -->
-  <!-- tmpl_if name="user_adverts" -->
-  <h3>Community Advert</h3>
-  <p></p>
-  <div class="advert" style="border: solid 1px;" onClick="document.location.href='/follow/<!-- tmpl_var name='advert_id' -->';" onMouseOver="this.style.cursor='pointer'; window.status='<!-- tmpl_var name='advert_link' -->';" onMouseOut="window.status='';">
-    <p style="text-align: center;"><a href="/follow/<!-- tmpl_var name='advert_id' -->"><!-- tmpl_var name='advert_link_text' --></a></p>
-    <!-- tmpl_var name='advert_text' -->
-    <p style="text-align: center;"><a href="/follow/<!-- tmpl_var name='advert_id' -->"><!-- tmpl_var name='advert_link_text' --></a></p>
-  </div>
-  <ul>
-    <li><a href="/about/FAQ%20:%20Site%20Adverts#user">What is this?</a></li>
-  </ul>
-  <!-- /tmpl_if -->
-
-  <!-- tmpl_if name="google_adverts" -->
   <div class="advert">
     <h3>Sponsored Links</h3>
     <p></p>
@@ -241,8 +223,6 @@
     <p><a href="/about/FAQ%20:%20Site%20Adverts">Why are these adverts here?</a></p>
     <!-- /tmpl_unless -->
   </div>
-  <!-- /tmpl_if -->
-
   <!-- /tmpl_if -->
 
 
