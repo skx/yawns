@@ -93,15 +93,16 @@ sub cgiapp_init
             #
             # Get the memcached handle.
             #
-            my $mem = Cache::Memcached->new(
-                                          { servers => [$host],
-                                            debug   => 0
-                                          } );
+            my $mem =
+              Cache::Memcached->new(
+                                     { servers => [$host],
+                                       debug   => 0
+                                     } );
 
             # session setup
             $session =
-              new CGI::Session( "driver:memcached", $query, { Memcached => $mem } )
-              or
+              new CGI::Session( "driver:memcached", $query,
+                                { Memcached => $mem } ) or
               die($CGI::Session::errstr);
         }
 
@@ -160,9 +161,6 @@ sub setup
         # Get tags of a particular type
         'get_tags' => 'get_tags',
 
-        # Recent additions
-        'recent_tags' => 'recent_tags',
-
         # Complete a tag
         'tag_complete' => 'tag_complete',
 
@@ -201,38 +199,6 @@ sub debug
         $username = $session->param("logged_in") || "Anonymous";
     }
     return ("OK - $username");
-}
-
-
-
-=head2 get_recent_tags
-
-Fetch the most recently added tags.
-
-=cut
-
-sub recent_tags
-{
-
-    #
-    # Get the tag object, and add the tag
-    #
-    my $holder = Yawns::Tags->new();
-    my $recent = $holder->getRecent();
-
-    #
-    # Show the tags.
-    #
-    my $template = HTML::Template->new(
-                       filename => "../templates/includes/recent_tags.template",
-                       loop_context_vars => 1 );
-
-    $template->param( recent_tags => $recent ) if defined($recent);
-
-    #
-    #  Show the template.
-    #
-    return ( $template->output() );
 }
 
 
