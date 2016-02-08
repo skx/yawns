@@ -30,7 +30,6 @@
  <!-- /tmpl_if -->
 </ul>
 </nav>
-</div>
 
       <!-- tmpl_else -->
              <h2>Error</h2>
