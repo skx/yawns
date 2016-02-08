@@ -90,7 +90,7 @@
 
           <!-- tmpl_if name='recaptcha' -->
           <div class="form-group">
-            <label for="lpass2" class="col-md-3 control-label">Password</label>
+            <label for="lpass2" class="col-md-3 control-label">ReCAPTCHA</label>
             <div style="margin-bottom: 25px" class="input-group col-md-9">
               <div class="g-recaptcha" data-sitekey="<!-- tmpl_var name='recaptcha' escape='html' -->"></div>
             </div>
