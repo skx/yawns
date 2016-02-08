@@ -880,7 +880,7 @@ sub application_login
             # Secure link
             $template->param( secure => "https://" .
                                 $ENV{ 'SERVER_NAME' } . $ENV{ 'REQUEST_URI' },
-                              title => "Advanced Login Options"
+                              title => "Login"
                             );
         }
 
