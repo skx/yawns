@@ -4,66 +4,111 @@
 
 
 <!-- tmpl_if name='new_user_sent' -->
-<h1>New Account Created</h1>
 
-
-<p>Your password has been emailed to <b><!-- tmpl_var name='new_user_email' --></b> - when you receive it, please login using the form at the side of any page.</p>
+<div class="container">
+  <h1>Account Created</h1>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-1 col-md-1">
+      </div>
+      <div class="col-sm-11 col-md-11">
+        <p>Your password has been emailed to <b><!-- tmpl_var name='new_user_email' --></b> - when you receive it, please login using the form at the side of any page.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- tmpl_else -->
 
-<h1>Create a new user account</h1>
+<div class="container">
+  <h1>Register An Account</h1>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-1 col-md-1">
+      </div>
+      <div class="col-sm-11 col-md-11">
+        <p>Registering an account with us will allow you to post weblog entries, track replies to your comments, and submit articles or polls.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-<p>To register an account please fill out the following details:</p>
-<form action="/create/user" method="post">
-  <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
-  <input type="hidden" name="mode" value="new_user" />
-  <table>
-    <tr>
-      <td valign="top"><b>Username:</b></td>
-      <td><input name="new_user_name" type="text" size="25" maxlength="25" value="<!-- tmpl_var name="new_user_name" -->"/>
-        <!-- tmpl_if name='blank_username' -->
-        <p>You must enter the username you wish to use.</p>
-        <!-- /tmpl_if -->
-        <!-- tmpl_if name='prev_banned' -->
-        <p>The IP address you are using is associated with a previously banned account - you may not re-register.</p>
-        <!-- /tmpl_if -->
-        <!-- tmpl_if name='bad_ip' -->
-        <p>The IP address you are using is listed as a spam-source on <a href="http://blogspam.net/">BlogSpam</a>.</p>
-        <!-- /tmpl_if -->
-        <!-- tmpl_if name='prev_email' -->
-        <p>The email address you are using is already associated with an account.</p>
-        <!-- /tmpl_if -->
-        <!-- tmpl_if name='invalid_username' -->
-        <p>Sorry, the username you entered is not valid - please use only letters, numbers and '-' or '_'.  Usernames should be no longer than 25 characters in length.</p>
-        <!-- /tmpl_if -->
+<div class="container">
+  <div id="signupbox" style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <div class="panel-title">Sign Up</div>
+        <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="/login/">Sign In</a></div>
+      </div>
+      <div class="panel-body" >
+        <form id="signupform" class="form-horizontal" role="form" method="POST" action="/create/user/">
+          <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
+          <input type="hidden" name="mode" value="new_user" />
 
-        <!-- tmpl_if name='already_exists' -->
-        <p>Sorry, the username you entered is already in use - please try again with a different username.</p>
-        <!-- /tmpl_if -->
-      </td>
-    </tr>
+          <div class="form-group">
+            <label for="lname" class="col-md-3 control-label">Username</label>
+            <div style="margin-bottom: 25px" class="input-group col-md-9">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+              <input type="text" class="form-control" id="new_user_name" name="new_user_name" placeholder="Your username" value="<!-- tmpl_var name='new_user_name' -->">
+            </div>
 
-    <tr>
-      <td valign="top"><b>Email Address:</b></td>
-      <td><input name="new_user_email" type="text" size="50" maxlength="50" value="<!-- tmpl_var name="new_user_email" -->"/>
-        <!-- tmpl_if name='blank_email' -->
-        <p>Sorry, you must enter an email address.</p>
-        <!-- /tmpl_if -->
-        <!-- tmpl_if name='invalid_email' -->
-        <p>Sorry, your email address contained errors: <!-- tmpl_var name='mail_error' -->.</p>
-        <!-- /tmpl_if -->
-    </td></tr>
+            <!-- tmpl_if name='blank_username' -->
+            <p>You must enter the username you wish to use.</p>
+            <!-- /tmpl_if -->
+            <!-- tmpl_if name='prev_banned' -->
+            <p>The IP address you are using is associated with a previously banned account, you may not register an account.</p>
+            <!-- /tmpl_if -->
+            <!-- tmpl_if name='bad_ip' -->
+            <p>The IP address you are using is listed as a spam-source on <a href="http://blogspam.net/">BlogSpam</a>, you may not register an account.</p>
+            <!-- /tmpl_if -->
+            <!-- tmpl_if name='already_exists' -->
+            <p>Sorry, the username you entered is already in use - please try again with a different username.</p>
+            <!-- /tmpl_if -->
+            <!-- tmpl_if name='invalid_username' -->
+            <p>Sorry, the username you entered is not valid - please use only letters, numbers and '-' or '_'.  Usernames should be no longer than 25 characters in length.</p>
+            <!-- /tmpl_if -->
 
-    <!-- tmpl_if name='recaptcha' -->
-    <tr><td></td><td><div class="g-recaptcha" data-sitekey="<!-- tmpl_var name='recaptcha' escape='html' -->"></div></td></tr>
-    <!-- /tmpl_if name='recaptcha' -->
+          </div>
 
-    <tr><td></td><td>
-        <p><input type="submit" name="submit" value="Create User" /> &nbsp;
-</form>
-</td></tr></table>
-<p>Your email address is needed to send you your password.  If you wish you can also receive email notification of new replies to any articles and comments you post.</p>
-<p>Please make sure it is a valid email address and you have entered it correctly, if you make a mistake you will create an account you cannot use - and you will have to choose another username.</p>
-<p>We do not and will not sell, trade, or otherwise disclose our users' email addresses to anyone, for any reason, ever.  Your email address will not be displayed publicly upon the website, unless you choose to add it yourself.</p>
+
+          <div class="form-group">
+            <label for="email" class="col-md-3 control-label">Email</label>
+            <div style="margin-bottom: 25px" class="input-group col-md-9">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+              <input type="text" id="new_user_email" class="form-control" name="new_user_email" placeholder="Your email address" value="">
+            </div>
+            <!-- tmpl_if name='prev_email' -->
+            <p>The email address you are using is already associated with an account.</p>
+            <!-- /tmpl_if -->
+            <!-- tmpl_if name='blank_email' -->
+            <p>Sorry, you must enter an email address.</p>
+            <!-- /tmpl_if -->
+            <!-- tmpl_if name='invalid_email' -->
+            <p>Sorry, your email address contained errors: <!-- tmpl_var name='mail_error' -->.</p>
+            <!-- /tmpl_if -->
+          </div>
+
+          <!-- tmpl_if name='recaptcha' -->
+          <div class="form-group">
+            <label for="lpass2" class="col-md-3 control-label">Password</label>
+            <div style="margin-bottom: 25px" class="input-group col-md-9">
+              <div class="g-recaptcha" data-sitekey="<!-- tmpl_var name='recaptcha' escape='html' -->"></div>
+            </div>
+          </div>
+          <!-- /tmpl_if name='recaptcha' -->
+
+          <div class="form-group">
+            <!-- Button -->
+            <div class="col-md-offset-3 col-md-9">
+              <button id="submit" name="submit" value="Create User" class="btn btn-info">Register</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- /tmpl_if name='new_user_sent' -->
