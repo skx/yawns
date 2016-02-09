@@ -4731,7 +4731,7 @@ sub reset_password
     #
     #  If the user is submitting...
     #
-    if ( $form->param('submit') eq 'Send' )
+    if ( $form->param('submit') )
     {
 
         # validate session
