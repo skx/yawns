@@ -72,7 +72,7 @@ since this object is used as a Singleton.
 sub new
 {
     my $host = conf::SiteConfig::get_conf('redis');
-    return ( Redis->new(  server => $redis ) );
+    return ( Redis->new(  server => $host ) );
 }
 
 
