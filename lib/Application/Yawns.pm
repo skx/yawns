@@ -128,6 +128,23 @@ sub cgiapp_prerun
             return ( $self->redirectURL("/about/blacklisted") );
         }
     }
+
+    #
+    #  Debug information for DBI
+    #
+    my $count = $self->{'count'} || 0;
+    $count += 1;
+    $self->{'count'} = $count;
+
+    #
+    #  If we're tracing DBI
+    #
+    if ( $conf::SiteConfig::get_conf( "dbi.log" ) )
+    {
+        my $file = "/tmp/dbi.$$.count.log";
+        my $dbi = Singleton::DBI->instance();
+        $dbi->trace( "2|SQL", $file );
+    }
 }
 
 
