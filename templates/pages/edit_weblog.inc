@@ -7,12 +7,6 @@ $(document).ready (function() {
 </script>
 
 	<h2>Edit Weblog Entry</h2>
-                  <!-- tmpl_if name='saved' -->
-		    <p>Your weblog entry has been updated.</p>
-		    <p>You can see <a href="/users/<!-- tmpl_var name="username" -->/weblog/<!-- tmpl_var name="id" -->">your updated entry here</a>.</p>
-
-                  <!-- tmpl_else -->
-
                   <form action="/edit/weblog/<!-- tmpl_var name="id" -->" method="post">
                   <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
                   <input type="hidden" name="mode" value="edit_weblog" />
@@ -39,4 +33,3 @@ $(document).ready (function() {
 
                     <p><input type="submit" name="submit" value="Save" /></p>
                   </form>
-		    <!-- /tmpl_if -->

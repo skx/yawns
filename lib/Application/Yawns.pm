@@ -5347,7 +5347,6 @@ sub edit_weblog
 
     my $submit_body     = $form->param('submit_body');
     my $submit_comments = $form->param('submit_comments');
-    my $saved           = 0;
 
     #
     # Sanitize.
@@ -5412,7 +5411,11 @@ sub edit_weblog
         }
 
 
-        $saved = 1;
+        #
+        #  Now we've edited redirect to show it
+        #
+        my $target = "/users/$logged_in/weblog/$gid";
+        return( $self->redirectURL( $target ) );
     }
     else
     {
@@ -5472,7 +5475,6 @@ sub edit_weblog
                       submit_tags     => $submit_tags,
                       submit_body     => $submit_body,
                       submit_comments => $submit_comments,
-                      saved           => $saved,
                       id              => $id,
                       username        => $username,
                       title           => "Edit Weblog",
