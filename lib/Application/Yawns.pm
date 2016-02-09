@@ -5257,7 +5257,6 @@ sub delete_weblog
 
     my $id = $form->param('id') || 0;
 
-    my $removed = 0;
     my $submit  = $form->param('submit');
 
     if ( $submit eq 'Yes Really Delete' )
@@ -5290,12 +5289,14 @@ sub delete_weblog
 
 
         #
-        #  All done.
+        #  Redirect
         #
-        $removed = 1;
+        $session->param( ok_flash => "Weblog deleted!" );
+        return ( $self->redirectURL("/users/$username/weblog") );
     }
     elsif ( $submit eq 'No Keep It' )
     {
+        $session->param( ok_flash => "Weblog entry was not removed!" );
         return ( $self->redirectURL("/users/$username/weblog/$id") );
     }
 
@@ -5312,8 +5313,7 @@ sub delete_weblog
     }
 
     # fill in all the parameters you got from the database
-    $template->param( removed  => $removed,
-                      id       => $id,
+    $template->param( id       => $id,
                       username => $username,
                     );
 
@@ -5414,6 +5414,7 @@ sub edit_weblog
         #
         #  Now we've edited redirect to show it
         #
+        $session->param( ok_flash => "Entry edited" );
         my $target = "/users/$username/weblog/$gid";
         return( $self->redirectURL( $target ) );
     }
