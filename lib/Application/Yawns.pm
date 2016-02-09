@@ -5414,7 +5414,7 @@ sub edit_weblog
         #
         #  Now we've edited redirect to show it
         #
-        my $target = "/users/$logged_in/weblog/$gid";
+        my $target = "/users/$username/weblog/$gid";
         return( $self->redirectURL( $target ) );
     }
     else
