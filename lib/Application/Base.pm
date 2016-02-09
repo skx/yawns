@@ -54,9 +54,9 @@ sub cgiapp_init
     else
     {
         my $redis   = Singleton::Redis->new();
-        my $session = CGI::Session->new( "driver:redis", $sid,
-                                       { Redis => $redis,
-                                         Expire => 60*60*24 } );
+        $session = CGI::Session->new( "driver:redis", $sid,
+                                    { Redis => $redis,
+                                      Expire => 60*60*24 } );
     }
 
     # assign the session object to a param
