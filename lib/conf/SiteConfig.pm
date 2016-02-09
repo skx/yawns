@@ -49,6 +49,12 @@ sub get_conf
     #
     $redis = "db.vpn.internal:6379";
 
+    #
+    # If you wish to log DBI performance and queries you can
+    # do so by setting the following to 1.
+    #
+    $dbi_log = 0;
+
 
     #
     #
