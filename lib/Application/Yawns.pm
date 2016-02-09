@@ -130,11 +130,11 @@ sub cgiapp_prerun
     }
 
     #
-    #  Debug information for DBI
+    #  Count the number of requests since this process started.
     #
-    my $count = $self->{'count'} || 0;
+    my $count = $ENV['COUNT'] || 0;
     $count += 1;
-    $self->{'count'} = $count;
+    $ENV['COUNT'] = $count;
 
     #
     #  If we're tracing DBI
