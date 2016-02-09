@@ -552,10 +552,6 @@ sub load_layout
                       {  id       => $answer[2],
                          response => $answer[0] } );
             }
-        }
-
-        if ($poll_id)
-        {
 
             #
             # Fill in poll data.
@@ -5228,10 +5224,7 @@ sub add_weblog
     my $planet_url = conf::SiteConfig::get_conf("planet_url");
     if ( defined($planet_url) )
     {
-        $template->param( planet_url  => $planet_url,
-                          planet_site => 1,
-                          sitename    => conf::SiteConfig::get_conf("sitename")
-                        );
+        $template->param( planet_url => $planet_url );
     }
 
     # generate the output

@@ -193,7 +193,7 @@
 	<div class="comments"> <!-- tmpl_if name="comments" --> <a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->#comments"><!-- tmpl_var name='comments' --> comment<!-- tmpl_if name='plural' -->s<!-- /tmpl_if --></a><!-- /tmpl_if --></div>
       </div>
       <!-- /tmpl_loop -->
-      <!-- tmpl_if name='planet_site' -->
+      <!-- tmpl_if name='planet_url' -->
       <p><a href="<!-- tmpl_var name='planet_url' -->" title="Planet <!-- tmpl_var name='sitename' -->" style="float:right;">Archived weblogs</a></p>
       <p>&nbsp;</p>
       <!-- /tmpl_if -->
