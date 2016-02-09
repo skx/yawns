@@ -44,7 +44,13 @@ sub get_conf
     #
     $session = "memcache://db.vpn.internal:11211/";
 
+    #
+    # The pointer to redis.
+    #
+    $redis = "db.vpn.internal:6379";
 
+
+    #
     #
     # number of articles to display on the front page
     #

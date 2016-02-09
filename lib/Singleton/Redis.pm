@@ -38,6 +38,7 @@ use warnings;
 #  The Redis module.
 #
 use Redis;
+use conf::SiteConfig;
 
 
 #
@@ -70,7 +71,8 @@ since this object is used as a Singleton.
 
 sub new
 {
-    return ( Redis->new(  server => 'db.vpn.internal:6379' ) );
+    my $host = conf::SiteConfig::get_conf('redis');
+    return ( Redis->new(  server => $redis ) );
 }
 
 

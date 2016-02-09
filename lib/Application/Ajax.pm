@@ -12,8 +12,8 @@ use warnings;
 #
 # Hierarchy.
 #
-package Application::Ajax;
-use base 'CGI::Application';
+package Application::Yawns;
+use base 'Application::Base';
 
 #
 # Standard module(s)
@@ -45,78 +45,6 @@ sub my_error_rm
     use Data::Dumper;
     return Dumper( \$error );
 }
-
-
-
-
-=begin doc
-
-Setup UTF output, and attempt to setup a session.
-
-NOTE:  We're not going to create a session, just follow the same routine
-as in L<Application::Yawns> such that we can determine whether a remote
-user is authenticated/logged-in or anonymous.
-
-=end doc
-
-=cut
-
-sub cgiapp_init
-{
-    my $self  = shift;
-    my $query = $self->query();
-
-    #
-    #  Get the cookie if we have one.
-    #
-    my $cookie_name   = 'CGISESSID';
-    my $cookie_expiry = '+7d';
-    my $sid           = $query->cookie($cookie_name) || undef;
-
-    #
-    #  Create the object
-    #
-    if ($sid)
-    {
-        my $session;
-
-
-        #
-        #  Are we using memcached?
-        #
-        my $cache = conf::SiteConfig::get_conf("session");
-
-        if ( $cache =~ /^memcache:\/\/(.*)\/$/i )
-        {
-            my $host = $1;
-
-            #
-            # Get the memcached handle.
-            #
-            my $mem =
-              Cache::Memcached->new(
-                                     { servers => [$host],
-                                       debug   => 0
-                                     } );
-
-            # session setup
-            $session =
-              new CGI::Session( "driver:memcached", $query,
-                                { Memcached => $mem } ) or
-              die($CGI::Session::errstr);
-        }
-
-        #
-        # assign the session object to a param
-        #
-        $self->param( session => $session );
-    }
-
-
-    binmode STDIN,  ":encoding(utf8)";
-    binmode STDOUT, ":encoding(utf8)";
-}
-
 
 
 
