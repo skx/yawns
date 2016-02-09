@@ -5189,7 +5189,7 @@ sub delete_weblog
 
     my $id = $form->param('id') || 0;
 
-    my $submit  = $form->param('submit');
+    my $submit = $form->param('submit');
 
     if ( $submit eq 'Yes Really Delete' )
     {
@@ -5238,8 +5238,7 @@ sub delete_weblog
 
     # fill in all the parameters you got from the database
     $template->param( id       => $id,
-                      username => $username,
-                    );
+                      username => $username, );
 
     # generate the output
     return ( $template->output() );
@@ -5340,7 +5339,7 @@ sub edit_weblog
         #
         $session->param( ok_flash => "Entry edited" );
         my $target = "/users/$username/weblog/$id";
-        return( $self->redirectURL( $target ) );
+        return ( $self->redirectURL($target) );
     }
     else
     {
