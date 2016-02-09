@@ -32,7 +32,7 @@
     <div class="weblog">
       <div class="link">#<a href="/users/<!-- tmpl_var escape='url' name='user' -->/weblog/<!-- tmpl_var name='item_id' -->"><!-- tmpl_var name='item_id' --></a></div>
       <div class="title"><!-- tmpl_if name="title" --><!-- tmpl_var name='title' --><!-- /tmpl_if --> </div>
-      <div class="tagline">Posted by <a href="/users/<!-- tmpl_var escape='url' name='user' -->"><!-- tmpl_var name='user' --></a> on <!-- tmpl_var name='ondate' --> at <!-- tmpl_var name='attime' --> <!-- tmpl_if name="edit" -->(<a href="/edit/weblog/<!-- tmpl_var name="item_id" -->">Edit Entry</a>)<!-- /tmpl_if --></div>
+      <div class="tagline">Posted by <a href="/users/<!-- tmpl_var escape='url' name='user' -->"><!-- tmpl_var name='user' --></a> on <!-- tmpl_var name='ondate' --> at <!-- tmpl_var name='attime' --> <!-- tmpl_if name="edit" -->, <a href="/delete/weblog/<!-- tmpl_var name="item_id" -->">Delete Entry</a> or <a href="/edit/weblog/<!-- tmpl_var name="item_id" -->">Edit Entry</a>.<!-- /tmpl_if --></div>
       <!-- tmpl_include name='../includes/view_add_tag.template' -->
       <div class="body"><!-- tmpl_var name='bodytext' --></div>
       <div class="links">

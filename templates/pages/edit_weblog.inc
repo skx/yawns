@@ -39,6 +39,4 @@ $(document).ready (function() {
 
                     <p><input type="submit" name="submit" value="Save" /></p>
                   </form>
-	<p>If you wish you can <a href="/delete/weblog/<!-- tmpl_var name="id" -->">delete this entry</a>.</p>
-
 		    <!-- /tmpl_if -->
