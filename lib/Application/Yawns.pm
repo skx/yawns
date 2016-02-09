@@ -5302,15 +5302,7 @@ sub delete_weblog
 
     # open the html template
     my $template = $self->load_layout("delete_weblog.inc");
-
-    if ($removed)
-    {
-        $template->param( title => "Entry Removed" );
-    }
-    else
-    {
-        $template->param( title => "Delete Weblog Entry?" );
-    }
+    $template->param( title => "Delete Weblog Entry?" );
 
     # fill in all the parameters you got from the database
     $template->param( id       => $id,
