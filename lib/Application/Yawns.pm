@@ -5407,7 +5407,7 @@ sub edit_weblog
         #  Now we've edited redirect to show it
         #
         $session->param( ok_flash => "Entry edited" );
-        my $target = "/users/$username/weblog/$gid";
+        my $target = "/users/$username/weblog/$id";
         return( $self->redirectURL( $target ) );
     }
     else
