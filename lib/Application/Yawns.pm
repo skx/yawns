@@ -139,7 +139,7 @@ sub cgiapp_prerun
     #
     #  If we're tracing DBI
     #
-    if ( $conf::SiteConfig::get_conf( "dbi.log" ) )
+    if ( conf::SiteConfig::get_conf( "dbi_log" ) )
     {
         my $file = "/tmp/dbi.$$.count.log";
         my $dbi = Singleton::DBI->instance();
