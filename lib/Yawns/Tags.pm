@@ -178,6 +178,22 @@ sub getTags
            ( !defined($type) ) );
 
 
+    #
+    # Look in cache first.
+    #
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r = Singleton::Redis->instance();
+        my $d = $r->get("tags.$type.$root");
+        if ($d)
+        {
+            my $o = decoded_json($d);
+            return ($o);
+        }
+    }
+
+
     my $tags;
 
     #
@@ -204,6 +220,11 @@ sub getTags
     }
     $sql->finish();
 
+    # Store in cache.
+    if ($r)
+    {
+        $r->set("tags.$type.$root", $tags);
+    }
 
     return ($tags);
 }
@@ -338,6 +359,15 @@ sub addTag
         my $weblogs = Yawns::Weblogs->new();
         $weblogs->invalidateCache();
     }
+
+    # Clear cache
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r = Singleton::Redis->instance();
+        my $d = $r->del("tags.$type.$root");
+    }
+
 }
 
 
@@ -416,6 +446,14 @@ sub deleteTags
     $sql->execute( $root, $type );
     $sql->finish();
 
+    # Clear cache
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r = Singleton::Redis->instance();
+        my $d = $r->del("tags.$type.$root");
+    }
+
 }
 
 
@@ -446,6 +484,16 @@ sub promoteSubmissionTags
     $query->execute( 'a', $article_id, $submission_id, 's' ) or
       die "Failed to update tag type" . $dbi->errstr();
     $query->finish();
+
+    # Clear cache
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        my $type = "a";
+        my $root = $article_id;
+        $r = Singleton::Redis->instance();
+        my $d = $r->del("tags.$type.$root");
+    }
 
 }
 
