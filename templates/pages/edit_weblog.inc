@@ -1,11 +1,3 @@
-<script>
-$(document).ready (function() {
-	$('textarea.expanding').autogrow({
-	});
-
-});
-</script>
-
 	<h2>Edit Weblog Entry</h2>
                   <form action="/edit/weblog/<!-- tmpl_var name="id" -->" method="post">
                   <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />

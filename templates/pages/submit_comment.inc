@@ -1,10 +1,3 @@
-<script>
-$(document).ready (function() {
-	$('textarea.expanding').autogrow({
-	});
-
-});
-</script>
 
                   <!-- tmpl_if name='confirm' -->
 		      <h2>Comment Posted</h2>

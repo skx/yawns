@@ -1,10 +1,3 @@
-<script>
-$(document).ready (function() {
-	$('textarea.expanding').autogrow({
-	});
-
-});
-</script>
 		<h1>Add New Weblog Entry</h1>
 
 
