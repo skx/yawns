@@ -54,6 +54,7 @@ use warnings;
 #  Yawns modules which we use.
 #
 use Singleton::DBI;
+use JSON;
 
 
 =head2 new
@@ -91,6 +92,22 @@ sub new
 sub getRecent
 {
     my ($class) = (@_);
+
+    #
+    #  Lookup in the cache first
+    #
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r = Singleton::Redis->instance();
+        my $d = $r->get("recent.weblogs");
+        if ($d)
+        {
+            my $o = decoded_json($d);
+            return ($o);
+        }
+    }
+
 
     my $number = 10;
     my $bignum = $number * $number;
@@ -193,6 +210,12 @@ sub getRecent
         }
     }
 
+    if ($r)
+    {
+        $r->set( "recent.weblogs", encode_json($entries) );
+    }
+
+
     #
     #
     # Return the entries.
@@ -211,6 +234,22 @@ sub getRecent
 sub getTipEntries
 {
     my ($class) = (@_);
+
+    #
+    #  Lookup in the cache first
+    #
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r = Singleton::Redis->instance();
+        my $d = $r->get("recent.tips");
+        if ($d)
+        {
+            my $o = decoded_json($d);
+            return ($o);
+        }
+    }
+
 
     #
     #  Run the query.
@@ -265,6 +304,11 @@ sub getTipEntries
 
     }
     $sql->finish();
+
+    if ($r)
+    {
+        $r->set( "recent.tips", encode_json($entries) );
+    }
 
     return ($entries);
 }
@@ -411,6 +455,18 @@ sub hideByUser
 sub invalidateCache
 {
     my ($class) = (@_);
+
+    #
+    #  Lookup in the cache first
+    #
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r = Singleton::Redis->instance();
+        $r->del("recent.tips");
+        $r->del("recent.weblogs");
+    }
+
 }
 
 
