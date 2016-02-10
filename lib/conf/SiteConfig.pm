@@ -214,7 +214,7 @@ http://www.steve.org.uk/
 
 =head1 LICENSE
 
-Copyright (c) 2005-2014 by Steve Kemp.  All rights reserved.
+Copyright (c) 2005-2016 by Steve Kemp.  All rights reserved.
 
 This module is free software;
 you can redistribute it and/or modify it under
