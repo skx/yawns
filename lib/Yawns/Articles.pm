@@ -107,12 +107,8 @@ sub count
     if ($r)
     {
         $r = Singleton::Redis->instance();
-        my $d = $r->get("article.count");
-        if ($d)
-        {
-            my $o = decode_json($d);
-            return ($o);
-        }
+        my $c = $r->get("article.count");
+        return ($c ) if ( $c > 0 );
     }
 
     my $count = 0;
@@ -134,7 +130,7 @@ sub count
 
     # Store in cache
     if ($r) {
-        $r->set("article.count", JSON->new->allow_nonref->encode($count ) );
+        $r->set("article.count", $count );
     }
 
 

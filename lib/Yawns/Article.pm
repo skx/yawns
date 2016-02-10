@@ -398,12 +398,8 @@ sub getTitle
     if ($r)
     {
         $r = Singleton::Redis->instance();
-        my $d = $r->get("article.title.$id");
-        if ($d)
-        {
-            my $o = decode_json($d);
-            return ($o);
-        }
+        my $t = $r->get("article.title.$id");
+        return( $t ) if ( $t );
     }
 
     #
@@ -423,7 +419,7 @@ sub getTitle
     $sql->finish();
 
     if ( $r ) {
-        $r->set("article.title.$id", JSON->new->allow_nonref->encode($title ) );
+        $r->set("article.title.$id", $title );
     }
     return ($title);
 }
