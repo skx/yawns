@@ -38,11 +38,15 @@ sub get_conf
     #
     $dbserv = 'db.vpn.internal';
 
+
     #
-    # We'll use memcached for login-sessions, which is also
-    # on the DB-host.
+    # The session-cache to use.
     #
-    $session = "memcache://db.vpn.internal:11211/";
+    # If you uncomment this line then memcached will be used
+    # for storing sessions.  If not then the redis-server located
+    # lower down will be used.
+    #
+    #    $session = "memcache://127.0.0.1:11211/";
 
     #
     # The pointer to redis.
@@ -55,17 +59,10 @@ sub get_conf
     #
     $dbi_log = 0;
 
-
-    #
     #
     # number of articles to display on the front page
     #
     $headlines = 10;
-
-    #
-    # number of headlines in previous articles sidebox
-    #
-    $old_headlines = 10;
 
     #
     # number of headlines to put in RDF file
@@ -161,22 +158,6 @@ sub get_conf
 <link rel="alternate" title="Atom" href="/atom.xml" type="application/atom+xml" />
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 END_OF_META
-
-
-    #
-    #  Should the sidebar show polls for anonymous users?
-    #
-    $sidebar_polls = 1;
-
-    #
-    #  Should the sidebar show previous article titles for anonymous users?
-    #
-    $sidebar_previous = 1;
-
-    #
-    #  Should the sidebar show blog entries for anonymous users?
-    #
-    $sidebar_blogs = 1;
 
     #
     #  Comment-filtering options.
