@@ -62,7 +62,7 @@ use String::Approx 'amatch';
 #
 use Yawns::Date;
 use Singleton::DBI;
-
+use Singleton::Redis;
 
 
 
