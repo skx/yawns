@@ -1,7 +1,7 @@
 #
 # Rebuild our RSS feeds every two minutes, if they've changed
 #
-*/2 * * * * cd current && ./bin/gen-feeds           >/dev/null
+*/2 * * * * cd ~current && ./bin/gen-feeds           >/dev/null
 
 #
 # Ensure that our search indexes are current.
