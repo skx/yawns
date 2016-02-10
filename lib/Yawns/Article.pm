@@ -190,7 +190,7 @@ sub get
     if ($r)
     {
         $r = Singleton::Redis->instance();
-        $r->set("article.$id", encode-json( \%the_article ) );
+        $r->set("article.$id", encode_json( \%the_article ) );
     }
 
     return ( \%the_article );
