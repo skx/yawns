@@ -109,7 +109,7 @@ sub count
         my $d = $r->get("article.count");
         if ($d)
         {
-            my $o = decoded_json($d);
+            my $o = decode_json($d);
             return ($o);
         }
     }

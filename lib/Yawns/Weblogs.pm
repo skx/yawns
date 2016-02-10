@@ -103,7 +103,7 @@ sub getRecent
         my $d = $r->get("recent.weblogs");
         if ($d)
         {
-            my $o = decoded_json($d);
+            my $o = decode_json($d);
             return ($o);
         }
     }
@@ -245,7 +245,7 @@ sub getTipEntries
         my $d = $r->get("recent.tips");
         if ($d)
         {
-            my $o = decoded_json($d);
+            my $o = decode_json($d);
             return ($o);
         }
     }

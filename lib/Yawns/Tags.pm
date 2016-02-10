@@ -188,7 +188,7 @@ sub getTags
         my $d = $r->get("tags.$type.$root");
         if ($d)
         {
-            my $o = decoded_json($d);
+            my $o = decode_json($d);
             return ($o);
         }
     }

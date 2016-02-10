@@ -103,7 +103,7 @@ sub get
         my $d = $r->get("article.$id");
         if ($d)
         {
-            my $o = decoded_json($d);
+            my $o = decode_json($d);
             return ($o);
         }
     }
@@ -401,7 +401,7 @@ sub getTitle
         my $d = $r->get("article.title.$id");
         if ($d)
         {
-            my $o = decoded_json($d);
+            my $o = decode_json($d);
             return ($o);
         }
     }
