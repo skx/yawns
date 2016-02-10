@@ -52,6 +52,7 @@ use strict;
 use warnings;
 use DBI qw/ :sql_types /;    # Database interface
 use HTML::Entities;
+use JSON;
 use Date::Format;
 use Date::Parse;
 use String::Approx 'amatch';
