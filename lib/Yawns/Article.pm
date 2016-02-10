@@ -46,6 +46,7 @@ require AutoLoader;
 use strict;
 use warnings;
 
+use JSON;
 
 #
 #  Yawns modules which we use.
