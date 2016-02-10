@@ -105,7 +105,7 @@ sub commentCount
     {
         $r = Singleton::Redis->instance();
         my $c = $r->get("poll.comments.$id" );
-        return ($c ) if ( $c > 0 );
+        return ($c ) if ( $c  );
     }
 
 
