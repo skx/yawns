@@ -68,7 +68,7 @@ require AutoLoader;
 use strict;
 use warnings;
 use HTML::Entities;
-
+use JSON;
 
 #
 #  Yawns modules which we use.
@@ -223,7 +223,7 @@ sub getTags
     # Store in cache.
     if ($r)
     {
-        $r->set("tags.$type.$root", $tags);
+        $r->set("tags.$type.$root", encode_json( $tags) );
     }
 
     return ($tags);

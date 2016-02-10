@@ -102,6 +102,18 @@ sub count
 {
     my ($class) = (@_);
 
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r = Singleton::Redis->instance();
+        my $d = $r->get("article.count");
+        if ($d)
+        {
+            my $o = decoded_json($d);
+            return ($o);
+        }
+    }
+
     my $count = 0;
 
     #
@@ -118,6 +130,12 @@ sub count
     my @ret = $sql->fetchrow_array();
     $count = $ret[0];
     $sql->finish();
+
+    # Store in cache
+    if ($r) {
+        $r->set("article.count", $count);
+    }
+
 
     return ($count);
 }

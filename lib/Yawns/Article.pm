@@ -95,6 +95,18 @@ sub get
     #
     my $id = $class->{ id };
 
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r = Singleton::Redis->instance();
+        my $d = $r->get("article.$id");
+        if ($d)
+        {
+            my $o = decoded_json($d);
+            return ($o);
+        }
+    }
+
     my $article;
 
     #
@@ -175,6 +187,11 @@ sub get
                         suspended      => $thisarticle[10],
                       );
 
+    if ($r)
+    {
+        $r = Singleton::Redis->instance();
+        $r->set("article.$id", encode-json( \%the_article ) );
+    }
 
     return ( \%the_article );
 }
@@ -221,6 +238,14 @@ sub edit
                   'author=?, leadtext=?, bodytext=?, words=? ' . 'WHERE id=?' );
 
     $sql2->execute( $title, $author, $leadtext, $body, $words, $id );
+
+    # Flush the cache
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r->del("article.$id");
+        $r->del("article.title.$id");
+    }
 
 }
 
@@ -289,6 +314,13 @@ sub create
     #
     $class->{ id } = $id;
 
+    # flush the cache
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r->del( "article.count" );
+    }
+
     return ($id);
 }
 
@@ -334,6 +366,14 @@ sub delete
     my $tags = Yawns::Tags->new();
     $tags->deleteTags( article => $id );
 
+    # Flush the cache
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r->del("article.$id");
+        $r->del("article.title.$id");
+        $r->del( "article.count" );
+    }
 }
 
 
@@ -353,6 +393,18 @@ sub getTitle
     #
     my $id = $class->{ id };
 
+    my $r = conf::SiteConfig::get_conf('redis');
+    if ($r)
+    {
+        $r = Singleton::Redis->instance();
+        my $d = $r->get("article.title.$id");
+        if ($d)
+        {
+            my $o = decoded_json($d);
+            return ($o);
+        }
+    }
+
     #
     #  Attempt to fetch from the cache
     #
@@ -369,6 +421,9 @@ sub getTitle
     $title = $ret[0];
     $sql->finish();
 
+    if ( $r ) {
+        $r->get("article.title.$id", $title);
+    }
     return ($title);
 }
 
