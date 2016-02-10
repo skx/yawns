@@ -104,8 +104,8 @@ sub commentCount
     if ($r)
     {
         $r = Singleton::Redis->instance();
-        my $c = $r->get("poll.comments.$id" );
-        return ($c ) if ( $c  );
+        my $c = $r->get("poll.comments.$id");
+        return ($c) if ($c);
     }
 
 
@@ -123,7 +123,8 @@ sub commentCount
     my $count = $query->fetchrow_array();
 
     # Update the cache
-    if ( $r ){
+    if ($r)
+    {
         $r->set( "poll.comments.$id", $count );
     }
 
@@ -149,7 +150,6 @@ sub get
     # Get the poll ID
     #
     my $id = $class->{ id };
-
     die "No poll ID" if !defined($id);
 
     #
@@ -200,7 +200,7 @@ sub vote
     if ($r)
     {
         $r = Singleton::Redis->instance();
-        my $c = $r->del("poll.votes.$id" );
+        my $c = $r->del("poll.votes.$id");
     }
 
     #
@@ -305,8 +305,8 @@ sub getTitle
     if ($r)
     {
         $r = Singleton::Redis->instance();
-        my $c = $r->get("poll.title.$id" );
-        return ($c ) if ( $c);
+        my $c = $r->get("poll.title.$id");
+        return ($c) if ($c);
     }
 
     #
@@ -320,8 +320,9 @@ sub getTitle
     my $title = $ret[0];
     $sql->finish();
 
-    if ( $r ) {
-        $r->set("poll.title.$id", $title );
+    if ($r)
+    {
+        $r->set( "poll.title.$id", $title );
     }
 
     return ($title);
@@ -349,8 +350,8 @@ sub getVoteCount
     if ($r)
     {
         $r = Singleton::Redis->instance();
-        my $c = $r->get("poll.votes.$id" );
-        return ($c ) if ( $c );
+        my $c = $r->get("poll.votes.$id");
+        return ($c) if ($c);
     }
 
     #
@@ -364,8 +365,9 @@ sub getVoteCount
     my $count = $ret[0] || 0;
     $sql->finish();
 
-    if ( $r ) {
-        $r->set("poll.votes.$id", $count );
+    if ($r)
+    {
+        $r->set( "poll.votes.$id", $count );
     }
 
     return ($count);
@@ -390,9 +392,9 @@ sub invalidateCache
     if ($r)
     {
         $r = Singleton::Redis->instance();
-        $r->del("poll.comments.$id" );
-        $r->del("poll.title.$id" );
-        $r->del("poll.votes.$id" );
+        $r->del("poll.comments.$id");
+        $r->del("poll.title.$id");
+        $r->del("poll.votes.$id");
     }
 
 }

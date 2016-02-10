@@ -191,7 +191,8 @@ sub get
     if ($r)
     {
         $r = Singleton::Redis->instance();
-        $r->set("article.$id", JSON->new->allow_nonref->encode( \%the_article ) );
+        $r->set( "article.$id",
+                 JSON->new->allow_nonref->encode( \%the_article ) );
     }
 
     return ( \%the_article );
@@ -319,7 +320,7 @@ sub create
     my $r = conf::SiteConfig::get_conf('redis');
     if ($r)
     {
-        $r->del( "article.count" );
+        $r->del("article.count");
     }
 
     return ($id);
@@ -373,7 +374,7 @@ sub delete
     {
         $r->del("article.$id");
         $r->del("article.title.$id");
-        $r->del( "article.count" );
+        $r->del("article.count");
     }
 }
 
@@ -399,7 +400,7 @@ sub getTitle
     {
         $r = Singleton::Redis->instance();
         my $t = $r->get("article.title.$id");
-        return( $t ) if ( $t );
+        return ($t) if ($t);
     }
 
     #
@@ -418,8 +419,9 @@ sub getTitle
     $title = $ret[0];
     $sql->finish();
 
-    if ( $r ) {
-        $r->set("article.title.$id", $title );
+    if ($r)
+    {
+        $r->set( "article.title.$id", $title );
     }
     return ($title);
 }

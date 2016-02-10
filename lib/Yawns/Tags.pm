@@ -223,7 +223,7 @@ sub getTags
     # Store in cache.
     if ($r)
     {
-        $r->set("tags.$type.$root", encode_json( $tags) );
+        $r->set( "tags.$type.$root", encode_json($tags) );
     }
 
     return ($tags);
@@ -756,7 +756,8 @@ sub _findByTagType
         push( @$tags,
               {  link  => $link,
                  title => $title,
-              } ) if ( $link && $title );
+              } )
+          if ( $link && $title );
 
     }
     $sql->finish();

@@ -520,7 +520,7 @@ sub getOwner
     # Find the user who posted this entry.
     #
     my $query = $db->prepare('SELECT username FROM weblogs WHERE gid=?');
-    $query->execute( $gid );
+    $query->execute($gid);
 
     $name = $query->fetchrow_array();
     return ($name);

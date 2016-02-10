@@ -149,7 +149,7 @@ sub add
     if ($r)
     {
         $r = Singleton::Redis->instance();
-        $r->del( "current.poll" );
+        $r->del("current.poll");
     }
 
     #
@@ -174,7 +174,7 @@ sub getCurrentPoll
     {
         $r = Singleton::Redis->instance();
         my $c = $r->get("current.poll");
-        return ($c ) if ( $c > 0 );
+        return ($c) if ( $c > 0 );
     }
 
     #
@@ -187,8 +187,9 @@ sub getCurrentPoll
     my $poll = $query->fetchrow_array();
 
     # Store in cache
-    if ($r) {
-        $r->set("current.poll", $poll );
+    if ($r)
+    {
+        $r->set( "current.poll", $poll );
     }
 
     return ($poll);

@@ -132,7 +132,8 @@ sub newArticleSubmission
                       author     => $username,
                       title      => $title,
                       article    => $body,
-                      ip_address => $ip );
+                      ip_address => $ip
+                    );
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or
       die "Cannot open $sendmail: $!";
@@ -188,7 +189,8 @@ sub newArticleReply
                       title        => $title,
                       article_link => $article_link,
                       home_url     => $home_url,
-                      ip_address   => $ip );
+                      ip_address   => $ip
+                    );
 
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or
@@ -209,7 +211,8 @@ sub newArticleReply
 sub newWeblogReply
 {
 
-    my ( $self, $address, $title, $gid, $owner, $entry, $author, $id, $ip ) = (@_);
+    my ( $self, $address, $title, $gid, $owner, $entry, $author, $id, $ip ) =
+      (@_);
 
 
     #
@@ -246,7 +249,8 @@ sub newWeblogReply
                       title        => $title,
                       comment_link => $comment_link,
                       home_url     => $home_url,
-                      ip_address   => $ip );
+                      ip_address   => $ip
+                    );
 
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or
@@ -266,8 +270,9 @@ sub newWeblogReply
 
 sub newCommentReply
 {
-    my ( $self, $address, $title, $article, $poll, $weblog, $user,
-         $comment_num, $ip ) = @_;
+    my ( $self,   $address, $title,       $article, $poll,
+         $weblog, $user,    $comment_num, $ip )
+      = @_;
 
     my $sitename = get_conf('sitename');
     my $sender   = get_conf('bounce_email');
@@ -318,7 +323,8 @@ sub newCommentReply
                       title        => $title,
                       article_link => $article_link,
                       home_url     => $home_url,
-                      ip_address   => $ip );
+                      ip_address   => $ip
+                    );
 
 
     open( SENDMAIL, "|$sendmail -f $sender" ) or

@@ -794,7 +794,7 @@ sub sendMail
                 # Send a mail
                 #
                 $mailer->newArticleSubmission( $recipient, $author, $title,
-                                               $body , $ip );
+                                               $body, $ip );
             }
             else
             {

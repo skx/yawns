@@ -108,7 +108,7 @@ sub count
     {
         $r = Singleton::Redis->instance();
         my $c = $r->get("article.count");
-        return ($c ) if ( $c > 0 );
+        return ($c) if ( $c > 0 );
     }
 
     my $count = 0;
@@ -129,8 +129,9 @@ sub count
     $sql->finish();
 
     # Store in cache
-    if ($r) {
-        $r->set("article.count", $count );
+    if ($r)
+    {
+        $r->set( "article.count", $count );
     }
 
 
