@@ -134,7 +134,7 @@ sub count
 
     # Store in cache
     if ($r) {
-        $r->set("article.count", $count);
+        $r->set("article.count", encode_json( $count) );
     }
 
 
