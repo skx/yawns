@@ -12,7 +12,7 @@ use warnings;
 #
 # Hierarchy.
 #
-package Application::Yawns;
+package Application::Ajax;
 use base 'Application::Base';
 
 #
