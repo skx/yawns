@@ -78,6 +78,7 @@ sub cgiapp_prerun
     my $self = shift;
 
     my $session = $self->param("session");
+    my $redis   = Singleton::Redis->instance();
 
     if ( $session && $session->param("ssl") )
     {
@@ -118,8 +119,18 @@ sub cgiapp_prerun
         }
     }
 
-    #  Blacklisted?
-    my $redis = Singleton::Redis->instance();
+    #
+    #  HTTP-request sshould never have a "#" character in them.
+    #
+    if ( $ENV{'REQUEST_URI'} =~ /#/ )
+    {
+        # Blacklist.
+        $redis->set( "IP:" . $self->remote_ip(), 1);
+    }
+
+    #
+    #  Is the remote IP Blacklisted?
+    #
     if ( $redis->get( "IP:" . $self->remote_ip() ) )
     {
         my $cur = $self->get_current_runmode();
@@ -150,6 +161,8 @@ sub cgiapp_prerun
         my $dbi = Singleton::DBI->instance();
         $dbi->trace( "2|SQL", $file );
     }
+
+
 }
 
 
