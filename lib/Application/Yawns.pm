@@ -130,18 +130,22 @@ sub cgiapp_prerun
     }
 
     #
-    #  Count the number of requests since this process started.
-    #
-    my $count = $ENV['COUNT'] || 0;
-    $count += 1;
-    $ENV['COUNT'] = $count;
-
-    #
     #  If we're tracing DBI
     #
     my $log = conf::SiteConfig::get_conf( "dbi_log" );
     if ( $log == 1 )
     {
+
+        #
+        #  Count the number of requests since this process started.
+        #
+        my $count = $ENV['COUNT'] || 1;
+        $count += 1;
+        $ENV['COUNT'] = $count;
+
+        #
+        #  Write out a log.
+        #
         my $file = "/tmp/dbi.$$.$count.log";
         my $dbi = Singleton::DBI->instance();
         $dbi->trace( "2|SQL", $file );
