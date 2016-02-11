@@ -223,7 +223,7 @@ sub getTags
     # Store in cache.
     if ($r)
     {
-        $r->set( "tags.$type.$root", encode_json($tags) );
+        $r->set( "tags.$type.$root", JSON->new->allow_nonref->encode($tags) );
     }
 
     return ($tags);
