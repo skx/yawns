@@ -34,7 +34,7 @@ use warnings;
 package Application::Yawns;
 use base 'Application::Base';
 
-use CGI::Application::Plugin::HtmlTidy.pm;
+use CGI::Application::Plugin::HtmlTidy;
 use CGI::Application::Plugin::RemoteIP;
 
 
