@@ -58,6 +58,9 @@ install libwww-perl
 install libtap-formatter-html-perl
 install make
 install libhtml-template-perl
+install tidy
+install libhtml-tidy-perl
+
 
 # for test-suite
 install libtest-file-perl
@@ -80,4 +83,3 @@ modenable negotiation
 modenable reqtimeout
 modenable rpaf
 modenable setenvif
-
