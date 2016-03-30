@@ -39,7 +39,7 @@ In brief there is a server listening for UDP submissions, on a remote host, whic
 
 The dashboard may be viewed here:
 
-* http://misc.debian-administration.org/events/
+* http://events.debian-administration.org/
 
 This behaviour is disabled by commenting out the setting of the `event_endpoint` configuration variable in the `lib/conf/SiteConfig.pm` file.
 
