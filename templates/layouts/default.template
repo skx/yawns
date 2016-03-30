@@ -88,6 +88,7 @@
 		  <table border="0" width="100%" margin="5" padding="5">
 		    <tr>
 		      <td valign="top" width="200" >
+                  <p>&nbsp;</p>
 
 
 			<!-- tmpl_if name='show_pending_header' -->
