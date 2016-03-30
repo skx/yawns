@@ -1,7 +1,7 @@
       <!-- tmpl_if name='content' -->
       <!-- tmpl_loop name='articles' -->
          <div class="teaser">
-	<h2 class="title"><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name="slug" -->"><!-- tmpl_var name='title' --></a></h2>
+	<h1 class="title"><a href="/article/<!-- tmpl_var name='id' -->/<!-- tmpl_var name="slug" -->"><!-- tmpl_var name='title' --></a></h1>
 	    <div class="tagline">Posted by <a href="/users/<!-- tmpl_var escape='URL' name='byuser' -->"><!-- tmpl_var name='byuser' --></a> on <!-- tmpl_var name='ondate' -->  at <!-- tmpl_var name='attime' --> </div>
 	<!-- tmpl_if name="has_tags" -->
 	    <div class="tags">
