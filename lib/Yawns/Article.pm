@@ -193,7 +193,7 @@ sub get
     if ($redis)
     {
         $redis->set( "article.$id",
-                 JSON->new->allow_nonref->encode( \%the_article ) );
+                 JSON->new->utf8->allow_nonref->encode( \%the_article ) );
     }
 
     return ( \%the_article );
