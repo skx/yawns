@@ -571,3 +571,7 @@ a.switch.selected {color:#ff5900}
    background:#000;
    font-weight:bold;
 }
+/* Override the bootstrap style */
+blockquote {
+    border-left: none;
+}
