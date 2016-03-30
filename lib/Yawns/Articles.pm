@@ -104,10 +104,11 @@ sub count
     my ($class) = (@_);
 
     my $r = conf::SiteConfig::get_conf('redis');
+    my $redis;
     if ($r)
     {
-        $r = Singleton::Redis->instance();
-        my $c = $r->get("article.count");
+        $redis = Singleton::Redis->instance();
+        my $c = $redis->get("article.count");
         return ($c) if ( $c > 0 );
     }
 
@@ -129,9 +130,9 @@ sub count
     $sql->finish();
 
     # Store in cache
-    if ($r)
+    if ($redis)
     {
-        $r->set( "article.count", $count );
+        $redis->set( "article.count", $count );
     }
 
 

@@ -97,10 +97,12 @@ sub get
     my $id = $class->{ id };
 
     my $r = conf::SiteConfig::get_conf('redis');
+    my $redis;
+
     if ($r)
     {
-        $r = Singleton::Redis->instance();
-        my $d = $r->get("article.$id");
+        $redis = Singleton::Redis->instance();
+        my $d = $redis->get("article.$id");
         if ($d)
         {
             my $o = decode_json($d);
@@ -188,10 +190,9 @@ sub get
                         suspended      => $thisarticle[10],
                       );
 
-    if ($r)
+    if ($redis)
     {
-        $r = Singleton::Redis->instance();
-        $r->set( "article.$id",
+        $redis->set( "article.$id",
                  JSON->new->allow_nonref->encode( \%the_article ) );
     }
 
@@ -243,10 +244,12 @@ sub edit
 
     # Flush the cache
     my $r = conf::SiteConfig::get_conf('redis');
+    my $redis;
     if ($r)
     {
-        $r->del("article.$id");
-        $r->del("article.title.$id");
+        $redis = Singleton::Redis->instance();
+        $redis->del("article.$id");
+        $redis->del("article.title.$id");
     }
 
 }
@@ -320,7 +323,8 @@ sub create
     my $r = conf::SiteConfig::get_conf('redis');
     if ($r)
     {
-        $r->del("article.count");
+        my $redis = Singleton::Redis->instance();
+        $redis->del("article.count");
     }
 
     return ($id);
@@ -372,9 +376,10 @@ sub delete
     my $r = conf::SiteConfig::get_conf('redis');
     if ($r)
     {
-        $r->del("article.$id");
-        $r->del("article.title.$id");
-        $r->del("article.count");
+        my $redis = Singleton::Redis->instance();
+        $redis->del("article.$id");
+        $redis->del("article.title.$id");
+        $redis->del("article.count");
     }
 }
 
@@ -396,10 +401,11 @@ sub getTitle
     my $id = $class->{ id };
 
     my $r = conf::SiteConfig::get_conf('redis');
+    my $redis;
     if ($r)
     {
-        $r = Singleton::Redis->instance();
-        my $t = $r->get("article.title.$id");
+        $redis = Singleton::Redis->instance();
+        my $t = $redis->get("article.title.$id");
         return ($t) if ($t);
     }
 
@@ -419,9 +425,9 @@ sub getTitle
     $title = $ret[0];
     $sql->finish();
 
-    if ($r)
+    if ($redis)
     {
-        $r->set( "article.title.$id", $title );
+        $redis->set( "article.title.$id", $title );
     }
     return ($title);
 }
