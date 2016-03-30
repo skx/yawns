@@ -47,7 +47,7 @@
 
           <div class="form-group">
             <label for="lname" class="col-md-3 control-label">Username</label>
-            <div style="margin-bottom: 25px" class="input-group col-md-9">
+            <div style="margin-bottom: 25px" class="input-group col-md-8">
               <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
               <input type="text" class="form-control" id="new_user_name" name="new_user_name" placeholder="Your username" value="<!-- tmpl_var name='new_user_name' -->">
             </div>
@@ -73,7 +73,7 @@
 
           <div class="form-group">
             <label for="email" class="col-md-3 control-label">Email</label>
-            <div style="margin-bottom: 25px" class="input-group col-md-9">
+            <div style="margin-bottom: 25px" class="input-group col-md-8">
               <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
               <input type="text" id="new_user_email" class="form-control" name="new_user_email" placeholder="Your email address" value="<!-- tmpl_var name='new_user_email' -->">
             </div>
@@ -91,7 +91,7 @@
           <!-- tmpl_if name='recaptcha' -->
           <div class="form-group">
             <label for="lpass2" class="col-md-3 control-label">ReCAPTCHA</label>
-            <div style="margin-bottom: 25px" class="input-group col-md-9">
+            <div style="margin-bottom: 25px" class="input-group col-md-8">
               <div class="g-recaptcha" data-sitekey="<!-- tmpl_var name='recaptcha' escape='html' -->"></div>
             </div>
           </div>
