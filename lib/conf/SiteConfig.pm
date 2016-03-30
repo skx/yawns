@@ -152,7 +152,6 @@ sub get_conf
 <link rel="icon" href="/favicon.ico"  />
 <link rel="shortcut icon" href="/favicon.ico" />
 <link rel="top"    title="home"    href="/"  />
-<link rel="stylesheet" type="text/css" href="/css/view.css" media="screen" title="Site Layout" />
 <link rel="search" title="Search" href="/about/search" />
 <link rel="alternate" title="Debian Administration RSS" href="/articles.rdf" type="application/rdf+xml" />
 <link rel="alternate" title="Atom" href="/atom.xml" type="application/atom+xml" />

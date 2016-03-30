@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/jquery.socialshareprivacy.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/jquery.autocomplete.css" />
+    <link rel="stylesheet" type="text/css" href="/css/view.css" media="screen" title="Site Layout" />
+
     <script type="text/javascript">
     (function() {
         var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
