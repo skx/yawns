@@ -242,8 +242,9 @@ div.comment p.foot {
  * Special markup for the articles.
  */
 div.article .title {
-	font-size: 110%;
-        border-bottom: 1px solid silver;
+	font-size: 120%;
+    border-bottom: 1px solid silver;
+    font-weight: bold;
 	padding: 0;
 
 }
