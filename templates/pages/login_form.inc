@@ -1,17 +1,4 @@
 <div class="container-fluid">
-  <!-- tmpl_if name='http' -->
-  <div class="row">
-    <div class="col-sm-1 col-md-1"></div>
-    <div class="col-sm-11 col-md-11"><h2>Insecure Access</h2></div>
-  </div>
-  <div class="row">
-    <div class="col-sm-1 col-md-2"></div>
-    <div class="col-sm-1 col-md-10">
-      <p>You're accesing this page over HTTP, rather than using the secure access method.  You should probably switch <a href="<!-- tmpl_var name='secure' -->">to the secure version</a> of this page.</p>
-    </div>
-  </div>
-  <!-- /tmpl_if -->
-
 
   <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
     <div class="panel panel-info" >

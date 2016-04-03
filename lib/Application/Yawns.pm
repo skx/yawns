@@ -81,26 +81,6 @@ sub cgiapp_prerun
     my $session = $self->param("session");
     my $redis   = Singleton::Redis->instance();
 
-    if ( $session && $session->param("ssl") )
-    {
-
-        #
-        #  If we're not over SSL then abort
-        #
-        if ( defined( $ENV{ 'HTTPS' } ) && ( $ENV{ 'HTTPS' } =~ /on/i ) )
-        {
-
-            # NOP
-        }
-        else
-        {
-            return (
-                  $self->redirectURL(
-                      "https://" . $ENV{ "SERVER_NAME" } . $ENV{ 'REQUEST_URI' }
-                  ) );
-        }
-    }
-
     if ( $session && $session->param("session_ip") )
     {
 
@@ -816,19 +796,7 @@ sub application_login
         # open the html template
         my $template = $self->load_layout("login_form.inc");
 
-        if ( !defined( $ENV{ 'HTTPS' } ) or ( $ENV{ 'HTTPS' } !~ /on/i ) )
-        {
-
-            # Link to the HTTPS version of this form
-            $template->param( http => 1 );
-
-            # Secure link
-            $template->param( secure => "https://" .
-                                $ENV{ 'SERVER_NAME' } . $ENV{ 'REQUEST_URI' },
-                              title => "Login"
-                            );
-        }
-
+        # Return the output.
         return ( $template->output() );
     }
     else
@@ -850,15 +818,8 @@ sub application_login
     my $lname  = $q->param('lname');
     my $lpass  = $q->param('lpass');
     my $secure = $q->param('secure');
-    my $ssl    = $q->param('ssl');
 
-
-    my $protocol = "http://";
-
-    if ( defined( $ENV{ 'HTTPS' } ) && ( $ENV{ 'HTTPS' } =~ /on/i ) )
-    {
-        $protocol = "https://";
-    }
+    my $protocol = $ENV{'HTTP_X_FORWARDED_PROTO'} || "http";
 
     #
     # Login results.
@@ -883,7 +844,7 @@ sub application_login
     #
     if ( ($logged_in) and ( !( lc($logged_in) eq lc('Anonymous') ) ) )
     {
-        my $link = $protocol . $ENV{ "SERVER_NAME" } . "/users/$logged_in";
+        my $link = $protocol . "://" . $ENV{ "SERVER_NAME" } . "/users/$logged_in";
 
         if ($suspended)
         {
@@ -924,17 +885,6 @@ sub application_login
             $session->param( "session_ip", undef );
         }
 
-        #
-        #  If the user wanted SSL all the time then set it up
-        #
-        if ( defined($ssl) && ($ssl) )
-        {
-            $session->param( "ssl", 1 );
-        }
-        else
-        {
-            $session->param( "ssl", undef );
-        }
 
         #
         # Login succeeded.  If we have a redirection target:
