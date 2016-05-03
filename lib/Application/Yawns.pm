@@ -132,7 +132,7 @@ sub cgiapp_prerun
         #  Count the number of requests since this process started.
         #
         my $count = $ENV['COUNT'];
-        $count = 0 if ( ! $count );
+        $count = 0 if ( !defined $count );
         $count += 1;
         $ENV['COUNT'] = $count;
 
