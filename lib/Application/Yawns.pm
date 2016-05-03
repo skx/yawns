@@ -131,7 +131,8 @@ sub cgiapp_prerun
         #
         #  Count the number of requests since this process started.
         #
-        my $count = $ENV['COUNT'] || 1;
+        my $count = $ENV['COUNT'];
+        $count = 0 if ( ! $count );
         $count += 1;
         $ENV['COUNT'] = $count;
 
@@ -6600,7 +6601,7 @@ sub new_user
     my $pub = get_conf('rc_pubkey');
     my $sec = get_conf('rc_secret');
 
-    if ( $form->param('submit') eq 'Create User' )
+    if ( $form->param('submit') && ( $form->param('submit') eq 'Create User' ) )
     {
 
         # validate session
