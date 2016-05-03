@@ -125,7 +125,7 @@ sub cgiapp_prerun
     #  If we're tracing DBI
     #
     my $log = conf::SiteConfig::get_conf( "dbi_log" );
-    if ( $log == 1 )
+    if ( defined( $log ) && ( $log == 1 ) )
     {
 
         #
