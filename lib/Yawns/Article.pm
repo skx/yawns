@@ -425,7 +425,7 @@ sub getTitle
     $title = $ret[0];
     $sql->finish();
 
-    if ($redis)
+    if (defined $redis && ( $title ) )
     {
         $redis->set( "article.title.$id", $title );
     }
