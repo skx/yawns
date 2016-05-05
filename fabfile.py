@@ -43,19 +43,12 @@ sudo apt-get install fabric
 # Define sets of servers as roles
 #
 env.roledefs = {
-        'web': ['web1.debian-administration.org:2222',
-                'web2.debian-administration.org:2222',
-                'web3.debian-administration.org:2222',
-                'web4.debian-administration.org:2222'],
-        'beta': ['web1.vlan299.skx.uk0.bigv.io:2222',
+        'live': ['web1.vlan299.skx.uk0.bigv.io:2222',
                 'web2.vlan299.skx.uk0.bigv.io:2222',
                 'web3.vlan299.skx.uk0.bigv.io:2222',
                 'web4.vlan299.skx.uk0.bigv.io:2222'],
+        'beta': ['beta.vlan299.skx.uk0.bigv.io:2222' ]
 
-        # These hosts are documented, but ignored, in this script.
-        'db':  ['db1.debian-administration.org:2222' ],
-        'planet':  ['planet.debian-administration.org:2222' ],
-        'misc': [ 'misc.debian-administration.org:2222' ]
 }
 
 
@@ -68,7 +61,7 @@ env.user = 'root'
 
 
 #
-#  Our live-target.
+#  Our live-targets.
 #
 @roles('web')
 def live():
