@@ -63,7 +63,7 @@ env.user = 'root'
 #
 #  Our live-targets.
 #
-@roles('web')
+@roles('live')
 def live():
     """
     Deploy our codebase to our LIVE environment.
@@ -244,7 +244,7 @@ def _include_resources():
     #
     #  Now fetch the actual articles.
     #
-    run( "cd /root/current/htdocs/ ; git clone --quiet http://git.steve.org.uk/git/yawns/resources.git resources/", pty=True )
+    run( "cd /root/current/htdocs/ ; git clone -c http.sslVerify=false --quiet http://git.steve.org.uk/git/yawns/resources.git resources/", pty=True )
 
 
 
