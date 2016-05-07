@@ -73,7 +73,7 @@
 <tr><td><b>Title:</b></td><td><input name="submit_title" size="50" maxlength="50" type="text" value="<!-- tmpl_var name='submit_title' -->" /></td></tr>
 
 <tr><td colspan="2"><p><b>Weblog Text:</b></td></tr>
-<tr><td colspan="2"><textarea name="submit_body" class="expanding" cols="80" rows="5"><!-- tmpl_var name='submit_body' --></textarea></td></tr>
+<tr><td colspan="2"><textarea name="submit_body" class="expanding" cols="80" rows="5"><!-- tmpl_var name='submit_body' escape='html' --></textarea></td></tr>
 </table>
                   <!-- /tmpl_if -->
 		  <!-- tmpl_if name='new' -->

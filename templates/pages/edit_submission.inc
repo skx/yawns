@@ -17,10 +17,9 @@
                   <tr><td><b>Current Tags</b></td><td><input type="text" name="tags" value="<!-- tmpl_var name="tags" -->" /> (Tags are separated by commas)</td></tr>
                   <tr><td><b>Author</b></td><td><input type="text" name="author" value="<!-- tmpl_var name="author" -->" /> </td></tr>
                   <tr><td valign="top"><b>Content:</b></td>
-                  <td><textarea name="bodytext" rows="20" cols="60"><!-- tmpl_var name='submission_body' --></textarea></td></tr>
+                  <td><textarea name="bodytext" rows="20" cols="60"><!-- tmpl_var name='submission_body' escape='html' --></textarea></td></tr>
 
                   <tr><td></td><td><input type="submit" value="Save Changes" />&nbsp;<input type="reset" /></td></tr>
 	</table>
 		  </form>
 	<!-- /tmpl_if -->
-

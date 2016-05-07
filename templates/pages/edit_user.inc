@@ -31,12 +31,12 @@
 	          <td><input name="url" type="text" size="50" maxlength="100" value="<!-- tmpl_var name='url' -->" /></td></tr>
 	        <tr><td valign="top"><b>Bio:</b></td>
 	          <td valign="top">
-                    <textarea name="bio" cols="100" rows="14"><!-- tmpl_var name='bio' --></textarea>
+                    <textarea name="bio" cols="100" rows="14"><!-- tmpl_var name='bio' escape='html' --></textarea>
 	        </td></tr>
 	        <tr><td>&nbsp;</td><td></td></tr>
 
 	        <tr><td valign="top"><b>Sig:</b></td>
-	          <td valign="top"><textarea name="sig" cols="80" rows="5"><!-- tmpl_var name='sig' --></textarea>
+	          <td valign="top"><textarea name="sig" cols="80" rows="5"><!-- tmpl_var name='sig' escape='html' --></textarea>
 	            <p>(Displayed at the bottom of any comments you make.)</p></td></tr>
 	        <tr><td>&nbsp;</td><td></td></tr>
 

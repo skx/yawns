@@ -19,8 +19,7 @@
     <br /><input name="submit_title" type="text" value="<!-- tmpl_var name='submit_title' -->" />
 
   <p><b>Text:</b>
-    <br /><textarea name="submit_body" cols="60" rows="10"><!-- tmpl_var name='submit_body' --></textarea></p>
+    <br /><textarea name="submit_body" cols="60" rows="10"><!-- tmpl_var name='submit_body' escape='html' --></textarea></p>
   <p><input type="submit" name="submit" value="save" /></p>
 </form>
 <!-- /tmpl_if -->
-

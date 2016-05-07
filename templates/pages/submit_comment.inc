@@ -109,7 +109,7 @@ name='onarticle' -->">return to the story you were reading</a>, your
 		  <tr><td><b>Title:</b></td><td><input name="submit_title" type="text" size="65" maxlength="75" value="<!-- tmpl_var name='submit_title' -->" /></td></tr>
 		  <tr><td colspan="2"><b>Your Comment:</b></td></tr>
 		  <tr><td colspan="2">
-                    <textarea name="submit_body" cols="80" class="expanding" rows="5"><!-- tmpl_var name='submit_body' --></textarea></td></tr>
+                    <textarea name="submit_body" cols="80" rows="5" class="expanding"><!-- tmpl_var name='submit_body' escape='html' --></textarea></td></tr>
 		  <tr><td valign="top"><p><b>Posting Format:</b></td>
 		      <td>
 <!-- tmpl_include name="../includes/formatting-types.template" -->
@@ -135,7 +135,7 @@ name='onarticle' -->">return to the story you were reading</a>, your
 		  <tr><td><b>Title:</b></td><td><input name="submit_title" type="text" size="65" maxlength="75" value="<!-- tmpl_var name='submit_title' -->" /></td></tr>
 		  <tr><td colspan="2"><b>Your Comment:</b></td></tr>
 		  <tr><td colspan="2">
-                    <textarea name="submit_body" cols="80" rows="5" class="expanding"><!-- tmpl_var name='submit_body' --></textarea></td></tr>
+                    <textarea name="submit_body" cols="80" rows="5" class="expanding"><!-- tmpl_var name='submit_body' escape='html' --></textarea></td></tr>
 		  <tr><td valign="top"><p><b>Posting Format:</b></td>
 		      <td>
 <!-- tmpl_include name="../includes/formatting-types.template" -->

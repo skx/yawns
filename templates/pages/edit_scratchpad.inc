@@ -14,7 +14,7 @@
        <input type="hidden" name="session" value="<!-- tmpl_var name='session' -->" />
        <input type="hidden" name="mode" value="edit_scratchpad">
 
-        <textarea name="text" cols="80" rows="20"><!-- tmpl_var name='text' --></textarea>
+        <textarea name="text" cols="80" rows="20"><!-- tmpl_var name='text' escape='html' --></textarea>
 	<p>
 <!-- tmpl_if name="private" -->
                         <select name="security">

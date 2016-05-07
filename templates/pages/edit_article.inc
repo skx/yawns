@@ -21,7 +21,7 @@
    <input name="edit_title" type="text" size="66" maxlength="66" value="<!-- tmpl_var name='edit_title' -->" /></p>
 
    <p><b>Note</b>:  Please do not edit the initial paragraph - this is used for display upon the front page, and in the RSS feed.</p>
-   <textarea name="edit_body" cols="120" rows="40"><!-- tmpl_var name='edit_body'  --></textarea></p>
+   <textarea name="edit_body" cols="120" rows="40"><!-- tmpl_var name='edit_body' escape='html'  --></textarea></p>
 
    <p><input type="submit" name="stage" value="Confirm" /> </p>
    <!-- /tmpl_if -->

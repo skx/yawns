@@ -61,7 +61,7 @@
     <p>If the preview above is correct and you would like it to be published on the site, then click on the 'Confirm' button below.</p>
     <p>If you have minor edits to perform you may make them below, and preview again until you are happy with it.</p>
     <p><b>Title</b>: <input name="submit_title" type="text" value="<!-- tmpl_var name='submit_title' -->" size="50" maxlength="65"/></p>
-    <textarea name="submit_body" cols="80" rows="40"><!-- tmpl_var name='submit_body'  --></textarea></p>
+    <textarea name="submit_body" cols="80" rows="40"><!-- tmpl_var name='submit_body' escape='html'  --></textarea></p>
 <!-- /tmpl_if -->
 <!-- tmpl_if name='new' -->
 
@@ -92,5 +92,3 @@
 <!-- /tmpl_if -->
 <!-- /tmpl_if -->
 </form>
-
-

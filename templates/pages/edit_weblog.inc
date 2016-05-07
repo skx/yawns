@@ -7,7 +7,7 @@
                     <p><b>Tags:</b> <input name="submit_tags" type="text" value="<!-- tmpl_var name='submit_tags' -->" size="50" maxlength="100" />
 
                     <p><b>Text:</b>
-                    <br /><textarea name="submit_body" class="expanding" cols="60" rows="10"><!-- tmpl_var name='submit_body' --></textarea></p>
+                    <br /><textarea name="submit_body" class="expanding" cols="60" rows="10"><!-- tmpl_var name='submit_body' escape='html' --></textarea></p>
 
                     <p><b>Comment Options:</b>
 	<!-- tmpl_if name='submit_comments' -->
