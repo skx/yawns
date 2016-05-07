@@ -11,12 +11,9 @@
 #    and one misc machine.
 #
 #   fab beta
-#     Deploy the codebase to the three-node cluster hosted at Brightbox
-#   There are two web nodes running behind the brightbox-maintained
-#   load-balancer, and an externally managed database host.
+#     Deploy the codebase to the single standalone node.
 #
-#
-#  The beta deployment runs over IPv6 (cool), the live does not.
+#  Both live and beta now run over IPv6.
 #
 # Steve
 # --
@@ -264,4 +261,3 @@ if __name__ == '__main__':
         #  Otherwise list our targets.
         #
         subprocess.call(['fab', '-f', __file__, '--list'])
-
