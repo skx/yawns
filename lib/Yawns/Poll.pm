@@ -320,7 +320,7 @@ sub getTitle
     my $title = $ret[0];
     $sql->finish();
 
-    if ($r)
+    if ($r && $title)
     {
         $r->set( "poll.title.$id", $title );
     }
