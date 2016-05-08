@@ -1,4 +1,9 @@
-                  <!-- tmpl_if name='anon_voted' -->
+<ol class="breadcrumb">
+  <li><a href="/polls/">Polls</a></li>
+  <li><a href="/polls/<!-- tmpl_var name='poll' -->">Poll #<!-- tmpl_var name='poll' --></a></li>
+</ol>
+
+<!-- tmpl_if name='anon_voted' -->
                   <p>    An anonymous user from your IP address
                         (<!-- tmpl_var name='anon_voted' -->) has already
                         voted, and so your vote has been ignored.
