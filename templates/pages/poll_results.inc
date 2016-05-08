@@ -63,20 +63,12 @@
     <!-- /tmpl_if -->
 
 
-    <!-- Navigation stuff -->
-    <div class="row">
-      <span class="left">
-        <p>
-        <!-- tmpl_if name='enabled'-->
-        <a href="/comment/onpoll/<!-- tmpl_var name='poll' -->">Add Comment</a>
-        <a href="/comment/feed/onpoll/<!-- tmpl_var name='poll' -->" title="Subscribe to comments on this poll."><img src="/images/xml.gif" title="Subscribe to comments on this poll." alt="XML logo" width="36" height="14"></a>
-        <!-- /tmpl_if -->
-        </p>
-      </span>
-      <span class="right">
-      </span>
-      <div class="spacer"> </div>
-    </div>
+    <!-- tmpl_if name='enabled'-->
+    <p>
+      <a href="/comment/onpoll/<!-- tmpl_var name='poll' -->">Add Comment</a>
+      <a href="/comment/feed/onpoll/<!-- tmpl_var name='poll' -->" title="Subscribe to comments on this poll."><img src="/images/xml.gif" title="Subscribe to comments on this poll." alt="XML logo" width="36" height="14"></a>
+    </p>
+    <!-- /tmpl_if -->
 
     <p>&nbsp;</p>
 
