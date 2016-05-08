@@ -1,6 +1,5 @@
 <ol class="breadcrumb">
   <li><a href="/polls/">Polls</a></li>
-  <li><a href="/polls/<!-- tmpl_var name='poll' -->">Poll #<!-- tmpl_var name='poll' --></a></li>
 </ol>
 
 
