@@ -64,25 +64,25 @@
 		      <form class="navbar-form navbar-left" role="search" action="/search/" method="post">
 			<div class="form-group">
                           <input type="hidden" name="mode" value="article_search">
-			  <input type="text" name="q" class="form-control" placeholder="Search..">
+			  <input type="text" name="q" class="form-control" placeholder="Search.." />
 			  </div>
 			  <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
 			</form>
 			<!-- tmpl_if name='logged_in' -->
 			<li class="dropdown">
-			  <a class="dropdown-toggle" href="#" data-toggle="dropdown"><!-- tmpl_var name='username' --><strong class="caret"></strong></a>
+			  <a class="dropdown-toggle" href="#" data-toggle="dropdown"><!-- tmpl_var name='username' --><strong class="caret">&nbsp;</strong></a>
 			  <ul class="dropdown-menu" role="menu">
-			    <li><a href="/users/<!-- tmpl_var name='username' -->"><i class="icon- glyphicon glyphicon-user"></i> Profile</a></li>
-			    <li><a href="/edit/prefs"> <i class="icon- glyphicon glyphicon-cog"></i> Options</a></li>
-			    <li><a href="/users/<!-- tmpl_var name='username' -->/weblog"><i class="icon- glyphicon glyphicon-book"></i> Blog</a></li>
-			    <li><a href="/logout/<!-- tmpl_var name='session' -->"><i class="icon- glyphicon glyphicon-off"></i> Logout</a></li>
+			    <li><a href="/users/<!-- tmpl_var name='username' -->"><i class="icon- glyphicon glyphicon-user">&nbsp;</i> Profile</a></li>
+			    <li><a href="/edit/prefs"> <i class="icon- glyphicon glyphicon-cog">&nbsp;</i> Options</a></li>
+			    <li><a href="/users/<!-- tmpl_var name='username' -->/weblog"><i class="icon- glyphicon glyphicon-book">&nbsp;</i> Blog</a></li>
+			    <li><a href="/logout/<!-- tmpl_var name='session' -->"><i class="icon- glyphicon glyphicon-off">&nbsp;</i> Logout</a></li>
 			  </ul>
 			</li>
 
 
 			<!-- tmpl_else -->
-			<li><a href="/create/user"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-			<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			<li><a href="/create/user"><span class="glyphicon glyphicon-user">&nbsp;</span> Sign Up</a></li>
+			<li><a href="/login"><span class="glyphicon glyphicon-log-in">&nbsp;</span> Login</a></li>
 			<!-- /tmpl_if -->
 		      </ul>
 		    </div>
