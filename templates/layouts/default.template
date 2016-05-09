@@ -70,12 +70,12 @@
 			</form>
 			<!-- tmpl_if name='logged_in' -->
 			<li class="dropdown">
-			  <a class="dropdown-toggle" href="#" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> <!-- tmpl_var name='username' --><strong class="caret"></strong></a>
+			  <a class="dropdown-toggle" href="#" data-toggle="dropdown"><!-- tmpl_var name='username' --><strong class="caret"></strong></a>
 			  <ul class="dropdown-menu" role="menu">
-			    <li><a href="/users/<!-- tmpl_var name='username' -->">profile</a></li>
-			    <li><a href="/edit/prefs">options</a></li>
-			    <li><a href="/users/<!-- tmpl_var name='username' -->/weblog">blog</a></li>
-			    <li><a href="/logout/<!-- tmpl_var name='session' -->">logout</a></li>
+			    <li><a href="/users/<!-- tmpl_var name='username' -->"><i class="icon- glyphicon glyphicon-user"></i> Profile</a></li>
+			    <li><a href="/edit/prefs"> <i class="icon- glyphicon glyphicon-cog"></i> Options</a></li>
+			    <li><a href="/users/<!-- tmpl_var name='username' -->/weblog"><i class="icon- glyphicon glyphicon-book"></i> Blog</a></li>
+			    <li><a href="/logout/<!-- tmpl_var name='session' -->"><i class="icon- glyphicon glyphicon-off"></i> Logout</a></li>
 			  </ul>
 			</li>
 
