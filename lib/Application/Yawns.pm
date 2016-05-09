@@ -154,7 +154,11 @@ sub cgiapp_prerun
 sub cgiapp_postrun
 {
     my ($self, $contentref) = @_;
-    $self->htmltidy_clean($contentref);
+
+    if ( get_conf( 'tidy_html' ) )
+    {
+        $self->htmltidy_clean($contentref);
+    }
 }
 
 

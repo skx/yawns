@@ -194,6 +194,11 @@ END_OF_META
 
 
     #
+    # Should we tidy HTML output?
+    #
+    $tidy_html = 0;
+
+    #
     # Return the requested config variable
     #
     return ($$requested);
