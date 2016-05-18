@@ -103,3 +103,10 @@ In short:
 * One job runs often to update the RSS feeds if a new article has been posted.
     * This is required because the CGI script might promote an article upon a single host, and the others wouldn't know about it.
 * One job runs once per day to update the search index.
+
+
+
+Questions?
+----------
+
+Questions welcome to the author.
