@@ -6781,7 +6781,7 @@ sub new_user
 
                         $self->send_alert(
                               "Denied access via recaptcha: '$content' from IP "
-                                . $self->remote() );
+                                . $self->remote_ip() );
 
                         # Blacklist
                         my $redis = Singleton::Redis->instance();
