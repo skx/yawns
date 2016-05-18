@@ -107,6 +107,20 @@ sub get_conf
     #
     $submission_mail = 'submissions@example.org';
 
+
+    #
+    # We're moving to using dynamic addresses, so mail will be
+    # sent from:
+    #
+    #   user.steve@bounces.debian-administration.org
+    #
+    # etc.
+    #
+    # Setup that here.
+    #
+    $bounce_domain = 'user.USER@bounce.example.org';
+
+
     #
     # Link used in various output pages, and in the emails.
     #

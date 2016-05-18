@@ -586,8 +586,6 @@ sub create
     my $ip        = $class->{ 'ip' };
     my $suspended = 0;
 
-    $suspended = 1 if ( $email && ( $email =~ /goood-mail.org/i ) );
-
     if ( ( !defined($username) ) ||
          ( !length($username) ) ||
          ( !defined($email) || ( !length($email) ) ) ||
@@ -684,6 +682,18 @@ sub sendMail
     my $sitename     = get_conf('sitename');
     my $bounce_email = get_conf('bounce_email');
     my $sendmail     = get_conf('sendmail_path');
+
+    #
+    #  Are we using a bounce-mail?
+    #
+    my $bd = get_conf( 'bounce_domain' );
+    if ( $bd && ( $bd =~ /@/ ) )
+    {
+        $bounce_email = $bd;
+
+        # Update the username.
+        $bounce_email =~ s/USER/$username/;
+    }
 
     if ( ( !defined($sendmail) ) or
          ( length($sendmail) < 1 ) )
