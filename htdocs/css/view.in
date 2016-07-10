@@ -575,3 +575,9 @@ a.switch.selected {color:#ff5900}
 blockquote {
     border-left: none;
 }
+.copyright {
+    font-family: Arial,
+         "Helvetica Neue",
+         Helvetica,
+         sans-serif;
+}
