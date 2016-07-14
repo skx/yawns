@@ -87,10 +87,11 @@
 		      </ul>
 		    </div>
 		  </nav>
-		  <table border="0" width="100%" margin="5" padding="5">
-		    <tr>
-		      <td valign="top" width="200" >
-                  <p>&nbsp;</p>
+
+
+    <div class="container-fluid">
+      <div class="row">
+	<div class="col-md-1">
 
 
 			<!-- tmpl_if name='show_pending_header' -->
@@ -174,13 +175,14 @@
 			<div style="text-align:center;"><a class="FlattrButton" style="display:none;" href="http://debian-administration.org"></a></div>
 
 
-</td>
-                      <td valign="top">
+        </div>
+	<div class="col-md-10">
                         <!-- tmpl_if name='ok_flash' --> <div class="alert alert-success"><!-- tmpl_var name='ok_flash' --></div><!-- /tmpl_if -->
                         <!-- tmpl_if name='error_flash' --> <div class="alert alert-danger"><!-- tmpl_var name='error_flash' --></div><!-- /tmpl_if -->
   <!-- tmpl_include name='###' -->
-</td>
-<td valign="top" width="200" align="center">
+
+        </div>
+        <div class="col-md-1">
   <!-- tmpl_if name='show_blogs' -->
   <p>&nbsp;</p>
   <div id="blogs">
@@ -244,9 +246,8 @@
     </div>
   </div>
   <!-- /tmpl_if name='recent_tips' -->
-</td>
-</tr>
-</table>
+        </div>
+      </div>
 <div id="footer">
   <p>Articles and comments are the property of their respective posters.</p>
   <p>Trademarks are the property of their respective owners.<br />  Debian is <a
