@@ -55,6 +55,9 @@ a:active {
 dt {
    font-weight:bold;
 }
+dd {
+    padding-left: 50px;
+}
 #header {
         height:110px;
         background-color: white;
