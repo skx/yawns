@@ -50,7 +50,7 @@
     <nav class="navbar">
       <div class="container-fluid">
 	<div class="navbar-header">
-	  <a class="navbar-brand pull-left" href="/" ><img height="75" width="75"  src="/images/logo.png"></a>
+	  <a class="navbar-brand pull-left" href="/" ><img height="75" width="75"  src="/images/logo.png" alt="logo"></a>
 	  </div>
 	  <ul class="nav navbar-nav">
 	    <li><a href="/">Home</a></li>
@@ -88,7 +88,7 @@
 	  </div>
 	</nav>
 
-
+<p>&nbsp;</p>
 	<div class="container-fluid">
 
           <div class="row">
