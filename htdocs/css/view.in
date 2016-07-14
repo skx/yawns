@@ -574,6 +574,7 @@ a.switch.selected {color:#ff5900}
 /* Override the bootstrap style */
 blockquote {
     border-left: none;
+    padding-left: 50px;
 }
 .copyright {
     font-family: Arial,
