@@ -21,239 +21,240 @@
     <link rel="stylesheet" type="text/css" href="/css/view.css" media="screen" title="Site Layout" />
 
     <script type="text/javascript">
-    (function() {
-        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
-        s.type = 'text/javascript';
-        s.async = true;
-        s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
-        t.parentNode.insertBefore(s, t);
-    })();
+      (function() {
+      var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+      t.parentNode.insertBefore(s, t);
+      })();
     </script>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-80553159-8', 'auto');
-  ga('send', 'pageview');
+      ga('create', 'UA-80553159-8', 'auto');
+      ga('send', 'pageview');
 
-</script>
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   </head>
-    <body>
+  <body>
 
 
-		<nav class="navbar">
-		  <div class="container-fluid">
-		    <div class="navbar-header">
-		      <a class="navbar-brand pull-left" href="/" ><img height="75" width="75"  src="/images/logo.png"></a>
-		    </div>
-		    <ul class="nav navbar-nav">
-		      <li><a href="/">Home</a></li>
-		      <li><a href="/about/Debian%20Administration">About</a></li>
-		      <li><a href="/archive/">Archive</a></li>
-		      <li><a href="/about/Contribute">Contribute</a></li>
-		      <li><a href="/about/FAQ">FAQ</a></li>
-		      <li><a href="/tag">Tags</a></li>
-		    </ul>
-		    <ul class="nav navbar-nav navbar-right">
-		      <form class="navbar-form navbar-left" role="search" action="/search/" method="post">
-			<div class="form-group">
-                          <input type="hidden" name="mode" value="article_search">
-			  <input type="text" name="q" class="form-control" placeholder="Search.." />
-			  </div>
-			  <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search">&nbsp;</span></button>
-			</form>
-			<!-- tmpl_if name='logged_in' -->
-			<li class="dropdown">
-			  <a class="dropdown-toggle" href="#" data-toggle="dropdown"><!-- tmpl_var name='username' --><strong class="caret">&nbsp;</strong></a>
-			  <ul class="dropdown-menu" role="menu">
-			    <li><a href="/users/<!-- tmpl_var name='username' -->"><i class="icon- glyphicon glyphicon-user">&nbsp;</i> Profile</a></li>
-			    <li><a href="/edit/prefs"> <i class="icon- glyphicon glyphicon-cog">&nbsp;</i> Options</a></li>
-			    <li><a href="/users/<!-- tmpl_var name='username' -->/weblog"><i class="icon- glyphicon glyphicon-book">&nbsp;</i> Blog</a></li>
-			    <li><a href="/logout/<!-- tmpl_var name='session' -->"><i class="icon- glyphicon glyphicon-off">&nbsp;</i> Logout</a></li>
-			  </ul>
-			</li>
+    <nav class="navbar">
+      <div class="container-fluid">
+	<div class="navbar-header">
+	  <a class="navbar-brand pull-left" href="/" ><img height="75" width="75"  src="/images/logo.png"></a>
+	  </div>
+	  <ul class="nav navbar-nav">
+	    <li><a href="/">Home</a></li>
+	    <li><a href="/about/Debian%20Administration">About</a></li>
+	    <li><a href="/archive/">Archive</a></li>
+	    <li><a href="/about/Contribute">Contribute</a></li>
+	    <li><a href="/about/FAQ">FAQ</a></li>
+	    <li><a href="/tag">Tags</a></li>
+	  </ul>
+	  <ul class="nav navbar-nav navbar-right">
+	    <form class="navbar-form navbar-left" role="search" action="/search/" method="post">
+	      <div class="form-group">
+                <input type="hidden" name="mode" value="article_search">
+		  <input type="text" name="q" class="form-control" placeholder="Search.." />
+		</div>
+		<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search">&nbsp;</span></button>
+	      </form>
+	      <!-- tmpl_if name='logged_in' -->
+	      <li class="dropdown">
+		<a class="dropdown-toggle" href="#" data-toggle="dropdown"><!-- tmpl_var name='username' --><strong class="caret">&nbsp;</strong></a>
+		<ul class="dropdown-menu" role="menu">
+		  <li><a href="/users/<!-- tmpl_var name='username' -->"><i class="icon- glyphicon glyphicon-user">&nbsp;</i> Profile</a></li>
+		  <li><a href="/edit/prefs"> <i class="icon- glyphicon glyphicon-cog">&nbsp;</i> Options</a></li>
+		  <li><a href="/users/<!-- tmpl_var name='username' -->/weblog"><i class="icon- glyphicon glyphicon-book">&nbsp;</i> Blog</a></li>
+		  <li><a href="/logout/<!-- tmpl_var name='session' -->"><i class="icon- glyphicon glyphicon-off">&nbsp;</i> Logout</a></li>
+		</ul>
+	      </li>
 
 
-			<!-- tmpl_else -->
-			<li><a href="/create/user"><span class="glyphicon glyphicon-user">&nbsp;</span> Sign Up</a></li>
-			<li><a href="/login"><span class="glyphicon glyphicon-log-in">&nbsp;</span> Login</a></li>
-			<!-- /tmpl_if -->
-		      </ul>
-		    </div>
-		  </nav>
+	      <!-- tmpl_else -->
+	      <li><a href="/create/user"><span class="glyphicon glyphicon-user">&nbsp;</span> Sign Up</a></li>
+	      <li><a href="/login"><span class="glyphicon glyphicon-log-in">&nbsp;</span> Login</a></li>
+	      <!-- /tmpl_if -->
+	    </ul>
+	  </div>
+	</nav>
 
 
-    <div class="container-fluid">
-      <div class="row">
-	<div class="col-md-1">
+	<div class="container-fluid">
+
+          <div class="row">
+	    <div class="col-md-2">
 
 
-			<!-- tmpl_if name='show_pending_header' -->
-			<h3 class="sideBarTitle">Submissions</h3>
-                        <ul class="list-group">
-                        <!-- /tmpl_if -->
+	      <!-- tmpl_if name='show_pending_header' -->
+	      <h3 class="sideBarTitle">Submissions</h3>
+              <ul class="list-group">
+                <!-- /tmpl_if -->
 
-			<!-- tmpl_if name='show_pending_article_count' -->
-			  <li class="list-group-item"><!-- tmpl_if name="pending_article_count" --><span class="badge"><!-- tmpl_var name='pending_article_count' --></span><!-- /tmpl_if --><a href="/submission/list">Articles</a></li>
-			<!-- /tmpl_if -->
+		<!-- tmpl_if name='show_pending_article_count' -->
+		<li class="list-group-item"><!-- tmpl_if name="pending_article_count" --><span class="badge"><!-- tmpl_var name='pending_article_count' --></span><!-- /tmpl_if --><a href="/submission/list">Articles</a></li>
+		<!-- /tmpl_if -->
 
-			<!-- tmpl_if name='show_pending_poll_count' -->
-			  <li class="list-group-item"><!-- tmpl_if name="pending_poll_count" --><span class="badge"><!-- tmpl_var name='pending_poll_count' --></span><!-- /tmpl_if --><a href="/submissions/polls">Polls</a></li>
-			<!-- /tmpl_if -->
+		<!-- tmpl_if name='show_pending_poll_count' -->
+		<li class="list-group-item"><!-- tmpl_if name="pending_poll_count" --><span class="badge"><!-- tmpl_var name='pending_poll_count' --></span><!-- /tmpl_if --><a href="/submissions/polls">Polls</a></li>
+		<!-- /tmpl_if -->
 
-			<!-- tmpl_if name='show_pending_header' -->
-                        </ul>
-			<!-- /tmpl_if -->
+		<!-- tmpl_if name='show_pending_header' -->
+              </ul>
+	      <!-- /tmpl_if -->
 
-			<!-- tmpl_if name='show_misc_header' -->
-			<h3 class="sideBarTitle">Administrivia</h3>
-                        <div class="list-group">
-			<!-- /tmpl_if -->
-			  <!-- tmpl_if name='show_recent_users' -->
-			  <a class="list-group-item" href="/recent/users">Recent members</a>
-			  <!-- /tmpl_if -->
-			  <!-- tmpl_if name='show_static_edit' -->
-			  <a class="list-group-item" href="/edit/about">Static pages</a>
-			  <!-- /tmpl_if -->
-			  <!-- tmpl_if name='show_edit_users' -->
-			  <a class="list-group-item" href="/user/admin">User Administration</a>
-			  <!-- /tmpl_if -->
-			<!-- tmpl_if name='show_misc_header' -->
-			</div>
-			<!-- /tmpl_if -->
-
-
-                        <!-- tmpl_if name="article_admin" -->
-                        <h3>Administrivia</h3>
-                        <ul>
-                          <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
-                        </ul>
-                        <!-- /tmpl_if -->
-
-                        <!-- tmpl_if name='article_author' -->
-                        <h3>Author Links</h3>
-                        <ul>
-                          <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
-                        </ul>
-                        <!-- /tmpl_if -->
-
-			<!-- tmpl_if name='show_pollbooth' -->
-			<p>&nbsp;</p>
-			<div id="poll" style="margin-left:15px;">
-			  <!-- tmpl_if name="poll_error" -->
-			  <!-- tmpl_if name="pending_poll_count" -->
-			  <h3>No Poll</h3>
-			  <p>Please <a href="/submissions/polls">publish a queued poll</a>.</p>
-			  <!-- tmpl_else -->
-			  <h3>No Poll</h3>
-			  <p>Please <a href="/create/poll">create a new poll</a>.</p>
-			  <!-- /tmpl_if -->
-			  <!-- tmpl_else -->
-			  <h3><b><!-- tmpl_var name="poll_question" --></b></h3>
-			  <form method="post" action="/polls/<!-- tmpl_var name="poll_id" -->">
-                            <input type="hidden" name="poll_id" value="<!-- tmpl_var name="poll_id" -->" />
-			      <!-- tmpl_loop name="poll_answers" -->
-			      <label><input type="radio" name="pollanswer" value="<!-- tmpl_var name="id" -->" /><!-- tmpl_var name="response" --></label><br />
-			      <!-- /tmpl_loop -->
-			      <input type="hidden" name="mode" value="poll_vote" />
-			      <input type="hidden" name="id" value="<!-- tmpl_var name='poll_id' -->" />
-			      <input type="submit"  value="Vote" /><br />
-			    <p class="votescast"><a href="/polls/<!-- tmpl_var name='poll_id' -->"><!-- tmpl_var name='poll_total_votes'> votes ~ <!-- tmpl_var name='poll_comment_count'> comments</a></p>
-											                </form>
-<!-- /tmpl_if -->
-                        </div>
-<!-- /tmpl_if -->
-
-<!-- Flattr -->
-<p>&nbsp;</p>
-			<div style="text-align:center;"><a class="FlattrButton" style="display:none;" href="http://debian-administration.org"></a></div>
+	      <!-- tmpl_if name='show_misc_header' -->
+	      <h3 class="sideBarTitle">Administrivia</h3>
+              <div class="list-group">
+		<!-- /tmpl_if -->
+		<!-- tmpl_if name='show_recent_users' -->
+		<a class="list-group-item" href="/recent/users">Recent members</a>
+		<!-- /tmpl_if -->
+		<!-- tmpl_if name='show_static_edit' -->
+		<a class="list-group-item" href="/edit/about">Static pages</a>
+		<!-- /tmpl_if -->
+		<!-- tmpl_if name='show_edit_users' -->
+		<a class="list-group-item" href="/user/admin">User Administration</a>
+		<!-- /tmpl_if -->
+		<!-- tmpl_if name='show_misc_header' -->
+	      </div>
+	      <!-- /tmpl_if -->
 
 
-        </div>
-	<div class="col-md-10">
-                        <!-- tmpl_if name='ok_flash' --> <div class="alert alert-success"><!-- tmpl_var name='ok_flash' --></div><!-- /tmpl_if -->
-                        <!-- tmpl_if name='error_flash' --> <div class="alert alert-danger"><!-- tmpl_var name='error_flash' --></div><!-- /tmpl_if -->
-  <!-- tmpl_include name='###' -->
+              <!-- tmpl_if name="article_admin" -->
+              <h3>Administrivia</h3>
+              <ul>
+                <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
+              </ul>
+              <!-- /tmpl_if -->
 
-        </div>
-        <div class="col-md-1">
-  <!-- tmpl_if name='show_blogs' -->
-  <p>&nbsp;</p>
-  <div id="blogs">
-    <h3>Recent Weblogs</h3>
-    <!-- tmpl_unless name='recent_weblogs' -->
-    <p>No weblogs posted yet.</p>
-    <!-- tmpl_else -->
-    <div class="weblogs">
-      <!-- tmpl_loop name="recent_weblogs" -->
-      <div class="body">
-	<div class="title"><a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a></div>
-	<div class="tagline">by <a href="/users/<!-- tmpl_var name='poster' -->"><!-- tmpl_var name='poster' --></a></div>
-	<div class="comments"> <!-- tmpl_if name="comments" --> <a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->#comments"><!-- tmpl_var name='comments' --> comment<!-- tmpl_if name='plural' -->s<!-- /tmpl_if --></a><!-- /tmpl_if --></div>
-      </div>
-      <!-- /tmpl_loop -->
-      <!-- tmpl_if name='planet_url' -->
-      <p><a href="<!-- tmpl_var name='planet_url' -->" title="Planet <!-- tmpl_var name='sitename' -->" style="float:right;">Archived weblogs</a></p>
-      <p>&nbsp;</p>
-      <!-- /tmpl_if -->
-    </div>
-  </div>
+              <!-- tmpl_if name='article_author' -->
+              <h3>Author Links</h3>
+              <ul>
+                <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
+              </ul>
+              <!-- /tmpl_if -->
 
-  <!-- /tmpl_unless -->
-  <!-- /tmpl_if -->
-  <p>&nbsp;</p>
-  <!-- tmpl_if  name="show_adverts" -->
-  <div class="advert">
-    <h3>Sponsored Links</h3>
-    <p></p>
-    <div align="center">
-      <script type="text/javascript"><!--
-					 google_ad_client = "pub-1910202134166551";
-					 //200x90, created 08/12/07
-					 google_ad_slot = "2315151555";
-					 google_ad_width = 200;
-					 google_ad_height = 90;
-					 //--></script>
-      <script type="text/javascript"
-	      src="//pagead2.googlesyndication.com/pagead/show_ads.js">
-      </script>
-    </div>
-    <!-- tmpl_unless name="logged_in" -->
-    <p><a href="/about/FAQ%20:%20Site%20Adverts">Why are these adverts here?</a></p>
-    <!-- /tmpl_unless -->
-  </div>
-  <!-- /tmpl_if -->
+	      <!-- tmpl_if name='show_pollbooth' -->
+	      <p>&nbsp;</p>
+	      <div id="poll" style="margin-left:15px;">
+		<!-- tmpl_if name="poll_error" -->
+		<!-- tmpl_if name="pending_poll_count" -->
+		<h3>No Poll</h3>
+		<p>Please <a href="/submissions/polls">publish a queued poll</a>.</p>
+		<!-- tmpl_else -->
+		<h3>No Poll</h3>
+		<p>Please <a href="/create/poll">create a new poll</a>.</p>
+		<!-- /tmpl_if -->
+		<!-- tmpl_else -->
+		<h3><b><!-- tmpl_var name="poll_question" --></b></h3>
+		<form method="post" action="/polls/<!-- tmpl_var name="poll_id" -->">
+                  <input type="hidden" name="poll_id" value="<!-- tmpl_var name="poll_id" -->" />
+		  <!-- tmpl_loop name="poll_answers" -->
+		  <label><input type="radio" name="pollanswer" value="<!-- tmpl_var name="id" -->" /><!-- tmpl_var name="response" --></label><br />
+		  <!-- /tmpl_loop -->
+		  <input type="hidden" name="mode" value="poll_vote" />
+		  <input type="hidden" name="id" value="<!-- tmpl_var name='poll_id' -->" />
+		  <input type="submit"  value="Vote" /><br />
+		  <p class="votescast"><a href="/polls/<!-- tmpl_var name='poll_id' -->"><!-- tmpl_var name='poll_total_votes'> votes ~ <!-- tmpl_var name='poll_comment_count'> comments</a></p>
+											      </form>
+                <!-- /tmpl_if -->
+              </div>
+              <!-- /tmpl_if -->
+
+              <!-- Flattr -->
+              <p>&nbsp;</p>
+	      <div style="text-align:center;"><a class="FlattrButton" style="display:none;" href="http://debian-administration.org"></a></div>
 
 
-  <!-- tmpl_if name='recent_tips' -->
-  <p>&nbsp;</p>
-  <div id="tipbox">
-    <h3>Recent Tips</h3>
-    <div class="weblogs">
-      <!-- tmpl_loop name="recent_tips" -->
-      <div class="body">
-	<div class="title"><a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a></div>
-        <div class="tagline">by <a href="/users/<!-- tmpl_var name='poster' -->"><!-- tmpl_var name='poster' --></a></div>
-	<div class="comments"> <!-- tmpl_if name="comments" --> <a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->#comments"><!-- tmpl_var name='comments' --> comment<!-- tmpl_if name='plural' -->s<!-- /tmpl_if --></a><!-- /tmpl_if --></div>
-      </div>
-      <!-- /tmpl_loop -->
-    </div>
-  </div>
-  <!-- /tmpl_if name='recent_tips' -->
-        </div>
-      </div>
-<div id="footer">
-  <p>Articles and comments are the property of their respective posters.</p>
-  <p>Trademarks are the property of their respective owners.<br />  Debian is <a
-										 href="http://tarr.uspto.gov/servlet/tarr?regser=serial&amp;entry=75386376&amp;action=Request+Status">a registered trademark</a> of <a href="http://www.spi-inc.org">Software in the Public Interest, Inc</a>.</p>
-  <p>This site is copyright <span class="copyright">&copy</span>; 2004-2016 <a href="https://steve.kemp.fi/">Steve Kemp</a>.<br />Site hosting provided by <a href="http://www.bytemark.co.uk/">Bytemark Hosting</a> on the <a href="http://bigv.io/">BigV</a> platform.</p>
-  <p><a href="/about/Syndication">Article Feeds in Atom, RSS, &amp; RDF formats</a></p>
-</div>
-</body>
-</html>
+            </div>
+	    <div class="col-md-8">
+              <!-- tmpl_if name='ok_flash' --> <div class="alert alert-success"><!-- tmpl_var name='ok_flash' --></div><!-- /tmpl_if -->
+              <!-- tmpl_if name='error_flash' --> <div class="alert alert-danger"><!-- tmpl_var name='error_flash' --></div><!-- /tmpl_if -->
+              <!-- tmpl_include name='###' -->
+
+            </div>
+            <div class="col-md-2">
+              <!-- tmpl_if name='show_blogs' -->
+              <p>&nbsp;</p>
+              <div id="blogs">
+                <h3>Recent Weblogs</h3>
+                <!-- tmpl_unless name='recent_weblogs' -->
+                <p>No weblogs posted yet.</p>
+                <!-- tmpl_else -->
+                <div class="weblogs">
+                  <!-- tmpl_loop name="recent_weblogs" -->
+                  <div class="body">
+	            <div class="title"><a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a></div>
+	            <div class="tagline">by <a href="/users/<!-- tmpl_var name='poster' -->"><!-- tmpl_var name='poster' --></a></div>
+	            <div class="comments"> <!-- tmpl_if name="comments" --> <a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->#comments"><!-- tmpl_var name='comments' --> comment<!-- tmpl_if name='plural' -->s<!-- /tmpl_if --></a><!-- /tmpl_if --></div>
+                  </div>
+                  <!-- /tmpl_loop -->
+                  <!-- tmpl_if name='planet_url' -->
+                  <p><a href="<!-- tmpl_var name='planet_url' -->" title="Planet <!-- tmpl_var name='sitename' -->" style="float:right;">Archived weblogs</a></p>
+                  <p>&nbsp;</p>
+                  <!-- /tmpl_if -->
+                </div>
+              </div>
+
+              <!-- /tmpl_unless -->
+              <!-- /tmpl_if -->
+              <p>&nbsp;</p>
+              <!-- tmpl_if  name="show_adverts" -->
+              <div class="advert">
+                <h3>Sponsored Links</h3>
+                <p></p>
+                <div align="center">
+                  <script type="text/javascript"><!--
+					             google_ad_client = "pub-1910202134166551";
+					             //200x90, created 08/12/07
+					             google_ad_slot = "2315151555";
+					             google_ad_width = 200;
+					             google_ad_height = 90;
+					             //--></script>
+                  <script type="text/javascript"
+	                  src="//pagead2.googlesyndication.com/pagead/show_ads.js">
+                  </script>
+                </div>
+                <!-- tmpl_unless name="logged_in" -->
+                <p><a href="/about/FAQ%20:%20Site%20Adverts">Why are these adverts here?</a></p>
+                <!-- /tmpl_unless -->
+              </div>
+              <!-- /tmpl_if -->
+
+
+              <!-- tmpl_if name='recent_tips' -->
+              <p>&nbsp;</p>
+              <div id="tipbox">
+                <h3>Recent Tips</h3>
+                <div class="weblogs">
+                  <!-- tmpl_loop name="recent_tips" -->
+                  <div class="body">
+	            <div class="title"><a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a></div>
+                    <div class="tagline">by <a href="/users/<!-- tmpl_var name='poster' -->"><!-- tmpl_var name='poster' --></a></div>
+	            <div class="comments"> <!-- tmpl_if name="comments" --> <a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->#comments"><!-- tmpl_var name='comments' --> comment<!-- tmpl_if name='plural' -->s<!-- /tmpl_if --></a><!-- /tmpl_if --></div>
+                  </div>
+                  <!-- /tmpl_loop -->
+                </div>
+              </div>
+              <!-- /tmpl_if name='recent_tips' -->
+            </div>
+          </div>
+          <div id="footer">
+            <p>Articles and comments are the property of their respective posters.</p>
+            <p>Trademarks are the property of their respective owners.<br />  Debian is <a
+										           href="http://tarr.uspto.gov/servlet/tarr?regser=serial&amp;entry=75386376&amp;action=Request+Status">a registered trademark</a> of <a href="http://www.spi-inc.org">Software in the Public Interest, Inc</a>.</p>
+            <p>This site is copyright <span class="copyright">&copy</span>; 2004-2016 <a href="https://steve.kemp.fi/">Steve Kemp</a>.<br />Site hosting provided by <a href="http://www.bytemark.co.uk/">Bytemark Hosting</a> on the <a href="http://bigv.io/">BigV</a> platform.</p>
+            <p><a href="/about/Syndication">Article Feeds in Atom, RSS, &amp; RDF formats</a></p>
+          </div>
+        </body>
+      </html>
