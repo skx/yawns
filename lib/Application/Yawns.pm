@@ -159,6 +159,7 @@ sub cgiapp_postrun
     {
         $self->htmltidy_clean($contentref);
     }
+    utf8::decode($$contentref);
 }
 
 
