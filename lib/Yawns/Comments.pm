@@ -772,6 +772,7 @@ sub _get_comments
         $comment[5] =~ s/&amp;amp;/&/g;
         $comment[5] =~ s/&amp;lt;/&lt;/g;
         $comment[5] =~ s/&amp;gt;/&gt;/g;
+        $comment[5] =~ s/&amp;#39;/'/g;
 
         #
         # Get the user modifier for the comment author.
