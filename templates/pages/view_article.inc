@@ -65,7 +65,6 @@ $(function() {
 
 <!-- tmpl_if  name="show_adverts" -->
 
-<!-- tmpl_if name="google_adverts" -->
 <p></p>
 <div class="advert">
   <center>
@@ -86,7 +85,6 @@ $(function() {
   <p  style="text-align: right;"><a href="/about/FAQ%20:%20Site%20Adverts">Why are these adverts here?</a></p>
   <!-- /tmpl_unless -->
 </div>
-<!-- /tmpl_if -->
 <!-- tmpl_else -->
 <!-- Adverts Removed -->
 <!-- /tmpl_if -->
