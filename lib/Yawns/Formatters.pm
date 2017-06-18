@@ -50,9 +50,6 @@ require AutoLoader;
 #
 #  The actual formatters we create, and return.
 #
-use Yawns::Formatters::HTML;
-use Yawns::Formatters::Text;
-use Yawns::Formatters::Textile;
 use Yawns::Formatters::Markdown;
 
 
@@ -100,9 +97,6 @@ sub getAvailable
     #  The formatters are the keys, and the values
     # are the human-readable names.
     #
-    $results{ 'html' }     = "HTML";
-    $results{ 'text' }     = "Plain Text";
-    $results{ 'textile' }  = "Textile";
     $results{ 'markdown' } = "Markdown";
 
     return (%results);
@@ -121,24 +115,7 @@ sub create
 {
     my ( $self, $type, $text ) = (@_);
 
-    if ( $type =~ /^html$/i )
-    {
-        return ( new Yawns::Formatters::HTML->new( text => $text ) );
-    }
-    elsif ( $type =~ /^text$/i )
-    {
-        return ( new Yawns::Formatters::Text->new( text => $text ) );
-    }
-    elsif ( $type =~ /^markdown$/i )
-    {
-        return ( new Yawns::Formatters::Markdown->new( text => $text ) );
-    }
-    elsif ( $type =~ /^textile$/i )
-    {
-        return ( new Yawns::Formatters::Textile->new( text => $text ) );
-    }
-
-    die "Invalid formatter.";
+    return ( new Yawns::Formatters::Markdown->new( text => $text );
 }
 
 
