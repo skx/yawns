@@ -5032,7 +5032,7 @@ sub add_weblog
         #  Create the correct formatter object.
         #
         my $creator = Yawns::Formatters->new();
-        my $formatter = $creator->create( $form->param('type'), $submit_body );
+        my $formatter = $creator->create( $submit_body );
 
 
         #
@@ -5083,7 +5083,7 @@ sub add_weblog
             #
             my $creator = Yawns::Formatters->new();
             my $formatter =
-              $creator->create( $form->param('type'), $submit_body );
+              $creator->create(  $submit_body );
 
             #
             #  Get the submitted body.
@@ -5736,7 +5736,7 @@ sub submit_article
         #  Create the correct formatter object.
         #
         my $creator = Yawns::Formatters->new();
-        my $formatter = $creator->create( $form->param('type'), $submit_body );
+        my $formatter = $creator->create( $submit_body );
 
 
 
@@ -5778,7 +5778,7 @@ sub submit_article
         #  Create the correct formatter object.
         #
         my $creator = Yawns::Formatters->new();
-        my $formatter = $creator->create( $form->param('type'), $submit_body );
+        my $formatter = $creator->create( $submit_body );
 
         #
         #  Get the submitted body.
@@ -6194,7 +6194,7 @@ sub add_comment
         #  Create the correct formatter object.
         #
         my $creator = Yawns::Formatters->new();
-        my $formatter = $creator->create( $form->param('type'), $submit_body );
+        my $formatter = $creator->create( $submit_body );
 
 
         #
@@ -6364,7 +6364,7 @@ sub add_comment
         #  Create the correct formatter object.
         #
         my $creator = Yawns::Formatters->new();
-        my $formatter = $creator->create( $form->param('type'), $submit_body );
+        my $formatter = $creator->create( $submit_body );
 
         #
         #  Get the submitted body.

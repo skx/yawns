@@ -113,7 +113,7 @@ sub getAvailable
 
 sub create
 {
-    my ( $self, $type, $text ) = (@_);
+    my ( $self, $text ) = (@_);
 
     return ( new Yawns::Formatters::Markdown->new( text => $text ) );
 }

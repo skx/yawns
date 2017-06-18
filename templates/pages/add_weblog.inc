@@ -85,9 +85,6 @@
 </table>
 
                     <table>
-		    <tr><td valign="top"><b>Posting Format:</b></td><td>
-<!-- tmpl_include name="../includes/formatting-types.template" -->
-                        </td></tr>
                     <tr><td><b>Comment Options:</b></td><td>
                         <select name="comments">
                         <option value="enabled">Comments Enabled</option>
@@ -99,10 +96,6 @@
                     <p><input type="submit" name="submit" value="Preview" /></p>
                   <!-- tmpl_else -->
                     <table>
-		    <tr><td><b>Posting Options:</b></td><td>
-<!-- tmpl_include name="../includes/formatting-types.template" -->
-                        </td></tr>
-
                     <tr><td><b>Comment Options:</b></td><td>
 
 <!-- tmpl_if name='comments_enabled' -->
@@ -121,8 +114,6 @@
 		    </table>
 
 		    <!-- /tmpl_if -->
-<p>Some help on <a href="/about/Entry%20Formatting">entry formatting</a> is available</p>
-
 <hr />
 
 
