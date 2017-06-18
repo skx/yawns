@@ -25,7 +25,7 @@ isa_ok( $creator, "Yawns::Formatters" );
 #  Get the available options and the expected ones.
 #
 my %avail    = $creator->getAvailable();
-my @expected = qw/ markdown html text textile /;
+my @expected = qw/ markdown /;
 
 #
 #  Test they are the same length.

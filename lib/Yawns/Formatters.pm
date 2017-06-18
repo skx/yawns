@@ -115,7 +115,7 @@ sub create
 {
     my ( $self, $type, $text ) = (@_);
 
-    return ( new Yawns::Formatters::Markdown->new( text => $text );
+    return ( new Yawns::Formatters::Markdown->new( text => $text ) );
 }
 
 
