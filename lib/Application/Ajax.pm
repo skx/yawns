@@ -95,9 +95,6 @@ sub setup
         # Add a tag
         'add_tag' => 'add_tag',
 
-        # Set the posting format
-        'set_format' => 'set_format',
-
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
     );
@@ -341,75 +338,5 @@ sub add_tag
 }
 
 
-
-
-=head2 set_format
-
-Save the users posting format.
-
-=cut
-
-sub set_format
-{
-
-    my ($self) = (@_);
-
-    #
-    #  Ensure we have a logged-in-user
-    #
-    my $session  = $self->param('session');
-    my $username = undef;
-    if ($session)
-    {
-        $username = $session->param("logged_in") || undef;
-        return ("Login Required") unless ($username);
-    }
-
-
-    #
-    # Get the data from the submission.
-    #
-    my $form = $self->query();
-
-    #
-    #  Get the format
-    #
-    my $format = $form->param("format");
-
-    #
-    #  Get all formats
-    #
-    my $accessor = Yawns::Formatters->new();
-    my %avail    = $accessor->getAvailable();
-
-    #
-    #  If the format is one that we know about save it
-    # away.
-    #
-    my $desc = $avail{ lc($format) };
-
-    if ( defined($desc) )
-    {
-
-        #
-        #  Set the preference.
-        #
-        my $prefs = Yawns::Preferences->new( username => $username );
-        $prefs->setPreference( "posting_format", $format );
-
-        #
-        # NOTE: We don't need to entity-encode the description,
-        #       since it must have been one of our valid ones
-        #       and they are exclusively ASCII.
-        #
-        return ("$desc preference saved.\n");
-    }
-
-    #
-    #  Naughty.
-    #
-    $format = HTML::Entities::encode_entities($format);
-    return ("Invalid posting format '$format'.\n");
-}
 
 1;
