@@ -110,10 +110,6 @@ name='onarticle' -->">return to the story you were reading</a>, your
 		  <tr><td colspan="2"><b>Your Comment:</b></td></tr>
 		  <tr><td colspan="2">
                     <textarea name="submit_body" cols="80" rows="5" class="expanding"><!-- tmpl_var name='submit_body' escape='html' --></textarea></td></tr>
-		  <tr><td valign="top"><p><b>Posting Format:</b></td>
-		      <td>
-<!-- tmpl_include name="../includes/formatting-types.template" -->
-                      </td></tr>
                   <tr><td></td><td>
 		    <input type="submit" name="submit" value="Preview" /> &nbsp;
                     <input name="onarticle"    type="hidden" value="<!-- tmpl_var name='onarticle' -->" />
@@ -136,10 +132,6 @@ name='onarticle' -->">return to the story you were reading</a>, your
 		  <tr><td colspan="2"><b>Your Comment:</b></td></tr>
 		  <tr><td colspan="2">
                     <textarea name="submit_body" cols="80" rows="5" class="expanding"><!-- tmpl_var name='submit_body' escape='html' --></textarea></td></tr>
-		  <tr><td valign="top"><p><b>Posting Format:</b></td>
-		      <td>
-<!-- tmpl_include name="../includes/formatting-types.template" -->
-                      </td></tr>
                   <tr><td></td><td>
                     <input type="submit" name="submit" value="Preview" /> &nbsp;
 
@@ -158,7 +150,3 @@ name='onarticle' -->">return to the story you were reading</a>, your
 		    <!-- /tmpl_if -->
                   <!-- /tmpl_if -->
                   </form>
-
-<!-- tmpl_unless name='confirm' -->
-<p>Some help on <a href="/about/Entry%20Formatting">entry formatting</a> is available</p>
-<!-- /tmpl_unless -->

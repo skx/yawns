@@ -53,7 +53,6 @@
 
   <p>Once you have made your submission it will enter a queue where it will stay until it has been checked by the webmaster.  Most articles are posted within a few days.</p>
   <p><b>Note</b> that this is a site concerned with <a href="http://www.debian.org/">Debian GNU/Linux</a> - articles focussing upon other distributions are unlikely to be featured, unless the meat of the article is portable.</p>
-  <p>Some help on <a href="/about/Entry%20Formatting">entry formatting</a> is available</p>
   <!-- tmpl_else -->
   <form action="/create/article" method="post">
     <input type="hidden" name="mode" value="submit_article" />
@@ -70,25 +69,16 @@
   <tr><td><b>Title:</b></td><td><input name="submit_title" type="text" size="50" maxlength="65" /></td></tr>
   <tr><td colspan="2"><b>Article Body:</b></td></tr>
   <tr><td colspan="2"><textarea name="submit_body" cols="80" rows="40"></textarea></td></tr>
-  <tr><td valign="top"><b>Posting Format</b></td><td>
-      <!-- tmpl_include name="../includes/formatting-types.template" -->
-
-  </td></tr>
   <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
   <tr><td></td><td><input type="submit" name="submit" value="Preview" /></td><td></td></tr>
 </table>
 <!-- tmpl_else -->
 
-<table>
-  <tr><td valign="top"><b>Posting Format</b></td><td>
-      <!-- tmpl_include name="../includes/formatting-types.template" -->
-</td></tr></table>
 <p><input type="submit" name="submit" value="Preview" /> &nbsp; <input type="submit" name="submit" value="Confirm" /></p>
 
 <p>Your article remains your own property and you retain the copyright - however by clicking on the Confirm button you do give your permission for us to publish the article here on this website along with any discussion that might arise from it.</p>
 <p>This <b>does not</b> in any way stop you from republishing the article in any other locations, or websites.  It is <i>your work</i> and you may do as you wish with it.</p>
 <p>We reserve the right to make minor editorial changes (spelling, grammar, formatting, etc) but will always consult with you before making any larger changes, so long as you have supplied a contact email address.</p>
-<p>Some help on <a href="/about/Entry%20Formatting">entry formatting</a> is available</p>
 <!-- /tmpl_if -->
 <!-- /tmpl_if -->
 </form>
