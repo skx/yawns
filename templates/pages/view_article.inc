@@ -68,17 +68,15 @@ $(function() {
 <p></p>
 <div class="advert">
   <center>
-    <script type="text/javascript"><!--
-	                               google_ad_client = "pub-1910202134166551";
-	                               google_ad_width = 728;
-	                               google_ad_height = 90;
-	                               google_ad_format = "728x90_as";
-	                               google_ad_type = "text_image";
-	                               google_ad_channel ="4454478967";
-	                               //--></script>
-    <script type="text/javascript"
-	    src="//pagead2.googlesyndication.com/pagead/show_ads.js">
-    </script>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-1910202134166551"
+     data-ad-slot="6097394608"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
   </center>
 
   <!-- tmpl_unless name="logged_in" -->
