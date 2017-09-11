@@ -63,7 +63,6 @@ use Yawns::Comment::Notifier;
 use Yawns::Date;
 use Yawns::Permissions;
 use Yawns::Preferences;
-use Yawns::Scratchpad;
 use Yawns::Stats;
 use Yawns::Users;
 use Yawns::Weblog;
@@ -224,41 +223,7 @@ sub getModifier
 
     my $magic = "";
 
-
-    #
-    # Does the user have any scratchpad content?
-    #
-    my $scratchpad = Yawns::Scratchpad->new( username => $username );
-
-    #
-    #  Only fetch the text if it is not-private.
-    #
-    my $scratchpad_text;
-    if ( !$scratchpad->isPrivate() )
-    {
-        $scratchpad_text = $scratchpad->get();
-    }
-
-    if ( !defined($scratchpad_text) )
-    {
-        $scratchpad_text = "";
-    }
-
     $magic = "";
-
-
-    #
-    # If so link it in.
-    #
-    if ( length($scratchpad_text) )
-    {
-        $magic = "[ " if ( !length($magic) );
-        $magic .= "<a href=\"/users/";
-        $magic .= $username;
-        $magic .= "/scratchpad\">View ";
-        $magic .= $username;
-        $magic .= "'s Scratchpad</a> | ";
-    }
 
 
     #
