@@ -59,7 +59,6 @@ use conf::SiteConfig;
 
 use Singleton::DBI;
 
-use Yawns::Bookmarks;
 use Yawns::Comment::Notifier;
 use Yawns::Date;
 use Yawns::Permissions;
@@ -827,12 +826,6 @@ sub delete
     #
     my $weblogs = Yawns::Weblogs->new( username => $username );
     $weblogs->deleteByUser();
-
-    #
-    # Delete all bookmarks
-    #
-    my $bookmarks = Yawns::Bookmarks->new( username => $username );
-    $bookmarks->deleteByUser();
 
 }
 
