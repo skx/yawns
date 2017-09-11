@@ -82,11 +82,6 @@
                 <tr><td>Scratchpad</td><td><a href="/users/<!--tmpl_var name='viewusername'>/scratchpad">Scratchpad</a></td></tr>
                 <!-- /tmpl_if -->
 
-
-                <!-- tmpl_if name='show_bookmarks' -->
-                <tr><td>Bookmarks</td><td><a href="/users/<!-- tmpl_var name='viewusername' -->/bookmarks">Bookmarks</a></td></tr>
-                <!-- /tmpl_if -->
-
                 <!-- tmpl_if name='weblogs'-->
                 <tr><td>Weblog</td><td><a href="/users/<!--tmpl_var name='viewusername'>/weblog"><!-- tmpl_var name="weblogs" --> <!-- tmpl_if name="weblog_plural" -->Entries<!-- tmpl_else -->Entry<!-- /tmpl_if --></a></td></tr>
                 <!-- /tmpl_if -->

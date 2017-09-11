@@ -231,9 +231,6 @@ sub setup
         'scratchpad'      => 'scratchpad',
         'edit_scratchpad' => 'edit_scratchpad',
 
-        # Bookmark support
-        'view_bookmarks'  => 'view_bookmarks',
-        'delete_bookmark' => 'delete_bookmark',
 
         # debug
         'debug' => 'debug',
@@ -2395,202 +2392,6 @@ sub recent_users
 }
 
 
-
-
-# ===========================================================================
-# View the bookmarks belonging to a user.
-# ===========================================================================
-sub view_bookmarks
-{
-    my ($self) = (@_);
-
-    # read in the template file
-    my $template =
-      $self->load_layout( "view_bookmarks.inc", global_vars => 1, );
-
-
-    my $form = $self->query();
-
-    #
-    #  Get the current logged in user.
-    #
-    my $session = $self->param("session");
-    my $username = $session->param("logged_in") || "Anonymous";
-
-    #
-    #  And the user we're viewing.
-    #
-    my $view_username = $form->param("user") || $username;
-
-    #
-    #  If the user is ourself we can delete the bookmarks.
-    #
-    my $delete   = 0;
-    my $is_owner = 0;
-    if ( lc($username) eq lc($view_username) )
-    {
-        $is_owner = 1;
-        $delete   = 1;
-    }
-
-    #
-    # Get the bookmarks
-    #
-    my $bookmarks = Yawns::Bookmarks->new( username => $view_username );
-    my $ref = $bookmarks->get();
-
-    my $article_bookmarks = undef;
-    my $poll_bookmarks    = undef;
-    my $weblog_bookmarks  = undef;
-
-    if ( $ref && @$ref )
-    {
-        my @all_bookmarks = @$ref;
-        foreach my $row (@all_bookmarks)
-        {
-            my @row = @$row;
-
-            #
-            #  The data
-            #
-            my $gid   = $row[0];
-            my $id    = $row[1];
-            my $type  = $row[2];
-            my $title = 'Unknown';
-
-            #
-            # Fix the title.
-            #
-            if ( $type eq 'a' )
-            {
-                my $article = Yawns::Article->new( id => $id );
-                my $articles = Yawns::Articles->new( id => $id );
-                $title = $article->getTitle();
-                my $slug = $articles->makeSlug($title);
-
-                push( @$article_bookmarks,
-                      {  gid    => $gid,
-                         uid    => $id,
-                         delete => $delete,
-                         slug   => $slug,
-                         title  => $title,
-                      } );
-
-            }
-            elsif ( $type eq 'w' )
-            {
-                my $weblog = Yawns::Weblog->new( gid => $id );
-                $title = $weblog->getTitle();
-
-                #
-                # Build up link to the weblog
-                #
-                my $owner = $weblog->getOwner();
-                my $link  = $weblog->getID();
-
-                push( @$weblog_bookmarks,
-                      {  gid    => $gid,
-                         delete => $delete,
-                         title  => $title,
-                         owner  => $owner,
-                         link   => $link,
-                      } );
-            }
-            elsif ( $type eq 'p' )
-            {
-                my $poll = Yawns::Poll->new( id => $id );
-                $title = $poll->getTitle();
-
-                push( @$poll_bookmarks,
-                      {  gid    => $gid,
-                         delete => $delete,
-                         id     => $id,
-                         title  => $title,
-                      } );
-            }
-        }
-    }
-
-    my $has_bookmarks = undef;
-
-    if ( defined $article_bookmarks )
-    {
-        $template->param( article_bookmarks => $article_bookmarks );
-        $has_bookmarks = 1;
-    }
-    if ( defined $poll_bookmarks )
-    {
-        $template->param( poll_bookmarks => $poll_bookmarks );
-        $has_bookmarks = 1;
-    }
-    if ( defined $weblog_bookmarks )
-    {
-        $template->param( weblog_bookmarks => $weblog_bookmarks );
-        $has_bookmarks = 1;
-    }
-
-    $template->param( has_bookmarks => $has_bookmarks,
-                      viewusername  => $view_username,
-                      is_owner      => $is_owner
-                    );
-
-    if ($has_bookmarks)
-    {
-        $template->param( title => "Bookmarks for $view_username" );
-    }
-    else
-    {
-        $template->param( title => "No bookmarks found" );
-    }
-
-    # generate the output
-    return ( $template->output() );
-}
-
-
-
-
-# ===========================================================================
-#  Delete an existing bookmark
-# ===========================================================================
-sub delete_bookmark
-{
-    my ($self) = (@_);
-
-
-    # Validate session token
-    my $ret = $self->validateSession();
-    return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
-
-    #
-    #  Get access to the form
-    #
-    my $form = $self->query();
-
-    #
-    #  See what we're adding.
-    #
-    my $session  = $self->param("session");
-    my $username = $session->param("logged_in");
-
-
-    #
-    #  Get the id
-    #
-    my $id = $form->param("id");
-
-    #
-    #  Do the addition
-    #
-    my $bookmarks = Yawns::Bookmarks->new( username => $username );
-    $bookmarks->remove( id => $id );
-
-
-    return ( $self->redirectURL("/users/$username/bookmarks") );
-}
-
-
-
 # ===========================================================================
 # view a users profile page.
 # ===========================================================================
@@ -2732,13 +2533,6 @@ sub view_user
     }
 
     #
-    #  See if the user has any bookmarks
-    #
-    my $show_bookmarks = 0;
-    my $bookmarks = Yawns::Bookmarks->new( username => $viewusername );
-    $show_bookmarks = $bookmarks->count();
-
-    #
     # open the html template
     #
     my $template = $self->load_layout("view_user.inc");
@@ -2768,7 +2562,6 @@ sub view_user
                       anon            => $anon,
                       missing_user    => $error,
                       show_scratchpad => $show_scratchpad,
-                      show_bookmarks  => $show_bookmarks,
                       weblogs         => $weblog,
                       weblog_plural   => $weblog_plural,
                       suspended_user  => $suspended,
