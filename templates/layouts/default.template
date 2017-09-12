@@ -71,7 +71,6 @@
 
 
 	      <!-- tmpl_else -->
-	      <li><a href="/create/user"><span class="glyphicon glyphicon-user">&nbsp;</span> Sign Up</a></li>
 	      <li><a href="/login"><span class="glyphicon glyphicon-log-in">&nbsp;</span> Login</a></li>
 	      <!-- /tmpl_if -->
 	    </ul>
