@@ -48,7 +48,6 @@
 	  <!-- tmpl_if name="comments_enabled" -->
           | <a href="/comment/onweblog/<!-- tmpl_var name="gid" -->">Add Comment</a>
           <!-- /tmpl_if -->
-          | <a href="/comment/feed/onweblog/<!-- tmpl_var name='gid' -->" title="Subscribe to comments on this weblog entry."><img src="/images/xml.gif" title="Subscribe to comments on this weblog entry." alt="XML logo" width="36" height="14"></a>
           ]
 	</div>
 

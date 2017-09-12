@@ -37,7 +37,6 @@ $(function() {
     <div class="row">
       <span class="left">
 	<a href="/comment/onarticle/<!-- tmpl_var name='article_id' -->">Add Comment</a>
-        <a href="/comment/feed/onarticle/<!-- tmpl_var name='article_id' -->"><img src="/images/xml.gif" title="Subscribe to comments on this article." alt="XML logo" width="36" height="14"></a></span>
       <span class="right">
       </span>
       <div class="spacer"> </div>
