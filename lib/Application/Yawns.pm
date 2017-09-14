@@ -542,16 +542,6 @@ sub load_layout
                        show_blogs     => 1, );
         }
 
-        #
-        #  Show the planet link?
-        #
-        my $planet_url = conf::SiteConfig::get_conf("planet_url");
-        if ( defined($planet_url) )
-        {
-            $l->param( planet_url  => $planet_url,
-                       planet_site => 1,
-                       sitename    => conf::SiteConfig::get_conf("sitename") );
-        }
     }
 
 
@@ -4726,15 +4716,6 @@ sub add_weblog
                       title            => "Add New Weblog Entry",
                     );
 
-
-    #
-    #  Show the planet link?
-    #
-    my $planet_url = conf::SiteConfig::get_conf("planet_url");
-    if ( defined($planet_url) )
-    {
-        $template->param( planet_url => $planet_url );
-    }
 
     # generate the output
     return ( $template->output() );

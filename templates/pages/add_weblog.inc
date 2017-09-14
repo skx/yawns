@@ -114,15 +114,5 @@
 		    </table>
 
 		    <!-- /tmpl_if -->
-<hr />
-
-
-<!-- tmpl_if name='new' -->
-<p><b>Tip:</b></p>
-<blockquote>
-<p>If you add the special <tt>&lt;cut&gt;</tt> tag your entry will be truncated at that point when it is included in the RSS feed<!-- tmpl_if name='planet_site' --> and also when it is syndicated upon <a href="<!-- tmpl_var name='planet_url' -->" title="Planet <!-- tmpl_var name='sitename' -->">the planet</a><!-- /tmpl_if -->.</p>
-</blockquote>
-<!-- /tmpl_if -->
-
                   <!-- /tmpl_if -->
                   </form>
