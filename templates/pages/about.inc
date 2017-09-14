@@ -4,7 +4,9 @@
   <div class="row">
     <div class="col-sm-1 col-md-1"></div>
     <div class="col-sm-11 col-md-11">
+      <p>&nbsp;</p>
       <!-- tmpl_var name='article_body' -->
+      <p>&nbsp;</p>
     </div>
   </div>
 
