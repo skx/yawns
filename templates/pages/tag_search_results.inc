@@ -21,10 +21,6 @@
 
 <!-- tmpl_else -->
 
-<p align="right"><a href="/tag/feeds/<!-- tmpl_var name='tag' escape='html'-->"><img src="/images/xml.gif" alt="XML logo" width="36" height="14"></a></p>
-
-
-
 
 <!-- tmpl_if name='articles' -->
 <div class="row">
