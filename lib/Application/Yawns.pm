@@ -1456,14 +1456,6 @@ sub index
                       content   => $last_id,
                     );
 
-    #
-    #  Add in the tips
-    #
-    my $weblogs     = Yawns::Weblogs->new();
-    my $recent_tips = $weblogs->getTipEntries();
-    $template->param( recent_tips => $recent_tips ) if ($recent_tips);
-
-
     # generate the output
     return ( $template->output() );
 }

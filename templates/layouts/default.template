@@ -209,23 +209,6 @@
                 <!-- /tmpl_unless -->
               </div>
               <!-- /tmpl_if -->
-
-
-              <!-- tmpl_if name='recent_tips' -->
-              <p>&nbsp;</p>
-              <div id="tipbox">
-                <h3>Recent Tips</h3>
-                <div class="weblogs">
-                  <!-- tmpl_loop name="recent_tips" -->
-                  <div class="body">
-	            <div class="title"><a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a></div>
-                    <div class="tagline">by <a href="/users/<!-- tmpl_var name='poster' -->"><!-- tmpl_var name='poster' --></a></div>
-	            <div class="comments"> <!-- tmpl_if name="comments" --> <a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->#comments"><!-- tmpl_var name='comments' --> comment<!-- tmpl_if name='plural' -->s<!-- /tmpl_if --></a><!-- /tmpl_if --></div>
-                  </div>
-                  <!-- /tmpl_loop -->
-                </div>
-              </div>
-              <!-- /tmpl_if name='recent_tips' -->
             </div>
           </div>
           <div id="footer">
