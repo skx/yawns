@@ -412,7 +412,6 @@ sub load_layout
     #  Default to showing blogs and polls
     #
     my $show_polls = 1;
-    my $show_blogs = 1;
 
     #
     # Administative display
@@ -442,7 +441,6 @@ sub load_layout
         my $user = Yawns::User->new( username => $username );
         my $userprefs = $user->get();
         $show_polls = $userprefs->{ 'polls' };
-        $show_blogs = $userprefs->{ 'blogs' };
 
         # Are we showing admin-stuff?
         my $perms = Yawns::Permissions->new( username => $username );
@@ -526,24 +524,6 @@ sub load_layout
         }
 
     }
-
-
-    #
-    # Fetch the blog data, only if it is supposed to be displayed.
-    #
-    if ($show_blogs)
-    {
-        my $weblogs        = Yawns::Weblogs->new();
-        my $recent_weblogs = $weblogs->getRecent();
-
-        if ($recent_weblogs)
-        {
-            $l->param( recent_weblogs => $recent_weblogs,
-                       show_blogs     => 1, );
-        }
-
-    }
-
 
     #
     #  Show the submissions header?

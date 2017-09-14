@@ -167,26 +167,6 @@
 
             </div>
             <div class="col-md-2">
-              <!-- tmpl_if name='show_blogs' -->
-              <p>&nbsp;</p>
-              <div id="blogs">
-                <h3>Recent Weblogs</h3>
-                <!-- tmpl_unless name='recent_weblogs' -->
-                <p>No weblogs posted yet.</p>
-                <!-- tmpl_else -->
-                <div class="weblogs">
-                  <!-- tmpl_loop name="recent_weblogs" -->
-                  <div class="body">
-	            <div class="title"><a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->"><!-- tmpl_var name='title' --></a></div>
-	            <div class="tagline">by <a href="/users/<!-- tmpl_var name='poster' -->"><!-- tmpl_var name='poster' --></a></div>
-	            <div class="comments"> <!-- tmpl_if name="comments" --> <a href="/users/<!-- tmpl_var name='poster' -->/weblog/<!-- tmpl_var name='id' -->#comments"><!-- tmpl_var name='comments' --> comment<!-- tmpl_if name='plural' -->s<!-- /tmpl_if --></a><!-- /tmpl_if --></div>
-                  </div>
-                  <!-- /tmpl_loop -->
-                </div>
-              </div>
-
-              <!-- /tmpl_unless -->
-              <!-- /tmpl_if -->
               <p>&nbsp;</p>
               <!-- tmpl_if  name="show_adverts" -->
               <div class="advert">
