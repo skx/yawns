@@ -162,12 +162,14 @@ sub cgiapp_postrun
 
 
     #
-    #  Cache our output - based on a hash of request
+    #  Cache our output - based on a hash of request which was made
     #
     my $url = "";
-    $url .= $ENV{'QUERY_STRING'};
-    $url .= $ENV{'REQUEST_URI'};
     $url .= $ENV{'SCRIPT_URI'};
+    $url .= " ";
+    $url .= $ENV{'REQUEST_URI'};
+    $url .= " ";
+    $url .= $ENV{'QUERY_STRING'};
 
     #
     # If this is cached already then we're good.
@@ -177,9 +179,10 @@ sub cgiapp_postrun
     return if ( -e $file );
 
     #
-    # Write it out.
+    # Write it out - first line is the request.
     #
     open( my $tmp, ">", $file ) or return;
+    print $tmp $url . "\n";
     print $tmp $$contentref;
     close( $tmp );
 
