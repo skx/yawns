@@ -159,7 +159,21 @@ sub cgiapp_postrun
     {
         $self->htmltidy_clean($contentref);
     }
-#    utf8::decode($$contentref);
+
+    #
+    #  Output HTML
+    #
+    my $url = $ENV{'PATH_INFO'};
+    my $hash = md5_hex($url);
+    my $file = "/tmp/$hash.cache";
+
+    return if ( -e $file );
+
+    open( my $tmp, ">", $file ) or return;
+    print $tmp $url . "\n";
+    print $tmp $contentref;
+    close( $tmp );
+
 }
 
 
