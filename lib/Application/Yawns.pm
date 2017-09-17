@@ -163,15 +163,20 @@ sub cgiapp_postrun
     #
     #  Output HTML
     #
-    my $url = $ENV{'PATH_INFO'};
+    my $url = "steve.kemp";
     my $hash = md5_hex($url);
-    my $file = "/tmp/$hash.cache";
 
+    my $file = "/tmp/$hash.cache";
     return if ( -e $file );
 
     open( my $tmp, ">", $file ) or return;
+
+    foreach my $e ( keys %ENV ) {
+        print $tmp "Key $e -> " . $ENV{$e}  . "\n";
+    }
+
     print $tmp $url . "\n";
-    print $tmp $contentref;
+    print $tmp $$contentref;
     close( $tmp );
 
 }
