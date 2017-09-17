@@ -160,22 +160,26 @@ sub cgiapp_postrun
         $self->htmltidy_clean($contentref);
     }
 
-    #
-    #  Output HTML
-    #
-    my $url = "steve.kemp";
-    my $hash = md5_hex($url);
 
+    #
+    #  Cache our output - based on a hash of request
+    #
+    my $url = "";
+    $url .= $ENV{'QUERY_STRING'};
+    $url .= $ENV{'REQUEST_URI'};
+    $url .= $ENV{'SCRIPT_URI'};
+
+    #
+    # If this is cached already then we're good.
+    #
+    my $hash = md5_hex($url);
     my $file = "/tmp/$hash.cache";
     return if ( -e $file );
 
+    #
+    # Write it out.
+    #
     open( my $tmp, ">", $file ) or return;
-
-    foreach my $e ( keys %ENV ) {
-        print $tmp "Key $e -> " . $ENV{$e}  . "\n";
-    }
-
-    print $tmp $url . "\n";
     print $tmp $$contentref;
     close( $tmp );
 
