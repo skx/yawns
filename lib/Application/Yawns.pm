@@ -58,7 +58,6 @@ use Singleton::Redis;
 use Yawns::About;
 use Yawns::Articles;
 use Yawns::Comment;
-use Yawns::Event;
 use Yawns::Formatters;
 use Yawns::Permissions;
 use Yawns::Poll;
@@ -618,33 +617,6 @@ sub load_layout
 }
 
 
-=begin doc
-
-Send an alert message
-
-=end doc
-
-=cut
-
-sub send_alert
-{
-    my ( $self, $text ) = (@_);
-
-    #
-    #  Abort if we're disabled, or have empty text.
-    #
-    my $enabled = conf::SiteConfig::get_conf('event_endpoint') || "";
-    return unless ( $enabled && length($enabled) );
-    return unless ( $text    && length($text) );
-
-    #
-    #  Send it.
-    #
-    my $event = Yawns::Event->new();
-    $event->send($text);
-}
-
-
 # ===========================================================================
 # CSRF protection.
 # ===========================================================================
@@ -670,7 +642,6 @@ sub validateSession
 
     if ( ( !defined($got) ) || ( $got ne $wanted ) )
     {
-        $self->send_alert("Form validation failed");
         return 1;
     }
 
@@ -842,22 +813,10 @@ sub application_login
 
         if ($suspended)
         {
-
-            # Record the suspended login.
-            $self->send_alert(
-                "Login from suspended user <a href=\"$link\">$logged_in</a> at "
-                  . $remote_ip );
-
             # ban.
             my $redis = Singleton::Redis->instance();
             $redis->set( "IP:" . $remote_ip, "1" );
 
-        }
-        else
-        {
-            $self->send_alert(
-                 "Successful login for <a href=\"$link\">$logged_in</a> from " .
-                   $remote_ip );
         }
 
         #
@@ -904,9 +863,6 @@ sub application_login
     else
     {
 
-        $lname = "_unknown_" if ( !defined($lname) );
-        $self->send_alert( "Failed login for $lname from " . $remote_ip );
-
         #
         # Login failed:  Invalid username or wrong password.
         #
@@ -931,10 +887,6 @@ sub application_logout
     my $ret = $self->validateSession();
     return ( $self->permission_denied( invalid_session => 1 ) ) if ($ret);
 
-
-    my $remote_ip = $self->remote_ip();
-    my $user = $session->param("logged_in") || "Anonymous";
-    $self->send_alert( "Successful logout for $user from " . $remote_ip );
 
     #
     #  Clear the session
@@ -6223,10 +6175,6 @@ sub new_user
 
             if ($prev_banned)
             {
-                $self->send_alert(
-                              "Denied registration for '$new_user_name' from " .
-                                $remote_ip );
-
                 # Blacklist
                 my $redis = Singleton::Redis->instance();
                 $redis->set( "IP:" . $self->remote_ip(), "1" );
@@ -6234,9 +6182,6 @@ sub new_user
             }
             if ($prev_email)
             {
-                $self->send_alert( "Denied registration for in-use email " .
-                                   $new_user_email . " " . $remote_ip );
-
                 # Blacklist
                 my $redis = Singleton::Redis->instance();
                 $redis->set( "IP:" . $self->remote_ip(), "1" );
@@ -6261,10 +6206,6 @@ sub new_user
                     else
                     {
                         $bad_ip = 1;
-
-                        $self->send_alert(
-                            "Denied registration - blogspam.net listing of IP $remote_ip <pre>$content</pre>"
-                        );
 
                         # Blacklist
                         my $redis = Singleton::Redis->instance();
@@ -6320,8 +6261,6 @@ sub new_user
                 {
                     $bad_cap = 1;
 
-                    $self->send_alert("Failed to fetch '$c_url'");
-
                 }
                 else
                 {
@@ -6334,10 +6273,6 @@ sub new_user
                     else
                     {
                         $bad_cap += 1;
-
-                        $self->send_alert(
-                              "Denied access via recaptcha: '$content' from IP "
-                                . $self->remote_ip() );
 
                         # Blacklist
                         my $redis = Singleton::Redis->instance();
@@ -6387,10 +6322,6 @@ sub new_user
                                         send_mail => 1
                                       );
                     $user->create();
-
-                    $self->send_alert(
-                        "New user, <a href=\"http://www.debian-administration.org/users/$new_user_name\">$new_user_name</a>, created from IP $remote_ip."
-                    );
 
                     $new_user_sent = 1;
                 }
