@@ -55,7 +55,6 @@ use warnings;
 use Getopt::Long;
 use Pod::Usage;
 
-use Yawns::Event;
 use Yawns::RSS;
 
 
@@ -121,9 +120,6 @@ foreach my $key (qw! articles headlines !)
         # get our hostname
         my $host = `hostname`;
         chomp($host);
-
-        my $event = Yawns::Event->new();
-        $event->send("RSS Feeds replaced on $host");
 
         # avoid multiple alerts.
         $alerted += 1;
