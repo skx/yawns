@@ -132,33 +132,6 @@
               </ul>
               <!-- /tmpl_if -->
 
-	      <!-- tmpl_if name='show_pollbooth' -->
-	      <p>&nbsp;</p>
-	      <div id="poll" style="margin-left:15px;">
-		<!-- tmpl_if name="poll_error" -->
-		<!-- tmpl_if name="pending_poll_count" -->
-		<h3>No Poll</h3>
-		<p>Please <a href="/submissions/polls">publish a queued poll</a>.</p>
-		<!-- tmpl_else -->
-		<h3>No Poll</h3>
-		<p>Please <a href="/create/poll">create a new poll</a>.</p>
-		<!-- /tmpl_if -->
-		<!-- tmpl_else -->
-		<h3><b><!-- tmpl_var name="poll_question" --></b></h3>
-		<form method="post" action="/polls/<!-- tmpl_var name="poll_id" -->">
-                  <input type="hidden" name="poll_id" value="<!-- tmpl_var name="poll_id" -->" />
-		  <!-- tmpl_loop name="poll_answers" -->
-		  <label><input type="radio" name="pollanswer" value="<!-- tmpl_var name="id" -->" /><!-- tmpl_var name="response" --></label><br />
-		  <!-- /tmpl_loop -->
-		  <input type="hidden" name="mode" value="poll_vote" />
-		  <input type="hidden" name="id" value="<!-- tmpl_var name='poll_id' -->" />
-		  <input type="submit"  value="Vote" /><br />
-		  <p class="votescast"><a href="/polls/<!-- tmpl_var name='poll_id' -->"><!-- tmpl_var name='poll_total_votes'> votes ~ <!-- tmpl_var name='poll_comment_count'> comments</a></p>
-											      </form>
-                <!-- /tmpl_if -->
-              </div>
-              <!-- /tmpl_if -->
-
             </div>
 	    <div class="col-md-8">
               <!-- tmpl_if name='ok_flash' --> <div class="alert alert-success"><!-- tmpl_var name='ok_flash' --></div><!-- /tmpl_if -->
