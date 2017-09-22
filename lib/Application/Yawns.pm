@@ -433,21 +433,6 @@ sub load_layout
     #
     $l->param( ipv6 => 1 ) if ( $self->is_ipv6() );
 
-    #
-    #  Default to showing blogs and polls
-    #
-    my $show_polls = 1;
-
-    #
-    # Administative display
-    #
-    my $show_pending_adverts  = 0;
-    my $show_pending_articles = 0;
-    my $show_pending_polls    = 0;
-    my $show_recent_users     = 0;
-    my $show_static_edit      = 0;
-    my $show_edit_users       = 0;
-
 
     #
     #  Is the user logged in?
@@ -461,20 +446,6 @@ sub load_layout
 
         # Set the session so that logout works
         $l->param( session => md5_hex( $session->id() ) );
-
-        # per-user preferences might change the display
-        my $user = Yawns::User->new( username => $username );
-        my $userprefs = $user->get();
-        $show_polls = $userprefs->{ 'polls' };
-
-        # Are we showing admin-stuff?
-        my $perms = Yawns::Permissions->new( username => $username );
-        $show_pending_adverts  = $perms->check( priv => "advert_admin" );
-        $show_pending_articles = $perms->check( priv => "article_admin" );
-        $show_pending_polls    = $perms->check( priv => "poll_admin" );
-        $show_recent_users     = $perms->check( priv => "recent_users" );
-        $show_static_edit      = $perms->check( priv => "edit_about" );
-        $show_edit_users       = $perms->check( priv => "edit_user" );
     }
 
     #
@@ -482,55 +453,6 @@ sub load_layout
     #
     $l->param( site_title => get_conf('site_title') );
     $l->param( metadata   => get_conf('metadata') );
-
-    #
-    #  Show the submissions header?
-    #
-    my $show_pending_header = $show_pending_articles ||
-      $show_pending_polls;
-
-    if ($show_pending_header)
-    {
-        $l->param( show_pending_header => 1 );
-
-        #
-        #  Article + poll count.
-        #
-        my $submissions = Yawns::Submissions->new();
-
-        if ($show_pending_articles)
-        {
-            my $pending_article_count = $submissions->articleCount();
-            $l->param( pending_article_count      => $pending_article_count,
-                       show_pending_article_count => 1 );
-        }
-
-        if ($show_pending_polls)
-        {
-            my $pending_poll_count = $submissions->pollCount();
-            $l->param( pending_poll_count      => $pending_poll_count,
-                       show_pending_poll_count => 1 );
-        }
-    }
-
-    #
-    #  Should we show more site-admin stuff?
-    #
-    if ($show_recent_users)
-    {
-        $l->param( show_recent_users => 1,
-                   show_misc_header  => 1 );
-    }
-    if ($show_static_edit)
-    {
-        $l->param( "show_static_edit" => 1,
-                   show_misc_header   => 1 );
-    }
-    if ($show_edit_users)
-    {
-        $l->param( "show_edit_users" => 1,
-                   show_misc_header  => 1 );
-    }
 
     #
     # Are there any flashes?
