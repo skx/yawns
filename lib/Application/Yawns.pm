@@ -1435,32 +1435,6 @@ sub article
         $article->{ 'article_body' } =~ s/&amp;gt;/&gt;/g;
     }
 
-
-    #
-    # Article author can see article read count, and have
-    # a link to edit the article.
-    #
-    my $article_author = undef;
-    my $author         = $article->{ 'article_byuser' };
-
-    if ( defined($username) &&
-         ( !( $username =~ /anonymous/i ) ) &&
-         defined($author) &&
-         ( lc($username) eq lc($author) ) )
-    {
-        $article_author = 1;
-    }
-
-    #
-    #  Show the admin linke?
-    #
-    my $show_admin_links = 0;
-    if ($logged_in)
-    {
-        my $perms = Yawns::Permissions->new( username => $username );
-        $show_admin_links = 1 if ( $perms->check( priv => "article_admin" ) );
-    }
-
     #
     #  Tag addition URL
     #
@@ -1475,7 +1449,6 @@ sub article
         article_id    => $article_id,
         article_title => $article->{ 'article_title' },
 
-        #        slug           => $slug,
         title          => $article->{ 'article_title' },
         suspended      => $article->{ 'suspended' },
         article_byuser => $article->{ 'article_byuser' },
@@ -1486,8 +1459,6 @@ sub article
         logged_in      => $logged_in,
         show_adverts   => $show_adverts,
         error          => $error,
-        article_author => $article_author,
-        article_admin  => $show_admin_links,
 
         # Navigation to previous article
         showprev        => $article->{ 'prev_show' },

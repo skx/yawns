@@ -80,60 +80,9 @@
 	<div class="container-fluid">
 
           <div class="row">
-	    <div class="col-md-2">
-
-
-	      <!-- tmpl_if name='show_pending_header' -->
-	      <h3 class="sideBarTitle">Submissions</h3>
-              <ul class="list-group">
-                <!-- /tmpl_if -->
-
-		<!-- tmpl_if name='show_pending_article_count' -->
-		<li class="list-group-item"><!-- tmpl_if name="pending_article_count" --><span class="badge"><!-- tmpl_var name='pending_article_count' --></span><!-- /tmpl_if --><a href="/submission/list">Articles</a></li>
-		<!-- /tmpl_if -->
-
-		<!-- tmpl_if name='show_pending_poll_count' -->
-		<li class="list-group-item"><!-- tmpl_if name="pending_poll_count" --><span class="badge"><!-- tmpl_var name='pending_poll_count' --></span><!-- /tmpl_if --><a href="/submissions/polls">Polls</a></li>
-		<!-- /tmpl_if -->
-
-		<!-- tmpl_if name='show_pending_header' -->
-              </ul>
-	      <!-- /tmpl_if -->
-
-	      <!-- tmpl_if name='show_misc_header' -->
-	      <h3 class="sideBarTitle">Administrivia</h3>
-              <div class="list-group">
-		<!-- /tmpl_if -->
-		<!-- tmpl_if name='show_recent_users' -->
-		<a class="list-group-item" href="/recent/users">Recent members</a>
-		<!-- /tmpl_if -->
-		<!-- tmpl_if name='show_static_edit' -->
-		<a class="list-group-item" href="/edit/about">Static pages</a>
-		<!-- /tmpl_if -->
-		<!-- tmpl_if name='show_edit_users' -->
-		<a class="list-group-item" href="/user/admin">User Administration</a>
-		<!-- /tmpl_if -->
-		<!-- tmpl_if name='show_misc_header' -->
-	      </div>
-	      <!-- /tmpl_if -->
-
-
-              <!-- tmpl_if name="article_admin" -->
-              <h3>Administrivia</h3>
-              <ul>
-                <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
-              </ul>
-              <!-- /tmpl_if -->
-
-              <!-- tmpl_if name='article_author' -->
-              <h3>Author Links</h3>
-              <ul>
-                <li><a href="/edit/article/<!-- tmpl_var name='article_id' -->">Edit Article</a></li>
-              </ul>
-              <!-- /tmpl_if -->
-
+	    <div class="col-md-1">
             </div>
-	    <div class="col-md-8">
+	    <div class="col-md-9">
               <!-- tmpl_if name='ok_flash' --> <div class="alert alert-success"><!-- tmpl_var name='ok_flash' --></div><!-- /tmpl_if -->
               <!-- tmpl_if name='error_flash' --> <div class="alert alert-danger"><!-- tmpl_var name='error_flash' --></div><!-- /tmpl_if -->
               <div class="alert alert-success">This site will <a href="https://debian-administration.org/article/730/This_site_is_going_to_go_read-only">turn read-only</a> at the end of September 2017.</div>
