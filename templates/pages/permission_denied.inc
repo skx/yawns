@@ -5,8 +5,17 @@
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='suspended' -->
-  <h1>Suspended</h1>
-  <p>You've been suspended.</p>
+  <div class="container-fluid">
+    <h1>Suspended</h1>
+    <div class="row">
+      <div class="col-sm-1 col-md-1"></div>
+      <div class="col-sm-11 col-md-11">
+        <p>&nbsp;</p>
+        <p>You've been suspended.</p>
+        <p>&nbsp;</p>
+      </div>
+    </div>
+  </div>
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='invalid_session' -->
@@ -72,33 +81,73 @@
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='too_fast' -->
-<h1>Slow Down</h1>
-<p>It has been less than a minute (60 seconds) since your last comment was successfully posted.  Please wait a while before attempting to post a new comment.</p>
+  <h1>Slow Down</h1>
+  <p>It has been less than a minute (60 seconds) since your last comment was successfully posted.  Please wait a while before attempting to post a new comment.</p>
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='already_logged_in' -->
-  <h1>Already Logged In!</h1>
-  <p>You're attempting to conduct an operation that shouldn't be conducted by a logged in user.</p>
+
+  <div class="container-fluid">
+    <h1>Already Logged In!</h1>
+    <div class="row">
+      <div class="col-sm-1 col-md-1"></div>
+      <div class="col-sm-11 col-md-11">
+        <p>&nbsp;</p>
+        <p>You're attempting to conduct an operation that shouldn't be conducted by a logged in user.</p>
+        <p>&nbsp;</p>
+      </div>
+    </div>
+  </div>
+
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='load_too_high' -->
-  <h1>Server On Fire!</h1>
-  <p>The load upon this server is currently too high to service your request, so it has been denied in the interests of security.</p>
-  <p>Please retry your request again later.</p>
-
+  <div class="container-fluid">
+    <h1>Server On Fire!</h1>
+    <div class="row">
+      <div class="col-sm-1 col-md-1"></div>
+      <div class="col-sm-11 col-md-11">
+        <p>&nbsp;</p>
+        <p>The load upon this server is currently too high to service your request, so it has been denied in the interests of security.</p>
+        <p>Please retry your request again later.</p>
+        <p>&nbsp;</p>
+      </div>
+    </div>
+  </div>
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='admin_only' -->
-  <h1>Restricted Operation:  Denied</h1>
-  <p>The operation you attempted to complete is restricted to site administrators only.</p>
-  <p>If you are already a site administrator, and you don't believe you should be seeing this message, then please contact <a href="/users/Steve">Steve</a>.</p>
+
+  <div class="container-fluid">
+    <h1>Restricted Operation:  Denied</h1>
+    <div class="row">
+      <div class="col-sm-1 col-md-1"></div>
+      <div class="col-sm-11 col-md-11">
+        <p>&nbsp;</p>
+        <p>The operation you attempted to complete is restricted to site administrators only.</p>
+        <p>If you are already a site administrator, and you don't believe you should be seeing this message, then please contact <a href="/users/Steve">Steve</a>.</p>
+        <p>&nbsp;</p>
+      </div>
+    </div>
+  </div>
+
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='login_required' -->
-  <h1>You Must Login</h1>
-  <p>This section is restricted to registered users of the site who are logged in.</p>
-  <p>Please login using the menu to the right of this page, and attempt this operation again.</p>
-  <p>If you do not already have an account on this site you can <a href="/create/user">create one here</a>.</p>
+
+  <div class="container-fluid">
+    <h1>You Must Login</h1>
+    <div class="row">
+      <div class="col-sm-1 col-md-1"></div>
+      <div class="col-sm-11 col-md-11">
+        <p>&nbsp;</p>
+        <p>This section is restricted to registered users of the site who are logged in.</p>
+        <p>Please login, and try again.  If logins are now disabled you're out of luck.</p>
+        <p>&nbsp;</p>
+      </div>
+    </div>
+  </div>
+
   <!-- /tmpl_if -->
 
   <!-- tmpl_if name='article_too_old' -->
@@ -159,12 +208,18 @@
 
 <!-- tmpl_else -->
 
- <h1>Access Denied</h1>
- <p>You do not have permission to complete the operation you attempted.</p>
-
-
-  <p>The action you conducted has not got a specific error message associated with it.</p>
-  <p>If you don't understand why you are seeing this page please contact the webmaster with an explaination of what you were doing prior to being shown this page.</p>
+  <div class="container-fluid">
+    <h1>Access Denied</h1>
+    <div class="row">
+      <div class="col-sm-1 col-md-1"></div>
+      <div class="col-sm-11 col-md-11">
+        <p>&nbsp;</p>
+        <p>You do not have permission to complete the operation you attempted.</p>
+        <p>The action you conducted has not got a specific error message associated with it.</p>
+        <p>If you don't understand why you are seeing this page please contact the webmaster with an explaination of what you were doing prior to being shown this page.</p>
+        <p>&nbsp;</p>
+      </div>
+    </div>
+  </div>
 
 <!-- /tmpl_if -->
-
