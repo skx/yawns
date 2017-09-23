@@ -7,22 +7,22 @@
 
 use Test::More qw( no_plan );
 
-BEGIN{ use_ok( 'Application::Ajax' ); }
-require_ok( 'Application::Ajax' );
 BEGIN{ use_ok( 'Application::Feeds' ); }
 require_ok( 'Application::Feeds' );
 BEGIN{ use_ok( 'Application::Yawns' ); }
 require_ok( 'Application::Yawns' );
 BEGIN{ use_ok( 'base' ); }
 require_ok( 'base' );
-BEGIN{ use_ok( 'Cache::Memcached' ); }
-require_ok( 'Cache::Memcached' );
+BEGIN{ use_ok( 'Carp' ); }
+require_ok( 'Carp' );
+BEGIN{ use_ok( 'CGI::Application' ); }
+require_ok( 'CGI::Application' );
+BEGIN{ use_ok( 'CGI::Application::Plugin::HtmlTidy' ); }
+require_ok( 'CGI::Application::Plugin::HtmlTidy' );
 BEGIN{ use_ok( 'CGI::Application::Plugin::RemoteIP' ); }
 require_ok( 'CGI::Application::Plugin::RemoteIP' );
 BEGIN{ use_ok( 'CGI::Fast' ); }
 require_ok( 'CGI::Fast' );
-BEGIN{ use_ok( 'CGI::Session' ); }
-require_ok( 'CGI::Session' );
 BEGIN{ use_ok( 'conf::SiteConfig' ); }
 require_ok( 'conf::SiteConfig' );
 BEGIN{ use_ok( 'constant' ); }
@@ -57,14 +57,14 @@ BEGIN{ use_ok( 'HTML::Parser' ); }
 require_ok( 'HTML::Parser' );
 BEGIN{ use_ok( 'HTML::Template' ); }
 require_ok( 'HTML::Template' );
+BEGIN{ use_ok( 'HTML::Tidy' ); }
+require_ok( 'HTML::Tidy' );
 BEGIN{ use_ok( 'HTML::TokeParser' ); }
 require_ok( 'HTML::TokeParser' );
 BEGIN{ use_ok( 'HTML::TreeBuilder' ); }
 require_ok( 'HTML::TreeBuilder' );
 BEGIN{ use_ok( 'IO::File' ); }
 require_ok( 'IO::File' );
-BEGIN{ use_ok( 'IO::Socket' ); }
-require_ok( 'IO::Socket' );
 BEGIN{ use_ok( 'JSON' ); }
 require_ok( 'JSON' );
 BEGIN{ use_ok( 'Lucy::Simple' ); }
@@ -99,8 +99,6 @@ BEGIN{ use_ok( 'Text::Diff' ); }
 require_ok( 'Text::Diff' );
 BEGIN{ use_ok( 'Text::Markdown' ); }
 require_ok( 'Text::Markdown' );
-BEGIN{ use_ok( 'Text::Textile' ); }
-require_ok( 'Text::Textile' );
 BEGIN{ use_ok( 'URI' ); }
 require_ok( 'URI' );
 BEGIN{ use_ok( 'URI::Find' ); }
@@ -115,8 +113,6 @@ BEGIN{ use_ok( 'Yawns::Article' ); }
 require_ok( 'Yawns::Article' );
 BEGIN{ use_ok( 'Yawns::Articles' ); }
 require_ok( 'Yawns::Articles' );
-BEGIN{ use_ok( 'Yawns::Bookmarks' ); }
-require_ok( 'Yawns::Bookmarks' );
 BEGIN{ use_ok( 'Yawns::Comment' ); }
 require_ok( 'Yawns::Comment' );
 BEGIN{ use_ok( 'Yawns::Comment::Notifier' ); }
@@ -125,18 +121,10 @@ BEGIN{ use_ok( 'Yawns::Comments' ); }
 require_ok( 'Yawns::Comments' );
 BEGIN{ use_ok( 'Yawns::Date' ); }
 require_ok( 'Yawns::Date' );
-BEGIN{ use_ok( 'Yawns::Event' ); }
-require_ok( 'Yawns::Event' );
 BEGIN{ use_ok( 'Yawns::Formatters' ); }
 require_ok( 'Yawns::Formatters' );
-BEGIN{ use_ok( 'Yawns::Formatters::HTML' ); }
-require_ok( 'Yawns::Formatters::HTML' );
 BEGIN{ use_ok( 'Yawns::Formatters::Markdown' ); }
 require_ok( 'Yawns::Formatters::Markdown' );
-BEGIN{ use_ok( 'Yawns::Formatters::Text' ); }
-require_ok( 'Yawns::Formatters::Text' );
-BEGIN{ use_ok( 'Yawns::Formatters::Textile' ); }
-require_ok( 'Yawns::Formatters::Textile' );
 BEGIN{ use_ok( 'Yawns::Mailer' ); }
 require_ok( 'Yawns::Mailer' );
 BEGIN{ use_ok( 'Yawns::Permissions' ); }
@@ -149,8 +137,6 @@ BEGIN{ use_ok( 'Yawns::Preferences' ); }
 require_ok( 'Yawns::Preferences' );
 BEGIN{ use_ok( 'Yawns::RSS' ); }
 require_ok( 'Yawns::RSS' );
-BEGIN{ use_ok( 'Yawns::Scratchpad' ); }
-require_ok( 'Yawns::Scratchpad' );
 BEGIN{ use_ok( 'Yawns::Stats' ); }
 require_ok( 'Yawns::Stats' );
 BEGIN{ use_ok( 'Yawns::Submissions' ); }
