@@ -100,15 +100,6 @@ sub commentCount
     my $id = $class->{ 'id' };
     die "No poll ID " if !defined($id);
 
-    my $r = conf::SiteConfig::get_conf('redis');
-    if ($r)
-    {
-        $r = Singleton::Redis->instance();
-        my $c = $r->get("poll.comments.$id");
-        return ($c) if ($c);
-    }
-
-
     #
     # Get the database handle.
     #
@@ -121,12 +112,6 @@ sub commentCount
            'SELECT COUNT(*) FROM comments WHERE score>0 AND root=? AND type=?');
     $query->execute( $id, 'p' );
     my $count = $query->fetchrow_array();
-
-    # Update the cache
-    if ($r)
-    {
-        $r->set( "poll.comments.$id", $count );
-    }
 
     return ($count);
 
@@ -194,14 +179,6 @@ sub vote
     #
     my $id = $class->{ id };
     die "No poll ID" if !defined($id);
-
-
-    my $r = conf::SiteConfig::get_conf('redis');
-    if ($r)
-    {
-        $r = Singleton::Redis->instance();
-        my $c = $r->del("poll.votes.$id");
-    }
 
     #
     #  Get the IP address and voting choice.
@@ -301,14 +278,6 @@ sub getTitle
     my $id = $class->{ id };
     die "No poll ID" if !defined($id);
 
-    my $r = conf::SiteConfig::get_conf('redis');
-    if ($r)
-    {
-        $r = Singleton::Redis->instance();
-        my $c = $r->get("poll.title.$id");
-        return ($c) if ($c);
-    }
-
     #
     #  Attempt to fetch from database.
     #
@@ -319,11 +288,6 @@ sub getTitle
     my @ret   = $sql->fetchrow_array();
     my $title = $ret[0];
     $sql->finish();
-
-    if ($r && $title)
-    {
-        $r->set( "poll.title.$id", $title );
-    }
 
     return ($title);
 }
@@ -346,14 +310,6 @@ sub getVoteCount
     my $id = $class->{ id };
     die "No poll ID" if !defined($id);
 
-    my $r = conf::SiteConfig::get_conf('redis');
-    if ($r)
-    {
-        $r = Singleton::Redis->instance();
-        my $c = $r->get("poll.votes.$id");
-        return ($c) if ($c);
-    }
-
     #
     #  Attempt to fetch from database.
     #
@@ -364,11 +320,6 @@ sub getVoteCount
     my @ret = $sql->fetchrow_array();
     my $count = $ret[0] || 0;
     $sql->finish();
-
-    if ($r)
-    {
-        $r->set( "poll.votes.$id", $count );
-    }
 
     return ($count);
 }
@@ -387,15 +338,6 @@ sub invalidateCache
 
     my $id = $class->{ 'id' };
     die "No poll ID " if !defined($id);
-
-    my $r = conf::SiteConfig::get_conf('redis');
-    if ($r)
-    {
-        $r = Singleton::Redis->instance();
-        $r->del("poll.comments.$id");
-        $r->del("poll.title.$id");
-        $r->del("poll.votes.$id");
-    }
 
 }
 

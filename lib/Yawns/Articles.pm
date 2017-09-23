@@ -62,7 +62,6 @@ use String::Approx 'amatch';
 #
 use Yawns::Date;
 use Singleton::DBI;
-use Singleton::Redis;
 
 
 
@@ -103,15 +102,6 @@ sub count
 {
     my ($class) = (@_);
 
-    my $r = conf::SiteConfig::get_conf('redis');
-    my $redis;
-    if ($r)
-    {
-        $redis = Singleton::Redis->instance();
-        my $c = $redis->get("article.count");
-        return ($c) if ( $c > 0 );
-    }
-
     my $count = 0;
 
     #
@@ -128,13 +118,6 @@ sub count
     my @ret = $sql->fetchrow_array();
     $count = $ret[0];
     $sql->finish();
-
-    # Store in cache
-    if ($redis)
-    {
-        $redis->set( "article.count", $count );
-    }
-
 
     return ($count);
 }

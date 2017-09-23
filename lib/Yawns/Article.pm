@@ -96,20 +96,6 @@ sub get
     #
     my $id = $class->{ id };
 
-    my $r = conf::SiteConfig::get_conf('redis');
-    my $redis;
-
-    if ($r)
-    {
-        $redis = Singleton::Redis->instance();
-        my $d = $redis->get("article.$id");
-        if ($d)
-        {
-            my $o = decode_json($d);
-            return ($o);
-        }
-    }
-
     my $article;
 
     #
@@ -190,12 +176,6 @@ sub get
                         suspended      => $thisarticle[10],
                       );
 
-    if ($redis)
-    {
-        $redis->set( "article.$id",
-                 JSON->new->utf8->allow_nonref->encode( \%the_article ) );
-    }
-
     return ( \%the_article );
 }
 
@@ -241,16 +221,6 @@ sub edit
                   'author=?, leadtext=?, bodytext=?, words=? ' . 'WHERE id=?' );
 
     $sql2->execute( $title, $author, $leadtext, $body, $words, $id );
-
-    # Flush the cache
-    my $r = conf::SiteConfig::get_conf('redis');
-    my $redis;
-    if ($r)
-    {
-        $redis = Singleton::Redis->instance();
-        $redis->del("article.$id");
-        $redis->del("article.title.$id");
-    }
 
 }
 
@@ -319,14 +289,6 @@ sub create
     #
     $class->{ id } = $id;
 
-    # flush the cache
-    my $r = conf::SiteConfig::get_conf('redis');
-    if ($r)
-    {
-        my $redis = Singleton::Redis->instance();
-        $redis->del("article.count");
-    }
-
     return ($id);
 }
 
@@ -372,15 +334,6 @@ sub delete
     my $tags = Yawns::Tags->new();
     $tags->deleteTags( article => $id );
 
-    # Flush the cache
-    my $r = conf::SiteConfig::get_conf('redis');
-    if ($r)
-    {
-        my $redis = Singleton::Redis->instance();
-        $redis->del("article.$id");
-        $redis->del("article.title.$id");
-        $redis->del("article.count");
-    }
 }
 
 
@@ -400,15 +353,6 @@ sub getTitle
     #
     my $id = $class->{ id };
 
-    my $r = conf::SiteConfig::get_conf('redis');
-    my $redis;
-    if ($r)
-    {
-        $redis = Singleton::Redis->instance();
-        my $t = $redis->get("article.title.$id");
-        return ($t) if ($t);
-    }
-
     #
     #  Attempt to fetch from the cache
     #
@@ -425,10 +369,6 @@ sub getTitle
     $title = $ret[0];
     $sql->finish();
 
-    if (defined $redis && ( $title ) )
-    {
-        $redis->set( "article.title.$id", $title );
-    }
     return ($title);
 }
 

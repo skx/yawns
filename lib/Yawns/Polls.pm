@@ -144,14 +144,6 @@ sub add
         $count += 1;
     }
 
-    # Flush cache.
-    my $r = conf::SiteConfig::get_conf('redis');
-    if ($r)
-    {
-        $r = Singleton::Redis->instance();
-        $r->del("current.poll");
-    }
-
     #
     # Return the current poll.
     return ($id);
@@ -169,28 +161,12 @@ sub getCurrentPoll
 {
     my ($class) = (@_);
 
-    my $r = conf::SiteConfig::get_conf('redis');
-    if ($r)
-    {
-        $r = Singleton::Redis->instance();
-        my $c = $r->get("current.poll");
-        return ($c) if ( $c > 0 );
-    }
-
-    #
-    # Not in cache, so fetch from the database.
     my $db = Singleton::DBI->instance();
 
     # get the id of the most recent poll.
     my $query = $db->prepare('SELECT MAX(id) FROM poll_questions');
     $query->execute();
     my $poll = $query->fetchrow_array();
-
-    # Store in cache
-    if ($r)
-    {
-        $r->set( "current.poll", $poll );
-    }
 
     return ($poll);
 
