@@ -53,8 +53,6 @@ $(function() {
 <div class="share"></div>
 <p>&nbsp;</p>
 
-<!-- tmpl_if  name="show_adverts" -->
-
 <p></p>
 <div class="advert">
   <center>
@@ -69,9 +67,6 @@ $(function() {
 </script>
   </center>
 </div>
-<!-- tmpl_else -->
-<!-- Adverts Removed -->
-<!-- /tmpl_if -->
 
 <!-- tmpl_if name="comments" -->
 <hr />

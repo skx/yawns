@@ -88,7 +88,6 @@
             </div>
             <div class="col-md-2">
               <p>&nbsp;</p>
-              <!-- tmpl_if  name="show_adverts" -->
               <div class="advert">
                 <h3>Sponsored Links</h3>
                 <p></p>
@@ -105,7 +104,6 @@
                   </script>
                 </div>
               </div>
-              <!-- /tmpl_if -->
             </div>
           </div>
           <div id="footer">
