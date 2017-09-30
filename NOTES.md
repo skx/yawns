@@ -5,7 +5,6 @@ Notes
 Some parts of the deployment/code need a little explanation.
 
 
-
 Configuration File
 ------------------
 
