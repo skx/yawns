@@ -85,7 +85,7 @@
 	    <div class="col-md-9">
               <!-- tmpl_if name='ok_flash' --> <div class="alert alert-success"><!-- tmpl_var name='ok_flash' --></div><!-- /tmpl_if -->
               <!-- tmpl_if name='error_flash' --> <div class="alert alert-danger"><!-- tmpl_var name='error_flash' --></div><!-- /tmpl_if -->
-              <div class="alert alert-success">This site will <a href="https://debian-administration.org/article/730/This_site_is_going_to_go_read-only">turn read-only</a> at the end of September 2017.</div>
+              <div class="alert alert-warning">This site is now <a href="https://debian-administration.org/article/730/This_site_is_going_to_go_read-only">read-only</a>, and retired.</div>
 
               <!-- tmpl_include name='###' -->
 
