@@ -176,11 +176,16 @@ sub serve_cache {
 
     my $file = $self->{'cached_content'};
     my $text = "";
+    my $first = "";
 
     open( my $f, "<", "$file" );
     while( my $line = <$f> )
     {
-        $text .= $line;
+        if ( length( $first) > 0 ) {
+            $text .= $line;
+        } else {
+            $first = $line;
+        }
     }
 
     $text .= "CACHED!";
