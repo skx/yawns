@@ -999,30 +999,6 @@ sub article
     }
 
 
-    #
-    # See if the user has altruisticly decided to show adverts
-    #
-    my $show_adverts = 1;
-
-    #
-    #  Anonymous users always get adverts.
-    #
-    if ( $username =~ /^anonymous$/i )
-    {
-        $show_adverts = 1;
-    }
-    else
-    {
-
-        #
-        #  Other users do not, unless they have set such an option
-        # manually.
-        #
-        my $user = Yawns::User->new( username => $username );
-        my $user_data = $user->get();
-        $show_adverts = $user_data->{ 'viewadverts' };
-    }
-
     my $template = $self->load_layout( "view_article.inc",
                                        loop_context_vars => 1,
                                        global_vars       => 1,
@@ -1086,7 +1062,6 @@ sub article
         article_body   => $article->{ 'article_body' },
         comments       => $article->{ 'comments' },
         logged_in      => $logged_in,
-        show_adverts   => $show_adverts,
         error          => $error,
 
         # Navigation to previous article
@@ -1300,25 +1275,6 @@ sub single_weblog
         $error = 1;
     }
 
-    #
-    #  Per-article adverts?
-    #
-    my $show_adverts = 1;
-    if ( $username =~ /^anonymous$/i )
-    {
-        $show_adverts = 1;
-    }
-    else
-    {
-
-        #
-        #  Other users do not, unless they have set such an option
-        # manually.
-        #
-        my $user = Yawns::User->new( username => $username );
-        my $user_data = $user->get();
-        $show_adverts = $user_data->{ 'viewadverts' };
-    }
 
 
     #
