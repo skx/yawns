@@ -76,27 +76,27 @@ sub cgiapp_prerun
 {
     my $self = shift;
 
+
     #
-    #  If we're tracing DBI
+    #  Cache our output - based on a hash of request which was made
     #
-    my $log = conf::SiteConfig::get_conf( "dbi_log" );
-    if ( defined( $log ) && ( $log == 1 ) )
+    my $url = "";
+    $url .= $ENV{'SCRIPT_URI'};
+    $url .= " ";
+    $url .= $ENV{'REQUEST_URI'};
+    $url .= " ";
+    $url .= $ENV{'QUERY_STRING'};
+
+    #
+    # If this is cached already then we're good.
+    #
+    my $hash = md5_hex($url);
+    my $file = "/tmp/$hash.cache";
+
+    if ( -e $file )
     {
-
-        #
-        #  Count the number of requests since this process started.
-        #
-        my $count = $ENV['COUNT'];
-        $count = 0 if ( !defined $count );
-        $count += 1;
-        $ENV['COUNT'] = $count;
-
-        #
-        #  Write out a log.
-        #
-        my $file = "/tmp/dbi.$$.$count.log";
-        my $dbi = Singleton::DBI->instance();
-        $dbi->trace( "2|SQL", $file );
+        $self->{'cached_content'} = $file;
+        $self->prerun_mode('serve_cache');
     }
 
 
@@ -171,7 +171,21 @@ sub unknown_mode
 }
 
 
+sub serve_cache {
+    my( $self ) = ( @_ );
 
+    my $file = $self->{'cached_content'};
+    my $text = "";
+
+    open( my $f, "<", "$file" );
+    while( my $line = <$f> )
+    {
+        $text .= $line;
+    }
+
+    $text .= "CACHED!";
+    return( $text );
+}
 
 =begin doc
 
@@ -190,6 +204,7 @@ sub setup
 
         # Front-page
         'index' => 'index',
+        'serve_cache' => 'serve_cache',
 
         # Past artciles
         'archive' => 'archive',
