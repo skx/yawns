@@ -104,9 +104,6 @@
 	                  src="//pagead2.googlesyndication.com/pagead/show_ads.js">
                   </script>
                 </div>
-                <!-- tmpl_unless name="logged_in" -->
-                <p><a href="/about/FAQ%20:%20Site%20Adverts">Why are these adverts here?</a></p>
-                <!-- /tmpl_unless -->
               </div>
               <!-- /tmpl_if -->
             </div>

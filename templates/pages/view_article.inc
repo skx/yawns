@@ -68,10 +68,6 @@ $(function() {
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
   </center>
-
-  <!-- tmpl_unless name="logged_in" -->
-  <p  style="text-align: right;"><a href="/about/FAQ%20:%20Site%20Adverts">Why are these adverts here?</a></p>
-  <!-- /tmpl_unless -->
 </div>
 <!-- tmpl_else -->
 <!-- Adverts Removed -->
