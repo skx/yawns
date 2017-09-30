@@ -46,17 +46,14 @@
 
  <!-- tmpl_if name='is_poll' -->
   <!-- tmpl_if name='enabled'-->
-   | <a href="/comment/onpoll/<!-- tmpl_var name='poll'>/<!-- tmpl_var name='comment_id' -->">Reply to this comment</a>
    <!-- /tmpl_if -->
  <!-- /tmpl_if -->
 
  <!-- tmpl_if name="article_id" -->
-  | <a href="/comment/onarticle/<!-- tmpl_var name='article_id'>/<!-- tmpl_var name='comment_id' -->">Reply to this comment</a>
  <!-- /tmpl_if -->
 
  <!-- tmpl_if name="weblog_id" -->
   <!-- tmpl_if name='enabled'-->
-  | <a href="/comment/onweblog/<!-- tmpl_var name='weblog_id'>/<!-- tmpl_var name='comment_id' -->">Reply to this comment</a>
  <!-- /tmpl_if -->
  <!-- /tmpl_if -->
 

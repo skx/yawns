@@ -64,9 +64,6 @@
 
 
     <!-- tmpl_if name='enabled'-->
-    <p>
-      <a href="/comment/onpoll/<!-- tmpl_var name='poll' -->">Add Comment</a>
-    </p>
     <!-- /tmpl_if -->
 
     <p>&nbsp;</p>

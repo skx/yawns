@@ -34,15 +34,6 @@ $(function() {
   <!-- /tmpl_if -->
 
   <div class="navigation">
-    <div class="row">
-      <span class="left">
-	<a href="/comment/onarticle/<!-- tmpl_var name='article_id' -->">Add Comment</a>
-      <span class="right">
-      </span>
-      <div class="spacer"> </div>
-    </div>
-
-
     <p>&nbsp;</p>
 
     <nav>

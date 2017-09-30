@@ -46,7 +46,6 @@
 	<div class="links">
           [<!-- tmpl_if name="comment_count" --><a href="/users/<!-- tmpl_var name="user" -->/weblog/<!-- tmpl_var name="item_id" -->#comments"><!-- tmpl_var name="comment_count" --> Comment<!-- tmpl_if name="plural" -->s<!-- /tmpl_if --></a>  <!-- tmpl_else -->0 Comments <!-- /tmpl_if -->
 	  <!-- tmpl_if name="comments_enabled" -->
-          | <a href="/comment/onweblog/<!-- tmpl_var name="gid" -->">Add Comment</a>
           <!-- /tmpl_if -->
           ]
 	</div>
