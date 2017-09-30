@@ -41,7 +41,6 @@
         | <a href="/report/weblog/<!-- tmpl_var name='gid' -->/<!-- tmpl_var name='session' -->" onClick="return( confirm('Are you sure you wish to flag this weblog entry for review?') );" >Report Entry</a>
         <!-- /tmpl_if -->
 	<!-- tmpl_if name="comments_enabled" -->
-        | <a href="/comment/onweblog/<!-- tmpl_var name="gid" -->">Add Comment</a>
         <!-- /tmpl_if -->
         ]
 
