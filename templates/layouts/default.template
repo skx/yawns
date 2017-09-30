@@ -67,10 +67,6 @@
 		  <li><a href="/logout/<!-- tmpl_var name='session' -->"><i class="icon- glyphicon glyphicon-off">&nbsp;</i> Logout</a></li>
 		</ul>
 	      </li>
-
-
-	      <!-- tmpl_else -->
-	      <li><a href="/login"><span class="glyphicon glyphicon-log-in">&nbsp;</span> Login</a></li>
 	      <!-- /tmpl_if -->
 	    </ul>
 	  </div>
