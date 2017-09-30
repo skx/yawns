@@ -1,0 +1,181 @@
+#!/usr/bin/perl -w -I. # -*- cperl -*- #
+
+=head1 NAME
+
+conf::SiteConfig - Configuration file for Yawns.
+
+=cut
+
+# stuff to export get_conf function properly
+package conf::SiteConfig;
+require Exporter;
+@ISA    = qw ( Exporter );
+@EXPORT = qw ( get_conf );
+
+
+
+=head2 get_conf
+
+  Return the configuration value for the specified key
+
+  Note that each of the values are contained inline.
+
+=cut
+
+sub get_conf
+{
+
+    my $requested = $_[0];
+
+    $dbuser = 'yawns';     # database username
+    $dbpass = 'yawns';     # database user password
+    $dbname = 'yawns';     # database name
+    $dbserv = 'localhost'; # database host
+
+
+    $headlines     = 10;    # number of articles to display on the front page
+    $old_headlines = 10;    # number of headlines in previous articles sidebox
+    $rdf_headlines = 10;    # number of headlines to put in RDF file
+
+    #
+    #  Name of the site as shown in the page footers.
+    #
+    $sitename = 'Debian Administration';
+
+    #
+    #  Used in the title of pages.
+    #
+    $site_title  = 'Debian Administration';
+    $site_slogan = 'Debian GNU/Linux System Administration Resources';
+
+    #
+    #  Seperator for page title.
+    #
+    $separator = ' :: ';
+
+    #
+    #  Tag-line, displayed upon each page.
+    #
+    $site_desc = 'Tips for a Debian GNU/Linux System Administrator.';
+
+    #
+    #  Address to and from which mails are sent via comment notifications
+    # or new article submissions.  Also displayed at the foot of every
+    # page.
+    #
+    $site_email = 'webmaster@debian-administration.org';
+
+    #
+    # Mail of a non-human for automated mails.
+    #
+    $bounce_email = 'bounces@debian-administration.org';
+
+    #
+    # Submission sender mail
+    #
+    $submission_mail = 'submissions@debian-administration.org';
+
+
+    #
+    # We're moving to using dynamic addresses, so mail will be
+    # sent from:
+    #
+    #   user.steve@bounces.debian-administration.org
+    #
+    # etc.
+    #
+    # Setup that here.
+    #
+    $bounce_domain = 'user.USER@bounce.debian-administration.org';
+
+    #
+    # Link used in various output pages, and in the emails.
+    #
+    $home_url = 'https://debian-administration.org';
+
+    #
+    # Binary to use for sending email notifications.
+    #
+    $sendmail_path = '';
+
+    #
+    #  This is inserted into the top of each output page
+    #
+    $metadata = <<END_OF_META;
+<meta name="description" content="$site_desc" />
+<meta name="keywords"  content="Debian System Administration News, Debian Sysadmin, Linux Administration, Linux Sysadmin, Sysadmin" />
+<meta name="copyright" content="(c) 2004-2017 $sitename" />
+<meta name="author"  content="$sitename" />
+<meta name="robots" content="index,follow" />
+<meta name="resource-type" content="document" />
+<meta name="classification" content="Personal" />
+<meta name="language" content="en" />
+<link rel="icon" href="/favicon.ico"  />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="top"    title="home"    href="/"  />
+<link rel="stylesheet" type="text/css" href="/css/view.css" media="screen" title="Site Layout" />
+<link rel="search" title="Search" href="/about/search" />
+<link rel="alternate" title="Debian Administration RSS" href="/articles.rdf" type="application/rdf+xml" />
+<link rel="alternate" title="Atom" href="/atom.xml" type="application/atom+xml" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+END_OF_META
+
+
+    #
+    #  RPC Filtering
+    #
+    $blogspam_test = 1;
+    $blogspam_url  = "http://test.blogspam.net:9999/";
+    $blogspam_options =
+      "exclude=dnsrbl,exclude=sfs,exclude=wordcount,exclude=bayasian,exclude=rdns";
+
+    #
+    #  Stop-words.
+    #  Any of these mentioned in a comment will result in the post being
+    # aborted - and the IP being blacklisted.
+    #
+    $stop_words = '';
+
+    #
+    # Disable logging.
+    #
+    $dbi_log = 0;
+
+    #
+    # These are used for anti-spam purposes on the signup page
+    #
+    $rc_pubkey = "";
+    $rc_secret = "";
+
+    #
+    # Should we tidy HTML output?
+    #
+    $tidy_html = 1;
+
+
+    # return the requested config variable
+    return ($$requested);
+}
+
+
+1;
+
+
+=head1 AUTHOR
+
+Steve Kemp
+
+http://www.steve.org.uk/
+
+
+
+=head1 LICENSE
+
+Copyright (c) 2005-2014 by Steve Kemp.  All rights reserved.
+
+This module is free software;
+you can redistribute it and/or modify it under
+the same terms as Perl itself.
+The LICENSE file contains the full text of the license.
+
+=cut
