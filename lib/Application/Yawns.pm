@@ -188,7 +188,7 @@ sub serve_cache {
         }
     }
 
-    $text .= "CACHED!";
+    $text .= "<!-- $first -->";
     return( $text );
 }
 
