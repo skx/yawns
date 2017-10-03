@@ -87,6 +87,9 @@ sub cgiapp_prerun
     $url .= " ";
     $url .= $ENV{'QUERY_STRING'};
 
+    # We ignore non-Gets
+    $url .= " GET";
+
     #
     # If this is cached already then we're good.
     #
@@ -125,6 +128,8 @@ sub cgiapp_postrun
     $url .= $ENV{'REQUEST_URI'};
     $url .= " ";
     $url .= $ENV{'QUERY_STRING'};
+    $url .= " ";
+    $url .= $ENV{'REQUEST_METHOD'};
 
     #
     # If this is cached already then we're good.
