@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ <title>Debian GNU/Linux System Administration Resources</title>
+ <subtitle>Tips for a Debian GNU/Linux System Administrator.</subtitle>
+ <link href="https://debian-administration.org/" />
+ <link rel="self" href="https://debian-administration.org/atom.xml" />
+ <updated>2017-10-03T03:26:01Z</updated>
+ <author>
+   <name>Steve Kemp</name>
+   <uri>https://debian-administration.org/</uri>
+ </author>
+ <icon>https://debian-administration.org/favicon.ico</icon>
+ <id>https://debian-administration.org/</id>
+
+ 
+  <entry>
+   <id>https://debian-administration.org/article/730/This_site_is_going_to_go_read-only</id>
+   <title>This site is going to go read-only</title>
+   <link href="https://debian-administration.org/article/730/This_site_is_going_to_go_read-only" />
+   <updated>2017-09-10T07:02:05Z</updated>
+   <summary type="html">This site was born in late September 2004, and has now reached 13 years of age and that seems to be a fitting time to stop.</summary>
+   <author>
+    <name>Steve</name>
+    <uri>https://debian-administration.org/users/Steve</uri>
+   </author>
+
+ </entry>
+ 
+  <entry>
+   <id>https://debian-administration.org/article/729/Implementing_two_factor_authentication_with_perl</id>
+   <title>Implementing two factor authentication with perl</title>
+   <link href="https://debian-administration.org/article/729/Implementing_two_factor_authentication_with_perl" />
+   <updated>2017-07-12T17:23:09Z</updated>
+   <summary type="html">Two factor authentication is a system which is designed to improve security, by requiring a second factor, in addition to a username/password pair, to access a particular resource.  Here we&#39;ll look briefly at how you add two factor support to your applications with Perl.</summary>
+   <author>
+    <name>Steve</name>
+    <uri>https://debian-administration.org/users/Steve</uri>
+   </author>
+
+ </entry>
+ 
+  <entry>
+   <id>https://debian-administration.org/article/728/Debian_Stretch_Released</id>
+   <title>Debian Stretch Released</title>
+   <link href="https://debian-administration.org/article/728/Debian_Stretch_Released" />
+   <updated>2017-06-18T03:44:23Z</updated>
+   <summary type="html">Today the Debian project is pleased to announce the release of the next stable release of Debian GNU/Linux, code-named Stretch.</summary>
+   <author>
+    <name>Steve</name>
+    <uri>https://debian-administration.org/users/Steve</uri>
+   </author>
+
+ </entry>
+ 
+  <entry>
+   <id>https://debian-administration.org/article/727/Installing_the_Go_programming_language_on_Debian_GNU/Linux</id>
+   <title>Installing the Go programming language on Debian GNU/Linux</title>
+   <link href="https://debian-administration.org/article/727/Installing_the_Go_programming_language_on_Debian_GNU/Linux" />
+   <updated>2016-12-15T08:25:42Z</updated>
+   <summary type="html">Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.  In this brief article we&#39;ll show how to install binary releases of the compiler/toolset, and test them.</summary>
+   <author>
+    <name>Steve</name>
+    <uri>https://debian-administration.org/users/Steve</uri>
+   </author>
+
+ </entry>
+ 
+  <entry>
+   <id>https://debian-administration.org/article/726/Performing_IMAP_queries_via_curl</id>
+   <title>Performing IMAP queries via curl</title>
+   <link href="https://debian-administration.org/article/726/Performing_IMAP_queries_via_curl" />
+   <updated>2016-01-14T08:27:45Z</updated>
+   <summary type="html">Most people are familiar with curl, the tool that allows you to make HTTP-requests, and FTP-requests, via the command-line.  Recently it gained the ability to perform IMAP operations, and this brief article demonstrates how that is done.</summary>
+   <author>
+    <name>Steve</name>
+    <uri>https://debian-administration.org/users/Steve</uri>
+   </author>
+
+ </entry>
+ 
+  <entry>
+   <id>https://debian-administration.org/article/725/Simplifying_repetitive_Apache_configuration_with_mod_macro</id>
+   <title>Simplifying repetitive Apache configuration with mod_macro</title>
+   <link href="https://debian-administration.org/article/725/Simplifying_repetitive_Apache_configuration_with_mod_macro" />
+   <updated>2015-12-09T12:34:40Z</updated>
+   <summary type="html">Apache is one of the more flexible webservers, and most of this is achieved via the use of various extension modules bundled with it, or externally available.  &lt;tt&gt;mod_macro&lt;/tt&gt; is a great module allowing you to simplifying configuration of multiple virtual hosts enormously.</summary>
+   <author>
+    <name>Steve</name>
+    <uri>https://debian-administration.org/users/Steve</uri>
+   </author>
+
+ </entry>
+ 
+  <entry>
+   <id>https://debian-administration.org/article/724/Enabling_swap_on_debian_based_system</id>
+   <title>Enabling swap on debian based system</title>
+   <link href="https://debian-administration.org/article/724/Enabling_swap_on_debian_based_system" />
+   <updated>2015-12-08T18:01:55Z</updated>
+   <summary type="html">Recently I found myself without a swap partition (having installed another OS and reworked my disk-setup) so I wanted to share a quick guide to enable swap again.</summary>
+   <author>
+    <name>tuwid</name>
+    <uri>https://debian-administration.org/users/tuwid</uri>
+   </author>
+
+ </entry>
+ 
+  <entry>
+   <id>https://debian-administration.org/article/723/Offering_IPv4-only_services_over_IPv6</id>
+   <title>Offering IPv4-only services over IPv6</title>
+   <link href="https://debian-administration.org/article/723/Offering_IPv4-only_services_over_IPv6" />
+   <updated>2015-11-29T08:06:53Z</updated>
+   <summary type="html">Although IPv6 is clearly the way of the future there are some software services which only support IPv4 access.  Here we&#39;ll show a simple approach to exporting them to IPv6-based clients.</summary>
+   <author>
+    <name>Steve</name>
+    <uri>https://debian-administration.org/users/Steve</uri>
+   </author>
+
+ </entry>
+ 
+  <entry>
+   <id>https://debian-administration.org/article/722/Analysing_performance_problems_with_systemd</id>
+   <title>Analysing performance problems with systemd</title>
+   <link href="https://debian-administration.org/article/722/Analysing_performance_problems_with_systemd" />
+   <updated>2015-09-26T18:06:21Z</updated>
+   <summary type="html">Now that Systemd is the default init-system in fresh installations of Debian GNU/Linux it is worth highlighting some of the new features.</summary>
+   <author>
+    <name>Steve</name>
+    <uri>https://debian-administration.org/users/Steve</uri>
+   </author>
+
+ </entry>
+ 
+  <entry>
+   <id>https://debian-administration.org/article/721/Validating_SPF_and_DKIM_at_SMTP-time_with_exim</id>
+   <title>Validating SPF and DKIM at SMTP-time with exim</title>
+   <link href="https://debian-administration.org/article/721/Validating_SPF_and_DKIM_at_SMTP-time_with_exim" />
+   <updated>2015-08-04T07:58:50Z</updated>
+   <summary type="html">In our recent articles we&#39;ve discussed creating SPF-records to avoid spoofed mails, and the creation and setup for DKIM-signing emails, for a similar purpose.  Here we&#39;ll look at the other side of the coin; performing DKIM and SPF testing on your &lt;i&gt;incoming&lt;/i&gt; email.</summary>
+   <author>
+    <name>Steve</name>
+    <uri>https://debian-administration.org/users/Steve</uri>
+   </author>
+
+ </entry>
+ 
+
+</feed>

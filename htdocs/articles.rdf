@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"  xmlns="http://purl.org/rss/1.0/">
+ <channel rdf:about="https://debian-administration.org">
+ <title>Debian GNU/Linux System Administration Resources</title>
+ <link>https://debian-administration.org/</link>
+ <description>Tips for a Debian GNU/Linux System Administrator.</description>
+ <items>
+  <rdf:Seq>
+   
+     <rdf:li rdf:resource="https://debian-administration.org/article/730/This_site_is_going_to_go_read-only" />
+   
+     <rdf:li rdf:resource="https://debian-administration.org/article/729/Implementing_two_factor_authentication_with_perl" />
+   
+     <rdf:li rdf:resource="https://debian-administration.org/article/728/Debian_Stretch_Released" />
+   
+     <rdf:li rdf:resource="https://debian-administration.org/article/727/Installing_the_Go_programming_language_on_Debian_GNU/Linux" />
+   
+     <rdf:li rdf:resource="https://debian-administration.org/article/726/Performing_IMAP_queries_via_curl" />
+   
+     <rdf:li rdf:resource="https://debian-administration.org/article/725/Simplifying_repetitive_Apache_configuration_with_mod_macro" />
+   
+     <rdf:li rdf:resource="https://debian-administration.org/article/724/Enabling_swap_on_debian_based_system" />
+   
+     <rdf:li rdf:resource="https://debian-administration.org/article/723/Offering_IPv4-only_services_over_IPv6" />
+   
+     <rdf:li rdf:resource="https://debian-administration.org/article/722/Analysing_performance_problems_with_systemd" />
+   
+     <rdf:li rdf:resource="https://debian-administration.org/article/721/Validating_SPF_and_DKIM_at_SMTP-time_with_exim" />
+   
+  </rdf:Seq>
+ </items>
+ </channel>
+
+ <image rdf:about="https://debian-administration.org/favicon.ico">
+  <title>Debian GNU/Linux System Administration Resources</title>
+  <url>https://debian-administration.org/favicon.ico</url>
+  <link>https://debian-administration.org/</link>
+ </image>
+
+ 
+ <item rdf:about="https://debian-administration.org/article/730/This_site_is_going_to_go_read-only">
+  <title>This site is going to go read-only</title>
+  <pubDate>Sun, 10 Sep 2017 07:02:05 GMT</pubDate>
+  <link>https://debian-administration.org/article/730/This_site_is_going_to_go_read-only</link>
+  <description>This site was born in late September 2004, and has now reached 13 years of age and that seems to be a fitting time to stop.</description>
+ </item>
+ 
+ <item rdf:about="https://debian-administration.org/article/729/Implementing_two_factor_authentication_with_perl">
+  <title>Implementing two factor authentication with perl</title>
+  <pubDate>Wed, 12 Jul 2017 17:23:09 GMT</pubDate>
+  <link>https://debian-administration.org/article/729/Implementing_two_factor_authentication_with_perl</link>
+  <description>Two factor authentication is a system which is designed to improve security, by requiring a second factor, in addition to a username/password pair, to access a particular resource.  Here we&#39;ll look briefly at how you add two factor support to your applications with Perl.</description>
+ </item>
+ 
+ <item rdf:about="https://debian-administration.org/article/728/Debian_Stretch_Released">
+  <title>Debian Stretch Released</title>
+  <pubDate>Sun, 18 Jun 2017 03:44:23 GMT</pubDate>
+  <link>https://debian-administration.org/article/728/Debian_Stretch_Released</link>
+  <description>Today the Debian project is pleased to announce the release of the next stable release of Debian GNU/Linux, code-named Stretch.</description>
+ </item>
+ 
+ <item rdf:about="https://debian-administration.org/article/727/Installing_the_Go_programming_language_on_Debian_GNU/Linux">
+  <title>Installing the Go programming language on Debian GNU/Linux</title>
+  <pubDate>Thu, 15 Dec 2016 08:25:42 GMT</pubDate>
+  <link>https://debian-administration.org/article/727/Installing_the_Go_programming_language_on_Debian_GNU/Linux</link>
+  <description>Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.  In this brief article we&#39;ll show how to install binary releases of the compiler/toolset, and test them.</description>
+ </item>
+ 
+ <item rdf:about="https://debian-administration.org/article/726/Performing_IMAP_queries_via_curl">
+  <title>Performing IMAP queries via curl</title>
+  <pubDate>Thu, 14 Jan 2016 08:27:45 GMT</pubDate>
+  <link>https://debian-administration.org/article/726/Performing_IMAP_queries_via_curl</link>
+  <description>Most people are familiar with curl, the tool that allows you to make HTTP-requests, and FTP-requests, via the command-line.  Recently it gained the ability to perform IMAP operations, and this brief article demonstrates how that is done.</description>
+ </item>
+ 
+ <item rdf:about="https://debian-administration.org/article/725/Simplifying_repetitive_Apache_configuration_with_mod_macro">
+  <title>Simplifying repetitive Apache configuration with mod_macro</title>
+  <pubDate>Wed,  9 Dec 2015 12:34:40 GMT</pubDate>
+  <link>https://debian-administration.org/article/725/Simplifying_repetitive_Apache_configuration_with_mod_macro</link>
+  <description>Apache is one of the more flexible webservers, and most of this is achieved via the use of various extension modules bundled with it, or externally available.  &lt;tt&gt;mod_macro&lt;/tt&gt; is a great module allowing you to simplifying configuration of multiple virtual hosts enormously.</description>
+ </item>
+ 
+ <item rdf:about="https://debian-administration.org/article/724/Enabling_swap_on_debian_based_system">
+  <title>Enabling swap on debian based system</title>
+  <pubDate>Tue,  8 Dec 2015 18:01:55 GMT</pubDate>
+  <link>https://debian-administration.org/article/724/Enabling_swap_on_debian_based_system</link>
+  <description>Recently I found myself without a swap partition (having installed another OS and reworked my disk-setup) so I wanted to share a quick guide to enable swap again.</description>
+ </item>
+ 
+ <item rdf:about="https://debian-administration.org/article/723/Offering_IPv4-only_services_over_IPv6">
+  <title>Offering IPv4-only services over IPv6</title>
+  <pubDate>Sun, 29 Nov 2015 08:06:53 GMT</pubDate>
+  <link>https://debian-administration.org/article/723/Offering_IPv4-only_services_over_IPv6</link>
+  <description>Although IPv6 is clearly the way of the future there are some software services which only support IPv4 access.  Here we&#39;ll show a simple approach to exporting them to IPv6-based clients.</description>
+ </item>
+ 
+ <item rdf:about="https://debian-administration.org/article/722/Analysing_performance_problems_with_systemd">
+  <title>Analysing performance problems with systemd</title>
+  <pubDate>Sat, 26 Sep 2015 18:06:21 GMT</pubDate>
+  <link>https://debian-administration.org/article/722/Analysing_performance_problems_with_systemd</link>
+  <description>Now that Systemd is the default init-system in fresh installations of Debian GNU/Linux it is worth highlighting some of the new features.</description>
+ </item>
+ 
+ <item rdf:about="https://debian-administration.org/article/721/Validating_SPF_and_DKIM_at_SMTP-time_with_exim">
+  <title>Validating SPF and DKIM at SMTP-time with exim</title>
+  <pubDate>Tue,  4 Aug 2015 07:58:50 GMT</pubDate>
+  <link>https://debian-administration.org/article/721/Validating_SPF_and_DKIM_at_SMTP-time_with_exim</link>
+  <description>In our recent articles we&#39;ve discussed creating SPF-records to avoid spoofed mails, and the creation and setup for DKIM-signing emails, for a similar purpose.  Here we&#39;ll look at the other side of the coin; performing DKIM and SPF testing on your &lt;i&gt;incoming&lt;/i&gt; email.</description>
+ </item>
+ 
+</rdf:RDF>
