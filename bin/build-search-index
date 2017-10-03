@@ -82,7 +82,6 @@ $sql->bind_columns( undef, \$title, \$content, \$id );
 while ( $sql->fetch() )
 {
     my %data = ( title => $title, body => $content, id => $id );
-    print "$id - $title\n";
     $lucy->add_doc( \%data );
 }
 $sql->finish();
