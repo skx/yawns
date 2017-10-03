@@ -125,8 +125,10 @@ def deploy( config_file ):
     # as they might require access to the configuration file containing the
     # database connection details, etc.
     #
-    _build_feeds()
+    # _build_feeds() - NOP.
+    #
     _build_templates()
+    _build_search_index()
 
     #
     #  Include any cron-jobs we might have.
@@ -210,6 +212,13 @@ def _build_templates():
     Build master HTML::Templates from our layout and page templates
     """
     run( "cd ~/current && ./bin/render-templates" )
+
+
+def _build_search_index():
+    """
+    Build our text-search index.
+    """
+    run( "cd ~/current && ./bin/build-search-index" )
 
 
 def _build_cron():
