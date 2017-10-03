@@ -599,22 +599,6 @@ sub about_page
     my ($self) = (@_);
 
     my $q        = $self->query();
-    my $username = "Anonymous";
-
-    #
-    # Is the viewer allowed to edit the page?
-    #
-    my $may_edit = 0;
-    if ( $username !~ /^anonymous$/ )
-    {
-
-        #
-        #  Check the permissions
-        #
-        my $perms = Yawns::Permissions->new( username => $username );
-        $may_edit = 1 if $perms->check( priv => "edit_about" );
-    }
-
 
     #
     # Get the page from the about section.
@@ -630,7 +614,6 @@ sub about_page
     # fill in the template parameters
     $template->param( title        => $key,
                       article_body => $about,
-                      may_edit     => $may_edit,
                     );
 
     # generate the output
