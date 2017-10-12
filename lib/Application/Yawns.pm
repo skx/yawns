@@ -56,6 +56,7 @@ use Text::Diff;
 use HTML::AddNoFollow;
 use Yawns::About;
 use Yawns::Articles;
+use Yawns::Cache;
 use Yawns::Comment;
 use Yawns::Formatters;
 use Yawns::Permissions;
@@ -94,11 +95,11 @@ sub cgiapp_prerun
     # If this is cached already then we're good.
     #
     my $hash = md5_hex($url);
-    my $file = "/tmp/$hash.cache";
 
-    if ( -e $file )
+    my $helper = Yawns::Cache->new( hash => $hash );
+    if ( $helper->exists() )
     {
-        $self->{'cached_content'} = $file;
+        $self->{'cached_content'} = $helper->path();
         $self->prerun_mode('serve_cache');
     }
 
@@ -135,17 +136,20 @@ sub cgiapp_postrun
     # If this is cached already then we're good.
     #
     my $hash = md5_hex($url);
-    my $file = "/tmp/$hash.cache";
-    return if ( -e $file );
 
-    #
-    # Write it out - first line is the request.
-    #
-    open( my $tmp, ">", $file ) or return;
-    print $tmp $url . "\n";
-    print $tmp $$contentref;
-    close( $tmp );
+    my $helper = Yawns::Cache->new( hash => $hash );
+    if (! $helper->exists() )
+    {
+        my $path = $helper->path();
 
+        #
+        # Write it out - first line is the request.
+        #
+        open( my $tmp, ">", $path ) or return;
+        print $tmp $url . "\n";
+        print $tmp $$contentref;
+        close( $tmp );
+    }
 }
 
 
