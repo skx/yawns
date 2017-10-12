@@ -1,6 +1,10 @@
 
 package Yawns::Cache;
 
+use strict;
+use warnings;
+use File::Path qw! make_path !;
+
 sub new
 {
     my ( $proto, %supplied ) = (@_);
