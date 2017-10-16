@@ -71,7 +71,7 @@ use conf::SiteConfig;
 
 
 #
-#  Prerun - Setup MySQL tracing, if we like.
+#  Serve previously-cached content if we have it.
 #
 sub cgiapp_prerun
 {
@@ -110,6 +110,8 @@ sub cgiapp_prerun
 #
 #  Post-Run - Tidy our generated HTML.
 #
+#  Cache our output if it is not a redirection.
+#
 sub cgiapp_postrun
 {
     my ($self, $contentref) = @_;
@@ -119,6 +121,15 @@ sub cgiapp_postrun
         $self->htmltidy_clean($contentref);
     }
 
+
+    # Retrieve the headers 
+    my %headers = $self->header_props(); 
+
+    # If we have any redirection-in-place then we'll return
+    # here to avoid any caching.
+    foreach my $key (sort keys %headers) {
+        return if ( $key =~ /location/i );
+    }
 
     #
     #  Cache our output - based on a hash of request which was made
