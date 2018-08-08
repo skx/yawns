@@ -40,10 +40,7 @@ sudo apt-get install fabric
 # Define sets of servers as roles
 #
 env.roledefs = {
-        'live': ['web1.vlan299.skx.uk0.bigv.io:2222',
-                'web2.vlan299.skx.uk0.bigv.io:2222',
-                'web3.vlan299.skx.uk0.bigv.io:2222',
-                'web4.vlan299.skx.uk0.bigv.io:2222'],
+        'live': ['origin.debian-administration.org:2222'],
         'beta': ['beta.vlan299.skx.uk0.bigv.io:2222' ]
 
 }
